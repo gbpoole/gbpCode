@@ -68,7 +68,7 @@ void identify_back_matches(tree_horizontal_info **halos,
                     match_score,
                     match_index,
                     NULL,
-                    F_GOODNESS_OF_MATCH);
+                    TRUE);
 
        // Store halo sizes for the current snapshot's halos
        if(i_search==0){
@@ -132,7 +132,7 @@ void identify_back_matches(tree_horizontal_info **halos,
                     match_score,
                     match_index,
                     match_flag_two_way,
-                    F_GOODNESS_OF_MATCH);
+                    TRUE);
 
        if(n_halos_1_matches>0 && n_halos_2_matches>0){
           // Assemble first fore matches for each halo
@@ -164,7 +164,7 @@ void identify_back_matches(tree_horizontal_info **halos,
                        match_score,
                        match_index,
                        match_flag_two_way,
-                       F_GOODNESS_OF_MATCH);
+                       TRUE);
 
           // Scan over all the current snapshot's halos ...
           for(j_halo=0;j_halo<n_halos_1_matches;j_halo++){

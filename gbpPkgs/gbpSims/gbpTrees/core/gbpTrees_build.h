@@ -3,10 +3,6 @@
 #include <gbpHalos.h>
 #include <gbpCosmo.h>
 
-// This defines the minimum effective fraction of
-//    mass needed to be considered a good match
-#define F_GOODNESS_OF_MATCH   0.7
-
 // This defines the minimum and minimum fraction of the 
 //    max score needed to be considered a good match
 #define F_MAX_MATCH_SCORE_MIN 0.
@@ -517,13 +513,14 @@ void read_matches(char    *filename_root_matches,
                   float   *match_score,
                   size_t  *match_index,
                   char    *match_flag_two_way,
-                  double   f_goodness_of_match);
+                  int      flag_reject_bad_matches);
 int check_for_matching_input_files(const char *filename_root_in,int i_read);
 
 float maximum_match_score(double n_particles);
-float minimum_match_score(double n_particles,double f_goodness);
+float minimum_match_score(double n_particles);
 float match_score_f_goodness(float match_score,int n_particles_in);
-int check_validity_of_match(int n_particles_use,float match_score,double f_goodness_of_match);
+double f_goodness_n_p(double n_particles);
+int check_validity_of_match(int n_particles_use,float match_score);
 
 int check_if_halo_is_better_main_progenitor(tree_horizontal_info *target_halo,
                                             match_info           *old_progenitor,

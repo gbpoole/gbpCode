@@ -118,7 +118,7 @@ int main(int argc, char *argv[]){
                match_forward_score,
                match_forward_index,
                match_forward_2way,
-               0.);
+               FALSE);
   SID_log("Done.",SID_LOG_CLOSE);
   SID_log("Processing backwards matches...",SID_LOG_OPEN|SID_LOG_TIMER);
   read_matches(filename_root_in,
@@ -136,7 +136,7 @@ int main(int argc, char *argv[]){
                match_backward_score,
                match_backward_index,
                match_backward_2way,
-               0.);
+               FALSE);
   SID_log("Done.",SID_LOG_CLOSE);
 
   // Open output file
@@ -162,9 +162,9 @@ int main(int argc, char *argv[]){
                 n_particles_i[i_halo],
                 n_particles_j[j_halo],
                 match_forward_score[i_halo],
-                match_forward_score[i_halo]/minimum_match_score((double)n_particles_i[i_halo],F_GOODNESS_OF_MATCH),
+                match_forward_score[i_halo]/minimum_match_score((double)n_particles_i[i_halo]),
                 match_backward_score[j_halo],
-                match_backward_score[j_halo]/minimum_match_score((double)n_particles_j[j_halo],F_GOODNESS_OF_MATCH));
+                match_backward_score[j_halo]/minimum_match_score((double)n_particles_j[j_halo]));
      }                
   }
   fclose(fp_out);

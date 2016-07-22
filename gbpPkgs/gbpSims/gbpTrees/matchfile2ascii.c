@@ -136,7 +136,7 @@ int main(int argc, char *argv[]){
                score,
                indices,
                flag_2way,
-               F_GOODNESS_OF_MATCH);
+               TRUE);
 
   // Print results
   for(k_read=0;k_read<n_groups_i;k_read++)

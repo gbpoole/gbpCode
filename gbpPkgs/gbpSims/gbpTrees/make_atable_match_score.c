@@ -70,7 +70,7 @@ int main(int argc, char *argv[]){
      if(ids_to[ids_to_index[i_to]]==ids_from[idx_from])
         score+=pow((double)(idx_from+1),MATCH_SCORE_RANK_INDEX);
   }
-  SID_log("Score = %le (%.3lf x goodness criterion)",SID_LOG_COMMENT,score,score/maximum_match_score(F_GOODNESS_OF_MATCH*(double)n_ids_from));
+  SID_log("Score = %le (%.3lf x goodness criterion)",SID_LOG_COMMENT,score,score/minimum_match_score((double)n_ids_from));
 
   // Clean-up
   SID_free(SID_FARG ids_from);

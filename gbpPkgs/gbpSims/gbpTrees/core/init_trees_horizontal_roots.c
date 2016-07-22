@@ -48,7 +48,7 @@ void init_trees_horizontal_roots(tree_horizontal_info **groups,
                match_score,
                match_index,
                NULL,
-               F_GOODNESS_OF_MATCH);
+               TRUE);
 
   int  n_groups=n_halos_1_matches;
 
@@ -147,7 +147,7 @@ void init_trees_horizontal_roots(tree_horizontal_info **groups,
                match_score,
                match_index,
                NULL,
-               F_GOODNESS_OF_MATCH);
+               TRUE);
 
   int n_subgroups=n_halos_1_matches;
   int i_subgroup;

@@ -111,7 +111,7 @@ int main(int argc, char *argv[]){
                match_score,
                match_index,
                NULL,
-               0.);
+               FALSE);
 
   // Create a storage array mapping the indices of the second catalog
   //    to those of the halos they are matched to in the first catalog

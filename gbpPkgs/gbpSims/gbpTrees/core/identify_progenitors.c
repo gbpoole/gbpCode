@@ -56,7 +56,7 @@ void identify_progenitors(tree_horizontal_info **halos,
                    match_score,
                    match_index,
                    match_flag_two_way,
-                   F_GOODNESS_OF_MATCH);
+                   TRUE);
 
       // Determine the back match which would work best as a descendant
       if(i_search==0){
