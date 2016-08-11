@@ -29,7 +29,6 @@ int check_validity_of_emerged_match(tree_horizontal_info *halo_i,
             flag_valid=FALSE;
       }
    }
-
    return(flag_valid);
 }
 

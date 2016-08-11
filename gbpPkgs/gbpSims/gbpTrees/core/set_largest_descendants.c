@@ -16,7 +16,7 @@ void set_largest_descendants(tree_horizontal_info *halos_i,
             // Inherit descendant's largest descendant.
             if(halos_i[i_halo].descendant.halo->n_particles_largest_descendant>halos_i[i_halo].n_particles)
                halos_i[i_halo].n_particles_largest_descendant=halos_i[i_halo].descendant.halo->n_particles_largest_descendant;
-            // Current halo size is larger tha largest descendant.  Use it.
+            // Current halo size is larger than largest descendant.  Use it.
             else
                halos_i[i_halo].n_particles_largest_descendant=halos_i[i_halo].n_particles;
          // Root of a new branch.  Initialize to current halo size.

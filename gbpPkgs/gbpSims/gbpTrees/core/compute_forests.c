@@ -292,10 +292,12 @@ void compute_forests(char *filename_root_out,int n_search_forests){
                     // To make things robust against multiple group tree linking events, we have to make sure we're
                     //    always working with the lowest-level link in the chain linking things together into forests.
                     //    Only in this way will previously linked trees be linked consistantly during subsequent links.
-                    while(group_forest_array[group_tree_id]!=group_tree_id)
+                    while(group_forest_array[group_tree_id]!=group_tree_id){
                        group_tree_id=group_forest_array[group_tree_id];
-                    while(group_forest_array[subgroup_forest_array_i]!=subgroup_forest_array_i) 
+                    }
+                    while(group_forest_array[subgroup_forest_array_i]!=subgroup_forest_array_i){
                        subgroup_forest_array_i=group_forest_array[subgroup_forest_array_i];
+                    }
 
                     // Perform any necessary linking.
                     if(subgroup_forest_array_i<group_tree_id)

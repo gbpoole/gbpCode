@@ -12,8 +12,6 @@ void propagate_progenitor_info(int         *n_groups,
                                int          l_write_last,
                                int          i_read_stop,
                                int          i_read_step,
-                               int          max_tree_id_subgroup,
-                               int          max_tree_id_group,
                                int          n_subgroups_max,
                                int          n_groups_max,
                                int          n_search,
@@ -24,9 +22,8 @@ void propagate_progenitor_info(int         *n_groups,
                                cosmo_info **cosmo,
                                char        *filename_output_dir,
                                int          flag_compute_fragmented){
-
   SID_log("Propagating progenitor information...",SID_LOG_OPEN|SID_LOG_TIMER);
-  SID_set_verbosity(SID_SET_VERBOSITY_RELATIVE,-1);
+//  SID_set_verbosity(SID_SET_VERBOSITY_RELATIVE,-1);
 
   // Sanity check
   if(n_wrap<=(2*n_search+1))
@@ -43,6 +40,8 @@ void propagate_progenitor_info(int         *n_groups,
   }
 
   // Loop over all the used snapshots (first set write counters to last-used values)
+  int max_tree_id_subgroup;
+  int max_tree_id_group;
   int flag_init_write=TRUE;
   int i_read   =i_write_last;
   int j_read   =j_write_last;
@@ -75,6 +74,10 @@ void propagate_progenitor_info(int         *n_groups,
                               n_wrap,
                               filename_output_dir,
                               TREE_HORIZONTAL_READ_EXTENDED|TREE_HORIZONTAL_STORE_EXTENDED);
+        if(j_file==0){
+           max_tree_id_subgroup=n_trees_subgroup_in;
+           max_tree_id_group   =n_trees_group_in;
+        }
 
         // *** Progenitor propagation that only references progenitors and not descendants can be done here ***
 

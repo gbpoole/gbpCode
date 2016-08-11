@@ -293,34 +293,33 @@ void compute_trees_horizontal(char        *filename_halo_root_in,
 
     // Loop twice (1st to process subgroups, 2nd to process groups)
     for(k_match=0;k_match<n_k_match;k_match++){
-
        // Initialize a bunch of stuff which depends on whether
        //   we are processing groups or subgroups.
        // Do the groups first, so that we have access to n_subgroups_group,
        //   which we need for setting MOST_MASSIVE flags, etc
        switch(k_match){
           case 0:
-          sprintf(group_text_prefix,"");
-          flag_match_subgroups=MATCH_GROUPS;
-          halos               =groups;
-          back_matches        =back_matches_groups;
-          n_halos             =n_groups;
-          n_halos_max         =n_groups_max;
-          max_id              =max_id_group;
-          max_tree_id         =max_tree_id_group;
-          n_particles         =n_particles_groups;
-          break;
+             sprintf(group_text_prefix,"");
+             flag_match_subgroups=FALSE;
+             halos               =groups;
+             back_matches        =back_matches_groups;
+             n_halos             =n_groups;
+             n_halos_max         =n_groups_max;
+             max_id              =max_id_group;
+             max_tree_id         =max_tree_id_group;
+             n_particles         =n_particles_groups;
+             break;
           case 1:
-          sprintf(group_text_prefix,"sub");
-          flag_match_subgroups=MATCH_SUBGROUPS;
-          halos               =subgroups;
-          back_matches        =back_matches_subgroups;
-          n_halos             =n_subgroups;
-          n_halos_max         =n_subgroups_max;
-          max_id              =max_id_subgroup;
-          max_tree_id         =max_tree_id_subgroup;
-          n_particles         =n_particles_subgroups;
-          break;
+             sprintf(group_text_prefix,"sub");
+             flag_match_subgroups=TRUE;
+             halos               =subgroups;
+             back_matches        =back_matches_subgroups;
+             n_halos             =n_subgroups;
+             n_halos_max         =n_subgroups_max;
+             max_id              =max_id_subgroup;
+             max_tree_id         =max_tree_id_subgroup;
+             n_particles         =n_particles_subgroups;
+             break;
        }
        halos_i  =halos[i_file%n_wrap];
        n_halos_i=n_halos[j_file];
@@ -389,7 +388,7 @@ void compute_trees_horizontal(char        *filename_halo_root_in,
                             flag_match_subgroups);
 
        // Add MOST_MASSIVE substructure flags
-       if(flag_match_subgroups==MATCH_SUBGROUPS)
+       if(flag_match_subgroups)
           add_substructure_info(subgroups[i_file%n_wrap],
                                 n_subgroups_group[i_file%n_wrap],
                                 n_particles_groups,
@@ -426,15 +425,13 @@ void compute_trees_horizontal(char        *filename_halo_root_in,
        write_trees_horizontal_report(n_halos_i,n_halos_max,halos_i);
 
        // Update the max_id variables
-       switch(flag_match_subgroups){
-          case MATCH_SUBGROUPS:
-            max_id_subgroup=max_id;
-            max_tree_id_subgroup=max_tree_id;
-            break;
-          case MATCH_GROUPS:
-            max_id_group   =max_id;
-            max_tree_id_group=max_tree_id;
-            break;
+       if(flag_match_subgroups){
+          max_id_subgroup     =max_id;
+          max_tree_id_subgroup=max_tree_id;
+       }
+       else{
+          max_id_group     =max_id;
+          max_tree_id_group=max_tree_id;
        }
        SID_log("Done.",SID_LOG_CLOSE);
     } // k_match
@@ -504,12 +501,9 @@ void compute_trees_horizontal(char        *filename_halo_root_in,
                             l_write==0,
                             mode_write);
   }
-  int i_write_last;
-  int l_write_last;
-  int j_write_last;
-  i_write_last=i_write+1;
-  j_write_last=j_write+i_read_step;
-  l_write_last=l_write-1;
+  int i_write_last=i_write+1;
+  int j_write_last=j_write+i_read_step;
+  int l_write_last=l_write-1;
 
   // Clean-up
   SID_log("Freeing arrays...",SID_LOG_OPEN);
@@ -549,8 +543,6 @@ void compute_trees_horizontal(char        *filename_halo_root_in,
                             l_write_last,
                             i_read_stop,
                             i_read_step,
-                            max_tree_id_subgroup,
-                            max_tree_id_group,
                             n_subgroups_max,
                             n_groups_max,
                             n_search,

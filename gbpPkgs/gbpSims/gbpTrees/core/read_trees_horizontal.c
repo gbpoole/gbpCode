@@ -27,9 +27,6 @@ void read_trees_horizontal(void **groups_in,   int *n_groups_in,
    SID_log("Reading horizontal trees for snapshot #%03d...",SID_LOG_OPEN,i_read);
 
    // Parse the mode and set things up accordingly
-   tree_horizontal_extended_info  *groups_extended;
-   tree_horizontal_extended_info  *subgroups_extended;
-   tree_horizontal_extended_info **subgroups_extended_all;
    if(check_mode_for_flag(mode,TREE_HORIZONTAL_STORE_EXTENDED) &&
       check_mode_for_flag(mode,TREE_HORIZONTAL_STORE_GHOSTS))
       SID_trap_error("Too many storage modes chosen in read_trees_horizontal.",ERROR_LOGIC);
@@ -66,10 +63,11 @@ void read_trees_horizontal(void **groups_in,   int *n_groups_in,
    SID_fread_all(&n_subgroups_max_in,sizeof(int),1,&fp_in);
    SID_fread_all(n_trees_subgroup_in,sizeof(int),1,&fp_in);
    SID_fread_all(n_trees_group_in,   sizeof(int),1,&fp_in);
+   tree_horizontal_extended_info  *groups_extended       =NULL;
+   tree_horizontal_extended_info  *subgroups_extended    =NULL;
    if(flag_store_extended){
-      groups_extended       =(tree_horizontal_extended_info  *)groups_in[i_file%n_wrap];
-      subgroups_extended    =(tree_horizontal_extended_info  *)subgroups_in[i_file%n_wrap];
-      subgroups_extended_all=(tree_horizontal_extended_info **)subgroups_in;
+      groups_extended   =(tree_horizontal_extended_info  *)groups_in[i_file%n_wrap];
+      subgroups_extended=(tree_horizontal_extended_info  *)subgroups_in[i_file%n_wrap];
    }
 
    // Perform read
@@ -91,9 +89,8 @@ void read_trees_horizontal(void **groups_in,   int *n_groups_in,
       SID_fread_all(&group_tree_id,       sizeof(int),1,&fp_in);
       SID_fread_all(&group_file_offset,   sizeof(int),1,&fp_in);
       SID_fread_all(&group_index,         sizeof(int),1,&fp_in);
-      if(!flag_read_extended){
+      if(!flag_read_extended)
          SID_fread_all(&group_n_particles_peak,sizeof(int),1,&fp_in);
-      }
       if(!check_validity_of_tree_case_flag(group_type)) 
          SID_trap_error("Invalid match type (%d) for i_group=%d",ERROR_LOGIC,
                         group_type,i_group);
@@ -188,9 +185,8 @@ void read_trees_horizontal(void **groups_in,   int *n_groups_in,
          SID_fread_all(&subgroup_tree_id,         sizeof(int),1,&fp_in);
          SID_fread_all(&subgroup_file_offset,     sizeof(int),1,&fp_in);
          SID_fread_all(&subgroup_index,           sizeof(int),1,&fp_in);
-         if(!flag_read_extended){
+         if(!flag_read_extended)
             SID_fread_all(&subgroup_n_particles_peak,sizeof(int),1,&fp_in);
-         }
          if(!check_validity_of_tree_case_flag(subgroup_type)) 
             SID_trap_error("Invalid match type (%d) for i_group,j_subgroup,i_subgroup=%d,%d,%d",ERROR_LOGIC,
                            subgroup_type,i_group,j_subgroup,i_subgroup);

@@ -6,7 +6,7 @@
 // This defines the minimum and minimum fraction of the 
 //    max score needed to be considered a good match
 #define F_MAX_MATCH_SCORE_MIN 0.
-#define MIN_MATCH_SCORE       1.
+#define MIN_MATCH_SCORE       2.5
 
 #define K_MATCH_SUBGROUPS 0
 #define K_MATCH_GROUPS    1
@@ -815,8 +815,6 @@ void propagate_progenitor_info(int         *n_groups,
                                int          l_write_last,
                                int          i_read_stop,
                                int          i_read_step,
-                               int          max_tree_id_subgroup,
-                               int          max_tree_id_group,
                                int          n_subgroups_max,
                                int          n_groups_max,
                                int          n_search,

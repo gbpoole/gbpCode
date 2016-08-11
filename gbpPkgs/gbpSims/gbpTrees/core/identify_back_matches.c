@@ -29,6 +29,10 @@ void identify_back_matches(tree_horizontal_info **halos,
     SID_log("Identifying back-matches...",SID_LOG_OPEN|SID_LOG_TIMER);
     SID_set_verbosity(SID_SET_VERBOSITY_RELATIVE,-1);
 
+    int read_mode=MATCH_GROUPS;
+    if(flag_match_subgroups)
+       read_mode=MATCH_SUBGROUPS;
+
     // First, do an initial count of matches.  This will not be a list of unique halos
     //    though, since the same halos are likely to appear in repeated snapshots.
     int j_file_1;
@@ -57,7 +61,7 @@ void identify_back_matches(tree_horizontal_info **halos,
        // Read back-matching
        read_matches(filename_root_matches,
                     j_read_1,j_read_2,n_halos_max,
-                    flag_match_subgroups,
+                    read_mode,
                     &n_halos_1_matches,
                     &n_halos_2_matches,
                     NULL,
@@ -121,7 +125,7 @@ void identify_back_matches(tree_horizontal_info **halos,
        // Read fore matches
        read_matches(filename_root_matches,
                     j_read_2,j_read_1,n_halos_max,
-                    flag_match_subgroups,
+                    read_mode,
                     &n_halos_2_matches,
                     &n_halos_1_matches,
                     NULL,
@@ -153,7 +157,7 @@ void identify_back_matches(tree_horizontal_info **halos,
           // Read back matches
           read_matches(filename_root_matches,
                        j_read_1,j_read_2,n_halos_max,
-                       flag_match_subgroups,
+                       read_mode,
                        &n_halos_1_matches,
                        &n_halos_2_matches,
                        NULL,

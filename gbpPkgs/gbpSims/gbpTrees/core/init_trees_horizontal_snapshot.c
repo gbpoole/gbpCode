@@ -12,16 +12,14 @@ void init_trees_horizontal_snapshot(tree_horizontal_info *halos,
                                     int                   flag_match_subgroups){
    int n_halos_max;
    int n_halos;
-   if(flag_match_subgroups==MATCH_GROUPS){
-      n_halos_max=n_groups_max;
-      n_halos    =n_groups;
-   }
-   else if(flag_match_subgroups==MATCH_SUBGROUPS){
+   if(flag_match_subgroups){
       n_halos_max=n_subgroups_max;
       n_halos    =n_subgroups;
    }
-   else
-      SID_trap_error("flag_match_subgroups not set correctly (%d) in init_trees_horizontal_snapshot().",ERROR_LOGIC,flag_match_subgroups);
+   else{
+      n_halos_max=n_groups_max;
+      n_halos    =n_groups;
+   }
    int i_halo;
    for(i_halo=0;i_halo<n_halos_max;i_halo++){
       halos[i_halo].file                          =  i_file;

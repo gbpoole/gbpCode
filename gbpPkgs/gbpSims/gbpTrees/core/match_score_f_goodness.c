@@ -21,7 +21,7 @@ float match_score_f_goodness(float match_score,int n_particles_in){
    float f_goodness_hi=1.;
    float f_goodness_lo=0.;
    float f_goodness;
-   float threshold =0.005; 
+   float threshold =1e-4; 
    float difference=threshold;
    int   iterations=0;
    int   n_max     =1000;

@@ -103,6 +103,7 @@ void write_trees_vertical(tree_info     *trees,
      }
      SID_Allreduce(SID_IN_PLACE,halo_count,  n_files_write,SID_INT,SID_SUM,SID.COMM_WORLD);
      SID_Allreduce(SID_IN_PLACE,forest_count,n_files_write,SID_INT,SID_SUM,SID.COMM_WORLD);
+
      // Sanity checks
      int forest_count_total;
      int halo_count_total;

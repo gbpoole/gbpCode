@@ -31,6 +31,10 @@ void identify_progenitors(tree_horizontal_info **halos,
                           int     flag_match_subgroups){
    SID_log("Identifying progenitors...",SID_LOG_OPEN|SID_LOG_TIMER);
 
+    int read_mode=MATCH_GROUPS;
+    if(flag_match_subgroups)
+       read_mode=MATCH_SUBGROUPS;
+
    // Loop over the scan range
    int j_file_1=i_file;
    int j_file_2=i_file+1;
@@ -45,7 +49,7 @@ void identify_progenitors(tree_horizontal_info **halos,
       //    (or for setting descendants if bridge fixing is turned off)
       read_matches(filename_root_matches,
                    j_read_1,j_read_2,n_halos_max,
-                   flag_match_subgroups,
+                   read_mode,
                    n_halos_1_matches,
                    n_halos_2_matches,
                    n_particles,
