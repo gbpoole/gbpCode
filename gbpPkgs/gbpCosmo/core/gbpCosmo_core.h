@@ -31,6 +31,7 @@ double E_z(double Omega_M, double Omega_k, double Omega_Lambda, double z);
 double H_z(double redshift,cosmo_info *cosmo);
 double t_Hubble_z(double redshift,cosmo_info *cosmo);
 double t_dyn_z(double redshift,cosmo_info  *cosmo);
+double n_dyn_ztoz(double redshift_1,double redshift_2,cosmo_info *cosmo);
 double t_age_a(double a_in,    cosmo_info **cosmo);
 double t_age_z(double redshift,cosmo_info **cosmo);
 double H_convert(double Hz);

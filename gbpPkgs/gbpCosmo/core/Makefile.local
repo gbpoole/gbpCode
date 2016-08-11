@@ -12,6 +12,7 @@ OBJFILES  = a_of_z.o              \
 	        Ha_Ho.o               \
 	        t_Hubble_z.o          \
 	        t_dyn_z.o             \
+	        n_dyn_ztoz.o          \
 	        t_age_z.o             \
 	        t_age_a.o             \
 	        E_z.o                 \
