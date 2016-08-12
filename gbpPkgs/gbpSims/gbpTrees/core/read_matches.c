@@ -20,6 +20,7 @@ void read_matches(char    *filename_in_dir,
                   int     *n_sub_group_j_in,
                   int     *match_ids,
                   float   *match_score,
+                  int     *match_count,
                   size_t  *match_index,
                   char    *match_flag_two_way,
                   int      flag_reject_bad_matches){
@@ -87,22 +88,23 @@ void read_matches(char    *filename_in_dir,
       flag_alloc_n_particles_j=TRUE;
 
    // Read the needed info from the header file
-   int  i_read;
-   int  i_read_start;
-   int  i_read_stop;
-   int  n_search_total;
-   int  n_files;
-   int  n_groups_in;
-   int  counter=0;
-   char filename_in_name[256];
+   int   i_read;
+   int   i_read_start;
+   int   i_read_stop;
+   int   n_search_total;
+   int   n_files;
+   int   n_groups_in;
+   int   counter=0;
+   char  filename_in_name[256];
+   float match_weight_rank_index;
    strcpy(filename_in_name,filename_in_dir);
    strip_path(filename_in_name);
    sprintf(filename_in,"%s/%sgroup_matches_header.dat",filename_in_dir,group_text_prefix);
    SID_fopen(filename_in,"r",&fp_in);
-   SID_fread(&i_read_start,  sizeof(int),1,&fp_in);
-   SID_fread(&i_read_stop,   sizeof(int),1,&fp_in);
-   SID_fread(&n_search_total,sizeof(int),1,&fp_in);
-   SID_fread(&n_files,       sizeof(int),1,&fp_in);
+   SID_fread(&i_read_start,           sizeof(int),  1,&fp_in);
+   SID_fread(&i_read_stop,            sizeof(int),  1,&fp_in);
+   SID_fread(&n_search_total,         sizeof(int),  1,&fp_in);
+   SID_fread(&n_files,                sizeof(int),  1,&fp_in);
    for(i_read=i_read_stop;i_read>=i_read_start && counter<2;i_read--){
       SID_fread(&i_read_file, sizeof(int),1,&fp_in);
       if(i_read_file==i_read_in){
@@ -166,15 +168,16 @@ void read_matches(char    *filename_in_dir,
       sprintf(filename_in,"%s_%sgroup_matches_%s_%s.dat",filename_in_name,    group_text_prefix,filename_cat1,filename_cat2);
 
    SID_fopen(filename_in,"r",&fp_in);
-   SID_fread(&i_read_file,sizeof(int),1,&fp_in);
-   SID_fread(&j_read_file,sizeof(int),1,&fp_in);
-   SID_fread(n_groups_i,  sizeof(int),1,&fp_in);
-   SID_fread(n_groups_j,  sizeof(int),1,&fp_in);
+   SID_fread(&i_read_file,            sizeof(int),  1,&fp_in);
+   SID_fread(&j_read_file,            sizeof(int),  1,&fp_in);
+   SID_fread(n_groups_i,              sizeof(int),  1,&fp_in);
+   SID_fread(n_groups_j,              sizeof(int),  1,&fp_in);
+   SID_fread(&match_weight_rank_index,sizeof(float),1,&fp_in);
 
    // Read matching data
-   SID_fread(match_ids,  sizeof(int),   (*n_groups_i),&fp_in);
-   SID_fread(match_index,sizeof(size_t),(*n_groups_i),&fp_in);
-   SID_fread(match_score,sizeof(float), (*n_groups_i),&fp_in);
+   SID_fread(match_ids,  sizeof(int),  (*n_groups_i),&fp_in);
+   SID_fread(match_score,sizeof(float),(*n_groups_i),&fp_in);
+   SID_fread(match_count,sizeof(int),  (*n_groups_i),&fp_in);
    SID_fclose(&fp_in);
 
    // If one of the catalogs is empty, set to no-match defaults
@@ -182,6 +185,11 @@ void read_matches(char    *filename_in_dir,
       for(int i_halo=0;i_halo<(*n_groups_i);i_halo++){
          match_ids[i_halo]  =-1;
          match_score[i_halo]= 0.;
+         match_count[i_halo]= 0;
+      }
+      if(match_index!=NULL){
+         for(int i_halo=0;i_halo<(*n_groups_i);i_halo++)
+            match_index[i_halo]=(size_t)i_halo;
       }
       if(match_flag_two_way!=NULL){
          for(int i_halo=0;i_halo<(*n_groups_i);i_halo++)
@@ -193,22 +201,20 @@ void read_matches(char    *filename_in_dir,
       //    between halos with no substructures.
       int i_halo;
       if(mode==MATCH_GROUPS){
-         size_t *match_index_temp;
          for(i_halo=0;i_halo<(*n_groups_i);i_halo++){
             if(n_sub_group_i[i_halo]<=0){
                match_ids[i_halo]  =-1;
                match_score[i_halo]= 0.;
+               match_count[i_halo]= 0;
             }
             else if(match_ids[i_halo]>=0 && (*n_groups_j)>0){
                if(n_sub_group_j[match_ids[i_halo]]<=0){
                   match_ids[i_halo]  =-1;
                   match_score[i_halo]= 0.;
+                  match_count[i_halo]= 0;
                }
             }
          }
-         merge_sort(match_ids,(size_t)(*n_groups_i),&match_index_temp,SID_INT,SORT_COMPUTE_INDEX,SORT_COMPUTE_NOT_INPLACE);
-         memcpy(match_index,match_index_temp,(*n_groups_i)*sizeof(size_t));
-         SID_free(SID_FARG match_index_temp);
       }
 
       // Apply a goodness-of-fit criterion and check that the maximum allowed score has not been exceeded
@@ -221,10 +227,12 @@ void read_matches(char    *filename_in_dir,
 
       // Since we may have changed some matches with the goodness 
       //    of fit criterion, we need to re-perform the sort
-      size_t *match_index_temp=NULL;
-      merge_sort(match_ids,(size_t)(*n_groups_i),&match_index_temp,SID_INT,SORT_COMPUTE_INDEX,SORT_COMPUTE_NOT_INPLACE);
-      memcpy(match_index,match_index_temp,(*n_groups_i)*sizeof(size_t));
-      SID_free(SID_FARG match_index_temp);
+      if(match_index!=NULL){
+         size_t *match_index_temp=NULL;
+         merge_sort(match_ids,(size_t)(*n_groups_i),&match_index_temp,SID_INT,SORT_COMPUTE_INDEX,SORT_COMPUTE_NOT_INPLACE);
+         memcpy(match_index,match_index_temp,(*n_groups_i)*sizeof(size_t));
+         SID_free(SID_FARG match_index_temp);
+      }
 
       // Determine if the matches are two-way if we have been asked to check this
       if(match_flag_two_way!=NULL && (*n_groups_i)>0){
@@ -241,18 +249,22 @@ void read_matches(char    *filename_in_dir,
             sprintf(filename_in,"%s_%sgroup_matches_%s_%s.dat",filename_in_name,    group_text_prefix,filename_cat2,filename_cat1);
 
          // Open two files, one for reading the IDs and one for matching the scores of the matching file
-         int i_read_file_check;
-         int j_read_file_check;
-         int n_groups_i_check;
-         int n_groups_j_check;
+         int   i_read_file_check;
+         int   j_read_file_check;
+         int   n_groups_i_check;
+         int   n_groups_j_check;
+         float match_score_rank_index;
          SID_fp fp_check_ids;
          SID_fp fp_check_score;
+         SID_fp fp_check_count;
          SID_fopen(filename_in,"r",&fp_check_ids);
          SID_fopen(filename_in,"r",&fp_check_score);
-         SID_fread(&j_read_file_check,sizeof(int),1,&fp_check_ids);
-         SID_fread(&i_read_file_check,sizeof(int),1,&fp_check_ids);
-         SID_fread(&n_groups_j_check, sizeof(int),1,&fp_check_ids);
-         SID_fread(&n_groups_i_check, sizeof(int),1,&fp_check_ids);
+         SID_fopen(filename_in,"r",&fp_check_count);
+         SID_fread(&j_read_file_check,     sizeof(int),  1,&fp_check_ids);
+         SID_fread(&i_read_file_check,     sizeof(int),  1,&fp_check_ids);
+         SID_fread(&n_groups_j_check,      sizeof(int),  1,&fp_check_ids);
+         SID_fread(&n_groups_i_check,      sizeof(int),  1,&fp_check_ids);
+         SID_fread(&match_score_rank_index,sizeof(float),1,&fp_check_ids);
 
          // Check that we have the right files
          if(n_groups_i_check!=(*n_groups_i))
@@ -266,8 +278,14 @@ void read_matches(char    *filename_in_dir,
 
          // Skip to the beginning of the relevant block for the score-reading file pointer
          SID_fskip(sizeof(int),   4,            &fp_check_score); // header
+         SID_fskip(sizeof(float), 1,            &fp_check_score); // header
          SID_fskip(sizeof(int),   (*n_groups_j),&fp_check_score); // ids
-         SID_fskip(sizeof(size_t),(*n_groups_j),&fp_check_score); // indices
+
+         // Skip to the beginning of the relevant block for the count-reading file pointer
+         SID_fskip(sizeof(int),   4,            &fp_check_count); // header
+         SID_fskip(sizeof(float), 1,            &fp_check_count); // header
+         SID_fskip(sizeof(int),   (*n_groups_j),&fp_check_count); // ids
+         SID_fskip(sizeof(float), (*n_groups_j),&fp_check_count); // scores
 
          // Set everything to being a one-way match unless subsequently changed
          for(i_halo=0;i_halo<(*n_groups_i);i_halo++) 
@@ -281,10 +299,12 @@ void read_matches(char    *filename_in_dir,
          int     n_remaining =(*n_groups_j);
          int    *buffer_ids  =(int   *)SID_malloc(sizeof(int)  *n_buffer);
          float  *buffer_score=(float *)SID_malloc(sizeof(float)*n_buffer);
+         int    *buffer_count=(int   *)SID_malloc(sizeof(int)  *n_buffer);
          for(int j_halo=0;n_remaining>0;n_remaining-=n_chunk){
             n_chunk=MIN(n_remaining,n_buffer);
             SID_fread(buffer_ids,  sizeof(int),  n_chunk,&fp_check_ids);
             SID_fread(buffer_score,sizeof(float),n_chunk,&fp_check_score);
+            SID_fread(buffer_count,sizeof(int),  n_chunk,&fp_check_count);
             for(int k_halo=0;k_halo<n_chunk;k_halo++,j_halo++){
                int id_i=buffer_ids[k_halo];
                if(id_i>=0){
@@ -306,8 +326,10 @@ void read_matches(char    *filename_in_dir,
          //SID_log("n_good=%d n_2way=%d",SID_LOG_COMMENT,n_good,n_2way);
          SID_fclose(&fp_check_ids);
          SID_fclose(&fp_check_score);
+         SID_fclose(&fp_check_count);
          SID_free(SID_FARG buffer_ids);
          SID_free(SID_FARG buffer_score);
+         SID_free(SID_FARG buffer_count);
       }
    }
 

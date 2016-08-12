@@ -18,6 +18,7 @@ void write_match_results(char       *filename_out_dir,
                          plist_info *plist1,
                          plist_info *plist2,
                          int         k_match,
+                         float       match_weight_rank_index,
                          int         mode){
   char        filename_out[256];
   char        filename_out_dir_snap[256];
@@ -49,6 +50,7 @@ void write_match_results(char       *filename_out_dir,
   int        *file_index_1;
   int        *match_id   =NULL;
   float      *match_score=NULL;
+  int        *match_count=NULL;
   char        cat_name_1[20];
   char        cat_name_2[20];
   size_t     *match_rank =NULL;
@@ -103,10 +105,11 @@ void write_match_results(char       *filename_out_dir,
         mkdir(filename_out_dir_snap,02755);
      if((fp_out=fopen(filename_out,"w"))==NULL)
         SID_trap_error("Could not open {%s} for writing.",ERROR_IO_OPEN,filename_out);
-     fwrite(&i_read,    sizeof(int),1,fp_out);
-     fwrite(&j_read,    sizeof(int),1,fp_out);
-     fwrite(&n_groups_1,sizeof(int),1,fp_out);
-     fwrite(&n_groups_2,sizeof(int),1,fp_out);
+     fwrite(&i_read,                 sizeof(int),  1,fp_out);
+     fwrite(&j_read,                 sizeof(int),  1,fp_out);
+     fwrite(&n_groups_1,             sizeof(int),  1,fp_out);
+     fwrite(&n_groups_2,             sizeof(int),  1,fp_out);
+     fwrite(&match_weight_rank_index,sizeof(float),1,fp_out);
   }
 
   // Everything else only needs to be written if there are halos to match with
@@ -118,6 +121,7 @@ void write_match_results(char       *filename_out_dir,
      n_groups_2_local=((int   *)ADaPS_fetch(plist2->data,"n_%sgroups_%s",         group_text_prefix,filename_cat2))[0];
      match_id        = (int   *)ADaPS_fetch(plist1->data,"match_match");
      match_score     = (float *)ADaPS_fetch(plist1->data,"match_score_match");
+     match_count     = (int   *)ADaPS_fetch(plist1->data,"match_count_match");
 
      // Generate ranking of matches
      sort(match_id,   (size_t)n_groups_1_local,&match_index,SID_INT,   SORT_GLOBAL,SORT_COMPUTE_INDEX,SORT_COMPUTE_NOT_INPLACE);
@@ -170,38 +174,6 @@ void write_match_results(char       *filename_out_dir,
        SID_trap_error("Buffer counts don't make sense (ie %d!=%d) after writing match IDs.",ERROR_LOGIC,buffered_count,n_groups_1);
      SID_log("Done.",SID_LOG_CLOSE);
 
-     // Write match sort indices ...
-     SID_log("Writing match sort indices...",SID_LOG_OPEN|SID_LOG_TIMER);                 
-     //    ... loop over all the groups in buffer-sized batches
-     for(i_group=0,buffered_count_local=0;i_group<n_groups_1;i_group+=n_buffer){
-        // Decide this buffer iteration's size
-        n_buffer=MIN(n_buffer_max,n_groups_1-i_group);
-        // Set the buffer to a default value smaller than the smallest possible data size
-        for(i_buffer=0;i_buffer<n_buffer;i_buffer++)
-           buffer_size_t[i_buffer]=0; // Min value of match_rank is 0
-        // Determine if any of the local data is being used for this buffer
-        for(j_group=0;j_group<n_groups_1_local;j_group++){
-           index_test=match_rank[j_group]-i_group;
-           // ... if so, set the appropriate buffer value
-           if(index_test>=0 && index_test<n_buffer){
-             buffer_size_t[index_test]=file_index_1[j_group];
-             buffered_count_local++;
-           }
-        }
-        // Doing a global max on the buffer yields the needed buffer on all ranks
-        SID_Allreduce(SID_IN_PLACE,buffer_size_t,n_buffer,SID_SIZE_T,SID_MAX,SID.COMM_WORLD);
-
-        // Write the buffer
-        if(SID.I_am_Master)
-           fwrite(buffer,sizeof(size_t),(size_t)n_buffer,fp_out);
-     }
-
-     // Sanity check
-     calc_sum_global(&buffered_count_local,&buffered_count,1,SID_INT,CALC_MODE_DEFAULT,SID.COMM_WORLD);
-     if(buffered_count!=n_groups_1)
-       SID_trap_error("Buffer counts don't make sense (ie %d!=%d) after writing match indices.",ERROR_LOGIC,buffered_count,n_groups_1);
-     SID_log("Done.",SID_LOG_CLOSE);
-
      // Write match_score ...
      //    ... loop over all the groups in buffer-sized batches
      SID_log("Writing match scores...",SID_LOG_OPEN|SID_LOG_TIMER);                 
@@ -238,8 +210,48 @@ void write_match_results(char       *filename_out_dir,
      calc_sum_global(&buffered_count_local,&buffered_count,1,SID_INT,CALC_MODE_DEFAULT,SID.COMM_WORLD);
      if(buffered_count!=n_groups_1)
         SID_trap_error("Buffer counts don't make sense (ie %d!=%d) after writing match scores.",ERROR_LOGIC,buffered_count,n_groups_1);
+     SID_log("Done.",SID_LOG_CLOSE);
+
+     // Write match_count ...
+     //    ... loop over all the groups in buffer-sized batches
+     SID_log("Writing match counts...",SID_LOG_OPEN|SID_LOG_TIMER);
+     for(i_group=0,buffered_count_local=0;i_group<n_groups_1;i_group+=n_buffer){
+        // Decide this buffer iteration's size
+        n_buffer=MIN(n_buffer_max,n_groups_1-i_group);
+        // Set the buffer to a default value smaller than the smallest possible data size
+        for(i_buffer=0;i_buffer<n_buffer;i_buffer++)
+           buffer_int[i_buffer]=-1; // Min value of match_count is 0.
+        // Determine if any of the local data is being used for this buffer
+        for(j_group=0;j_group<n_groups_1_local;j_group++){
+           index_test=file_index_1[j_group]-i_group;
+           // ... if so, set the appropriate buffer value
+           if(index_test>=0 && index_test<n_buffer){
+             buffer_int[index_test]=match_count[j_group];
+             buffered_count_local++;
+           }
+        }
+        // Doing a global max on the buffer yields the needed buffer on all ranks
+        SID_Allreduce(SID_IN_PLACE,buffer_int,n_buffer,SID_INT,SID_MAX,SID.COMM_WORLD);
+
+        if(SID.I_am_Master){
+           // Sanity check
+           for(i_buffer=0;i_buffer<n_buffer;i_buffer++){
+              if(buffer_int[i_buffer]<0.)
+                 SID_trap_error("Illegal match_count result (%f) for group No. %d.",ERROR_LOGIC,buffer_int[i_buffer],i_group+i_buffer);
+           }
+           // Write the buffer
+           fwrite(buffer,sizeof(int),(size_t)n_buffer,fp_out);
+        }
+     }
+
+     // Sanity check
+     calc_sum_global(&buffered_count_local,&buffered_count,1,SID_INT,CALC_MODE_DEFAULT,SID.COMM_WORLD);
+     if(buffered_count!=n_groups_1)
+        SID_trap_error("Buffer counts don't make sense (ie %d!=%d) after writing match scores.",ERROR_LOGIC,buffered_count,n_groups_1);
+     SID_log("Done.",SID_LOG_CLOSE);
 
      // Clean-up
+     SID_log("Cleaning-up...",SID_LOG_OPEN);
      SID_free(SID_FARG buffer);
      SID_free(SID_FARG match_rank);
 

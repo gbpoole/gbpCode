@@ -459,6 +459,7 @@ int compute_trees_matches(char   *filename_root_in,
                                                     plist1_order,
                                                     plist2_order,
                                                     k_match,
+                                                    MATCH_SCORE_RANK_INDEX,
                                                     WRITE_MATCHES_MODE_TREES);
                                 SID_set_verbosity(SID_SET_VERBOSITY_DEFAULT);
                              }

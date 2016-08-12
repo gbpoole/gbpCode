@@ -57,7 +57,6 @@ int compute_cross_catalog_matches(char   *filename_root_in_1,
   char        cat_name_1[20];
   char        cat_name_2[20];
   size_t     *match_rank =NULL;
-  size_t     *match_index=NULL;
   size_t      offset;
   plist_info  plist1;
   plist_info  plist2;
@@ -202,6 +201,7 @@ int compute_cross_catalog_matches(char   *filename_root_in_1,
                             plist1_order,
                             plist2_order,
                             k_match,
+                            match_weight_rank_index,
                             WRITE_MATCHES_MODE_SINGLE);
         SID_set_verbosity(SID_SET_VERBOSITY_DEFAULT);
      }

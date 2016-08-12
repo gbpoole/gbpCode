@@ -75,11 +75,6 @@ int main(int argc, char *argv[]){
   // Read matches
   int    *n_subgroups  =NULL;
   int    *n_groups     =NULL;
-  int    *n_particles_i=NULL;
-  int    *n_particles_j=NULL;
-  int    *match_ids    =NULL;
-  float  *match_score  =NULL;
-  size_t *match_index  =NULL;
   int     n_halos_i;
   int     n_halos_j;
   int     n_files;
@@ -96,6 +91,12 @@ int main(int argc, char *argv[]){
                       &n_subgroups_max,
                       &n_groups_max,
                       &n_halos_max);
+  int    *n_particles_i=(int    *)SID_malloc(sizeof(int)   *n_halos_max);
+  int    *n_particles_j=(int    *)SID_malloc(sizeof(int)   *n_halos_max);
+  int    *match_ids    =(int    *)SID_malloc(sizeof(int)   *n_halos_max);
+  float  *match_score  =(float  *)SID_malloc(sizeof(float) *n_halos_max);
+  int    *match_count  =(int    *)SID_malloc(sizeof(int)   *n_halos_max);
+  size_t *match_index  =(size_t *)SID_malloc(sizeof(size_t)*n_halos_max);
   read_matches(filename_matches_root,
                i_read,
                j_read,
@@ -109,6 +110,7 @@ int main(int argc, char *argv[]){
                NULL,
                match_ids,
                match_score,
+               match_count,
                match_index,
                NULL,
                FALSE);
@@ -196,6 +198,7 @@ int main(int argc, char *argv[]){
   SID_free(SID_FARG properties_j);
   SID_free(SID_FARG match_ids);
   SID_free(SID_FARG match_score);
+  SID_free(SID_FARG match_count);
   SID_free(SID_FARG match_index);
   SID_free(SID_FARG storage_index);
 

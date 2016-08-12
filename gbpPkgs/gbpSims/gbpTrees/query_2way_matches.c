@@ -89,16 +89,16 @@ int main(int argc, char *argv[]){
   SID_log("Done.",SID_LOG_CLOSE);
 
   // Initialize some arrays
-  int    *n_particles_i       =(int    *)SID_malloc(sizeof(int)   *max_n_groups);
-  int    *n_particles_j       =(int    *)SID_malloc(sizeof(int)   *max_n_groups);
-  int    *match_forward_ids   =(int    *)SID_malloc(sizeof(int)   *max_n_groups);
-  size_t *match_forward_index =(size_t *)SID_malloc(sizeof(size_t)*max_n_groups);
-  float  *match_forward_score =(float  *)SID_malloc(sizeof(float) *max_n_groups);
-  char   *match_forward_2way  =(char   *)SID_malloc(sizeof(char)  *max_n_groups);
-  int    *match_backward_ids  =(int    *)SID_malloc(sizeof(int)   *max_n_groups);
-  size_t *match_backward_index=(size_t *)SID_malloc(sizeof(size_t)*max_n_groups);
-  float  *match_backward_score=(float  *)SID_malloc(sizeof(float) *max_n_groups);
-  char   *match_backward_2way =(char   *)SID_malloc(sizeof(char)  *max_n_groups);
+  int    *n_particles_i       =(int   *)SID_malloc(sizeof(int)  *max_n_groups);
+  int    *n_particles_j       =(int   *)SID_malloc(sizeof(int)  *max_n_groups);
+  int    *match_forward_ids   =(int   *)SID_malloc(sizeof(int)  *max_n_groups);
+  float  *match_forward_score =(float *)SID_malloc(sizeof(float)*max_n_groups);
+  int    *match_forward_count =(int   *)SID_malloc(sizeof(int)  *max_n_groups);
+  char   *match_forward_2way  =(char  *)SID_malloc(sizeof(char) *max_n_groups);
+  int    *match_backward_ids  =(int   *)SID_malloc(sizeof(int)  *max_n_groups);
+  float  *match_backward_score=(float *)SID_malloc(sizeof(float)*max_n_groups);
+  int    *match_backward_count=(int   *)SID_malloc(sizeof(int)  *max_n_groups);
+  char   *match_backward_2way =(char  *)SID_malloc(sizeof(char) *max_n_groups);
 
   // Loop over all matching combinations
   SID_log("Reading forward matches...",SID_LOG_OPEN|SID_LOG_TIMER);
@@ -116,7 +116,8 @@ int main(int argc, char *argv[]){
                NULL,
                match_forward_ids,
                match_forward_score,
-               match_forward_index,
+               match_forward_count,
+               NULL,
                match_forward_2way,
                FALSE);
   SID_log("Done.",SID_LOG_CLOSE);
@@ -134,7 +135,8 @@ int main(int argc, char *argv[]){
                NULL,
                match_backward_ids,
                match_backward_score,
-               match_backward_index,
+               match_backward_count,
+               NULL,
                match_backward_2way,
                FALSE);
   SID_log("Done.",SID_LOG_CLOSE);
@@ -148,22 +150,26 @@ int main(int argc, char *argv[]){
   fprintf(fp_out,"#        (%02d): No. particles in snapshot %d\n",i_column++,i_read);
   fprintf(fp_out,"#        (%02d): No. particles in snapshot %d\n",i_column++,j_read);
   fprintf(fp_out,"#        (%02d): Forward  match score\n",        i_column++);
+  fprintf(fp_out,"#        (%02d): Forward  match count\n",        i_column++);
   fprintf(fp_out,"#        (%02d): Forward  goodness of match\n",  i_column++);
   fprintf(fp_out,"#        (%02d): Backward match score\n",        i_column++);
+  fprintf(fp_out,"#        (%02d): Backward match count\n",        i_column++);
   fprintf(fp_out,"#        (%02d): Backward goodness of match\n",  i_column++);
   for(int i_halo=0;i_halo<n_groups_i;i_halo++){
      int j_halo=match_forward_ids[i_halo];
      if(match_forward_2way[i_halo]){
         if(j_halo<0 || j_halo>n_groups_j)
            SID_trap_error("There's an invalid match id (ie. %d<0 || %d>%d)  attached to a 2-way match!",ERROR_LOGIC,j_halo,j_halo,n_groups_j);
-        fprintf(fp_out,"%7d %7d %6d %6d %10.3le %10.3le %10.3le %10.3le\n",
+        fprintf(fp_out,"%7d %7d %6d %6d %10.3le %7d %10.3le %10.3le %7d %10.3le\n",
                 i_halo,
                 j_halo,
                 n_particles_i[i_halo],
                 n_particles_j[j_halo],
                 match_forward_score[i_halo],
+                match_forward_count[i_halo],
                 match_score_f_goodness(match_forward_score[i_halo],(double)n_particles_i[i_halo]),
                 match_backward_score[j_halo],
+                match_backward_count[j_halo],
                 match_score_f_goodness(match_backward_score[i_halo],(double)n_particles_i[i_halo]));
      }                
   }
@@ -173,12 +179,12 @@ int main(int argc, char *argv[]){
   SID_free(SID_FARG n_particles_i);
   SID_free(SID_FARG n_particles_j);
   SID_free(SID_FARG match_forward_ids);
-  SID_free(SID_FARG match_forward_index);
   SID_free(SID_FARG match_forward_score);
+  SID_free(SID_FARG match_forward_count);
   SID_free(SID_FARG match_forward_2way);
   SID_free(SID_FARG match_backward_ids);
-  SID_free(SID_FARG match_backward_index);
   SID_free(SID_FARG match_backward_score);
+  SID_free(SID_FARG match_backward_count);
   SID_free(SID_FARG match_backward_2way);
   
   SID_log("Done.",SID_LOG_CLOSE);
