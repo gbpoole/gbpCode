@@ -39,6 +39,11 @@
 #define MATCH_APPLY_OFFSETS TTTP07 // When matching across multiple cores, apply
                                    //   rank offsets so that match_ids are global indices
 
+#define N_P_MATCH_MIN  10 // minimum number   of particles for applying moment preselection
+#define F_P_MATCH_MIN 0.1 // minimum fraction of particles for applying moment preselection
+                          //    a value of 0.1 is approximately the mass in the core radius
+                          //    of an NFW halo with concentration c=10
+
 typedef struct halo_properties_info halo_properties_info;
 struct halo_properties_info{
   long long id_MBP;                    // ID of most bound particle in structure

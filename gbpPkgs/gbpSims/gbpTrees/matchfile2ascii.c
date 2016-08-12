@@ -86,7 +86,7 @@ int main(int argc, char *argv[]){
   SID_fread(&j_read_in,       sizeof(int),1,&fp_in);SID_log("j_read    =%d",SID_LOG_COMMENT,j_read_in);
   SID_fread(&n_groups_i,      sizeof(int),1,&fp_in);SID_log("n_groups_i=%d",SID_LOG_COMMENT,n_groups_i);
   SID_fread(&n_groups_j,      sizeof(int),1,&fp_in);SID_log("n_groups_j=%d",SID_LOG_COMMENT,n_groups_j);
-  SID_fread(&score_rank_index,sizeof(int),1,&fp_in);SID_log("score_idx =%d",SID_LOG_COMMENT,score_rank_index);
+  SID_fread(&score_rank_index,sizeof(int),1,&fp_in);SID_log("score_idx =%f",SID_LOG_COMMENT,score_rank_index);
 
   // Allocate RAM
   int   *match    =(int   *)SID_malloc(sizeof(int)  *n_groups_i);
