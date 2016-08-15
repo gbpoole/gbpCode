@@ -39,10 +39,7 @@
 #define MATCH_APPLY_OFFSETS TTTP07 // When matching across multiple cores, apply
                                    //   rank offsets so that match_ids are global indices
 
-#define N_P_MATCH_MIN  10 // minimum number   of particles for applying moment preselection
-#define F_P_MATCH_MIN 0.1 // minimum fraction of particles for applying moment preselection
-                          //    a value of 0.1 is approximately the mass in the core radius
-                          //    of an NFW halo with concentration c=10
+#define N_P_MATCH_PRESELECT_MIN 32 // minimum number of particles for applying moment preselection
 
 typedef struct halo_properties_info halo_properties_info;
 struct halo_properties_info{
@@ -274,6 +271,8 @@ void match_halos(plist_info  *plist_1_in,
                  const char  *catalog_1to2,
                  int          mode,
                  float        match_weight_rank_index);
+float match_score_f_goodness(float match_score,int n_particles_in);
+float maximum_match_score(double n_particles);
 
 #ifdef __cplusplus
 }

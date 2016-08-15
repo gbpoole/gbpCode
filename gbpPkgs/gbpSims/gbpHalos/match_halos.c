@@ -724,12 +724,13 @@ void match_halos(plist_info  *plist_1_in,
                    if(flag_moment_preselection){
                       // This is the minimum size a halo needs to
                       //    be for applying moment-based preselection
-                      int n_p_min_preselect=MAX(N_P_MATCH_MIN,F_P_MATCH_MIN*n_particles_group_1[i_group]);
                       for(i_hist=0;i_hist<n_hist_array[i_group];i_hist++){
-                         if(hist_count[i_hist]>=n_p_min_preselect){
-                            float S_0_new=((float)hist_count[i_hist]/(float)n_particles_group_1[i_group]);
-                            float S_0_old=((float)hist_count[j_hist]/(float)n_particles_group_1[i_group]);
-                            if((hist_score[i_hist]/S_0_new)>(hist_score[j_hist]/S_0_old))
+                         if(hist_count[i_hist]>=N_P_MATCH_PRESELECT_MIN){
+                            float f_m1_new=match_score_f_goodness(hist_score[i_hist],n_particles_group_1[i_group]);
+                            float f_0_new =((float)hist_count[i_hist]/(float)n_particles_group_1[i_group]);
+                            float f_m1_old=match_score_f_goodness(hist_score[j_hist],n_particles_group_1[i_group]);
+                            float f_0_old =((float)hist_count[j_hist]/(float)n_particles_group_1[i_group]);
+                            if((f_m1_new/f_0_new)>(f_m1_old/f_0_old))
                                j_hist=i_hist;
                          }
                       }

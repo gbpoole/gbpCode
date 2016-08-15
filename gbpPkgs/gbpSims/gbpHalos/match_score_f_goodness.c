@@ -5,7 +5,6 @@
 #include <gbpLib.h>
 #include <gbpMath.h>
 #include <gbpHalos.h>
-#include <gbpTrees_build.h>
 
 float match_score_f_goodness(float match_score,int n_particles_in){
    // If score is <=0, return zero ...

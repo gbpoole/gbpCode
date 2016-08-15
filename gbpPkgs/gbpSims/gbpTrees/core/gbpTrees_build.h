@@ -517,9 +517,7 @@ void read_matches(char    *filename_root_matches,
                   int      flag_reject_bad_matches);
 int check_for_matching_input_files(const char *filename_root_in,int i_read);
 
-float maximum_match_score(double n_particles);
 float minimum_match_score(double n_particles);
-float match_score_f_goodness(float match_score,int n_particles_in);
 double f_goodness_n_p(double n_particles);
 int check_validity_of_match(int n_particles_use,float match_score);
 
