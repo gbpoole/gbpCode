@@ -31,9 +31,8 @@ void write_tree_run_parameters(char *filename_root_out,
    fprintf(fp_out,"#flag_fix_bridges        %d\n",flag_fix_bridges);
    fprintf(fp_out,"#flag_compute_fragmented %d\n",flag_compute_fragmented);
    fprintf(fp_out,"#flag_compute_ghosts     %d\n",flag_compute_ghosts);
-   fprintf(fp_out,"#f_s_goodness_of_match   variable\n");
-   fprintf(fp_out,"#f_max_match_score_min   %f\n",F_MAX_MATCH_SCORE_MIN);
-   fprintf(fp_out,"#min_match_score         %f\n",MIN_MATCH_SCORE);
+   fprintf(fp_out,"#f_match_moment_diff_min %f\n",F_MATCH_MOMENT_DIFF_MIN);
+   fprintf(fp_out,"#n_p_match_min           %f\n",N_P_MATCH_MIN);
 
    // Close file
    fclose(fp_out);

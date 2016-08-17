@@ -3,10 +3,9 @@
 #include <gbpHalos.h>
 #include <gbpCosmo.h>
 
-// This defines the minimum and minimum fraction of the 
-//    max score needed to be considered a good match
-#define F_MAX_MATCH_SCORE_MIN 0.
-#define MIN_MATCH_SCORE       2.5
+// These parameters determine what will be considered a valid match
+#define F_MATCH_MOMENT_DIFF_MIN -0.05
+#define N_P_MATCH_MIN              10
 
 #define K_MATCH_SUBGROUPS 0
 #define K_MATCH_GROUPS    1
@@ -517,9 +516,8 @@ void read_matches(char    *filename_root_matches,
                   int      flag_reject_bad_matches);
 int check_for_matching_input_files(const char *filename_root_in,int i_read);
 
-float minimum_match_score(double n_particles);
 double f_goodness_n_p(double n_particles);
-int check_validity_of_match(int n_particles_use,float match_score);
+int check_validity_of_match(int n_particles_halo,int n_particles_match,float match_score);
 
 int check_if_halo_is_better_main_progenitor(tree_horizontal_info *target_halo,
                                             match_info           *old_progenitor,
