@@ -118,7 +118,7 @@ void match_halos(plist_info  *plist_1_in,
   else                   strcpy(catalog_2,catalog_2_in);
 
   // Right now, moment preselection is just fixed to 'on'.
-  //    Functionality to turn this off could be added later.
+  //    Functionality to turn this on/off could be added later.
   int flag_moment_preselection=TRUE;
 
   // Determine if we are matching groups or subgroups (default is subgroups)
