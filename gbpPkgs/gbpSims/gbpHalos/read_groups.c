@@ -182,7 +182,7 @@ void read_groups(char        *filename_groups_root,
    int    *storage_index_group    =NULL;
    int    *storage_index_subgroup =NULL;
    int    *storage_index_particles=NULL;
-   int     n_buffer_max           =1024;
+   int     n_buffer_max           =256*1024;
    int     n_groups_boundary      =0;
    int     n_subgroups_boundary   =0;
    int     n_groups_interior      =0;
@@ -1077,7 +1077,6 @@ void read_groups(char        *filename_groups_root,
             // Read the IDs
 
             // Initialize read and allocate buffers
-            int     n_buffer_max        =1024;
             int     n_buffer_local      =0;
             int    *buffer_ranks_tmp    =(int    *)SID_malloc(sizeof(int)   *n_buffer_max);
             int    *buffer_sizes_tmp    =(int    *)SID_malloc(sizeof(int)   *n_buffer_max);
