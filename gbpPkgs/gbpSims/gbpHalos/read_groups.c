@@ -531,12 +531,12 @@ void read_groups(char        *filename_groups_root,
    else{
      SID_log("Initializing...",SID_LOG_OPEN);
      if((fp_groups=fopen(filename_groups,"r"))!=NULL){
-        int group_length_i=0;
+        int    group_length_i=0;
         if(SID.I_am_Master){
           int offset_size=sizeof(int);
           fread_verify(&n_groups,   sizeof(int),1,fp_groups);
           fread_verify(&offset_size,sizeof(int),1,fp_groups);
-          for(int i_group=0,n_particles=0;i_group<n_groups;i_group++){
+          for(int i_group=0;i_group<n_groups;i_group++){
              fread_verify(&group_length_i,sizeof(int),1,fp_groups);
              n_particles+=(size_t)group_length_i;
           }
@@ -596,8 +596,7 @@ void read_groups(char        *filename_groups_root,
         }
         calc_sum_global(&n_particles_local,&n_particles,1,SID_SIZE_T,CALC_MODE_DEFAULT,SID.COMM_WORLD);
         if(n_particles!=n_ids)
-           SID_trap_error("The number of loaded particles does not match the number of particles in the header (ie. %lld!=%lld)",ERROR_LOGIC,
-                          n_particles,n_ids);
+           SID_trap_error("The number of loaded particles does not match the number of particles in the header (ie. %lld!=%lld)",ERROR_LOGIC,n_particles,n_ids);
      }
      else{
         n_groups   =0;
@@ -640,11 +639,9 @@ void read_groups(char        *filename_groups_root,
       SID_trap_error("Inconsistant group count (%d!=%d) after initializing domain decomposition.",ERROR_LOGIC,n_groups_check,n_groups);
    SID_Allreduce(&n_particles_local,&n_particles_check,1,SID_SIZE_T,SID_SUM,SID.COMM_WORLD);
    if(n_particles_check!=n_particles)
-      SID_trap_error("Inconsistant particle count (%zd!=%zd) after initializing domain decomposition.",ERROR_LOGIC,
-                     n_particles_check,n_particles);
+      SID_trap_error("Inconsistant particle count (%zd!=%zd) after initializing domain decomposition.",ERROR_LOGIC,n_particles_check,n_particles);
    if(n_particles_check!=n_ids)
-      SID_trap_error("Particle count after initializing the domain decomposition does not match the header value (ie. (%lld!=%lld).",ERROR_LOGIC,
-                     n_particles_check,n_ids);
+      SID_trap_error("Particle count after initializing the domain decomposition does not match the header value (ie. (%lld!=%lld).",ERROR_LOGIC,n_particles_check,n_ids);
 
    // Read the files ...
    if(flag_read_groups||flag_read_subgroups){
