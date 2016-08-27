@@ -513,11 +513,12 @@ void read_matches(char    *filename_root_matches,
                   int     *match_count,
                   size_t  *match_index,
                   char    *match_flag_two_way,
+                  double   f_match_moment_diff_min,
                   int      flag_reject_bad_matches);
 int check_for_matching_input_files(const char *filename_root_in,int i_read);
 
 double f_goodness_n_p(double n_particles);
-int check_validity_of_match(int n_particles_halo,int n_particles_match,float match_score);
+int check_validity_of_match(int n_particles_halo,int n_particles_match,float match_score,double f_match_moment_diff_min);
 
 int check_if_halo_is_better_main_progenitor(tree_horizontal_info *target_halo,
                                             match_info           *old_progenitor,
@@ -616,7 +617,8 @@ void init_trees_horizontal_roots(tree_horizontal_info **groups,
                                  int    *max_id_group,
                                  int    *max_tree_id_group,
                                  int    *max_id_subgroup,
-                                 int    *max_tree_id_subgroup);
+                                 int    *max_tree_id_subgroup,
+                                 double  f_match_moment_diff_min);
 void init_trees_horizontal_snapshot(tree_horizontal_info *halos,
                                     match_info          **back_matches,
                                     int                   i_read,
@@ -665,6 +667,7 @@ void identify_back_matches(tree_horizontal_info **halos,
                            int     n_halos_max,
                            int     n_files,
                            char   *filename_root_matches,
+                           double  f_match_moment_diff_min,
                            int     flag_match_subgroups);
 void identify_bridges(tree_horizontal_info *halos_i,
                       int                   n_halos_i,
@@ -694,6 +697,7 @@ void identify_progenitors(tree_horizontal_info **halos,
                           int    *n_halos_2_matches,
                           char   *filename_root_matches,
                           char   *group_text_prefix,
+                          double  f_match_moment_diff_min,
                           int     flag_match_subgroups);
 void finalize_bridged_halo_list(tree_horizontal_info *halos_i,
                                 int                   n_halos_i,
@@ -895,6 +899,7 @@ void compute_trees_horizontal(char   *filename_halos_root_in,
                               int     i_read_step,
                               int     n_search,
                               int     flag_fix_bridges,
+                              double  f_match_moment_diff_min,
                               int    *flag_clean);
 void compute_forests(char *filename_root_out,int n_search_forests);
 void compute_trees_vertical(char   *filename_SSimPL_dir,

@@ -28,6 +28,7 @@ int main(int argc, char *argv[]){
   int         n_files_subgroups;
   int         n_k_match=2;
   int         flag_clean=FALSE;
+  double      f_match_moment_diff_min=F_MATCH_MOMENT_DIFF_MIN;
   FILE       *fp_in;
   FILE       *fp_out;
   char       *line=NULL;
@@ -48,6 +49,8 @@ int main(int argc, char *argv[]){
   i_read_step                 =atoi(argv[6]);
   n_search                    =atoi(argv[7]);
   flag_fix_bridges            =atoi(argv[8]);
+  if(argc==10)
+     f_match_moment_diff_min=atof(argv[9]);
 
   // Report the run time parameters
   SID_log("Constructing horizontal merger trees...",SID_LOG_OPEN|SID_LOG_TIMER);
@@ -85,6 +88,7 @@ int main(int argc, char *argv[]){
                            i_read_step,
                            n_search,
                            flag_fix_bridges,
+                           f_match_moment_diff_min,
                            &flag_clean);
 
   // Clean-up

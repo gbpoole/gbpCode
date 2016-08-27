@@ -23,6 +23,7 @@ void read_matches(char    *filename_in_dir,
                   int     *match_count,
                   size_t  *match_index,
                   char    *match_flag_two_way,
+                  double   f_match_moment_diff_min,
                   int      flag_reject_bad_matches){
    char   group_text_prefix[5];
    char   filename_in[MAX_FILENAME_LENGTH];
@@ -220,7 +221,7 @@ void read_matches(char    *filename_in_dir,
       // Apply a goodness-of-fit criterion and check that the maximum allowed score has not been exceeded
       for(i_halo=0;i_halo<(*n_groups_i);i_halo++){
          if(match_ids[i_halo]>=0){
-            if(flag_reject_bad_matches && !check_validity_of_match(n_particles_i[i_halo],match_count[i_halo],match_score[i_halo]))
+            if(flag_reject_bad_matches && !check_validity_of_match(n_particles_i[i_halo],match_count[i_halo],match_score[i_halo],f_match_moment_diff_min))
                match_ids[i_halo]=-1;
          }
       }
@@ -314,7 +315,7 @@ void read_matches(char    *filename_in_dir,
                   // Do this check first to avoid having to check if both needed n_particles_* references are defined
                   int id_j=match_ids[id_i];
                   if(id_j==j_halo){
-                     if(!flag_reject_bad_matches || check_validity_of_match(n_particles_j[j_halo],buffer_count[k_halo],buffer_score[k_halo])){
+                     if(!flag_reject_bad_matches || check_validity_of_match(n_particles_j[j_halo],buffer_count[k_halo],buffer_score[k_halo],f_match_moment_diff_min)){
                         match_flag_two_way[id_i]=TRUE; 
                         n_2way++;
                      }

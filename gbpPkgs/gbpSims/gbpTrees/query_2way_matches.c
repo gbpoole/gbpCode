@@ -119,6 +119,7 @@ int main(int argc, char *argv[]){
                match_forward_count,
                NULL,
                match_forward_2way,
+               F_MATCH_MOMENT_DIFF_MIN,
                FALSE);
   SID_log("Done.",SID_LOG_CLOSE);
   SID_log("Processing backwards matches...",SID_LOG_OPEN|SID_LOG_TIMER);
@@ -138,6 +139,7 @@ int main(int argc, char *argv[]){
                match_backward_count,
                NULL,
                match_backward_2way,
+               F_MATCH_MOMENT_DIFF_MIN,
                FALSE);
   SID_log("Done.",SID_LOG_CLOSE);
 

@@ -29,6 +29,7 @@ void identify_progenitors(tree_horizontal_info **halos,
                           int    *n_halos_2_matches,
                           char   *filename_root_matches,
                           char   *group_text_prefix,
+                          double  f_match_moment_diff_min,
                           int     flag_match_subgroups){
    SID_log("Identifying progenitors...",SID_LOG_OPEN|SID_LOG_TIMER);
 
@@ -62,6 +63,7 @@ void identify_progenitors(tree_horizontal_info **halos,
                    match_count,
                    match_index,
                    match_flag_two_way,
+                   f_match_moment_diff_min,
                    TRUE);
 
       // Determine the back match which would work best as a descendant

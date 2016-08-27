@@ -20,6 +20,7 @@ void compute_trees_horizontal(char        *filename_halo_root_in,
                               int          i_read_step,
                               int          n_search,
                               int          flag_fix_bridges,
+                              double       f_match_moment_diff_min,
                               int         *flag_clean){
   char        group_text_prefix[5];
   FILE       *fp;
@@ -272,7 +273,8 @@ void compute_trees_horizontal(char        *filename_halo_root_in,
                               &max_id_group,
                               &max_tree_id_group,
                               &max_id_subgroup,
-                              &max_tree_id_subgroup);
+                              &max_tree_id_subgroup,
+                              f_match_moment_diff_min);
 
   // The first snapshot is done now (set to defaults as the roots of trees) ... now loop over all other snapshots ...
   //   There are a bunch of counters at work here.  Because we aren't necessarily using every 
@@ -362,6 +364,7 @@ void compute_trees_horizontal(char        *filename_halo_root_in,
                                 n_halos_max,
                                 n_files,
                                 filename_root_matches,
+                                f_match_moment_diff_min,
                                 flag_match_subgroups);
 
        // Perform forward-matching
@@ -390,6 +393,7 @@ void compute_trees_horizontal(char        *filename_halo_root_in,
                             &n_halos_2_matches,
                             filename_root_matches,
                             group_text_prefix,
+                            f_match_moment_diff_min,
                             flag_match_subgroups);
 
        // Add MOST_MASSIVE substructure flags

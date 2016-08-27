@@ -31,6 +31,7 @@ int main(int argc, char *argv[]){
   int         n_dim_files;
   int         n_k_match=2;
   int         flag_clean=FALSE;
+  double      f_match_moment_diff_min=F_MATCH_MOMENT_DIFF_MIN;
   FILE       *fp_in;
   FILE       *fp_out;
   char       *line=NULL;
@@ -57,6 +58,8 @@ int main(int argc, char *argv[]){
   flag_fix_bridges            =atoi(argv[8]);
   box_size            =(double)atof(argv[9]);
   n_dim_files                 =atoi(argv[10]);
+  if(argc==12)
+     f_match_moment_diff_min=atof(argv[11]);
 
   // Initialize cosmology
   char filename_cosmology[MAX_FILENAME_LENGTH];
@@ -83,6 +86,7 @@ int main(int argc, char *argv[]){
                            i_read_step,
                            n_search,
                            flag_fix_bridges,
+                           f_match_moment_diff_min,
                            &flag_clean);
   compute_trees_vertical(filename_SSimPL_dir,
                          filename_halo_version_root,

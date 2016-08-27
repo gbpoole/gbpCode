@@ -28,7 +28,8 @@ void init_trees_horizontal_roots(tree_horizontal_info **groups,
                                  int    *max_id_group, 
                                  int    *max_tree_id_group, 
                                  int    *max_id_subgroup, 
-                                 int    *max_tree_id_subgroup){
+                                 int    *max_tree_id_subgroup,
+                                 double  f_match_moment_diff_min){
   SID_log("Initializing tree roots...",SID_LOG_OPEN|SID_LOG_TIMER);
 
   // Initialize everything to a 1:1 simple match
@@ -50,6 +51,7 @@ void init_trees_horizontal_roots(tree_horizontal_info **groups,
                match_count,
                match_index,
                NULL,
+               f_match_moment_diff_min,
                TRUE);
 
   int  n_groups=n_halos_1_matches;
@@ -150,6 +152,7 @@ void init_trees_horizontal_roots(tree_horizontal_info **groups,
                match_count,
                match_index,
                NULL,
+               f_match_moment_diff_min,
                TRUE);
 
   int n_subgroups=n_halos_1_matches;

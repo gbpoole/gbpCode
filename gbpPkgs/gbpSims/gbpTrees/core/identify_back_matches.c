@@ -26,6 +26,7 @@ void identify_back_matches(tree_horizontal_info **halos,
                            int     n_halos_max,
                            int     n_files,
                            char   *filename_root_matches,
+                           double  f_match_moment_diff_min,
                            int     flag_match_subgroups){
     SID_log("Identifying back-matches...",SID_LOG_OPEN|SID_LOG_TIMER);
     SID_set_verbosity(SID_SET_VERBOSITY_RELATIVE,-1);
@@ -74,6 +75,7 @@ void identify_back_matches(tree_horizontal_info **halos,
                     match_count,
                     match_index,
                     NULL,
+                    f_match_moment_diff_min,
                     TRUE);
 
        // Store halo sizes for the current snapshot's halos
@@ -139,6 +141,7 @@ void identify_back_matches(tree_horizontal_info **halos,
                     match_count,
                     match_index,
                     match_flag_two_way,
+                    f_match_moment_diff_min,
                     TRUE);
 
        if(n_halos_1_matches>0 && n_halos_2_matches>0){
@@ -172,6 +175,7 @@ void identify_back_matches(tree_horizontal_info **halos,
                        match_count,
                        match_index,
                        match_flag_two_way,
+                       f_match_moment_diff_min,
                        TRUE);
 
           // Scan over all the current snapshot's halos ...
