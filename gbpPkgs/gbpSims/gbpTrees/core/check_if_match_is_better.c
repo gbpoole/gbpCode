@@ -30,9 +30,9 @@ int check_if_match_is_better(tree_horizontal_info *target_halo,
                flag_valid=FALSE;
             // ... otherwise, select via secondary criteria ...
             else if(file_offset_new==file_offset_old){
-               // If equally immediate, give first preference to 2-way matches ...
-               if(old_match->flag_two_way)
-                  flag_valid=FALSE;
+               //// If equally immediate, give first preference to 2-way matches ...
+               //if(old_match->flag_two_way)
+               //   flag_valid=FALSE;
                // ... otherwise, give secondary preference to the halo with the best metrics.
                //     Unfortunately, the best choice of metric(s) is not perfectly obvious:
                //    ... using match score for this decision introduces the problem
@@ -44,7 +44,8 @@ int check_if_match_is_better(tree_horizontal_info *target_halo,
                //        introduced by transient exchanges of outer halo particles or
                //        (equivilantly) by changes in the identity of the substructure
                //        core the halo finder reports as the centre of the system
-               else if(!new_match->flag_two_way && (old_match->score>new_match->score))
+               //else if(!new_match->flag_two_way && (old_match->score>new_match->score))
+               if(old_match->score>new_match->score)
                   flag_valid=FALSE;
             }
          }
