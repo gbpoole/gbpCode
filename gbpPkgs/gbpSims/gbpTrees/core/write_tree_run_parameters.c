@@ -7,14 +7,15 @@
 #include <gbpHalos.h>
 #include <gbpTrees_build.h>
 
-void write_tree_run_parameters(char *filename_root_out,
-                               int   i_read_start,
-                               int   i_read_stop,
-                               int   i_read_step,
-                               int   n_search,
-                               int   flag_fix_bridges,
-                               int   flag_compute_fragmented,
-                               int   flag_compute_ghosts){
+void write_tree_run_parameters(char  *filename_root_out,
+                               int    i_read_start,
+                               int    i_read_stop,
+                               int    i_read_step,
+                               int    n_search,
+                               double f_match_moment_diff_min,
+                               int    flag_fix_bridges,
+                               int    flag_compute_fragmented,
+                               int    flag_compute_ghosts){
    // Open file
    FILE *fp_out;
    char  filename_out[MAX_FILENAME_LENGTH];
@@ -31,7 +32,7 @@ void write_tree_run_parameters(char *filename_root_out,
    fprintf(fp_out,"#flag_fix_bridges        %d\n",flag_fix_bridges);
    fprintf(fp_out,"#flag_compute_fragmented %d\n",flag_compute_fragmented);
    fprintf(fp_out,"#flag_compute_ghosts     %d\n",flag_compute_ghosts);
-   fprintf(fp_out,"#f_match_moment_diff_min %f\n",F_MATCH_MOMENT_DIFF_MIN);
+   fprintf(fp_out,"#f_match_moment_diff_min %f\n",f_match_moment_diff_min);
    fprintf(fp_out,"#n_p_match_min           %f\n",N_P_MATCH_MIN);
 
    // Close file

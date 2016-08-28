@@ -192,6 +192,7 @@ void compute_trees_horizontal(char        *filename_halo_root_in,
                             i_read_stop,
                             i_read_step,
                             n_search,
+                            f_match_moment_diff_min,
                             flag_fix_bridges,
                             flag_compute_fragmented,
                             flag_compute_ghosts);
