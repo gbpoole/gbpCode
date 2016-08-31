@@ -11,5 +11,5 @@ int check_validity_of_match(int n_particles_halo,int n_particles_match,float mat
    double f_0    =(double)n_particles_match/(double)n_particles_halo;
    double f_m1   =match_score_f_goodness(match_score,n_particles_halo);
    double f_diff =f_m1-f_0;
-   return(f_diff>=f_match_moment_diff_min && n_particles_match>N_P_MATCH_MIN);
+   return(f_diff>=f_match_moment_diff_min && n_particles_match>=N_P_MATCH_MIN);
 }

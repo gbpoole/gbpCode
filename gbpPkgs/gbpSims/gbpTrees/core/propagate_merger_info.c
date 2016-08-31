@@ -12,10 +12,7 @@ void propagate_merger_info(tree_horizontal_extended_info **groups,   int *n_grou
                            int          n_wrap){
    SID_log("Propagating merger information for snapshot #%03d...",SID_LOG_OPEN,j_read);
    // Process groups
-   int i_group;
-   int i_subgroup;
-   int j_subgroup;
-   for(i_group=0,i_subgroup=0;i_group<n_groups[l_read];i_group++){
+   for(int i_group=0,i_subgroup=0;i_group<n_groups[l_read];i_group++){
       // Set merger flags...
       //    ... first, find the primary halo ...
       tree_horizontal_extended_info *this_group   =&(groups[i_read%n_wrap][i_group]);
@@ -24,10 +21,10 @@ void propagate_merger_info(tree_horizontal_extended_info **groups,   int *n_grou
       int n_progenitors=0;
       while(current_group!=NULL){
          // Decide if this halo is a better primary
-         if((current_group->n_particles_peak)>(primary_group->n_particles_peak)){
-            // Don't set fragmented halos to be primaries if it can be avoided
-            int flag_frag_old=check_if_extended_type_is_fragmented(primary_group);
-            int flag_frag_new=check_if_extended_type_is_fragmented(current_group);
+         // Don't set fragmented halos to be primaries if it can be avoided
+         int flag_frag_old=check_if_extended_type_is_fragmented(primary_group);
+         int flag_frag_new=check_if_extended_type_is_fragmented(current_group);
+         if((current_group->n_particles_peak>primary_group->n_particles_peak) || (!flag_frag_new && flag_frag_old)){
             if(!flag_frag_new || flag_frag_new==flag_frag_old)
                primary_group=current_group;
          }
@@ -46,7 +43,7 @@ void propagate_merger_info(tree_horizontal_extended_info **groups,   int *n_grou
          }
       }
       // Process subgroups
-      for(j_subgroup=0;j_subgroup<n_subgroups_group[i_read%n_wrap][i_group];i_subgroup++,j_subgroup++){
+      for(int j_subgroup=0;j_subgroup<n_subgroups_group[i_read%n_wrap][i_group];i_subgroup++,j_subgroup++){
          // Set merger flags...
          //    ... first, find the primary halo ...
          tree_horizontal_extended_info *this_subgroup   =&(subgroups[i_read%n_wrap][i_subgroup]);
@@ -55,10 +52,10 @@ void propagate_merger_info(tree_horizontal_extended_info **groups,   int *n_grou
          n_progenitors=0;
          while(current_subgroup!=NULL){
             // Decide if this halo is a better primary
-            if((current_subgroup->n_particles_peak)>(primary_subgroup->n_particles_peak)){
-               // Don't set fragmented halos to be primaries if it can be avoided
-               int flag_frag_old=check_if_extended_type_is_fragmented(primary_subgroup);
-               int flag_frag_new=check_if_extended_type_is_fragmented(current_subgroup);
+            // Don't set fragmented halos to be primaries if it can be avoided
+            int flag_frag_old=check_if_extended_type_is_fragmented(primary_subgroup);
+            int flag_frag_new=check_if_extended_type_is_fragmented(current_subgroup);
+            if((current_subgroup->n_particles_peak>primary_subgroup->n_particles_peak) || (!flag_frag_new && flag_frag_old)){
                if(!flag_frag_new || flag_frag_new==flag_frag_old)
                   primary_subgroup=current_subgroup;
             }

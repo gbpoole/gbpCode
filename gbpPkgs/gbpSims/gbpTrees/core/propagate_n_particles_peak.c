@@ -43,7 +43,7 @@ void propagate_n_particles_peak(tree_horizontal_extended_info **groups,   int *n
          // ... else check current size against a (previously) propagated result.
          //     To protect against transient mass exchanges, we only consider situations
          //     where non-dominants are satellites or dominants are centrals
-         else if(flag_most_massive==flag_dominant)
+         else if(!(flag_most_massive && !flag_dominant))
             this_subgroup->n_particles_peak=MAX(this_subgroup->n_particles_peak,this_subgroup->n_particles);
 
          // Propagate peak particle counts forward (unless this halo is a merging fragment)

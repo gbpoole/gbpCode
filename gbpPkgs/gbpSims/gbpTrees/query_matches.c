@@ -140,7 +140,7 @@ int main(int argc, char *argv[]){
                      match_count,
                      NULL,
                      match_2way,
-                     F_MATCH_MOMENT_DIFF_MIN,
+                     F_MATCH_MOMENT_DIFF_MIN_DEFAULT,
                      FALSE);
 
         // Check for goodness of match
@@ -148,7 +148,7 @@ int main(int argc, char *argv[]){
         int n_particles_j_i=0;
         if(match_ids[i_halo]>=0)
            n_particles_j_i=n_particles_j[match_ids[i_halo]];
-        if(check_validity_of_match(n_particles_i[i_halo],match_count[i_halo],match_score[i_halo],F_MATCH_MOMENT_DIFF_MIN))
+        if(check_validity_of_match(n_particles_i[i_halo],match_count[i_halo],match_score[i_halo],F_MATCH_MOMENT_DIFF_MIN_DEFAULT))
            sprintf(goodness_of_match_text,"good");
         else
            sprintf(goodness_of_match_text,"bad");
@@ -209,7 +209,7 @@ int main(int argc, char *argv[]){
                      match_count,
                      NULL,
                      match_2way,
-                     F_MATCH_MOMENT_DIFF_MIN,
+                     F_MATCH_MOMENT_DIFF_MIN_DEFAULT,
                      FALSE);
 
         // Write desired information
@@ -221,7 +221,7 @@ int main(int argc, char *argv[]){
             int n_particles_j_i=0;
             if(match_ids[i_halo]>=0)
                n_particles_j_i=n_particles_j[j_halo];
-            if(check_validity_of_match(n_particles_i[i_halo],match_count[i_halo],match_score[i_halo],F_MATCH_MOMENT_DIFF_MIN))
+            if(check_validity_of_match(n_particles_i[i_halo],match_count[i_halo],match_score[i_halo],F_MATCH_MOMENT_DIFF_MIN_DEFAULT))
                sprintf(goodness_of_match_text,"good");
             else
                sprintf(goodness_of_match_text,"bad");

@@ -113,7 +113,7 @@ int main(int argc, char *argv[]){
                match_count,
                match_index,
                NULL,
-               F_MATCH_MOMENT_DIFF_MIN,
+               F_MATCH_MOMENT_DIFF_MIN_DEFAULT,
                FALSE);
 
   // Create a storage array mapping the indices of the second catalog

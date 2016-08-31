@@ -33,7 +33,7 @@ void write_tree_run_parameters(char  *filename_root_out,
    fprintf(fp_out,"#flag_compute_fragmented %d\n",flag_compute_fragmented);
    fprintf(fp_out,"#flag_compute_ghosts     %d\n",flag_compute_ghosts);
    fprintf(fp_out,"#f_match_moment_diff_min %f\n",f_match_moment_diff_min);
-   fprintf(fp_out,"#n_p_match_min           %f\n",N_P_MATCH_MIN);
+   fprintf(fp_out,"#n_p_match_min           %d\n",N_P_MATCH_MIN);
 
    // Close file
    fclose(fp_out);

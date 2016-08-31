@@ -93,10 +93,10 @@ void propagate_progenitor_info(int         *n_groups,
      // Wait until we've loaded n_search+1 snapshots
      //    before starting to process or write results.
      if(j_file>n_search){
-        // Note: the order of the functions called here is important.
+        // Note: the order of the functions called here is important!
         if(j_process<=i_read_stop){
            // Decide which halos are primaries and secondaries in merger events.
-           //    Set's flags for progenitors.  All progenitor peak particle
+           //    Sets flags for progenitors.  All progenitor peak particle
            //    counts must be set at this point.  Those for current
            //    or descendants' snapshots don't have to be set.
            propagate_merger_info(groups_read,   n_groups,
@@ -146,9 +146,11 @@ void propagate_progenitor_info(int         *n_groups,
            }
 
            // Set the identy of the dominant substructures of each group.
-           //    This needs to be complete for all descendants before 
+           //    This needs to be complete for this snapshot before 
            //    propagate_n_particles_peak() can be called.  Initializes
-           //    uninitialized halos and propagates results to descendants.
+           //    uninitialized halos for this snapshot (hence, needs to be
+           //    done before propagate_n_particles_peak) and propagates 
+           //    results to descendants.
            propagate_dominant_substructures(groups_read,   n_groups,
                                             subgroups_read,n_subgroups,
                                             n_subgroups_group,
@@ -158,10 +160,10 @@ void propagate_progenitor_info(int         *n_groups,
                                             i_read_step,
                                             n_wrap);
 
-           // Propagate the peak particle counts forward. 
-           //    Fragmented flags and peak particle counts
-           //    for this snapshot and for any descendants 
-           //    need to have been set.
+           // Initialize and propagate the peak particle counts forward. 
+           //    Fragmented flags for this snapshot and any 
+           //    descendants as well as dominant flags for 
+           //    this snapshot need to have been set.
            propagate_n_particles_peak(groups_read,   n_groups,
                                       subgroups_read,n_subgroups,
                                       n_subgroups_group,

@@ -62,18 +62,18 @@ void propagate_fix_fragmented_info(tree_horizontal_extended_info **groups,   int
 
       // Process subgroups
       for(j_subgroup=0;j_subgroup<n_subgroups_group[i_read%n_wrap][i_group];i_subgroup++,j_subgroup++){
-         int subgroup_id                =subgroups[i_read%n_wrap][i_subgroup].id;
-         int subgroup_tree_id           =subgroups[i_read%n_wrap][i_subgroup].tree_id;
-         int subgroup_descendant_id     =subgroups[i_read%n_wrap][i_subgroup].descendant_id;
-         int subgroup_type              =subgroups[i_read%n_wrap][i_subgroup].type;
-         int subgroup_score_desc        =subgroups[i_read%n_wrap][i_subgroup].score_desc;
-         int subgroup_score_prog        =subgroups[i_read%n_wrap][i_subgroup].score_prog;
-         int subgroup_snap_bridge       =subgroups[i_read%n_wrap][i_subgroup].snap_bridge;
-         int subgroup_file_bridge       =subgroups[i_read%n_wrap][i_subgroup].file_bridge;
-         int subgroup_index_bridge      =subgroups[i_read%n_wrap][i_subgroup].index_bridge;
-         int subgroup_id_bridge         =subgroups[i_read%n_wrap][i_subgroup].id_bridge;
-         int subgroup_file_offset       =subgroups[i_read%n_wrap][i_subgroup].descendant_file_offset;
-         int subgroup_index             =subgroups[i_read%n_wrap][i_subgroup].descendant_index;
+         int subgroup_id           =subgroups[i_read%n_wrap][i_subgroup].id;
+         int subgroup_tree_id      =subgroups[i_read%n_wrap][i_subgroup].tree_id;
+         int subgroup_descendant_id=subgroups[i_read%n_wrap][i_subgroup].descendant_id;
+         int subgroup_type         =subgroups[i_read%n_wrap][i_subgroup].type;
+         int subgroup_score_desc   =subgroups[i_read%n_wrap][i_subgroup].score_desc;
+         int subgroup_score_prog   =subgroups[i_read%n_wrap][i_subgroup].score_prog;
+         int subgroup_snap_bridge  =subgroups[i_read%n_wrap][i_subgroup].snap_bridge;
+         int subgroup_file_bridge  =subgroups[i_read%n_wrap][i_subgroup].file_bridge;
+         int subgroup_index_bridge =subgroups[i_read%n_wrap][i_subgroup].index_bridge;
+         int subgroup_id_bridge    =subgroups[i_read%n_wrap][i_subgroup].id_bridge;
+         int subgroup_file_offset  =subgroups[i_read%n_wrap][i_subgroup].descendant_file_offset;
+         int subgroup_index        =subgroups[i_read%n_wrap][i_subgroup].descendant_index;
 
          // For every halo that is fragmented in this snapshot, we need
          //    to check if it should be.  Scan their progenitors for a merger primary.

@@ -31,7 +31,7 @@ int main(int argc, char *argv[]){
   int         n_dim_files;
   int         n_k_match=2;
   int         flag_clean=FALSE;
-  double      f_match_moment_diff_min=F_MATCH_MOMENT_DIFF_MIN;
+  double      f_match_moment_diff_min=F_MATCH_MOMENT_DIFF_MIN_DEFAULT;
   FILE       *fp_in;
   FILE       *fp_out;
   char       *line=NULL;
