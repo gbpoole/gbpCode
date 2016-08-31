@@ -9,7 +9,7 @@ void init_trees_horizontal_stats(tree_horizontal_stats_info *stats,int n_halos){
    stats->n_emerged                  =0;
    stats->n_fragmented_strayed       =0;
    stats->n_fragmented_normal        =0;
-   stats->n_fragmented_ejected       =0;
+   stats->n_fragmented_other         =0;
    stats->n_emerged_progenitors      =0;
    stats->n_invalid                  =0;
    stats->n_unprocessed              =0;
@@ -19,7 +19,7 @@ void init_trees_horizontal_stats(tree_horizontal_stats_info *stats,int n_halos){
    stats->max_emerged_size           =0;
    stats->max_fragmented_strayed_size=0;
    stats->max_fragmented_normal_size =0;
-   stats->max_fragmented_ejected_size=0;
+   stats->max_fragmented_other_size  =0;
    stats->max_emerged_progenitor_size=0;
    stats->max_id                     =0;
 }

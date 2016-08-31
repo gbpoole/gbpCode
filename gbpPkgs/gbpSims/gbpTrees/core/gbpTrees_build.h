@@ -172,7 +172,7 @@ struct tree_horizontal_stats_info {
    int n_emerged;
    int n_fragmented_strayed;
    int n_fragmented_normal;
-   int n_fragmented_ejected;
+   int n_fragmented_other;
    int n_emerged_progenitors;
    int n_invalid;
    int n_unprocessed;
@@ -182,7 +182,7 @@ struct tree_horizontal_stats_info {
    int max_emerged_size;
    int max_fragmented_strayed_size;
    int max_fragmented_normal_size;
-   int max_fragmented_ejected_size;
+   int max_fragmented_other_size;
    int max_emerged_progenitor_size;
    int max_id;
 };

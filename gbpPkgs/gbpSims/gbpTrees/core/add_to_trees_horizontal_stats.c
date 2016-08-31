@@ -45,8 +45,8 @@ void add_to_trees_horizontal_stats(tree_horizontal_stats_info *stats,int id,int 
       stats->n_fragmented_normal++;
    }
    if(check_mode_for_flag(type,TREE_CASE_FRAGMENTED_OTHER)){
-      stats->max_fragmented_ejected_size=MAX(stats->max_fragmented_ejected_size,n_particles);
-      stats->n_fragmented_ejected++;
+      stats->max_fragmented_other_size=MAX(stats->max_fragmented_other_size,n_particles);
+      stats->n_fragmented_other++;
    }
 
    // Sanity checks
