@@ -10,7 +10,7 @@ void propagate_fix_fragmented_info(tree_horizontal_extended_info **groups,   int
                                    int          l_read,
                                    int          i_read_step,
                                    int          n_wrap){
-   SID_log("Propagating fragmented halo information for snapshot #%03d...",SID_LOG_OPEN,j_read);
+   SID_log("Correcting fragmented halo information for snapshot #%03d...",SID_LOG_OPEN,j_read);
    // Process groups
    int i_group;
    int i_subgroup;

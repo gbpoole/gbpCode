@@ -38,7 +38,6 @@ int precompute_treenode_markers_recursive(tree_info *trees,tree_markers_info **m
       //     double          M_peak;
       //   };
 
-         
       // Set defaults (also: stuff that gets set here will be available to this halo's progenitors)
       //    Also: anything having to do with peak mass should already have been set.
       if(halo->descendant==NULL || (*markers_descendant)==NULL) 
