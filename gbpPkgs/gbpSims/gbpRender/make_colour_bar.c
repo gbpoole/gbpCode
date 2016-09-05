@@ -36,7 +36,8 @@ int main(int argc, char *argv[]){
   }
   set_image_RGB(image,
                 0.,
-                1.);
+                1.,
+                FALSE);
   write_image(image,".",file_out,WRITE_IMAGE_PNG);
   free_image(&image);
   SID_log("Done.",SID_LOG_CLOSE);

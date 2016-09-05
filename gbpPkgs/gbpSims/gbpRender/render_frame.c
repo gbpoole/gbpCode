@@ -2366,27 +2366,29 @@ void render_frame(render_info  *render){
        }
     }
 
+    // log functionality has been passed to to output phase
+    //   to preserve precision and to make post-rendering changes easier
     // Take log_10 (if needed)
-    if(check_mode_for_flag(v_mode,MAKE_MAP_LOG)){
-      SID_log("Taking log of RGB image...",SID_LOG_OPEN);
-      for(i_pixel=0;i_pixel<n_pixels;i_pixel++){
-        if(mask[i_pixel])
-          RGB_image[i_pixel]=take_log10(RGB_image[i_pixel]);
-        else
-          RGB_image[i_pixel]=LOG_ZERO;
-      }
-      SID_log("Done.",SID_LOG_CLOSE);
-    }
-    if(check_mode_for_flag(w_mode,MAKE_MAP_LOG)){
-      SID_log("Taking log of Y image...",SID_LOG_OPEN);
-      for(i_pixel=0;i_pixel<n_pixels;i_pixel++){
-        if(mask[i_pixel])
-          Y_image[i_pixel]=take_log10(Y_image[i_pixel]);
-        else
-          Y_image[i_pixel]=LOG_ZERO;
-      }
-      SID_log("Done.",SID_LOG_CLOSE);
-    }
+    //if(check_mode_for_flag(v_mode,MAKE_MAP_LOG)){
+    //  SID_log("Taking log of RGB image...",SID_LOG_OPEN);
+    //  for(i_pixel=0;i_pixel<n_pixels;i_pixel++){
+    //    if(mask[i_pixel])
+    //      RGB_image[i_pixel]=take_log10(RGB_image[i_pixel]);
+    //    else
+    //      RGB_image[i_pixel]=LOG_ZERO;
+    //  }
+    //  SID_log("Done.",SID_LOG_CLOSE);
+    //}
+    //if(check_mode_for_flag(w_mode,MAKE_MAP_LOG)){
+    //  SID_log("Taking log of Y image...",SID_LOG_OPEN);
+    //  for(i_pixel=0;i_pixel<n_pixels;i_pixel++){
+    //    if(mask[i_pixel])
+    //      Y_image[i_pixel]=take_log10(Y_image[i_pixel]);
+    //    else
+    //      Y_image[i_pixel]=LOG_ZERO;
+    //  }
+    //  SID_log("Done.",SID_LOG_CLOSE);
+    //}
 
     // Compute some image statistics
     double min_RGB_image;

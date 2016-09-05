@@ -12,14 +12,13 @@
 #endif
 
 #define MAKE_MAP_DEFAULT       0
-#define MAKE_MAP_LOG           TTTP01
-#define MAKE_MAP_APPLY_DIMMING TTTP02
-#define MAKE_MAP_COLOUR        TTTP03
-#define MAKE_MAP_LUMINOSITY    TTTP04
-#define MAKE_MAP_NO_WEIGHTING  TTTP05
-#define MAKE_MAP_MODE_RHO      TTTP06
-#define MAKE_MAP_MODE_SIGMA    TTTP07
-#define MAKE_MAP_INV_SIGMA     TTTP08
+#define MAKE_MAP_APPLY_DIMMING TTTP01
+#define MAKE_MAP_COLOUR        TTTP02
+#define MAKE_MAP_LUMINOSITY    TTTP03
+#define MAKE_MAP_NO_WEIGHTING  TTTP04
+#define MAKE_MAP_MODE_RHO      TTTP05
+#define MAKE_MAP_MODE_SIGMA    TTTP06
+#define MAKE_MAP_INV_SIGMA     TTTP07
 
 #define N_KERNEL_TABLE      20000
 #define SPH_KERNEL_2D       TTTP01
@@ -27,25 +26,27 @@
 #define SPH_KERNEL_GASOLINE TTTP03
 #define SPH_KERNEL_GAUSSIAN TTTP04
 
-#define CAMERA_MONO            0
-#define CAMERA_STEREO          2
-#define CAMERA_PLANE_PARALLEL  4
+#define CAMERA_MONO            TTTP00
+#define CAMERA_STEREO          TTTP01
+#define CAMERA_PLANE_PARALLEL  TTTP02
+#define CAMERA_LOG_RGB         TTTP03
+#define CAMERA_LOG_Y           TTTP04
 #define CAMERA_DEFAULT         CAMERA_MONO
 
 #define CAMERA_RGB_MODE_1CHANNEL TTTP01
 #define CAMERA_RGB_MODE_3CHANNEL TTTP02
 #define CAMERA_RGB_MODE_DEFAULT  CAMERA_RGB_MODE_1CHANNEL|CAMERA_RGB_MODE_3CHANNEL
 
-#define RENDER_INIT_PERSPECTIVE 1
-#define RENDER_INIT_EVOLVE      2
+#define RENDER_INIT_PERSPECTIVE TTTP01
+#define RENDER_INIT_EVOLVE      TTTP02
 #define RENDER_INIT_DEFAULT     RENDER_INIT_PERSPECTIVE
 
-#define SET_RENDER_DEFAULT 2
-#define SET_RENDER_RESCALE 4
-#define SET_RENDER_GADGET  8
+#define SET_RENDER_DEFAULT TTTP01
+#define SET_RENDER_RESCALE TTTP02
+#define SET_RENDER_GADGET  TTTP03
 
-#define WRITE_FRAME_DEFAULT  2
-#define WRITE_FRAME_PNG_ONLY 4
+#define WRITE_FRAME_DEFAULT  TTTP01
+#define WRITE_FRAME_PNG_ONLY TTTP02
 
 #define RENDER_SWS_FLAGS      SWS_BICUBIC
 #define RENDER_FORMAT_DEFAULT "mpeg"
@@ -55,10 +56,11 @@
 
 #define WRITE_IMAGE_PNG      TTTP01
 #define WRITE_IMAGE_RAW      TTTP02
+#define WRITE_IMAGE_LOG      TTTP03
 #define WRITE_IMAGE_DEFAULT  (WRITE_IMAGE_PNG|WRITE_IMAGE_RAW)
 
-#define READ_GADGET_RENDER_SCATTER    2
-#define READ_GADGET_RENDER_ID_ORDERED 4
+#define READ_GADGET_RENDER_SCATTER    TTTP01
+#define READ_GADGET_RENDER_ID_ORDERED TTTP02
 #define READ_GADGET_RENDER_DEFAULT    READ_GADGET_RENDER_SCATTER
 
 #define RENDER_INVALID_SSIMPL_DIR ":%* invalid directory *%:"
@@ -334,21 +336,25 @@ void create_colour_table(int     colourmapselect,
 
 void set_image_RGB(image_info *image,
                    double      image_min,
-                   double      image_max);
+                   double      image_max,
+                   int         flag_RGB_log);
 void set_image_RGBY(image_info *image_RGBY_in,
                     image_info *image_RGB_in,
                     image_info *image_Y_in,
                     double      RGB_min,
                     double      RGB_max,
                     double      Y_min,
-                    double      Y_max);
+                    double      Y_max,
+                    int         flag_RGB_log,
+                    int         flag_Y_log);
 void set_image_RGBY_3CHANNEL(image_info *image_RGBY_3CHANNEL_in,
                              image_info *image_RY_in,
                              image_info *image_GY_in,
                              image_info *image_BY_in,
                              image_info *image_Y_in,
                              double      Y_min,
-                             double      Y_max);
+                             double      Y_max,
+                             int         flag_Y_log);
 
 void write_image(image_info *image,const char *filename_dir,const char *filename_root,int mode);
 void read_image (image_info *image,const char *filename_dir,const char *filename_root);

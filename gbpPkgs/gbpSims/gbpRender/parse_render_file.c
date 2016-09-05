@@ -242,9 +242,9 @@ void parse_render_file(render_info **render, char *filename){
                char next_word[32];
                grab_word(line,i_word,next_word);
                if(!strcmp(next_word,"linear"))
-                  (*render)->v_mode&=(~MAKE_MAP_LOG);
+                  (*render)->camera->camera_mode&=(~CAMERA_LOG_RGB);
                else if(!strcmp(next_word,"log"))
-                  (*render)->v_mode|=MAKE_MAP_LOG;
+                  (*render)->camera->camera_mode|=CAMERA_LOG_RGB;
                else
                   SID_log("Ignoring unknown RGB_range modifier {%s}.",SID_LOG_COMMENT,next_word);
                i_word++;
@@ -281,9 +281,9 @@ void parse_render_file(render_info **render, char *filename){
                char next_word[32];
                grab_word(line,i_word,next_word);
                if(!strcmp(next_word,"linear"))
-                  (*render)->w_mode&=(~MAKE_MAP_LOG);
+                  (*render)->camera->camera_mode&=(~CAMERA_LOG_Y);
                else if(!strcmp(next_word,"log"))
-                  (*render)->w_mode|=MAKE_MAP_LOG;
+                  (*render)->camera->camera_mode|=CAMERA_LOG_Y;
                else
                   SID_log("Ignoring unknown Y_range modifier {%s}.",SID_LOG_COMMENT,next_word);
                i_word++;
