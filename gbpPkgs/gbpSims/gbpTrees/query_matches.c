@@ -116,6 +116,7 @@ int main(int argc, char *argv[]){
   fprintf(fp_out,"#        (%02d): Match score\n",             i_column++);
   fprintf(fp_out,"#        (%02d): Match count\n",             i_column++);
   fprintf(fp_out,"#        (%02d): Match score f_goodness\n",  i_column++);
+  fprintf(fp_out,"#        (%02d): Delta_f_g=f^(-1)-f^(0)\n",  i_column++);
   fprintf(fp_out,"#        (%02d): 2-way or 1-way match?\n",   i_column++);
   fprintf(fp_out,"#        (%02d): Good or bad match?\n",      i_column++);
 
@@ -162,8 +163,11 @@ int main(int argc, char *argv[]){
 
         // Write desired information
         match=match_ids[i_halo];
+        float f_g_m1 =match_score_f_goodness(match_score[i_halo],n_particles_i[i_halo]);
+        float f_g_0  =(float)match_count[i_halo]/(float)n_particles_i[i_halo];
+        float Delta_f=f_g_m1-f_g_0;
         if(match>=0)
-          fprintf(fp_out,"%3d %7d %6d %3d %7d %6d %10.3le %7d %10.3le %s %s\n",
+          fprintf(fp_out,"%3d %7d %6d %3d %7d %6d %10.3le %7d %10.3le %10.3e %s %s\n",
                          i_read,
                          i_halo,
                          n_particles_i[i_halo],
@@ -172,17 +176,19 @@ int main(int argc, char *argv[]){
                          n_particles_j[match],
                          match_score[i_halo],
                          match_count[i_halo],
-                         match_score_f_goodness(match_score[i_halo],n_particles_i[i_halo]),
+                         f_g_m1,
+                         Delta_f,
                          twoway_match_text,
                          goodness_of_match_text);
         else
-          fprintf(fp_out,"%3d %7d %6d %3d %7d %6d %10.3le %7d %10.3le %s %s\n",
+          fprintf(fp_out,"%3d %7d %6d %3d %7d %6d %10.3le %7d %10.3le %10.3e %s %s\n",
                          i_read,i_halo,
                          n_particles_i[i_halo],
                          j_read,match,-1,
                          match_score[i_halo],
                          match_count[i_halo],
-                         match_score_f_goodness(match_score[i_halo],n_particles_i[i_halo]),
+                         f_g_m1,
+                         Delta_f,
                          twoway_match_text,
                          goodness_of_match_text);
      }    
@@ -233,14 +239,19 @@ int main(int argc, char *argv[]){
             else
                sprintf(twoway_match_text,"1-way");
 
-            fprintf(fp_out,"%3d %7d %6d %3d %7d %6d %10.3le %7d %10.3le %s %s\n",
+            float f_g_m1 =match_score_f_goodness(match_score[i_halo],n_particles_i[i_halo]);
+            float f_g_0  =(float)match_count[i_halo]/(float)n_particles_i[i_halo];
+            float Delta_f=f_g_m1-f_g_0;
+
+            fprintf(fp_out,"%3d %7d %6d %3d %7d %6d %10.3le %7d %10.3le %10.3e %s %s\n",
                            i_read,i_halo,
                            n_particles_i[i_halo],
                            j_read,j_halo,
                            n_particles_j[j_halo],
                            match_score[i_halo],
                            match_count[i_halo],
-                           match_score_f_goodness(match_score[i_halo],n_particles_i[i_halo]),
+                           f_g_m1,
+                           Delta_f,
                            twoway_match_text,
                            goodness_of_match_text);
           }

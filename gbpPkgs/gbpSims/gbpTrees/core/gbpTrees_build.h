@@ -4,7 +4,7 @@
 #include <gbpCosmo.h>
 
 // These parameters determine what will be considered a valid match
-#define F_MATCH_MOMENT_DIFF_MIN_DEFAULT -0.5
+#define F_MATCH_MOMENT_DIFF_MIN_DEFAULT -0.2
 #define N_P_MATCH_MIN                     10
 
 #define K_MATCH_SUBGROUPS 0
