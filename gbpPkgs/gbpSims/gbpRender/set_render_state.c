@@ -60,19 +60,15 @@ int set_render_state(render_info *render,int frame,int mode){
                             pow(perspective->p_o[2]-perspective->p_c[2],2));
 
   // Perform snapshot and smooth-file reading
-fprintf(stderr,"test1\n");
   if(!check_mode_for_flag(render->mode,SET_RENDER_RESCALE)){
-fprintf(stderr,"test2\n");
     int *snap_list=(int *)SID_malloc(sizeof(int)*render->n_interpolate);
     // Determine which snapshot(s) to use
-fprintf(stderr,"testA: %d %d\n",render->snap_a_list!=NULL,render->n_snap_a_list>0);
     if(render->snap_a_list!=NULL && render->n_snap_a_list>0){
       if(render->n_interpolate>1)
          SID_log("Selecting snapshots for t=%lf...",SID_LOG_OPEN,perspective->time);
       else
          SID_log("Selecting snapshot for t=%lf...",SID_LOG_OPEN,perspective->time);
       pick_best_snap(perspective->time,render->snap_a_list,render->n_snap_a_list,&snap_best,&snap_diff_best);
-fprintf(stderr,"test3: %d\n",snap_best);
       if(render->n_interpolate>1){
          // Determine the list of best snapshots to use
          if(snap_diff_best<0)
