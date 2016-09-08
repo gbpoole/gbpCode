@@ -128,7 +128,7 @@ void read_gadget_binary_render(char       *filename_root_in,
    // Determine file format
    gadget_read_info read_info;
    flag_filefound=init_gadget_read(filename_root_in,snapshot_number,&read_info);
-   if(!flag_filefound) SID_trap_error("Could not find snapshot w/ root={%s}.",ERROR_IO_OPEN,filename_root_in);
+   if(!flag_filefound) SID_trap_error("Could not find snapshot w/ root={%s;snap=%d}.",ERROR_IO_OPEN,filename_root_in,snapshot_number);
 
    // A file was found ... 
    if(flag_filefound){

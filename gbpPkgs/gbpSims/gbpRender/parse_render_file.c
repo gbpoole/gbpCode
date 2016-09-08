@@ -21,7 +21,7 @@ void parse_render_file(render_info **render, char *filename){
   char    parameter[64];
   char    variable[64];
   char    image[64];
-  char    c_value[64];
+  char    c_value[128];
   double  d_value;
   int     i_value;
   int     i;
@@ -223,8 +223,16 @@ void parse_render_file(render_info **render, char *filename){
             (*render)->camera->camera_mode|=CAMERA_STEREO;
           }
           else if(!strcmp(variable,"colour_table")){
-            grab_int(line,i_word++,&i_value);
-            (*render)->camera->colour_table=i_value;
+            grab_word(line,i_word++,c_value);
+
+            // Check that the colour table exisits
+            //char  filename_test[MAX_FILENAME_LENGTH];
+            //FILE *fp_test=NULL;
+            //sprintf(filename_test,"%s/gbpCode_cmap_%s.txt",GBP_DATA_DIR,c_value);
+            //if((fp_test=fopen(filename_test,"r"))==NULL)
+            //   SID_trap_error("Colour table {%s} not found.",ERROR_LOGIC,c_value);
+            //fclose(fp_test);
+            strcpy((*render)->camera->colour_table,c_value);
           }
           else if(!strcmp(variable,"plane_parallel")){
             (*render)->camera->camera_mode|=CAMERA_PLANE_PARALLEL|CAMERA_MONO;

@@ -2,9 +2,9 @@
 #include <gbpLib.h>
 #include <gbpRender.h>
 
-void init_image(int           width,
-                int           height,
-                int           colourmapselect,
+void init_image(int          width,
+                int          height,
+                const char  *colourmapselect,
                 image_info **image){
   int i_pixel;
 
@@ -25,7 +25,6 @@ void init_image(int           width,
     (*image)->values[i_pixel]=0.;
 
   // Set colourtable
-  (*image)->n_colours=256;
-  (*image)->colourmapselect=colourmapselect;
-  create_colour_table(colourmapselect,(*image)->n_colours,&((*image)->colour_table));
+  strcpy((*image)->colourmapselect,colourmapselect);
+  create_colour_table(colourmapselect,&((*image)->n_colours),&((*image)->colour_table));
 }

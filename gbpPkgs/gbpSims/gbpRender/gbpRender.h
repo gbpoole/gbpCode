@@ -75,7 +75,7 @@ struct image_info{
   double           range[2];
   int            **colour_table;
   double          *values;
-  int              colourmapselect;
+  char             colourmapselect[MAX_FILENAME_LENGTH];
   int              n_colours;
 };
 
@@ -145,7 +145,7 @@ struct scene_info{
 typedef struct camera_info camera_info;
 struct camera_info{
   int               camera_mode;
-  int               colour_table;
+  char              colour_table[MAX_FILENAME_LENGTH];
   int               flag_velocity_space;
   int               width;
   int               height;
@@ -327,13 +327,12 @@ void write_image_to_movie(image_info *image, movie_info *movie);
 void close_movie(movie_info *movie);
 void init_image(int          width,
                 int          height,
-                int          colourmapselect,
+                const char  *colourmapselect,
                 image_info **image);
 void free_image(image_info **image);
-void create_colour_table(int     colourmapselect,
-                         int     n_colours,
-                         int  ***colour_table);
-
+void create_colour_table(const char   *colourmapselect,
+                         int          *n_colours,
+                         int        ***rgb);
 void set_image_RGB(image_info *image,
                    double      image_min,
                    double      image_max,

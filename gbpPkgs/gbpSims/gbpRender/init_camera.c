@@ -36,7 +36,7 @@ void init_camera(camera_info **camera, int mode){
   strcpy((*camera)->Y_param,  "");
 
   // Initialize image buffers
-  (*camera)->colour_table             =9;
+  sprintf((*camera)->colour_table,"greyscale");
   (*camera)->image_RGB                =NULL;
   (*camera)->image_Y                  =NULL;
   (*camera)->image_Z                  =NULL;
