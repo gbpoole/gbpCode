@@ -232,10 +232,14 @@ void identify_back_matches(tree_horizontal_info **halos,
              if(halo_i->forematch_first.halo==back_matches[k_halo].halo) break;
           }
           // We are either overwritting a back match with a forematch or
-          //    adding it to the end of the list here
-          memcpy(&(back_matches[k_halo]),&(halo_i->forematch_first),sizeof(match_info));
-          if(k_halo==halo_i->n_back_matches)
+          //    adding it to the end of the list here.  Overwrite only if
+          //    the forward match score is >= the back match score though.
+          if(k_halo==halo_i->n_back_matches){
+             memcpy(&(back_matches[k_halo]),&(halo_i->forematch_first),sizeof(match_info));
              halo_i->n_back_matches++;
+          }
+          else if((halo_i->forematch_first.score)>=(back_matches[k_halo].score))
+             memcpy(&(back_matches[k_halo]),&(halo_i->forematch_first),sizeof(match_info));
        }
     }
     SID_log("Done.",SID_LOG_CLOSE);
