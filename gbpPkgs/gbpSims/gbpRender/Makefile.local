@@ -49,7 +49,7 @@ OBJFILES  = RGB_lookup.o                \
 	    set_image_RGBY_3CHANNEL.o   \
 	    write_image.o               \
 	    write_image_to_movie.o
-DATAFILES = rgb.txt gbpCode_cmap_red.txt gbpCode_cmap_green.txt gbpCode_cmap_blue.txt \
+DATAFILES = rgb.txt gbpCode_cmap_red.txt gbpCode_cmap_green.txt gbpCode_cmap_blue.txt gbpCode_cmap_GiggleZ.txt \
 	gbpCode_cmap_greyscale.txt           gbpCode_cmap_iso_H150_R090_C050.txt  gbpCode_cmap_iso_H300_R180_C050.txt      gbpCode_cmap_linear_H030_Rn360_C050.txt  gbpCode_cmap_linear_H120_R540_C050.txt   gbpCode_cmap_linear_H210_R270_C050.txt   gbpCode_cmap_linear_H270_Rn360_C050.txt \
 	gbpCode_cmap_iso_H000_R090_C050.txt  gbpCode_cmap_iso_H150_R180_C050.txt  gbpCode_cmap_iso_H300_R270_C050.txt      gbpCode_cmap_linear_H030_Rn540_C050.txt  gbpCode_cmap_linear_H120_Rn270_C050.txt  gbpCode_cmap_linear_H210_R360_C050.txt   gbpCode_cmap_linear_H270_Rn540_C050.txt \
 	gbpCode_cmap_iso_H000_R180_C050.txt  gbpCode_cmap_iso_H150_R270_C050.txt  gbpCode_cmap_iso_H330_R090_C050.txt      gbpCode_cmap_linear_H060_R270_C050.txt   gbpCode_cmap_linear_H120_Rn360_C050.txt  gbpCode_cmap_linear_H210_R540_C050.txt   gbpCode_cmap_linear_H300_R270_C050.txt  \
