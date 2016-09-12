@@ -282,6 +282,29 @@ struct render_info{
   int             sealed; // TRUE if the render is fully initialized
 };
 
+typedef struct map_quantities_info map_quantities_info;
+struct map_quantities_info{
+   int           flag_weigh;
+   int           flag_line_integral;
+   int          *ptype_used;
+   size_t        n_particles;
+   GBPREAL     **x;
+   GBPREAL     **y;
+   GBPREAL     **z;
+   float       **h_smooth;
+   float       **rho;
+   float       **sigma;
+   double        mass_array;
+   interp_info  *transfer_rho;
+   int           flag_transfer_rho_log;
+   interp_info  *transfer_sigma;
+   int           flag_transfer_sigma_log;
+   int           flag_comoving;
+   double        inv_expansion_factor_cubed;
+   int           v_mode;
+   int           w_mode;
+};
+
 // Function definitions
 #ifdef __cplusplus
 extern "C" {
@@ -315,6 +338,173 @@ void set_frame(camera_info *camera);
 void set_render_scale(render_info *render,double RGB_min,double RGB_max,double Y_min,double Y_max,double Z_min,double Z_max);
 int  set_transfer_function(char *line,int i_word,interp_info **return_interp);
 
+void rotate_particle(double   x_hat,
+                     double   y_hat,
+                     double   z_hat,
+                     double   theta,
+                     GBPREAL *x_i,
+                     GBPREAL *y_i,
+                     GBPREAL *z_i);
+int set_pixel_space(float   h_i,
+                    float   x_i,
+                    float   y_i,
+                    float   f_i,
+                    double  xmin,
+                    double  ymin,
+                    double  FOV_x,
+                    double  FOV_y,
+                    double  pixel_size_x,
+                    double  pixel_size_y,
+                    double  radius_kernel_max,
+                    double *radius2_norm,
+                    double *radius_kernel,
+                    double *part_pos_x,
+                    double *part_pos_y,
+                    int    *kx_min,
+                    int    *kx_max,
+                    int    *ky_min,
+                    int    *ky_max);
+void transform_particle(GBPREAL *x_i,
+                        GBPREAL *y_i,
+                        GBPREAL *z_i,
+                        double   x_o,
+                        double   y_o,
+                        double   z_o,
+                        double   x_hat,
+                        double   y_hat,
+                        double   z_hat,
+                        double   d_o,
+                        double   stereo_offset,
+                        double   theta,
+                        double   theta_roll,
+                        double   box_size,
+                        double   expansion_factor,
+                        double   focus_shift_x,
+                        double   focus_shift_y,
+                        int      flag_comoving,
+                        int      flag_force_periodic);
+void free_particle_map_quantities(map_quantities_info *mq);
+void init_particle_map_quantities(map_quantities_info *mq,render_info *render,ADaPS *transfer_list,int flag_comoving,double expansion_factor);
+void set_particle_map_quantities(render_info *render,map_quantities_info *mq,int mode,size_t i_particle,
+                                 float    box_size,
+                                 float    half_box,
+                                 float   *x_i,
+                                 float   *y_i,
+                                 float   *z_i,
+                                 float   *h_i,
+                                 float   *v_i,
+                                 float   *w_i);
+float compute_f_stretch(double d_image_plane,float z_i,int flag_plane_parallel);
+void compute_perspective_transformation(double  x_o,
+                                        double  y_o,
+                                        double  z_o,
+                                        double  x_c,
+                                        double  y_c,
+                                        double  z_c,
+                                        double  unit_factor,
+                                        const char *unit_text,
+                                        double  f_image_plane,
+                                        double  stereo_offset,
+                                        double *FOV_x,
+                                        double *FOV_y,
+                                        double *d_o,
+                                        double *x_o_out,
+                                        double *y_o_out,
+                                        double *z_o_out,
+                                        double *x_c_out,
+                                        double *y_c_out,
+                                        double *z_c_out,
+                                        double *x_hat,
+                                        double *y_hat,
+                                        double *z_hat,
+                                        double *theta,
+                                        double *theta_roll);
+int check_if_particle_marked(char **mark,int i_species,size_t i_particle,char *c_i);
+void init_make_map_noabs(render_info *render,
+                         double       x_o,
+                         double       y_o,
+                         double       z_o,
+                         double       x_c,
+                         double       y_c,
+                         double       z_c,
+                         double       unit_factor,
+                         const char  *unit_text,
+                         double       f_image_plane,
+                         double       box_size,
+                         double       FOV_x_in,
+                         double       FOV_y_in,
+                         double       xmin,
+                         double       ymin,
+                         double       pixel_size_x,
+                         double       pixel_size_y,
+                         double       radius_kernel_max,
+                         int          nx,
+                         int          ny,
+                         double       expansion_factor,
+                         double       focus_shift_x,
+                         double       focus_shift_y,
+                         double       d_near_field,
+                         double       stereo_offset,
+                         int          flag_comoving,
+                         int          flag_force_periodic,
+                         int          camera_mode,
+                         int         *flag_weigh,
+                         int         *flag_line_integral,
+                         float       **x,
+                         float       **y,
+                         float       **z,
+                         float       **h_smooth,
+                         float       **f_stretch,
+                         float       **value,
+                         float       **weight,
+                         char        **colour,
+                         size_t      **z_index,
+                         int          *i_x_min_local_return,
+                         int          *i_x_max_local_return,
+                         size_t       *n_particles);
+void init_make_map_abs(render_info *render,
+                       double       x_o,
+                       double       y_o,
+                       double       z_o,
+                       double       x_c,
+                       double       y_c,
+                       double       z_c,
+                       double       unit_factor,
+                       const char  *unit_text,
+                       double       f_image_plane,
+                       double       box_size,
+                       double       FOV_x_in,
+                       double       FOV_y_in,
+                       double       xmin,
+                       double       ymin,
+                       double       pixel_size_x,
+                       double       pixel_size_y,
+                       double       radius_kernel_max,
+                       int          nx,
+                       int          ny,
+                       double       expansion_factor,
+                       double       focus_shift_x,
+                       double       focus_shift_y,
+                       double       d_near_field,
+                       double       stereo_offset,
+                       int          flag_comoving,
+                       int          flag_force_periodic,
+                       int          camera_mode,
+                       int         *flag_weigh,
+                       int         *flag_line_integral,
+                       float       **x,
+                       float       **y,
+                       float       **z,
+                       float       **h_smooth,
+                       float       **f_stretch,
+                       float       **value,
+                       float       **weight,
+                       char        **colour,
+                       size_t      **z_index,
+                       int          *i_x_min_local_return,
+                       int          *i_x_max_local_return,
+                       size_t       *n_particles);
+void fetch_image_array(image_info *image,double **values);
 void render_frame(render_info  *render);
 
 void open_movie(char       *filename,
