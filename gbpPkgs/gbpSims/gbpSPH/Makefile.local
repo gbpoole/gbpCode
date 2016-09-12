@@ -32,6 +32,7 @@ OBJFILES  = display_gadget_header.o         \
             write_gadget_binary.o           
 LIBFILE   = libgbpSPH.a
 BINFILES  = make_snaplist              \
+	        make_expanded_snaplist     \
 	        gadget2ascii               \
 		    gadget_excise              \
 		    gadget_split               \
