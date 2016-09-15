@@ -42,8 +42,9 @@ void average_tree_branches(const char *catalog_name){
      int    **M_hist  =(int **)SID_malloc(sizeof(int *)*n_snaps);
      for(int i_snap=0;i_snap<n_snaps;i_snap++)
         M_hist[i_snap]=(int *)SID_calloc(sizeof(int)*n_M_bins);
-     int    *i_z_track=(int    *)SID_malloc(sizeof(int)*n_snaps);;
-     int    *idx_track=(int    *)SID_malloc(sizeof(int)*n_snaps);;
+     int    *i_z_track=(int    *)SID_malloc(sizeof(int)*n_snaps);
+     int    *idx_track=(int    *)SID_malloc(sizeof(int)*n_snaps);
+     int    *tc_track =(int    *)SID_malloc(sizeof(int)*n_snaps);
      double *M_track  =(double *)SID_malloc(sizeof(double)*n_snaps);
      double *x_track  =(double *)SID_malloc(sizeof(double)*n_snaps);
      double *y_track  =(double *)SID_malloc(sizeof(double)*n_snaps);
@@ -59,6 +60,7 @@ void average_tree_branches(const char *catalog_name){
         fread_verify(&n_track, sizeof(int),   1,      fp_tracks_in);
         fread_verify(i_z_track,sizeof(int),   n_track,fp_tracks_in);
         fread_verify(idx_track,sizeof(int),   n_track,fp_tracks_in);
+        fread_verify(tc_track, sizeof(int),   n_track,fp_tracks_in);
         fread_verify(x_track,  sizeof(double),n_track,fp_tracks_in);
         fread_verify(y_track,  sizeof(double),n_track,fp_tracks_in);
         fread_verify(z_track,  sizeof(double),n_track,fp_tracks_in);
@@ -68,9 +70,11 @@ void average_tree_branches(const char *catalog_name){
         fread_verify(M_track,  sizeof(double),n_track,fp_tracks_in);
         // Build the M-histograms
         for(int i_track=0;i_track<n_track;i_track++){
-           int i_bin=(int)((take_log10(M_track[i_track])-M_min)*inv_dM);
-           if(i_bin>=0 && i_bin<n_M_bins)
-              M_hist[i_z_track[i_track]][i_bin]++;
+           if(check_mode_for_flag(tc_track[i_track],TREE_CASE_MOST_MASSIVE)==check_mode_for_flag(tc_track[i_track],TREE_CASE_DOMINANT)){
+              int i_bin=(int)((take_log10(M_track[i_track])-M_min)*inv_dM);
+              if(i_bin>=0 && i_bin<n_M_bins)
+                 M_hist[i_z_track[i_track]][i_bin]++;
+           }
         }
      } // for i_list
      fclose(fp_tracks_in);

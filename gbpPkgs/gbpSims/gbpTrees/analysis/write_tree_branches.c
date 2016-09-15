@@ -152,6 +152,7 @@ void write_tree_branches(tree_info *trees,tree_node_info **list_in,int n_list_in
   // Allocate some temporary arrays for the tracks
   int    *i_z_track=(int    *)SID_malloc(sizeof(int)   *trees->n_snaps);
   int    *idx_track=(int    *)SID_malloc(sizeof(int)   *trees->n_snaps);
+  int    *tc_track =(int    *)SID_malloc(sizeof(int)   *trees->n_snaps);
   double *M_track  =(double *)SID_malloc(sizeof(double)*trees->n_snaps);
   double *x_track  =(double *)SID_malloc(sizeof(double)*trees->n_snaps);
   double *y_track  =(double *)SID_malloc(sizeof(double)*trees->n_snaps);
@@ -332,6 +333,7 @@ void write_tree_branches(tree_info *trees,tree_node_info **list_in,int n_list_in
               while(current_track!=NULL && check_treenode_if_main_progenitor(current_track)){
                  i_z_track[n_track]=current_track->snap_tree;
                  idx_track[n_track]=current_track->neighbour_index;
+                 tc_track[n_track] =current_track->tree_case;
                  x_track[n_track]  =halo_properties[i_z_track[n_track]][idx_track[n_track]].position_MBP[0];
                  y_track[n_track]  =halo_properties[i_z_track[n_track]][idx_track[n_track]].position_MBP[1];
                  z_track[n_track]  =halo_properties[i_z_track[n_track]][idx_track[n_track]].position_MBP[2];
@@ -352,18 +354,20 @@ void write_tree_branches(tree_info *trees,tree_node_info **list_in,int n_list_in
               SID_Sendrecv(&n_track,       1,SID_INT,MASTER_RANK,1918370,&n_track,       1,SID_INT,i_rank,1918370,SID.COMM_WORLD);
               SID_Sendrecv(i_z_track,n_track,SID_INT,MASTER_RANK,1918371,i_z_track,n_track,SID_INT,i_rank,1918371,SID.COMM_WORLD);
               SID_Sendrecv(idx_track,n_track,SID_INT,MASTER_RANK,1918372,idx_track,n_track,SID_INT,i_rank,1918372,SID.COMM_WORLD);
-              SID_Sendrecv(x_track,  n_track,SID_INT,MASTER_RANK,1918373,x_track,  n_track,SID_INT,i_rank,1918373,SID.COMM_WORLD);
-              SID_Sendrecv(y_track,  n_track,SID_INT,MASTER_RANK,1918374,y_track,  n_track,SID_INT,i_rank,1918374,SID.COMM_WORLD);
-              SID_Sendrecv(z_track,  n_track,SID_INT,MASTER_RANK,1918375,z_track,  n_track,SID_INT,i_rank,1918375,SID.COMM_WORLD);
-              SID_Sendrecv(vx_track, n_track,SID_INT,MASTER_RANK,1918376,vx_track, n_track,SID_INT,i_rank,1918376,SID.COMM_WORLD);
-              SID_Sendrecv(vy_track, n_track,SID_INT,MASTER_RANK,1918377,vy_track, n_track,SID_INT,i_rank,1918377,SID.COMM_WORLD);
-              SID_Sendrecv(vz_track, n_track,SID_INT,MASTER_RANK,1918378,vz_track, n_track,SID_INT,i_rank,1918378,SID.COMM_WORLD);
-              SID_Sendrecv(M_track,  n_track,SID_INT,MASTER_RANK,1918379,M_track,  n_track,SID_INT,i_rank,1918379,SID.COMM_WORLD);
+              SID_Sendrecv(tc_track, n_track,SID_INT,MASTER_RANK,1918373,tc_track, n_track,SID_INT,i_rank,1918373,SID.COMM_WORLD);
+              SID_Sendrecv(x_track,  n_track,SID_INT,MASTER_RANK,1918374,x_track,  n_track,SID_INT,i_rank,1918374,SID.COMM_WORLD);
+              SID_Sendrecv(y_track,  n_track,SID_INT,MASTER_RANK,1918375,y_track,  n_track,SID_INT,i_rank,1918375,SID.COMM_WORLD);
+              SID_Sendrecv(z_track,  n_track,SID_INT,MASTER_RANK,1918376,z_track,  n_track,SID_INT,i_rank,1918376,SID.COMM_WORLD);
+              SID_Sendrecv(vx_track, n_track,SID_INT,MASTER_RANK,1918377,vx_track, n_track,SID_INT,i_rank,1918377,SID.COMM_WORLD);
+              SID_Sendrecv(vy_track, n_track,SID_INT,MASTER_RANK,1918378,vy_track, n_track,SID_INT,i_rank,1918378,SID.COMM_WORLD);
+              SID_Sendrecv(vz_track, n_track,SID_INT,MASTER_RANK,1918379,vz_track, n_track,SID_INT,i_rank,1918379,SID.COMM_WORLD);
+              SID_Sendrecv(M_track,  n_track,SID_INT,MASTER_RANK,1918380,M_track,  n_track,SID_INT,i_rank,1918380,SID.COMM_WORLD);
            }
            if(SID.I_am_Master){
               fwrite(&n_track, sizeof(int),   1,      fp_tracks_out);
               fwrite(i_z_track,sizeof(int),   n_track,fp_tracks_out);
               fwrite(idx_track,sizeof(int),   n_track,fp_tracks_out);
+              fwrite(tc_track, sizeof(int),   n_track,fp_tracks_out);
               fwrite(x_track,  sizeof(double),n_track,fp_tracks_out);
               fwrite(y_track,  sizeof(double),n_track,fp_tracks_out);
               fwrite(z_track,  sizeof(double),n_track,fp_tracks_out);
@@ -387,6 +391,7 @@ void write_tree_branches(tree_info *trees,tree_node_info **list_in,int n_list_in
   SID_free(SID_FARG list);
   SID_free(SID_FARG i_z_track);
   SID_free(SID_FARG idx_track);
+  SID_free(SID_FARG tc_track);
   SID_free(SID_FARG M_track);
   SID_free(SID_FARG x_track);
   SID_free(SID_FARG y_track);
