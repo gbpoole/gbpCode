@@ -29,11 +29,11 @@ void seal_render_camera(render_info *render){
        init_image(render->camera->width,render->camera->height,render->camera->colour_table,&(render->camera->image_RGBY_left));
        flag_images_defined=TRUE;
     }
-    if(check_mode_for_flag(render->camera->RGB_mode,CAMERA_RGB_MODE_3CHANNEL)){
+    if(check_mode_for_flag(render->camera->RGB_mode,CAMERA_RGB_MODE_MARKED)){
        init_image(render->camera->width,render->camera->height,"red",      &(render->camera->image_RY_left));
        init_image(render->camera->width,render->camera->height,"green",    &(render->camera->image_GY_left));
        init_image(render->camera->width,render->camera->height,"blue",     &(render->camera->image_BY_left));
-       init_image(render->camera->width,render->camera->height,"greyscale",&(render->camera->image_RGBY_3CHANNEL_left));
+       init_image(render->camera->width,render->camera->height,"greyscale",&(render->camera->image_RGBY_MARKED_left));
        flag_images_defined=TRUE;
     }
     if(!flag_images_defined)
@@ -46,11 +46,11 @@ void seal_render_camera(render_info *render){
        init_image(render->camera->width,render->camera->height,render->camera->colour_table,&(render->camera->image_RGBY_right));
        flag_images_defined=TRUE;
     }
-    if(check_mode_for_flag(render->camera->RGB_mode,CAMERA_RGB_MODE_3CHANNEL)){
+    if(check_mode_for_flag(render->camera->RGB_mode,CAMERA_RGB_MODE_MARKED)){
        init_image(render->camera->width,render->camera->height,"red",      &(render->camera->image_RY_right));
        init_image(render->camera->width,render->camera->height,"green",    &(render->camera->image_GY_right));
        init_image(render->camera->width,render->camera->height,"blue",     &(render->camera->image_BY_right));
-       init_image(render->camera->width,render->camera->height,"greyscale",&(render->camera->image_RGBY_3CHANNEL_right));
+       init_image(render->camera->width,render->camera->height,"greyscale",&(render->camera->image_RGBY_MARKED_right));
        flag_images_defined=TRUE;
     }
     if(!flag_images_defined)
@@ -77,11 +77,11 @@ void seal_render_camera(render_info *render){
         init_image(render->camera->width,render->camera->height,render->camera->colour_table,&(render->camera->image_RGBY));
         flag_images_defined=TRUE;
      }
-     if(check_mode_for_flag(render->camera->RGB_mode,CAMERA_RGB_MODE_3CHANNEL)){
+     if(check_mode_for_flag(render->camera->RGB_mode,CAMERA_RGB_MODE_MARKED)){
         init_image(render->camera->width,render->camera->height,"red",      &(render->camera->image_RY));
         init_image(render->camera->width,render->camera->height,"green",    &(render->camera->image_GY));
         init_image(render->camera->width,render->camera->height,"blue",     &(render->camera->image_BY));
-        init_image(render->camera->width,render->camera->height,"greyscale",&(render->camera->image_RGBY_3CHANNEL));
+        init_image(render->camera->width,render->camera->height,"greyscale",&(render->camera->image_RGBY_MARKED));
         flag_images_defined=TRUE;
      }
      if(!flag_images_defined)

@@ -13,7 +13,7 @@ void write_frame(render_info *render,int frame,int mode){
   char filename_Y[MAX_FILENAME_LENGTH];
   char filename_Z[MAX_FILENAME_LENGTH];
   char filename_RGBY[MAX_FILENAME_LENGTH];
-  char filename_RGBY_3CHANNEL[MAX_FILENAME_LENGTH];
+  char filename_RGBY_MARKED[MAX_FILENAME_LENGTH];
   char filename_RY[MAX_FILENAME_LENGTH];
   char filename_GY[MAX_FILENAME_LENGTH];
   char filename_BY[MAX_FILENAME_LENGTH];
@@ -37,7 +37,7 @@ void write_frame(render_info *render,int frame,int mode){
      // Set image set filesnames
      image_info *image_RGB          =NULL;
      image_info *image_RGBY         =NULL;
-     image_info *image_RGBY_3CHANNEL=NULL;
+     image_info *image_RGBY_MARKED=NULL;
      image_info *image_Y            =NULL;
      image_info *image_Z            =NULL;
      image_info *image_RY           =NULL;
@@ -53,7 +53,7 @@ void write_frame(render_info *render,int frame,int mode){
         image_RY           =render->camera->image_RY_left;
         image_GY           =render->camera->image_GY_left;
         image_BY           =render->camera->image_BY_left;
-        image_RGBY_3CHANNEL=render->camera->image_RGBY_3CHANNEL_left;
+        image_RGBY_MARKED=render->camera->image_RGBY_MARKED_left;
      }
      else if(i_set==1){
         sprintf(set_label,"R");
@@ -64,7 +64,7 @@ void write_frame(render_info *render,int frame,int mode){
         image_RY           =render->camera->image_RY_right;
         image_GY           =render->camera->image_GY_right;
         image_BY           =render->camera->image_BY_right;
-        image_RGBY_3CHANNEL=render->camera->image_RGBY_3CHANNEL_right;
+        image_RGBY_MARKED=render->camera->image_RGBY_MARKED_right;
      }
      else if(i_set==2){
         sprintf(set_label,"M");
@@ -75,7 +75,7 @@ void write_frame(render_info *render,int frame,int mode){
         image_RY           =render->camera->image_RY;
         image_GY           =render->camera->image_GY;
         image_BY           =render->camera->image_BY;
-        image_RGBY_3CHANNEL=render->camera->image_RGBY_3CHANNEL;
+        image_RGBY_MARKED=render->camera->image_RGBY_MARKED;
      }
      else
         SID_trap_error("Undefined image set index in read_frame().",ERROR_LOGIC);
@@ -86,17 +86,17 @@ void write_frame(render_info *render,int frame,int mode){
      sprintf(filename_RY,           "RY_%s_%05d",           set_label,frame);
      sprintf(filename_GY,           "GY_%s_%05d",           set_label,frame);
      sprintf(filename_BY,           "BY_%s_%05d",           set_label,frame);
-     sprintf(filename_RGBY_3CHANNEL,"RGBY_3CHANNEL_%s_%05d",set_label,frame);
+     sprintf(filename_RGBY_MARKED,"RGBY_MARKED_%s_%05d",set_label,frame);
      if(check_mode_for_flag(render->camera->RGB_mode,CAMERA_RGB_MODE_1CHANNEL)){
-        write_image(image_RGB, render->filename_out_dir,filename_RGB, mode);
-        write_image(image_Y,   render->filename_out_dir,filename_Y,   mode);
+        write_image(image_RGB, render->filename_out_dir,filename_RGB, mode&(~WRITE_IMAGE_PNG));
+        write_image(image_Y,   render->filename_out_dir,filename_Y,   mode&(~WRITE_IMAGE_PNG));
         write_image(image_RGBY,render->filename_out_dir,filename_RGBY,mode);
      }
-     if(check_mode_for_flag(render->camera->RGB_mode,CAMERA_RGB_MODE_3CHANNEL)){
+     if(check_mode_for_flag(render->camera->RGB_mode,CAMERA_RGB_MODE_MARKED)){
         write_image(image_RY,           render->filename_out_dir,filename_RY,           mode&(~WRITE_IMAGE_PNG));
         write_image(image_GY,           render->filename_out_dir,filename_GY,           mode&(~WRITE_IMAGE_PNG));
         write_image(image_BY,           render->filename_out_dir,filename_BY,           mode&(~WRITE_IMAGE_PNG));
-        write_image(image_RGBY_3CHANNEL,render->filename_out_dir,filename_RGBY_3CHANNEL,mode);
+        write_image(image_RGBY_MARKED,render->filename_out_dir,filename_RGBY_MARKED,mode);
      }
      write_image(image_Z,render->filename_out_dir,filename_Z,mode);
   }

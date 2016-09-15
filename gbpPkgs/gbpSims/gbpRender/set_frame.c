@@ -23,7 +23,7 @@ void set_frame(camera_info *camera){
   image_info *image_GY;
   image_info *image_BY;
   image_info *image;
-  image_info *image_RGBY_3CHANNEL;
+  image_info *image_RGBY_MARKED;
   double     *values;
 
   // Loop over each set of images
@@ -39,7 +39,7 @@ void set_frame(camera_info *camera){
       image_RY           =camera->image_RY_left;
       image_GY           =camera->image_GY_left;
       image_BY           =camera->image_BY_left;
-      image_RGBY_3CHANNEL=camera->image_RGBY_3CHANNEL_left;
+      image_RGBY_MARKED=camera->image_RGBY_MARKED_left;
       break;
     case 1: // right image of a stereo pair
       image_RGB          =camera->image_RGB_right;
@@ -49,7 +49,7 @@ void set_frame(camera_info *camera){
       image_RY           =camera->image_RY_right;
       image_GY           =camera->image_GY_right;
       image_BY           =camera->image_BY_right;
-      image_RGBY_3CHANNEL=camera->image_RGBY_3CHANNEL_right;
+      image_RGBY_MARKED=camera->image_RGBY_MARKED_right;
       break;
     case 2: // mono image
       image_RGB          =camera->image_RGB;
@@ -59,7 +59,7 @@ void set_frame(camera_info *camera){
       image_RY           =camera->image_RY;
       image_GY           =camera->image_GY;
       image_BY           =camera->image_BY;
-      image_RGBY_3CHANNEL=camera->image_RGBY_3CHANNEL;
+      image_RGBY_MARKED=camera->image_RGBY_MARKED;
       break;
     }
 
@@ -76,11 +76,11 @@ void set_frame(camera_info *camera){
                       camera->Y_range[1],
                       flag_log_RGB,flag_log_Y);
     }
-    if(image_RGBY_3CHANNEL!=NULL){
+    if(image_RGBY_MARKED!=NULL){
        set_image_RGB(image_RY,0.,1.,FALSE);
        set_image_RGB(image_GY,0.,1.,FALSE);
        set_image_RGB(image_BY,0.,1.,FALSE);
-       set_image_RGBY_3CHANNEL(image_RGBY_3CHANNEL,
+       set_image_RGBY_MARKED(image_RGBY_MARKED,
                                image_RY,
                                image_GY,
                                image_BY,

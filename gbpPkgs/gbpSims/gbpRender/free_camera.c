@@ -14,7 +14,7 @@ void free_camera(camera_info **camera){
   SID_free(SID_FARG (*camera)->mask_RGB);
   SID_free(SID_FARG (*camera)->mask_Y);
   SID_free(SID_FARG (*camera)->mask_RGBY);
-  SID_free(SID_FARG (*camera)->mask_RGBY_3CHANNEL);
+  SID_free(SID_FARG (*camera)->mask_RGBY_MARKED);
   free_image(&((*camera)->image_RGB));
   free_image(&((*camera)->image_RGB_left));
   free_image(&((*camera)->image_RGB_right));
@@ -33,20 +33,20 @@ void free_camera(camera_info **camera){
   free_image(&((*camera)->image_BY));
   free_image(&((*camera)->image_BY_left));
   free_image(&((*camera)->image_BY_right));
-  free_image(&((*camera)->image_RGBY_3CHANNEL));
-  free_image(&((*camera)->image_RGBY_3CHANNEL_left));
-  free_image(&((*camera)->image_RGBY_3CHANNEL_right));
+  free_image(&((*camera)->image_RGBY_MARKED));
+  free_image(&((*camera)->image_RGBY_MARKED_left));
+  free_image(&((*camera)->image_RGBY_MARKED_right));
   free_image(&((*camera)->image_Z));
   free_image(&((*camera)->image_Z_left));
   free_image(&((*camera)->image_Z_right));
   SID_free(SID_FARG (*camera)->mask_RGB_left);
   SID_free(SID_FARG (*camera)->mask_Y_left);
   SID_free(SID_FARG (*camera)->mask_RGBY_left);
-  SID_free(SID_FARG (*camera)->mask_RGBY_3CHANNEL_left);
+  SID_free(SID_FARG (*camera)->mask_RGBY_MARKED_left);
   SID_free(SID_FARG (*camera)->mask_RGB_right);
   SID_free(SID_FARG (*camera)->mask_Y_right);
   SID_free(SID_FARG (*camera)->mask_RGBY_right);
-  SID_free(SID_FARG (*camera)->mask_RGBY_3CHANNEL_right);
+  SID_free(SID_FARG (*camera)->mask_RGBY_MARKED_right);
   if((*camera)->RGB_gamma!=NULL)
     free_interpolate(SID_FARG (*camera)->RGB_gamma,NULL);
   if((*camera)->transfer_list!=NULL)

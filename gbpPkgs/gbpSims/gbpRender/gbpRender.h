@@ -34,8 +34,8 @@
 #define CAMERA_DEFAULT         CAMERA_MONO
 
 #define CAMERA_RGB_MODE_1CHANNEL TTTP01
-#define CAMERA_RGB_MODE_3CHANNEL TTTP02
-#define CAMERA_RGB_MODE_DEFAULT  CAMERA_RGB_MODE_1CHANNEL|CAMERA_RGB_MODE_3CHANNEL
+#define CAMERA_RGB_MODE_MARKED   TTTP02
+#define CAMERA_RGB_MODE_DEFAULT  CAMERA_RGB_MODE_1CHANNEL
 
 #define RENDER_INIT_PERSPECTIVE TTTP01
 #define RENDER_INIT_EVOLVE      TTTP02
@@ -160,12 +160,12 @@ struct camera_info{
   char             *mask_RGBY;
   char             *mask_RGBY_left;
   char             *mask_RGBY_right;
-  image_info       *image_RGBY_3CHANNEL;
-  image_info       *image_RGBY_3CHANNEL_left;
-  image_info       *image_RGBY_3CHANNEL_right;
-  char             *mask_RGBY_3CHANNEL;
-  char             *mask_RGBY_3CHANNEL_left;
-  char             *mask_RGBY_3CHANNEL_right;
+  image_info       *image_RGBY_MARKED;
+  image_info       *image_RGBY_MARKED_left;
+  image_info       *image_RGBY_MARKED_right;
+  char             *mask_RGBY_MARKED;
+  char             *mask_RGBY_MARKED_left;
+  char             *mask_RGBY_MARKED_right;
   int               RGB_mode;
   int               flag_calc_Z_image;
   char              RGB_param[64];
@@ -536,7 +536,7 @@ void set_image_RGBY(image_info *image_RGBY_in,
                     double      Y_max,
                     int         flag_RGB_log,
                     int         flag_Y_log);
-void set_image_RGBY_3CHANNEL(image_info *image_RGBY_3CHANNEL_in,
+void set_image_RGBY_MARKED(image_info *image_RGBY_MARKED_in,
                              image_info *image_RY_in,
                              image_info *image_GY_in,
                              image_info *image_BY_in,

@@ -2,7 +2,7 @@
 #include <gbpRender.h>
 #include <gd.h>
 
-void set_image_RGBY_3CHANNEL(image_info *image_RGBY_in,
+void set_image_RGBY_MARKED(image_info *image_RGBY_in,
                              image_info *image_RY_in,
                              image_info *image_GY_in,
                              image_info *image_BY_in,

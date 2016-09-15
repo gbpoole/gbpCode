@@ -88,6 +88,8 @@ void parse_render_file(render_info **render, char *filename){
               else
                  SID_trap_error("Invalid mark type {%s} in line {%s}.",ERROR_LOGIC,mark_type,line);
            }
+           // Turn on the flag to create and generate the 3-channel images needed for marking
+           (*render)->camera->RGB_mode|=CAMERA_RGB_MODE_MARKED;
         }
         else if(!strcmp(parameter,"scene")){
           grab_word(line,i_word++,variable);

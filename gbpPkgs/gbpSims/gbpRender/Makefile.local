@@ -58,7 +58,7 @@ OBJFILES  = RGB_lookup.o                     \
 	    render_frame.o                       \
 	    set_image_RGB.o                      \
 	    set_image_RGBY.o                     \
-	    set_image_RGBY_3CHANNEL.o            \
+	    set_image_RGBY_MARKED.o            \
 	    write_image.o                        \
 	    write_image_to_movie.o
 DATAFILES = rgb.txt gbpCode_cmap_red.txt gbpCode_cmap_green.txt gbpCode_cmap_blue.txt gbpCode_cmap_GiggleZ.txt \
