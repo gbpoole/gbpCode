@@ -74,7 +74,6 @@ void write_image_to_movie(image_info *image, movie_info *movie){
                                            c->width, c->height,
                                            c->pix_fmt,
                                            GBPGFX_SWS_FLAGS, NULL, NULL, NULL);
-          fprintf(stderr,"test1\n");
           if(img_convert_ctx==NULL)
             SID_trap_error("Cannot initialize the conversion context",ERROR_LOGIC);
         }

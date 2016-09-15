@@ -3,53 +3,81 @@
 #############################
 
 INCFILES  = gbpRender.h
-OBJFILES  = RGB_lookup.o                \
-	    fetch_render_colour_index.o \
-	    close_movie.o               \
-	    add_mark_argument.o         \
-	    create_mark_argument.o      \
-	    free_mark_arguments.o       \
-	    pick_best_snapshot.o        \
-	    process_SSimPL_halos.o      \
-	    perform_marking.o           \
-	    init_perspective.o          \
-	    free_perspective.o          \
-	    copy_perspective.o          \
-	    init_perspective_interp.o   \
-	    free_perspective_interp.o   \
-	    add_scene_perspective.o     \
-	    init_scene.o                \
-	    seal_scenes.o               \
-	    free_scenes.o               \
-	    init_camera.o               \
-	    seal_render_camera.o        \
-	    free_camera.o               \
-	    init_render.o               \
-	    free_render.o               \
-	    add_render_scene.o          \
-	    seal_render.o               \
-	    set_render_state.o          \
-	    parse_render_file.o         \
-	    read_frame.o                \
-	    write_frame.o               \
-	    write_path_file.o           \
-	    set_frame.o                 \
-	    set_render_scale.o          \
-	    set_sph_kernel.o            \
-	    set_transfer_function.o     \
-	    read_gadget_binary_render.o \
-	    create_colour_table.o       \
-	    free_image.o                \
-	    init_image.o                \
-	    open_movie.o                \
-	    read_image.o                \
-	    render_frame.o              \
-	    set_image_RGB.o             \
-	    set_image_RGBY.o            \
-	    set_image_RGBY_3CHANNEL.o   \
-	    write_image.o               \
+OBJFILES  = RGB_lookup.o                     \
+	    fetch_render_colour_index.o          \
+	    close_movie.o                        \
+	    add_mark_argument.o                  \
+	    create_mark_argument.o               \
+	    free_mark_arguments.o                \
+	    pick_best_snapshot.o                 \
+	    process_SSimPL_halos.o               \
+	    perform_marking.o                    \
+	    init_perspective.o                   \
+	    free_perspective.o                   \
+	    copy_perspective.o                   \
+	    init_perspective_interp.o            \
+	    free_perspective_interp.o            \
+	    add_scene_perspective.o              \
+	    init_scene.o                         \
+	    seal_scenes.o                        \
+	    free_scenes.o                        \
+	    init_camera.o                        \
+	    seal_render_camera.o                 \
+	    free_camera.o                        \
+	    init_render.o                        \
+	    free_render.o                        \
+	    add_render_scene.o                   \
+	    seal_render.o                        \
+	    set_render_state.o                   \
+	    parse_render_file.o                  \
+	    read_frame.o                         \
+	    write_frame.o                        \
+	    write_path_file.o                    \
+	    set_frame.o                          \
+	    set_render_scale.o                   \
+	    set_sph_kernel.o                     \
+	    set_transfer_function.o              \
+	    read_gadget_binary_render.o          \
+	    create_colour_table.o                \
+	    free_image.o                         \
+	    init_image.o                         \
+	    open_movie.o                         \
+	    read_image.o                         \
+	    fetch_image_array.o                  \
+	    rotate_particle.o                    \
+	    set_pixel_space.o                    \
+	    transform_particle.o                 \
+	    free_particle_map_quantities.o       \
+	    init_particle_map_quantities.o       \
+	    set_particle_map_quantities.o        \
+	    compute_f_stretch.o                  \
+	    compute_perspective_transformation.o \
+	    check_if_particle_marked.o           \
+	    init_make_map_noabs.o                \
+	    init_make_map_abs.o                  \
+	    render_frame.o                       \
+	    set_image_RGB.o                      \
+	    set_image_RGBY.o                     \
+	    set_image_RGBY_3CHANNEL.o            \
+	    write_image.o                        \
 	    write_image_to_movie.o
-DATAFILES = rgb.txt
+DATAFILES = rgb.txt gbpCode_cmap_red.txt gbpCode_cmap_green.txt gbpCode_cmap_blue.txt gbpCode_cmap_GiggleZ.txt \
+	gbpCode_cmap_greyscale.txt           gbpCode_cmap_iso_H150_R090_C050.txt  gbpCode_cmap_iso_H300_R180_C050.txt      gbpCode_cmap_linear_H030_Rn360_C050.txt  gbpCode_cmap_linear_H120_R540_C050.txt   gbpCode_cmap_linear_H210_R270_C050.txt   gbpCode_cmap_linear_H270_Rn360_C050.txt \
+	gbpCode_cmap_iso_H000_R090_C050.txt  gbpCode_cmap_iso_H150_R180_C050.txt  gbpCode_cmap_iso_H300_R270_C050.txt      gbpCode_cmap_linear_H030_Rn540_C050.txt  gbpCode_cmap_linear_H120_Rn270_C050.txt  gbpCode_cmap_linear_H210_R360_C050.txt   gbpCode_cmap_linear_H270_Rn540_C050.txt \
+	gbpCode_cmap_iso_H000_R180_C050.txt  gbpCode_cmap_iso_H150_R270_C050.txt  gbpCode_cmap_iso_H330_R090_C050.txt      gbpCode_cmap_linear_H060_R270_C050.txt   gbpCode_cmap_linear_H120_Rn360_C050.txt  gbpCode_cmap_linear_H210_R540_C050.txt   gbpCode_cmap_linear_H300_R270_C050.txt  \
+	gbpCode_cmap_iso_H000_R270_C050.txt  gbpCode_cmap_iso_H180_R090_C050.txt  gbpCode_cmap_iso_H330_R180_C050.txt      gbpCode_cmap_linear_H060_R360_C050.txt   gbpCode_cmap_linear_H120_Rn540_C050.txt  gbpCode_cmap_linear_H210_Rn270_C050.txt  gbpCode_cmap_linear_H300_R360_C050.txt  \
+	gbpCode_cmap_iso_H030_R090_C050.txt  gbpCode_cmap_iso_H180_R180_C050.txt  gbpCode_cmap_iso_H330_R270_C050.txt      gbpCode_cmap_linear_H060_R540_C050.txt   gbpCode_cmap_linear_H150_R270_C050.txt   gbpCode_cmap_linear_H210_Rn360_C050.txt  gbpCode_cmap_linear_H300_R540_C050.txt  \
+	gbpCode_cmap_iso_H030_R180_C050.txt  gbpCode_cmap_iso_H180_R270_C050.txt  gbpCode_cmap_linear_found.txt            gbpCode_cmap_linear_H060_Rn270_C050.txt  gbpCode_cmap_linear_H150_R360_C050.txt   gbpCode_cmap_linear_H210_Rn540_C050.txt  gbpCode_cmap_linear_H300_Rn270_C050.txt \
+	gbpCode_cmap_iso_H030_R270_C050.txt  gbpCode_cmap_iso_H210_R090_C050.txt  gbpCode_cmap_linear_H000_R270_C050.txt   gbpCode_cmap_linear_H060_Rn360_C050.txt  gbpCode_cmap_linear_H150_R540_C050.txt   gbpCode_cmap_linear_H240_R270_C050.txt   gbpCode_cmap_linear_H300_Rn360_C050.txt \
+	gbpCode_cmap_iso_H060_R090_C050.txt  gbpCode_cmap_iso_H210_R180_C050.txt  gbpCode_cmap_linear_H000_R360_C050.txt   gbpCode_cmap_linear_H060_Rn540_C050.txt  gbpCode_cmap_linear_H150_Rn270_C050.txt  gbpCode_cmap_linear_H240_R360_C050.txt   gbpCode_cmap_linear_H300_Rn540_C050.txt \
+	gbpCode_cmap_iso_H060_R180_C050.txt  gbpCode_cmap_iso_H210_R270_C050.txt  gbpCode_cmap_linear_H000_R540_C050.txt   gbpCode_cmap_linear_H090_R270_C050.txt   gbpCode_cmap_linear_H150_Rn360_C050.txt  gbpCode_cmap_linear_H240_R540_C050.txt   gbpCode_cmap_linear_H330_R270_C050.txt  \
+	gbpCode_cmap_iso_H060_R270_C050.txt  gbpCode_cmap_iso_H240_R090_C050.txt  gbpCode_cmap_linear_H000_Rn270_C050.txt  gbpCode_cmap_linear_H090_R360_C050.txt   gbpCode_cmap_linear_H150_Rn540_C050.txt  gbpCode_cmap_linear_H240_Rn270_C050.txt  gbpCode_cmap_linear_H330_R360_C050.txt  \
+	gbpCode_cmap_iso_H090_R090_C050.txt  gbpCode_cmap_iso_H240_R180_C050.txt  gbpCode_cmap_linear_H000_Rn360_C050.txt  gbpCode_cmap_linear_H090_R540_C050.txt   gbpCode_cmap_linear_H180_R270_C050.txt   gbpCode_cmap_linear_H240_Rn360_C050.txt  gbpCode_cmap_linear_H330_R540_C050.txt  \
+	gbpCode_cmap_iso_H090_R180_C050.txt  gbpCode_cmap_iso_H240_R270_C050.txt  gbpCode_cmap_linear_H000_Rn540_C050.txt  gbpCode_cmap_linear_H090_Rn270_C050.txt  gbpCode_cmap_linear_H180_R360_C050.txt   gbpCode_cmap_linear_H240_Rn540_C050.txt  gbpCode_cmap_linear_H330_Rn270_C050.txt \
+	gbpCode_cmap_iso_H090_R270_C050.txt  gbpCode_cmap_iso_H270_R090_C050.txt  gbpCode_cmap_linear_H030_R270_C050.txt   gbpCode_cmap_linear_H090_Rn360_C050.txt  gbpCode_cmap_linear_H180_R540_C050.txt   gbpCode_cmap_linear_H270_R270_C050.txt   gbpCode_cmap_linear_H330_Rn360_C050.txt \
+	gbpCode_cmap_iso_H120_R090_C050.txt  gbpCode_cmap_iso_H270_R180_C050.txt  gbpCode_cmap_linear_H030_R360_C050.txt   gbpCode_cmap_linear_H090_Rn540_C050.txt  gbpCode_cmap_linear_H180_Rn270_C050.txt  gbpCode_cmap_linear_H270_R360_C050.txt   gbpCode_cmap_linear_H330_Rn540_C050.txt \
+	gbpCode_cmap_iso_H120_R180_C050.txt  gbpCode_cmap_iso_H270_R270_C050.txt  gbpCode_cmap_linear_H030_R540_C050.txt   gbpCode_cmap_linear_H120_R270_C050.txt   gbpCode_cmap_linear_H180_Rn360_C050.txt  gbpCode_cmap_linear_H270_R540_C050.txt                                           \
+	gbpCode_cmap_iso_H120_R270_C050.txt  gbpCode_cmap_iso_H300_R090_C050.txt  gbpCode_cmap_linear_H030_Rn270_C050.txt  gbpCode_cmap_linear_H120_R360_C050.txt   gbpCode_cmap_linear_H180_Rn540_C050.txt  gbpCode_cmap_linear_H270_Rn270_C050.txt
 LIBFILE   = libgbpRender.a
 BINFILES  = make_colour_bar render
 SCRIPTS   = make_movie

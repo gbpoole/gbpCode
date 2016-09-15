@@ -21,7 +21,7 @@ void parse_render_file(render_info **render, char *filename){
   char    parameter[64];
   char    variable[64];
   char    image[64];
-  char    c_value[64];
+  char    c_value[128];
   double  d_value;
   int     i_value;
   int     i;
@@ -163,23 +163,6 @@ void parse_render_file(render_info **render, char *filename){
         else if(!strcmp(parameter,"snap_a_list_file")){
           SID_log("Reading snapshot a_list...",SID_LOG_OPEN);
           grab_word(line,i_word++,(*render)->snap_a_list_filename);
-          if(SID.I_am_Master){
-            if((fp_list=fopen((*render)->snap_a_list_filename,"r"))==NULL)
-              SID_trap_error("Could not open snapshot a_list {%s}",ERROR_IO_OPEN,(*render)->snap_a_list_filename);
-            (*render)->n_snap_a_list=count_lines_data(fp_list);
-          }
-          SID_Bcast(&((*render)->n_snap_a_list),sizeof(int),MASTER_RANK,SID.COMM_WORLD);
-          (*render)->snap_a_list  =(double *)SID_malloc(sizeof(double)*(*render)->n_snap_a_list);
-          if(SID.I_am_Master){
-             for(i=0;i<(*render)->n_snap_a_list;i++){
-               grab_next_line_data(fp_list,&line,&line_length);
-               grab_double(line,1,&((*render)->snap_a_list[i]));
-             }
-             fclose(fp_list);
-          }
-          SID_Bcast(((*render)->snap_a_list),(*render)->n_snap_a_list*sizeof(double),MASTER_RANK,SID.COMM_WORLD);
-          for(i=0;i<(*render)->n_snap_a_list;i++)
-            SID_log("a[%3d]=%lf",SID_LOG_COMMENT,i,(*render)->snap_a_list[i]);
           SID_log("Done.",SID_LOG_CLOSE);
         }
         else if(!strcmp(parameter,"h_Hubble"))
@@ -223,8 +206,16 @@ void parse_render_file(render_info **render, char *filename){
             (*render)->camera->camera_mode|=CAMERA_STEREO;
           }
           else if(!strcmp(variable,"colour_table")){
-            grab_int(line,i_word++,&i_value);
-            (*render)->camera->colour_table=i_value;
+            grab_word(line,i_word++,c_value);
+
+            // Check that the colour table exisits
+            //char  filename_test[MAX_FILENAME_LENGTH];
+            //FILE *fp_test=NULL;
+            //sprintf(filename_test,"%s/gbpCode_cmap_%s.txt",GBP_DATA_DIR,c_value);
+            //if((fp_test=fopen(filename_test,"r"))==NULL)
+            //   SID_trap_error("Colour table {%s} not found.",ERROR_LOGIC,c_value);
+            //fclose(fp_test);
+            strcpy((*render)->camera->colour_table,c_value);
           }
           else if(!strcmp(variable,"plane_parallel")){
             (*render)->camera->camera_mode|=CAMERA_PLANE_PARALLEL|CAMERA_MONO;
@@ -242,9 +233,9 @@ void parse_render_file(render_info **render, char *filename){
                char next_word[32];
                grab_word(line,i_word,next_word);
                if(!strcmp(next_word,"linear"))
-                  (*render)->v_mode&=(~MAKE_MAP_LOG);
+                  (*render)->camera->camera_mode&=(~CAMERA_LOG_RGB);
                else if(!strcmp(next_word,"log"))
-                  (*render)->v_mode|=MAKE_MAP_LOG;
+                  (*render)->camera->camera_mode|=CAMERA_LOG_RGB;
                else
                   SID_log("Ignoring unknown RGB_range modifier {%s}.",SID_LOG_COMMENT,next_word);
                i_word++;
@@ -281,9 +272,9 @@ void parse_render_file(render_info **render, char *filename){
                char next_word[32];
                grab_word(line,i_word,next_word);
                if(!strcmp(next_word,"linear"))
-                  (*render)->w_mode&=(~MAKE_MAP_LOG);
+                  (*render)->camera->camera_mode&=(~CAMERA_LOG_Y);
                else if(!strcmp(next_word,"log"))
-                  (*render)->w_mode|=MAKE_MAP_LOG;
+                  (*render)->camera->camera_mode|=CAMERA_LOG_Y;
                else
                   SID_log("Ignoring unknown Y_range modifier {%s}.",SID_LOG_COMMENT,next_word);
                i_word++;

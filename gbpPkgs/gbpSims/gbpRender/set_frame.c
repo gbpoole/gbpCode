@@ -28,8 +28,10 @@ void set_frame(camera_info *camera){
 
   // Loop over each set of images
   for(i_image=0;i_image<3;i_image++){
+    int flag_log_RGB=check_mode_for_flag(camera->camera_mode,CAMERA_LOG_RGB);
+    int flag_log_Y  =check_mode_for_flag(camera->camera_mode,CAMERA_LOG_Y);
     switch(i_image){
-    case 0:
+    case 0: // left image of a stereo pair
       image_RGB          =camera->image_RGB_left;
       image_Y            =camera->image_Y_left;
       image_Z            =camera->image_Z_left;
@@ -39,7 +41,7 @@ void set_frame(camera_info *camera){
       image_BY           =camera->image_BY_left;
       image_RGBY_3CHANNEL=camera->image_RGBY_3CHANNEL_left;
       break;
-    case 1:
+    case 1: // right image of a stereo pair
       image_RGB          =camera->image_RGB_right;
       image_Y            =camera->image_Y_right;
       image_Z            =camera->image_Z_right;
@@ -49,7 +51,7 @@ void set_frame(camera_info *camera){
       image_BY           =camera->image_BY_right;
       image_RGBY_3CHANNEL=camera->image_RGBY_3CHANNEL_right;
       break;
-    case 2:
+    case 2: // mono image
       image_RGB          =camera->image_RGB;
       image_Y            =camera->image_Y;
       image_Z            =camera->image_Z;
@@ -63,32 +65,34 @@ void set_frame(camera_info *camera){
 
     // Set RGB & Y images
     if(image_RGBY!=NULL){
-       set_image_RGB(image_RGB,camera->RGB_range[0],camera->RGB_range[1]);
-       set_image_RGB(image_Y,camera->Y_range[0],camera->Y_range[1]);
+       set_image_RGB(image_RGB,camera->RGB_range[0],camera->RGB_range[1],flag_log_RGB);
+       set_image_RGB(image_Y,camera->Y_range[0],camera->Y_range[1],flag_log_Y);
        set_image_RGBY(image_RGBY,
                       image_RGB,
                       image_Y,
                       camera->RGB_range[0],
                       camera->RGB_range[1],
                       camera->Y_range[0],
-                      camera->Y_range[1]);
+                      camera->Y_range[1],
+                      flag_log_RGB,flag_log_Y);
     }
     if(image_RGBY_3CHANNEL!=NULL){
-       set_image_RGB(image_RY,0.,1.);
-       set_image_RGB(image_GY,0.,1.);
-       set_image_RGB(image_BY,0.,1.);
+       set_image_RGB(image_RY,0.,1.,FALSE);
+       set_image_RGB(image_GY,0.,1.,FALSE);
+       set_image_RGB(image_BY,0.,1.,FALSE);
        set_image_RGBY_3CHANNEL(image_RGBY_3CHANNEL,
                                image_RY,
                                image_GY,
                                image_BY,
                                image_Y,
                                camera->Y_range[0],
-                               camera->Y_range[1]);
+                               camera->Y_range[1],
+                               flag_log_Y);
     }
 
     // Set Z image
     if(image_Z!=NULL)
-       set_image_RGB(image_Z,camera->Z_range[0],camera->Z_range[1]);
+       set_image_RGB(image_Z,camera->Z_range[0],camera->Z_range[1],FALSE);
   }
 }
 

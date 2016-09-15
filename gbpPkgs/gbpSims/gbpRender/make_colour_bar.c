@@ -10,7 +10,7 @@ int main(int argc, char *argv[]){
   int         i_frame;
   int         width;
   int         height;
-  int         colour_table;
+  char        colour_table[MAX_FILENAME_LENGTH];
   image_info *image;
   char        file_out[256];
   double     *image_array;
@@ -19,10 +19,10 @@ int main(int argc, char *argv[]){
 
   SID_init(&argc,&argv,NULL,NULL);
 
-  width       =atoi(argv[1]);
-  height      =atoi(argv[2]);
-  colour_table=atoi(argv[3]);
-  strcpy(file_out,argv[4]);
+  width         =atoi(argv[1]);
+  height        =atoi(argv[2]);
+  strcpy(colour_table,argv[3]);
+  strcpy(file_out,    argv[4]);
 
   SID_log("Creating image of colourtable {%s}...",SID_LOG_OPEN|SID_LOG_TIMER,file_out);
 
@@ -36,7 +36,8 @@ int main(int argc, char *argv[]){
   }
   set_image_RGB(image,
                 0.,
-                1.);
+                1.,
+                FALSE);
   write_image(image,".",file_out,WRITE_IMAGE_PNG);
   free_image(&image);
   SID_log("Done.",SID_LOG_CLOSE);

@@ -44,7 +44,7 @@ void write_path_file(render_info *render,int frame){
         fp_out=fopen(filename,"w");
         camera_info *camera=render->camera;
         fprintf(fp_out,"%%camera_mode         %d\n",     camera->camera_mode);
-        fprintf(fp_out,"%%colour_table        %d\n",     camera->colour_table);
+        fprintf(fp_out,"%%colour_table        %s\n",     camera->colour_table);
         fprintf(fp_out,"%%flag_velocity_space %d\n",     camera->flag_velocity_space);
         fprintf(fp_out,"%%width               %d\n",     camera->width);
         fprintf(fp_out,"%%height              %d\n",     camera->height);
