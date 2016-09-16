@@ -149,32 +149,33 @@ struct camera_info{
   int               flag_velocity_space;
   int               width;
   int               height;
+  int               n_depth;
+  double           *depth_array;
   double            stereo_ratio;
   double            f_near_field;
   double            f_taper_field;
   double            f_image_plane;
   perspective_info *perspective; // Present perspective state of camera
-  image_info       *image_RGBY;
-  image_info       *image_RGBY_left;
-  image_info       *image_RGBY_right;
+  image_info       **image_RGBY;
+  image_info       **image_RGBY_left;
+  image_info       **image_RGBY_right;
   char             *mask_RGBY;
   char             *mask_RGBY_left;
   char             *mask_RGBY_right;
-  image_info       *image_RGBY_MARKED;
-  image_info       *image_RGBY_MARKED_left;
-  image_info       *image_RGBY_MARKED_right;
+  image_info       **image_RGBY_MARKED;
+  image_info       **image_RGBY_MARKED_left;
+  image_info       **image_RGBY_MARKED_right;
   char             *mask_RGBY_MARKED;
   char             *mask_RGBY_MARKED_left;
   char             *mask_RGBY_MARKED_right;
   int               RGB_mode;
-  int               flag_calc_Z_image;
   char              RGB_param[64];
   double            RGB_range[2];
   interp_info      *RGB_gamma;
   ADaPS            *transfer_list;
-  image_info       *image_RGB;
-  image_info       *image_RGB_left;
-  image_info       *image_RGB_right;
+  image_info       **image_RGB;
+  image_info       **image_RGB_left;
+  image_info       **image_RGB_right;
   char             *mask_RGB;
   char             *mask_RGB_left;
   char             *mask_RGB_right;
@@ -182,28 +183,25 @@ struct camera_info{
   char              Y_param[64];
   double            Y_range[2];
   interp_info      *Y_gamma;
-  image_info       *image_Y;
-  image_info       *image_Y_left;
-  image_info       *image_Y_right;
+  image_info       **image_Y;
+  image_info       **image_Y_left;
+  image_info       **image_Y_right;
   char             *mask_Y;
   char             *mask_Y_left;
   char             *mask_Y_right;
   int               Z_mode;
   double            Z_range[2];
   interp_info      *Z_gamma;
-  image_info       *image_Z;
-  image_info       *image_Z_left;
-  image_info       *image_Z_right;
   // These images are used when colours can not be set with a colour table
-  image_info       *image_RY;
-  image_info       *image_RY_left;
-  image_info       *image_RY_right;
-  image_info       *image_GY;
-  image_info       *image_GY_left;
-  image_info       *image_GY_right;
-  image_info       *image_BY;
-  image_info       *image_BY_left;
-  image_info       *image_BY_right;
+  image_info       **image_RY;
+  image_info       **image_RY_left;
+  image_info       **image_RY_right;
+  image_info       **image_GY;
+  image_info       **image_GY_left;
+  image_info       **image_GY_right;
+  image_info       **image_BY;
+  image_info       **image_BY_left;
+  image_info       **image_BY_right;
 };
 
 typedef struct mark_arg_info mark_arg_info;
@@ -323,7 +321,7 @@ void init_scene(scene_info **scene);
 void seal_scenes(scene_info *scenes);
 void free_scenes(scene_info **scene);
 void init_camera(camera_info **camera, int mode);
-void seal_render_camera(render_info *render);
+void seal_camera(render_info *render);
 void free_camera(camera_info **camera);
 void init_render(render_info **render);
 void free_render(render_info **render);
@@ -504,7 +502,7 @@ void init_make_map_abs(render_info *render,
                        int          *i_x_min_local_return,
                        int          *i_x_max_local_return,
                        size_t       *n_particles);
-void fetch_image_array(image_info *image,double **values);
+void fetch_image_array(image_info **image,int i_depth,double **values);
 void render_frame(render_info  *render);
 
 void open_movie(char       *filename,

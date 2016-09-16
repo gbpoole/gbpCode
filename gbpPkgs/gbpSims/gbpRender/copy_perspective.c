@@ -13,6 +13,9 @@ void copy_perspective(perspective_info *from,perspective_info *to){
   to->p_o[0]       =from->p_o[0];
   to->p_o[1]       =from->p_o[1];
   to->p_o[2]       =from->p_o[2];
+  to->p_c[0]       =from->p_c[0];
+  to->p_c[1]       =from->p_c[1];
+  to->p_c[2]       =from->p_c[2];
   to->radius       =from->radius;
   to->FOV          =from->FOV;
   to->focus_shift_x=from->focus_shift_x;

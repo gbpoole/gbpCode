@@ -9,8 +9,6 @@
 #include <gbpRender.h>
 
 void seal_render(render_info *render){
-  scene_info *current=NULL;
-  scene_info *next   =NULL;
   SID_log("Sealing render...",SID_LOG_OPEN);
 
   // Read expansion factor list if the file's been given
@@ -34,14 +32,18 @@ void seal_render(render_info *render){
         SID_free(SID_FARG line);
      }
      SID_Bcast(render->snap_a_list,render->n_snap_a_list*sizeof(double),MASTER_RANK,SID.COMM_WORLD);
-     for(int i=0;i<(render->n_snap_a_list);i++)
-       SID_log("a[%3d]=%lf",SID_LOG_COMMENT,i,render->snap_a_list[i]);
   }
 
+  // Seal the scenes
   seal_scenes(render->scenes);
-  seal_render_camera(render);
+
+  // Seal the camera
+  seal_camera(render);
+
+  // Set the total number of frames in the render
   render->n_frames=render->last_scene->last_frame+1;
 
+  // Set the flag saying that render has been sealed
   render->sealed=TRUE;
 
   SID_log("Done.",SID_LOG_CLOSE);

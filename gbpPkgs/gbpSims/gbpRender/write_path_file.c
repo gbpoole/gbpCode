@@ -53,7 +53,6 @@ void write_path_file(render_info *render,int frame){
         fprintf(fp_out,"%%f_taper_field       %le\n",    camera->f_taper_field);
         fprintf(fp_out,"%%f_image_plane       %le\n",    camera->f_image_plane);
         fprintf(fp_out,"%%RGB_mode            %d\n",     camera->RGB_mode);
-        fprintf(fp_out,"%%flag_calc_Z_image   %d\n",     camera->flag_calc_Z_image);
         fprintf(fp_out,"%%RGB_param           %s\n",     camera->RGB_param);
         fprintf(fp_out,"%%RGB_range           %le %le\n",camera->RGB_range[0],camera->RGB_range[1]);
         fclose(fp_out);
