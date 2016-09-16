@@ -583,12 +583,12 @@ void render_frame(render_info  *render){
      SID_free(SID_FARG mask_buffer);
      #endif
      for(int i_depth=0;i_depth<n_depth;i_depth++){
-        SID_Allreduce(SID_IN_PLACE,temp_image,n_pixels,SID_DOUBLE,SID_SUM,SID.COMM_WORLD);
-        SID_Allreduce(SID_IN_PLACE,Y_image,   n_pixels,SID_DOUBLE,SID_SUM,SID.COMM_WORLD);
+        SID_Allreduce(SID_IN_PLACE,temp_image[i_depth],n_pixels,SID_DOUBLE,SID_SUM,SID.COMM_WORLD);
+        SID_Allreduce(SID_IN_PLACE,Y_image[i_depth],   n_pixels,SID_DOUBLE,SID_SUM,SID.COMM_WORLD);
         if(RY_image!=NULL){
-          SID_Allreduce(SID_IN_PLACE,RY_image,n_pixels,SID_DOUBLE,SID_SUM,SID.COMM_WORLD);
-          SID_Allreduce(SID_IN_PLACE,GY_image,n_pixels,SID_DOUBLE,SID_SUM,SID.COMM_WORLD);
-          SID_Allreduce(SID_IN_PLACE,BY_image,n_pixels,SID_DOUBLE,SID_SUM,SID.COMM_WORLD);
+          SID_Allreduce(SID_IN_PLACE,RY_image[i_depth],n_pixels,SID_DOUBLE,SID_SUM,SID.COMM_WORLD);
+          SID_Allreduce(SID_IN_PLACE,GY_image[i_depth],n_pixels,SID_DOUBLE,SID_SUM,SID.COMM_WORLD);
+          SID_Allreduce(SID_IN_PLACE,BY_image[i_depth],n_pixels,SID_DOUBLE,SID_SUM,SID.COMM_WORLD);
         }
      }
 
