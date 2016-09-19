@@ -44,8 +44,13 @@ void init_render(render_info **render){
   (*render)->w_mode             = MAKE_MAP_DEFAULT;
   (*render)->plist_list         = NULL;
   (*render)->trees              = NULL;
+
   (*render)->mark_arg_first     = NULL;
   (*render)->mark_arg_last      = NULL;
+  (*render)->mark_properties    = NULL;
+  (*render)->n_mark_arg         = 0;
+  (*render)->n_mark_properties  = 0;
+
   (*render)->kernel_radius      = NULL;
   (*render)->kernel_table       = NULL;
   (*render)->kernel_table_3d    = NULL;

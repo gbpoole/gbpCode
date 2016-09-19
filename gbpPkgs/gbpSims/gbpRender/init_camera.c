@@ -20,8 +20,7 @@ void init_camera(camera_info **camera, int mode){
 
   // Initialze image information
   (*camera)->flag_velocity_space=FALSE;
-  (*camera)->n_depth            =1;
-  (*camera)->depth_array        =NULL;
+  (*camera)->n_depth            =3;
   (*camera)->stereo_ratio       =0.;
   (*camera)->RGB_mode           =CAMERA_RGB_MODE_DEFAULT;
   (*camera)->RGB_gamma          =NULL;

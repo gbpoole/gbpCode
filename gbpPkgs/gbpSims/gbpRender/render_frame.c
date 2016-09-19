@@ -76,16 +76,6 @@ void render_frame(render_info  *render){
   double  d_image_plane      =d_o*f_image_plane;
   double  box_size           =((double *)ADaPS_fetch(render->plist_list[0]->data,"box_size"))[0];
 
-  // Cast the depth array into the units of the render
-  double *depth_array=NULL;
-  if(render->camera->depth_array!=NULL){
-     depth_array=(double *)SID_malloc(sizeof(double *)*n_depth_minus1);
-     memcpy(depth_array,render->camera->depth_array,sizeof(double)*n_depth_minus1);
-     for(int i_depth=0;i_depth<n_depth_minus1;i_depth++){
-        depth_array[i_depth]*=unit_factor;
-     }
-  }
-
   // Sanity check the taper distances
   double taper_width=d_taper_field-d_near_field;
   if(taper_width<0.)
@@ -305,6 +295,57 @@ void render_frame(render_info  *render){
                                         &theta,
                                         &theta_roll);
 
+     // Create depth array and cast it into the units of the render
+     double *depth_array=(double *)SID_malloc(sizeof(double)*n_depth);
+     char   *depth_flags=(char   *)SID_malloc(sizeof(char)  *n_depth);
+     for(int i_depth=0,i_mark=0;i_depth<n_depth;i_depth++){
+        if(i_depth==0)
+           depth_array[i_depth]=0.;
+        else if(i_depth==1)
+           depth_array[i_depth]=d_o;
+        else if(i_depth==2)
+           depth_array[i_depth]=d_image_plane;
+        else{
+           float x_m=0.;
+           float y_m=0.;
+           float z_m=0.;
+           if(flag_velocity_space){
+              x_m=(float)render->mark_properties[i_mark].velocity_COM[0];
+              y_m=(float)render->mark_properties[i_mark].velocity_COM[1];
+              z_m=(float)render->mark_properties[i_mark].velocity_COM[2];
+           }
+           else{
+              x_m=(float)render->mark_properties[i_mark].position_COM[0];
+              y_m=(float)render->mark_properties[i_mark].position_COM[1];
+              z_m=(float)render->mark_properties[i_mark].position_COM[2];
+           }
+           x_m*=unit_factor;
+           y_m*=unit_factor;
+           z_m*=unit_factor;
+           transform_particle(&x_m,
+                              &y_m,
+                              &z_m,
+                              x_o,
+                              y_o,
+                              z_o,
+                              x_hat,
+                              y_hat,
+                              z_hat,
+                              d_o,
+                              stereo_offset,
+                              theta,
+                              theta_roll,
+                              box_size,
+                              expansion_factor,
+                              focus_shift_x,
+                              focus_shift_y,
+                              flag_comoving,
+                              flag_force_periodic);
+           depth_array[i_depth]=z_m;
+           i_mark++;
+        }
+     }
+
      // Set physical image-plane domain
      double xmin  = -FOV_x_image_plane/2.; // Things will be centred on (x_o,y_o,z_o) later
      double ymin  = -FOV_y_image_plane/2.; // Things will be centred on (x_o,y_o,z_o) later
@@ -476,9 +517,12 @@ void render_frame(render_info  *render){
 
              // Determine which image depth
              //    to add this particle to
-             int i_depth=0;
-             if(n_depth>1)
-               while(i_depth<n_depth_minus1 && z_i>depth_array[i_depth]) i_depth++;
+             for(int i_depth=0;i_depth<n_depth;i_depth++){
+                if(z_i>=depth_array[i_depth])
+                   depth_flags[i_depth]=TRUE;
+                else
+                   depth_flags[i_depth]=FALSE;
+             }
 
              // Loop over the kernal
              double pixel_pos_x=xmin+(kx_min+0.5)*pixel_size_x;
@@ -505,29 +549,24 @@ void render_frame(render_info  *render){
                        //   works the way it is coded and the last image represents the
                        //   final sum.
                        if(Y_image!=NULL){
-                          double val=(f_dim-f_absorption*Y_image[i_depth][pos])*w_k;
-                          for(int j_depth=0;j_depth<=i_depth;j_depth++)
-                             Y_image[j_depth][pos]+=val;
+                          for(int i_depth=0;i_depth<n_depth;i_depth++)
+                             if(depth_flags[i_depth]) Y_image[i_depth][pos]+=(f_dim-f_absorption*Y_image[i_depth][pos])*w_k;
                        }
                        if(temp_image!=NULL){
-                          double val=(f_dim*v_i-f_absorption*temp_image[i_depth][pos])*w_k;
-                          for(int j_depth=0;j_depth<=i_depth;j_depth++)
-                             temp_image[j_depth][pos]+=val;
+                          for(int i_depth=0;i_depth<n_depth;i_depth++)
+                             if(depth_flags[i_depth]) temp_image[i_depth][pos]+=(f_dim*v_i-f_absorption*temp_image[i_depth][pos])*w_k;
                        }
                        if(RY_image!=NULL){
-                          double val=(f_dim*R_i-f_absorption*  RY_image[i_depth][pos])*w_k;
-                          for(int j_depth=0;j_depth<=i_depth;j_depth++)
-                             RY_image[j_depth][pos]+=val;
+                          for(int i_depth=0;i_depth<n_depth;i_depth++)
+                             if(depth_flags[i_depth]) RY_image[i_depth][pos]+=(f_dim*R_i-f_absorption*  RY_image[i_depth][pos])*w_k;
                        }
                        if(GY_image!=NULL){
-                          double val=(f_dim*G_i-f_absorption*  GY_image[i_depth][pos])*w_k;
-                          for(int j_depth=0;j_depth<=i_depth;j_depth++)
-                             GY_image[j_depth][pos]+=val;
+                          for(int i_depth=0;i_depth<n_depth;i_depth++)
+                             if(depth_flags[i_depth]) GY_image[i_depth][pos]+=(f_dim*G_i-f_absorption*  GY_image[i_depth][pos])*w_k;
                        }
                        if(BY_image!=NULL){
-                          double val=(f_dim*B_i-f_absorption*  BY_image[i_depth][pos])*w_k;
-                          for(int j_depth=0;j_depth<=i_depth;j_depth++)
-                             BY_image[j_depth][pos]+=val;
+                          for(int i_depth=0;i_depth<n_depth;i_depth++)
+                             if(depth_flags[i_depth]) BY_image[i_depth][pos]+=(f_dim*B_i-f_absorption*BY_image[i_depth][pos])*w_k;
                        }
                        mask[pos]=TRUE;
                      }
@@ -710,6 +749,8 @@ void render_frame(render_info  *render){
      SID_free(SID_FARG RY_image);
      SID_free(SID_FARG GY_image);
      SID_free(SID_FARG BY_image);
+     SID_free(SID_FARG depth_flags);
+     SID_free(SID_FARG depth_array);
    
      SID_log("Done.",SID_LOG_CLOSE);
   }

@@ -393,8 +393,11 @@ void parse_render_file(render_info **render, char *filename){
     SID_log("Done.",SID_LOG_CLOSE);
   }
   fclose(fp);
+
+  // Finalize the render structure
   if(!(*render)->sealed)
     seal_render(*render);
+  
   if(line!=NULL)
      SID_free(SID_FARG line);
   SID_set_verbosity(SID_SET_VERBOSITY_DEFAULT);

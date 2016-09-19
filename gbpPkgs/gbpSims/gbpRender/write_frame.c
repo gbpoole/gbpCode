@@ -86,13 +86,13 @@ void write_frame(render_info *render,int frame,int mode){
            sprintf(filename_RGBY_MARKED,"RGBY_MARKED_%s_%05d",set_label,frame);
         }
         else{
-           sprintf(filename_RGB,        "RGB_%s_%05d_%02d",        set_label,frame,i_depth);
-           sprintf(filename_Y,          "Y_%s_%05d_%02d",          set_label,frame,i_depth);
-           sprintf(filename_RGBY,       "RGBY_%s_%05d_%02d",       set_label,frame,i_depth);
-           sprintf(filename_RY,         "RY_%s_%05d_%02d",         set_label,frame,i_depth);
-           sprintf(filename_GY,         "GY_%s_%05d_%02d",         set_label,frame,i_depth);
-           sprintf(filename_BY,         "BY_%s_%05d_%02d",         set_label,frame,i_depth);
-           sprintf(filename_RGBY_MARKED,"RGBY_MARKED_%s_%05d_%02d",set_label,frame,i_depth);
+           sprintf(filename_RGB,        "RGB_D_%02d_%s_%05d",        i_depth,set_label,frame);
+           sprintf(filename_Y,          "Y_D_%02d_%s_%05d",          i_depth,set_label,frame);
+           sprintf(filename_RGBY,       "RGBY_D_%02d_%s_%05d",       i_depth,set_label,frame);
+           sprintf(filename_RY,         "RY_D_%02d_%s_%05d",         i_depth,set_label,frame);
+           sprintf(filename_GY,         "GY_D_%02d_%s_%05d",         i_depth,set_label,frame);
+           sprintf(filename_BY,         "BY_D_%02d_%s_%05d",         i_depth,set_label,frame);
+           sprintf(filename_RGBY_MARKED,"RGBY_D_%02d_MARKED_%s_%05d",i_depth,set_label,frame);
 //           mode_png=mode&(~WRITE_IMAGE_PNG);
         }
         if(image_RGB!=NULL)

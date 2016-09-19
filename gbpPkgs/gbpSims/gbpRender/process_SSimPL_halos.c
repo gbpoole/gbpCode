@@ -41,11 +41,13 @@ void process_SSimPL_halos(render_info *render,
   pick_best_snap(render->snap_a_list[render->snap_list[i_snap]],render->trees->a_list,render->trees->n_snaps,&i_read,NULL);
   i_read=render->trees->snap_list[i_read];
 
-  // Set the halo and tree filename roots
+  // Set the filename roots
   char filename_trees_root[MAX_FILENAME_LENGTH];
   char filename_halos_root[MAX_FILENAME_LENGTH];
-  sprintf(filename_trees_root,"%s/trees/%s",render->filename_SSimPL_root,render->filename_trees_version);
-  sprintf(filename_halos_root,"%s/halos/%s",render->filename_SSimPL_root,render->filename_halos_version);
+  char filename_catalogs_root[MAX_FILENAME_LENGTH];
+  sprintf(filename_trees_root,   "%s/trees/%s",   render->filename_SSimPL_root,render->filename_trees_version);
+  sprintf(filename_halos_root,   "%s/halos/%s",   render->filename_SSimPL_root,render->filename_halos_version);
+  sprintf(filename_catalogs_root,"%s/catalogs/%s",render->filename_SSimPL_root,render->filename_halos_version);
 
   // Initialize filename paths
   char filename_input_file_root[MAX_FILENAME_LENGTH];
@@ -91,6 +93,14 @@ void process_SSimPL_halos(render_info *render,
   SID_fread_all(&offset_size,    sizeof(int),1,&fp_subgroups_length);
   SID_fskip(sizeof(int),2+n_groups_cat,   &fp_groups_offset);
   SID_fskip(sizeof(int),2+n_subgroups_cat,&fp_subgroups_offset);
+
+  // Open catalogs
+  char filename_cat_root_in[256];
+  sprintf(filename_cat_root_in,"%s/catalogs/%s",render->filename_SSimPL_root,render->filename_halos_version);
+  fp_catalog_info fp_properties_groups;
+  fp_catalog_info fp_properties_subgroups;
+  fopen_catalog(filename_cat_root_in,i_read,READ_CATALOG_PROPERTIES|READ_CATALOG_GROUPS,   &fp_properties_groups);
+  fopen_catalog(filename_cat_root_in,i_read,READ_CATALOG_PROPERTIES|READ_CATALOG_SUBGROUPS,&fp_properties_subgroups);
 
   // Read tree file header
   int n_step_in;
@@ -194,6 +204,9 @@ void process_SSimPL_halos(render_info *render,
        }
     }
 
+    // Read catalogs for groups
+    fread_catalog_file(&fp_properties_groups,NULL,NULL,&(group_i.properties),NULL,i_group);
+
     // Read each subgroup in turn
     int flag_group_ids_unread=TRUE;
     int j_subgroup;
@@ -221,6 +234,10 @@ void process_SSimPL_halos(render_info *render,
              break;
           }
        }
+
+       // Read catalogs for groups
+       fread_catalog_file(&fp_properties_subgroups,NULL,NULL,&(subgroup_i.properties),NULL,i_subgroup);
+
        // Perform selection and action
        if(select_function(i_group,
                           j_subgroup,
@@ -264,6 +281,8 @@ void process_SSimPL_halos(render_info *render,
   SID_fclose(&fp_groups_offset);
   SID_fclose(&fp_subgroups_length);
   SID_fclose(&fp_subgroups_offset);
+  fclose_catalog(&fp_properties_groups);
+  fclose_catalog(&fp_properties_subgroups);
   free_SID_fp_buffer(&fp_trees_in_buffer);
   free_SID_fp_buffer(&fp_groups_length_buffer);
   free_SID_fp_buffer(&fp_groups_offset_buffer);

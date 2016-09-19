@@ -29,7 +29,10 @@ void free_render(render_info **render){
   SID_free(SID_FARG (*render)->kernel_radius);
   SID_free(SID_FARG (*render)->kernel_table);
   SID_free(SID_FARG (*render)->kernel_table_3d);
+
+  // Marking information
   free_mark_arguments(&((*render)->mark_arg_first));
+  SID_free(SID_FARG (*render)->mark_properties);
 
   // Free colour information
   for(int i=0;i<(*render)->n_colour_list;i++){;

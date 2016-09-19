@@ -16,6 +16,7 @@ struct select_group_params_local{
    size_t  n_ids_list;
    void   *ids_list;
    char   *val_list;
+   halo_properties_info properties;
 };
 
 int check_case_for_fragmented_local(int tree_case);
@@ -95,6 +96,7 @@ int add_group_to_ids_list_local(int                i_group,
          memcpy(&(ids_i[params->n_ids_list]),group_i->ids,group_i->n_particles*sizeof(int));
    }
    params->n_ids_list+=group_i->n_particles;
+   params->properties =group_i->properties;
 }
 
 int add_subgroup_to_ids_list_local(int                i_group,
@@ -132,6 +134,7 @@ int add_subgroup_to_ids_list_local(int                i_group,
          memcpy(&(ids_i[params->n_ids_list]),subgroup_i->ids,subgroup_i->n_particles*sizeof(int));
    }
    params->n_ids_list+=subgroup_i->n_particles;
+   params->properties =subgroup_i->properties;
 }
 
 int select_group_index_local(int                i_group,
@@ -314,7 +317,8 @@ void make_ids_list(render_info *render,
                    char   **val_list,
                    size_t  *n_ids_list,
                    int      mode,
-                   int      selection);
+                   int      selection,
+                   halo_properties_info *properties);
 void make_ids_list(render_info *render,
                    int    i_snap,
                    int    select_function(int                i_group,
@@ -342,7 +346,8 @@ void make_ids_list(render_info *render,
                    char   **val_list,
                    size_t  *n_ids_list,
                    int      mode,
-                   int      selection){
+                   int      selection,
+                   halo_properties_info *properties){
 
    // Initialize some stuff
    int flag_long_ids=ADaPS_exist(render->plist_list[i_snap]->data,"flag_LONGIDs");
@@ -373,6 +378,10 @@ void make_ids_list(render_info *render,
    params.val_list  =(*val_list);
    params.n_ids_list=0;
    process_SSimPL_halos(render,i_snap,1,mode,select_function,action_function,&params);
+
+   // Save properties if we've been given a pointer
+   if(properties!=NULL)
+      memcpy(properties,&(params.properties),sizeof(halo_properties_info));
 
    // Sort the list in place
    switch(flag_long_ids){
@@ -444,8 +453,8 @@ void apply_mark_list(render_info   *render,
    }
 }
 
-void execute_marking_argument_local(render_info *render,mark_arg_info *arg);
-void execute_marking_argument_local(render_info *render,mark_arg_info *arg){
+void execute_marking_argument_local(render_info *render,mark_arg_info *arg,halo_properties_info *properties);
+void execute_marking_argument_local(render_info *render,mark_arg_info *arg,halo_properties_info *properties){
    int (*select_function)(int                i_group,
                           int                j_subgroup,
                           int                i_subgroup,
@@ -637,7 +646,8 @@ void execute_marking_argument_local(render_info *render,mark_arg_info *arg){
                                 &val_list,
                                 &n_ids_list,
                                 0,
-                                select_index);
+                                select_index,
+                                properties);
 
                   // Mark the particles in the list
                   apply_mark_list(render,arg,i_snap,i_type,ids_list,val_list,n_ids_list,mark,&mark_count);
@@ -663,11 +673,27 @@ void perform_marking(render_info *render){
    mark_arg_info *current_arg=render->mark_arg_first;
    if(current_arg!=NULL){
       SID_log("Performing particle marking...",SID_LOG_OPEN|SID_LOG_TIMER);
+      // Make sure the properties array is allocated
+      if(render->mark_properties==NULL && render->n_mark_properties>0)
+         render->mark_properties=(halo_properties_info *)SID_malloc(sizeof(halo_properties_info)*render->n_mark_properties);
+      int i_mark_properties=0;
       while(current_arg!=NULL){
+         // Set a pointer to a properties structure if we want it returned
+         halo_properties_info *properties=NULL;
+         if(current_arg->flag_keep_properties){
+            if(i_mark_properties>=render->n_mark_properties)
+               SID_trap_error("Marked properties array has been over-run (i.e. %d>=%d)",ERROR_LOGIC,i_mark_properties,render->n_mark_properties);
+            properties=&(render->mark_properties[i_mark_properties++]);
+         }
          // Perform marking
-         execute_marking_argument_local(render,current_arg);
+         execute_marking_argument_local(render,current_arg,properties);
          current_arg=current_arg->next;
       }
+
+      // Sanity check
+      if(i_mark_properties!=render->n_mark_properties)
+         SID_trap_error("Marked properties array has not been properly populated (i.e. %d!=%d)",ERROR_LOGIC,i_mark_properties,render->n_mark_properties);
+
       SID_log("Done.",SID_LOG_CLOSE);
    }
 }

@@ -81,5 +81,5 @@ DATAFILES = rgb.txt gbpCode_cmap_red.txt gbpCode_cmap_green.txt gbpCode_cmap_blu
 LIBFILE   = libgbpRender.a
 BINFILES  = make_colour_bar render
 SCRIPTS   = make_movie
-LIBS      = -lgbpRender -lgbpSPH -lgbpTrees -lgbpCosmo -lgbpMath -lgbpLib
+LIBS      = -lgbpRender -lgbpSPH -lgbpHalos -lgbpTrees -lgbpCosmo -lgbpMath -lgbpLib
 #############################

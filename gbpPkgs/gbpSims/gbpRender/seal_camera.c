@@ -20,18 +20,7 @@ void seal_camera(render_info *render){
   copy_perspective(render->first_scene->first_perspective,render->camera->perspective);
 
   // Decide how many depths to split the output into
-  double d_o=render->camera->perspective->radius;
-  if(render->camera->f_image_plane!=1.){
-    render->camera->n_depth       =3;
-    render->camera->depth_array   =(double *)SID_malloc(sizeof(double)*(render->camera->n_depth-1));
-    render->camera->depth_array[0]=render->camera->f_image_plane*d_o;
-    render->camera->depth_array[1]=d_o;
-  }
-  else{
-    render->camera->n_depth       =2;
-    render->camera->depth_array   =(double *)SID_malloc(sizeof(double)*(render->camera->n_depth-1));
-    render->camera->depth_array[0]=d_o;
-  }
+  render->camera->n_depth=3+render->n_mark_properties;
 
   // Initialize image buffers 
   if(check_mode_for_flag(render->camera->camera_mode,CAMERA_STEREO)){

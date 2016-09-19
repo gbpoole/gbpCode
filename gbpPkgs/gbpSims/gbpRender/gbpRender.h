@@ -150,7 +150,6 @@ struct camera_info{
   int               width;
   int               height;
   int               n_depth;
-  double           *depth_array;
   double            stereo_ratio;
   double            f_near_field;
   double            f_taper_field;
@@ -206,27 +205,29 @@ struct camera_info{
 
 typedef struct mark_arg_info mark_arg_info;
 struct mark_arg_info{
-   char            species[32];
-   char            type[32];
-   double          dval[8];
-   int             ival[8];
-   char            value;
+   char           species[32];
+   char           type[32];
+   double         dval[8];
+   int            ival[8];
+   char           value;
+   int            flag_keep_properties;
    mark_arg_info *next;
 };
 
 typedef struct process_halo_info process_halo_info;
 struct process_halo_info{
-    int    n_particles;
-    size_t offset;
-    int    id;
-    int    tree_case;
-    int    descendant_id;
-    int    tree_id;
-    int    file_offset;
-    int    file_index;
-    int    n_subgroups;
-    int    n_particles_peak;
-    void  *ids;
+    int                   n_particles;
+    size_t                offset;
+    int                   id;
+    int                   tree_case;
+    int                   descendant_id;
+    int                   tree_id;
+    int                   file_offset;
+    int                   file_index;
+    int                   n_subgroups;
+    int                   n_particles_peak;
+    halo_properties_info  properties;
+    void                 *ids;
 };
 
 typedef struct render_info render_info;
@@ -263,12 +264,19 @@ struct render_info{
   int             flag_add_absorption;
   plist_info    **plist_list;
   tree_info      *trees;
-  mark_arg_info  *mark_arg_first;
-  mark_arg_info  *mark_arg_last;
+
+  // Marking info
+  mark_arg_info        *mark_arg_first;
+  mark_arg_info        *mark_arg_last;
+  int                   n_mark_arg;
+  int                   n_mark_properties;
+  halo_properties_info *mark_properties;
+
   double          h_Hubble;
   double          f_absorption;
   int             w_mode;
   int             v_mode;
+
   // Colour info
   int             n_colour_list;
   char          **colour_name;

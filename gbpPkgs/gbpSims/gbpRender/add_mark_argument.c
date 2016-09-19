@@ -12,18 +12,27 @@
 void add_mark_argument(render_info *render,const char *species,int value,const char *type,...){
    va_list vargs;
    va_start(vargs,type);
-   mark_arg_info *new_arg;
+
+   // Create new argument
+   mark_arg_info *new_arg=NULL;
    create_mark_argument(render,&new_arg);
    strcpy(new_arg->species,species);
    new_arg->value=(char)value;
+   new_arg->flag_keep_properties=FALSE;
    strcpy(new_arg->type,type);
+
+   // Parse the passed parameters
    if(!strcmp(new_arg->type,"sphere")){
       for(int i_val=0;i_val<4;i_val++)
          new_arg->dval[i_val]=va_arg(vargs,double);
    }
    else if(!strcmp(new_arg->type,"group_index")   || !strcmp(new_arg->type,"subgroup_index")   ||
-           !strcmp(new_arg->type,"group_tree_id") || !strcmp(new_arg->type,"subgroup_tree_id") ||
            !strcmp(new_arg->type,"group_id")      || !strcmp(new_arg->type,"subgroup_id")){
+      for(int i_val=0;i_val<1;i_val++)
+         new_arg->ival[i_val]=va_arg(vargs,int);
+      new_arg->flag_keep_properties=TRUE;
+   }
+   else if(!strcmp(new_arg->type,"group_tree_id") || !strcmp(new_arg->type,"subgroup_tree_id")){
       for(int i_val=0;i_val<1;i_val++)
          new_arg->ival[i_val]=va_arg(vargs,int);
    }
@@ -33,6 +42,7 @@ void add_mark_argument(render_info *render,const char *species,int value,const c
    }
    else if(!strcmp(new_arg->type,"") || !strcmp(new_arg->type,"*"))
       sprintf(new_arg->type,"all");
+
    // These things don't take argument values
    else if(strcmp(new_arg->type,"group_fragmented") && strcmp(new_arg->type,"subgroup_fragmented"))
       SID_trap_error("Invalid mark type {%s} in add_mark_argument().",ERROR_LOGIC,new_arg->type);
@@ -41,6 +51,12 @@ void add_mark_argument(render_info *render,const char *species,int value,const c
    else
       render->mark_arg_last->next=new_arg;
    render->mark_arg_last=new_arg;
+   render->n_mark_arg++;
+
+   // Count the number of arguments that need to keep properties
+   if(new_arg->flag_keep_properties)
+      render->n_mark_properties++;
+
    va_end(vargs);
 }
 
