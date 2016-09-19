@@ -36,8 +36,6 @@ int main(int argc, char *argv[]){
     char    temp_char[2],temp_char_old[2];
     int     data_column;
     int     n_bins;
-    char   *line_in;
-    size_t  line_length=0;
     double *data;
     int    *data_bin;
     int     i_data,j_data,i_bin;
@@ -94,7 +92,7 @@ int main(int argc, char *argv[]){
         return(OPEN_INPUT_ERROR);
     }
 
-    SID_log("Compiling stats and histogram of column #%d of {%s}...",SID_LOG_OPEN,data_column,filename_in);
+    SID_log("Compiling stats and histogram (%d bins) of column #%d of {%s}...",SID_LOG_OPEN,n_bins,data_column,filename_in);
     if(flag_take_log) SID_log("Taking the log of the data.",SID_LOG_COMMENT);
     SID_log("Stats:",SID_LOG_COMMENT,data_column);
 
@@ -108,6 +106,8 @@ int main(int argc, char *argv[]){
     /* Allocate memory for the data. Read it and sort it in ascending order */
     /************************************************************************/
     data=(double *)SID_malloc(sizeof(double)*n_data);
+    char   *line_in    =NULL;
+    size_t  line_length=0;
     for(i=0;i<n_data;i++){
       grab_next_line_data(unit_in,&line_in,&line_length);
       grab_double(line_in,data_column,&(data[i]));
@@ -221,7 +221,10 @@ int main(int argc, char *argv[]){
     /********************/
     /* Open output file */
     /********************/
-    sprintf(filename_out,"%s.hist.%05d",filename_in,data_column);
+    char filename_in_base[MAX_FILENAME_LENGTH];
+    strcpy(filename_in_base,filename_in);
+    strip_path(filename_in_base);
+    sprintf(filename_out,"%s.hist.%05d",filename_in_base,data_column);
     if((unit_out=fopen(filename_out,"w"))==NULL){
         fprintf(stderr,"Error opening output file {%s}.\n",filename_out);
         SID_free(SID_FARG data);
