@@ -8,16 +8,14 @@
 #include <gbpSPH.h>
 #include <gbpRender.h>
 
-void add_render_scene(render_info *render){
-  scene_info *current_s;
-  scene_info *last_s;
-  scene_info *next_s;
-  scene_info *new_s;
+void add_render_scene(render_info *render,int n_frames){
+  scene_info *current_s=NULL;
+  scene_info *last_s   =NULL;
+  scene_info *next_s   =NULL;
+  scene_info *new_s    =NULL;
   SID_log("Adding render scene...",SID_LOG_OPEN);
-  // Seal the previous scene
-  seal_scenes(render->scenes);
   // Create a new scene
-  init_scene(&new_s);
+  init_scene(&new_s,n_frames);
   // Attach it to the end of the linked list
   current_s=render->scenes;
   last_s   =current_s;
@@ -29,13 +27,16 @@ void add_render_scene(render_info *render){
   if(last_s==NULL){
     render->first_scene=new_s;
     render->scenes     =new_s;
+    new_s->first_frame =0;
   }
   // Set last (ie last added) scene pointers
   //   (Carry last scene's last perspective as new starting perspective)
   else{
-    copy_perspective(last_s->last_perspective,new_s->first_perspective);
+    copy_perspective(last_s->perspectives[last_s->n_frames-1],new_s->perspectives[0]);
+    new_s->first_frame=last_s->last_frame+1;
     last_s->next=new_s;
   }
+  new_s->last_frame=new_s->first_frame+(new_s->n_frames-1);
   render->last_scene=new_s;
   SID_log("Done.",SID_LOG_CLOSE);
 }

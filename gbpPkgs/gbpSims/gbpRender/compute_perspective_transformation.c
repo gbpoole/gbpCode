@@ -95,13 +95,13 @@ void compute_perspective_transformation(double  x_o,
         Dz_stereo=0.;
      else
         Dz_stereo=-sqrt(stereo_offset*stereo_offset-Dx_stereo*Dx_stereo-Dy_stereo*Dy_stereo);
-     if(stereo_offset!=0){
-        SID_log("Stereo offset results: (offset=%10.3le [%s])",SID_LOG_OPEN,   stereo_offset/unit_factor,unit_text);
-        SID_log("(x_o,x_c,D_x)=(%10.3le,%10.3le,%10.3le) [%s]",SID_LOG_COMMENT,x_o/unit_factor,x_c/unit_factor,Dx_stereo/unit_factor,unit_text);
-        SID_log("(y_o,y_c,D_y)=(%10.3le,%10.3le,%10.3le) [%s]",SID_LOG_COMMENT,y_o/unit_factor,y_c/unit_factor,Dy_stereo/unit_factor,unit_text);
-        SID_log("(z_o,z_c,D_z)=(%10.3le,%10.3le,%10.3le) [%s]",SID_LOG_COMMENT,z_o/unit_factor,z_c/unit_factor,Dz_stereo/unit_factor,unit_text);
-        SID_log("",SID_LOG_SILENT_CLOSE);
-     }
+     //if(stereo_offset!=0){
+     //   SID_log("Stereo offset results: (offset=%10.3le [%s])",SID_LOG_OPEN,   stereo_offset/unit_factor,unit_text);
+     //   SID_log("(x_o,x_c,D_x)=(%10.3le,%10.3le,%10.3le) [%s]",SID_LOG_COMMENT,x_o/unit_factor,x_c/unit_factor,Dx_stereo/unit_factor,unit_text);
+     //   SID_log("(y_o,y_c,D_y)=(%10.3le,%10.3le,%10.3le) [%s]",SID_LOG_COMMENT,y_o/unit_factor,y_c/unit_factor,Dy_stereo/unit_factor,unit_text);
+     //   SID_log("(z_o,z_c,D_z)=(%10.3le,%10.3le,%10.3le) [%s]",SID_LOG_COMMENT,z_o/unit_factor,z_c/unit_factor,Dz_stereo/unit_factor,unit_text);
+     //   SID_log("",SID_LOG_SILENT_CLOSE);
+     //}
      (*x_o_out)+=Dx_stereo;
      (*y_o_out)+=Dy_stereo;
      (*z_o_out)+=Dz_stereo;

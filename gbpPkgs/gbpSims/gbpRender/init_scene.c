@@ -8,20 +8,20 @@
 #include <gbpSPH.h>
 #include <gbpRender.h>
 
-void init_scene(scene_info **scene){
+void init_scene(scene_info **scene,int n_frames){
   SID_log("Initializing scene...",SID_LOG_OPEN);
-  (*scene)=(scene_info *)SID_malloc(sizeof(scene_info));
-  (*scene)->n_frames         =1;
-  (*scene)->n_perspectives   =0;
-  (*scene)->perspectives     =NULL;
-  (*scene)->first_perspective=NULL;
-  (*scene)->last_perspective =NULL;
-  (*scene)->evolve           =NULL;
-  add_scene_perspective((*scene));
-  init_perspective(&((*scene)->evolve),RENDER_INIT_EVOLVE);
-  init_perspective_interp(&((*scene)->interp));
-  (*scene)->sealed     =FALSE;
-  (*scene)->next       =NULL;
+  if(n_frames<=0)
+     SID_trap_error("Invalid number of frames (%d) requested for scene.",ERROR_LOGIC,n_frames);
+  (*scene)                 =(scene_info *)SID_malloc(sizeof(scene_info));
+  (*scene)->n_frames       =n_frames;
+  (*scene)->perspectives   =(perspective_info **)SID_malloc(sizeof(perspective_info *)*n_frames);
+  for(int i_frame=0;i_frame<n_frames;i_frame++)
+     init_perspective(&((*scene)->perspectives[i_frame]));
+  (*scene)->sealed         =FALSE;
+  (*scene)->next           =NULL;
+  (*scene)->flag_time_set  =FALSE;
+  (*scene)->flag_p_o_set   =FALSE;
+  (*scene)->flag_radius_set=FALSE;
   SID_log("Done.",SID_LOG_CLOSE);
 }
 

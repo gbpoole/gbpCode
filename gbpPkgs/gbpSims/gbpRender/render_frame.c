@@ -682,24 +682,24 @@ void render_frame(render_info  *render){
        if(mask[i_pixel]) 
          n_unmasked++;
      if(RGB_image!=NULL){
-       calc_min(RGB_image[n_depth-1],&min_RGB_image,n_pixels,SID_DOUBLE,CALC_MODE_DEFAULT);
-       calc_max(RGB_image[n_depth-1],&max_RGB_image,n_pixels,SID_DOUBLE,CALC_MODE_DEFAULT);
+       calc_min(RGB_image[0],&min_RGB_image,n_pixels,SID_DOUBLE,CALC_MODE_DEFAULT);
+       calc_max(RGB_image[0],&max_RGB_image,n_pixels,SID_DOUBLE,CALC_MODE_DEFAULT);
      }
      if(Y_image!=NULL){
-       calc_min(Y_image[n_depth-1],&min_Y_image,n_pixels,SID_DOUBLE,CALC_MODE_DEFAULT);
-       calc_max(Y_image[n_depth-1],&max_Y_image,n_pixels,SID_DOUBLE,CALC_MODE_DEFAULT);
+       calc_min(Y_image[0],&min_Y_image,n_pixels,SID_DOUBLE,CALC_MODE_DEFAULT);
+       calc_max(Y_image[0],&max_Y_image,n_pixels,SID_DOUBLE,CALC_MODE_DEFAULT);
      }
      if(RY_image!=NULL){
-       calc_min(RY_image[n_depth-1],&min_RY_image,n_pixels,SID_DOUBLE,CALC_MODE_DEFAULT);
-       calc_max(RY_image[n_depth-1],&max_RY_image,n_pixels,SID_DOUBLE,CALC_MODE_DEFAULT);
+       calc_min(RY_image[0],&min_RY_image,n_pixels,SID_DOUBLE,CALC_MODE_DEFAULT);
+       calc_max(RY_image[0],&max_RY_image,n_pixels,SID_DOUBLE,CALC_MODE_DEFAULT);
      }
      if(GY_image!=NULL){
-       calc_min(GY_image[n_depth-1],&min_GY_image,n_pixels,SID_DOUBLE,CALC_MODE_DEFAULT);
-       calc_max(GY_image[n_depth-1],&max_GY_image,n_pixels,SID_DOUBLE,CALC_MODE_DEFAULT);
+       calc_min(GY_image[0],&min_GY_image,n_pixels,SID_DOUBLE,CALC_MODE_DEFAULT);
+       calc_max(GY_image[0],&max_GY_image,n_pixels,SID_DOUBLE,CALC_MODE_DEFAULT);
      }
      if(BY_image!=NULL){
-       calc_min(BY_image[n_depth-1],&min_BY_image,n_pixels,SID_DOUBLE,CALC_MODE_DEFAULT);
-       calc_max(BY_image[n_depth-1],&max_BY_image,n_pixels,SID_DOUBLE,CALC_MODE_DEFAULT);
+       calc_min(BY_image[0],&min_BY_image,n_pixels,SID_DOUBLE,CALC_MODE_DEFAULT);
+       calc_max(BY_image[0],&max_BY_image,n_pixels,SID_DOUBLE,CALC_MODE_DEFAULT);
      }
      SID_log("Done.",SID_LOG_CLOSE);
    

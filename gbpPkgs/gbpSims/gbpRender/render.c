@@ -9,7 +9,6 @@
 
 int main(int argc, char *argv[]){
   int          flag_continue;
-  int          i_frame;
   int          i_frame_start;
   int          i_frame_stop;
   render_info *render=NULL;
@@ -62,7 +61,7 @@ int main(int argc, char *argv[]){
     mode=SET_RENDER_DEFAULT;
   
   // Loop over all the frames
-  for(i_frame=i_frame_start;i_frame<=i_frame_stop;i_frame++){
+  for(int i_frame=i_frame_start;i_frame<=i_frame_stop;i_frame++){
 
     SID_log("Generating frame %d of %d...",SID_LOG_OPEN|SID_LOG_TIMER,i_frame+1,render->n_frames);
 

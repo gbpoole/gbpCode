@@ -112,95 +112,80 @@ struct perspective_info{
   double time;            // Used for time-evolving movies
   double focus_shift_x;   // After all transformations are applied, this shifts everything in the image-frame.  Useful
   double focus_shift_y;   //    for cases where you want flag_comoving=FALSE but don't want (0,0,0) in the image-centre.
-  perspective_info *next; // Used for perspective lists
-};
-
-// Perspectives are evenly spaced (in therms of frames) accross a scene
-typedef struct perspective_interp_info perspective_interp_info;
-struct perspective_interp_info{
-  interp_info *p_o[3];  
-  interp_info *radius;     
-  interp_info *FOV;     
-  interp_info *theta;   
-  interp_info *zeta;   
-  interp_info *phi;     
-  interp_info *time;
 };
 
 typedef struct scene_info scene_info;
 struct scene_info{
-  int                      n_frames;
-  int                      first_frame;
-  int                      last_frame;
-  int                      n_perspectives;
-  perspective_info        *perspectives;
-  perspective_info        *first_perspective;
-  perspective_info        *last_perspective;
-  perspective_info        *evolve;  // Sets magnitudes of linear gradients accross the scene
-  perspective_interp_info *interp;
-  int                      sealed;  // Set to TRUE if scene initialization has been finalized
-  scene_info              *next;
+  int                n_frames;
+  int                first_frame;
+  int                last_frame;
+  perspective_info **perspectives;
+  int                sealed;  // Set to TRUE if scene initialization has been finalized
+  int                flag_time_set;
+  int                flag_p_o_set;
+  int                flag_radius_set;
+  scene_info        *next;
 };
 
 typedef struct camera_info camera_info;
 struct camera_info{
-  int               camera_mode;
-  char              colour_table[MAX_FILENAME_LENGTH];
-  int               flag_velocity_space;
-  int               width;
-  int               height;
-  int               n_depth;
-  double            stereo_ratio;
-  double            f_near_field;
-  double            f_taper_field;
-  double            f_image_plane;
-  perspective_info *perspective; // Present perspective state of camera
+  int                camera_mode;
+  char               colour_table[MAX_FILENAME_LENGTH];
+  int                flag_velocity_space;
+  int                width;
+  int                height;
+  int                n_depth;
+  double             stereo_ratio;
+  double             f_near_field;
+  double             f_taper_field;
+  double             f_image_plane;
+  perspective_info  *perspective; // Present perspective state of camera
   image_info       **image_RGBY;
   image_info       **image_RGBY_left;
   image_info       **image_RGBY_right;
-  char             *mask_RGBY;
-  char             *mask_RGBY_left;
-  char             *mask_RGBY_right;
+  char              *mask_RGBY;
+  char              *mask_RGBY_left;
+  char              *mask_RGBY_right;
   image_info       **image_RGBY_MARKED;
   image_info       **image_RGBY_MARKED_left;
   image_info       **image_RGBY_MARKED_right;
-  char             *mask_RGBY_MARKED;
-  char             *mask_RGBY_MARKED_left;
-  char             *mask_RGBY_MARKED_right;
-  int               RGB_mode;
-  char              RGB_param[64];
-  double            RGB_range[2];
-  interp_info      *RGB_gamma;
-  ADaPS            *transfer_list;
+  char              *mask_RGBY_MARKED;
+  char              *mask_RGBY_MARKED_left;
+  char              *mask_RGBY_MARKED_right;
+  int                RGB_mode;
+  char               RGB_param[64];
+  double             RGB_range[2];
+  interp_info       *RGB_gamma;
+  ADaPS             *transfer_list;
   image_info       **image_RGB;
   image_info       **image_RGB_left;
   image_info       **image_RGB_right;
-  char             *mask_RGB;
-  char             *mask_RGB_left;
-  char             *mask_RGB_right;
-  int               Y_mode;
-  char              Y_param[64];
-  double            Y_range[2];
-  interp_info      *Y_gamma;
+  char              *mask_RGB;
+  char              *mask_RGB_left;
+  char              *mask_RGB_right;
+  int                Y_mode;
+  char               Y_param[64];
+  double             Y_range[2];
+  interp_info       *Y_gamma;
   image_info       **image_Y;
   image_info       **image_Y_left;
   image_info       **image_Y_right;
-  char             *mask_Y;
-  char             *mask_Y_left;
-  char             *mask_Y_right;
-  int               Z_mode;
-  double            Z_range[2];
-  interp_info      *Z_gamma;
+  char              *mask_Y;
+  char              *mask_Y_left;
+  char              *mask_Y_right;
+  int                Z_mode;
+  double             Z_range[2];
+  interp_info       *Z_gamma;
   // These images are used when colours can not be set with a colour table
-  image_info       **image_RY;
-  image_info       **image_RY_left;
-  image_info       **image_RY_right;
-  image_info       **image_GY;
-  image_info       **image_GY_left;
-  image_info       **image_GY_right;
-  image_info       **image_BY;
-  image_info       **image_BY_left;
-  image_info       **image_BY_right;
+  image_info        **image_RY;
+  image_info        **image_RY_left;
+  image_info        **image_RY_right;
+  image_info        **image_GY;
+  image_info        **image_GY_left;
+  image_info        **image_GY_right;
+  image_info        **image_BY;
+  image_info        **image_BY_left;
+  image_info        **image_BY_right;
 };
 
 typedef struct mark_arg_info mark_arg_info;
@@ -319,13 +304,10 @@ extern "C" {
 double RGB_lookup(render_info *render,char colour,int channel);
 char   fetch_render_colour_index(render_info *render,const char *name);
 
-void init_perspective(perspective_info **perspective,int mode);
+void init_perspective(perspective_info **perspective);
 void free_perspective(perspective_info **perspective);
 void copy_perspective(perspective_info *from,perspective_info *to);
-void init_perspective_interp(perspective_interp_info **perspective_interp);
-void free_perspective_interp(perspective_interp_info **perspective_interp);
-void add_scene_perspective(scene_info *scene);
-void init_scene(scene_info **scene);
+void init_scene(scene_info **scene,int n_frames);
 void seal_scenes(scene_info *scenes);
 void free_scenes(scene_info **scene);
 void init_camera(camera_info **camera, int mode);
@@ -333,10 +315,11 @@ void seal_camera(render_info *render);
 void free_camera(camera_info **camera);
 void init_render(render_info **render);
 void free_render(render_info **render);
-void add_render_scene(render_info *render);
+void add_render_scene(render_info *render,int n_frames);
 void seal_render(render_info *render);
 int  set_render_state(render_info *render,int frame,int mode);
 void parse_render_file(render_info **render, char *filename);
+void parse_set_scene_quantity(scene_info *scene,const char *quantity,char *line, int i_word_in);
 void write_frame(render_info *render,int frame,int mode);
 void write_path_file(render_info *render,int frame);
 void read_frame(render_info *render,int frame);

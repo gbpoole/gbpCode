@@ -20,7 +20,7 @@ void init_render(render_info **render){
   init_camera(&((*render)->camera),CAMERA_DEFAULT);
 
   // Create the first scene
-  init_scene(&((*render)->scenes));
+  (*render)->scenes     =NULL;
   (*render)->first_scene=(*render)->scenes;
   (*render)->last_scene =(*render)->scenes;
 

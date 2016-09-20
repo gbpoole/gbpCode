@@ -15,11 +15,7 @@ OBJFILES  = RGB_lookup.o                     \
 	    init_perspective.o                   \
 	    free_perspective.o                   \
 	    copy_perspective.o                   \
-	    init_perspective_interp.o            \
-	    free_perspective_interp.o            \
-	    add_scene_perspective.o              \
 	    init_scene.o                         \
-	    seal_scenes.o                        \
 	    free_scenes.o                        \
 	    init_camera.o                        \
 	    seal_camera.o                        \
@@ -28,8 +24,8 @@ OBJFILES  = RGB_lookup.o                     \
 	    free_render.o                        \
 	    add_render_scene.o                   \
 	    seal_render.o                        \
-	    set_render_state.o                   \
 	    parse_render_file.o                  \
+	    parse_set_scene_quantity.o           \
 	    read_frame.o                         \
 	    write_path_file.o                    \
 	    set_frame.o                          \
@@ -54,13 +50,14 @@ OBJFILES  = RGB_lookup.o                     \
 	    check_if_particle_marked.o           \
 	    init_make_map_noabs.o                \
 	    init_make_map_abs.o                  \
-	    render_frame.o                       \
 	    set_image_RGB.o                      \
 	    set_image_RGBY.o                     \
 	    set_image_RGBY_MARKED.o              \
 	    write_frame.o                        \
 	    write_image.o                        \
-	    write_image_to_movie.o
+	    write_image_to_movie.o               \
+	    render_frame.o                       \
+	    set_render_state.o                   
 DATAFILES = rgb.txt gbpCode_cmap_red.txt gbpCode_cmap_green.txt gbpCode_cmap_blue.txt gbpCode_cmap_GiggleZ.txt \
 	gbpCode_cmap_greyscale.txt           gbpCode_cmap_iso_H150_R090_C050.txt  gbpCode_cmap_iso_H300_R180_C050.txt      gbpCode_cmap_linear_H030_Rn360_C050.txt  gbpCode_cmap_linear_H120_R540_C050.txt   gbpCode_cmap_linear_H210_R270_C050.txt   gbpCode_cmap_linear_H270_Rn360_C050.txt \
 	gbpCode_cmap_iso_H000_R090_C050.txt  gbpCode_cmap_iso_H150_R180_C050.txt  gbpCode_cmap_iso_H300_R270_C050.txt      gbpCode_cmap_linear_H030_Rn540_C050.txt  gbpCode_cmap_linear_H120_Rn270_C050.txt  gbpCode_cmap_linear_H210_R360_C050.txt   gbpCode_cmap_linear_H270_Rn540_C050.txt \

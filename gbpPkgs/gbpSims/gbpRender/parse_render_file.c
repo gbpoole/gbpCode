@@ -93,52 +93,7 @@ void parse_render_file(render_info **render, char *filename){
         }
         else if(!strcmp(parameter,"scene")){
           grab_word(line,i_word++,variable);
-          if(!strcmp(variable,"n_frames")){
-            grab_int(line,i_word++,&i_value);
-            (*render)->last_scene->n_frames=i_value;
-          }
-          else if(!strcmp(variable,"FOV")){
-            grab_double(line,i_word++,&d_value);
-            (*render)->last_scene->last_perspective->FOV=d_value;
-          }
-          else if(!strcmp(variable,"p_o")){
-            grab_double(line,i_word++,&d_value);
-            (*render)->last_scene->last_perspective->p_o[0]=d_value;
-            grab_double(line,i_word++,&d_value);
-            (*render)->last_scene->last_perspective->p_o[1]=d_value;
-            grab_double(line,i_word++,&d_value);
-            (*render)->last_scene->last_perspective->p_o[2]=d_value;
-          }
-          else if(!strcmp(variable,"radius")){
-            grab_double(line,i_word++,&d_value);
-            (*render)->last_scene->last_perspective->radius=d_value;
-          }
-          else if(!strcmp(variable,"theta")){
-            grab_double(line,i_word++,&d_value);
-            (*render)->last_scene->last_perspective->theta=d_value;
-          }
-          else if(!strcmp(variable,"phi")){
-            grab_double(line,i_word++,&d_value);
-            (*render)->last_scene->last_perspective->phi=d_value;
-          }
-          else if(!strcmp(variable,"zeta")){
-            grab_double(line,i_word++,&d_value);
-            (*render)->last_scene->last_perspective->zeta=d_value;
-          }
-          else if(!strcmp(variable,"time")){
-            grab_double(line,i_word++,&d_value);
-            (*render)->last_scene->last_perspective->time=d_value;
-          }
-          else if(!strcmp(variable,"focus_shift_x")){
-            grab_double(line,i_word++,&d_value);
-            (*render)->last_scene->last_perspective->focus_shift_x=d_value;
-          }
-          else if(!strcmp(variable,"focus_shift_y")){
-            grab_double(line,i_word++,&d_value);
-            (*render)->last_scene->last_perspective->focus_shift_y=d_value;
-          }
-          else
-            SID_trap_error("Unknown variable {%s} for parameter {%s} for command {%s} on line %d",ERROR_LOGIC,variable,parameter,command,i_line);
+          parse_set_scene_quantity((*render)->last_scene,variable,line,i_word);
         }
         else if(!strcmp(parameter,"n_interpolate"))
           grab_int(line,i_word++,&((*render)->n_interpolate));
@@ -338,52 +293,21 @@ void parse_render_file(render_info **render, char *filename){
           else
             SID_trap_error("Unknown variable {%s} for parameter {%s} for command {%s} on line %d",ERROR_LOGIC,variable,parameter,command,i_line);
         }
-        else if(!strcmp(parameter,"evolve")){
-          grab_word(line,i_word++,variable);
-          if(!strcmp(variable,"FOV")){
-            grab_double(line,i_word++,&d_value);
-            (*render)->last_scene->evolve->FOV=d_value;
-          }
-          else if(!strcmp(variable,"p_o")){
-            grab_double(line,i_word++,&d_value);
-            (*render)->last_scene->evolve->p_o[0]=d_value;
-            grab_double(line,i_word++,&d_value);
-            (*render)->last_scene->evolve->p_o[1]=d_value;
-            grab_double(line,i_word++,&d_value);
-            (*render)->last_scene->evolve->p_o[2]=d_value;
-          }
-          else if(!strcmp(variable,"radius")){
-            grab_double(line,i_word++,&d_value);
-            (*render)->last_scene->evolve->radius=d_value;
-          }
-          else if(!strcmp(variable,"theta")){
-            grab_double(line,i_word++,&d_value);
-            (*render)->last_scene->evolve->theta=d_value;
-          }
-          else if(!strcmp(variable,"phi")){
-            grab_double(line,i_word++,&d_value);
-            (*render)->last_scene->evolve->phi=d_value;
-          }
-          else if(!strcmp(variable,"zeta")){
-            grab_double(line,i_word++,&d_value);
-            (*render)->last_scene->evolve->zeta=d_value;
-          }
-          else if(!strcmp(variable,"time")){
-            grab_double(line,i_word++,&d_value);
-            (*render)->last_scene->evolve->time=d_value;
-          }
-          else
-            SID_trap_error("Unknown variable {%s} for parameter {%s} for command {%s} on line %d",ERROR_LOGIC,variable,parameter,command,i_line);
-        }      
         else
           SID_trap_error("Unknown parameter {%s} for command {%s} on line %d",ERROR_LOGIC,parameter,command,i_line);
       }
       else if(!strcmp(command,"add")){
         grab_word(line,i_word++,parameter);
-        if(!strcmp(parameter,"scene"))
-          add_render_scene((*render));
-        else if(!strcmp(parameter,"perspective"))
-          add_scene_perspective((*render)->last_scene);
+        if(!strcmp(parameter,"scene")){
+           grab_word(line,i_word++,temp_word);
+           if(!strcmp(temp_word,"n_frames")){
+              int n_frames=0;
+              grab_int(line,i_word++,&n_frames);
+              add_render_scene((*render),n_frames);
+           }
+           else
+              SID_trap_error("Number of frames in new scene not specified correctly on line {%s}.",ERROR_LOGIC,line);
+        }
         else
           SID_trap_error("Unknown parameter {%s} for command {%s} on line %d",ERROR_LOGIC,parameter,command,i_line);
       }

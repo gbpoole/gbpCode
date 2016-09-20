@@ -10,56 +10,28 @@
 
 // Return true if the new perspective is sucessfully set
 int set_render_state(render_info *render,int frame,int mode){
-  scene_info       *current_scene;
-  perspective_info *perspective;
-  int               start_frame;
-  int               stop_frame=0;
-  int               r_val=FALSE;
-  int               i_snap,j_snap,snap_best;
-  double            snap_diff,snap_diff_best;
 
+  // Make sure the render structure has been finalized
   (render->mode)=mode;
-
   if(!render->sealed)
     seal_render(render);
 
-  perspective  =render->camera->perspective;
-  current_scene=render->scenes;
-  while(current_scene!=NULL && r_val==FALSE){
-    r_val=TRUE;
-    if(frame==current_scene->first_frame)
-      copy_perspective(current_scene->first_perspective,perspective);
-    else if(frame==current_scene->last_frame)
-      copy_perspective(current_scene->last_perspective, perspective);
-    else if(frame>=current_scene->first_frame && frame<current_scene->last_frame){
-      perspective->p_o[0]=interpolate(current_scene->interp->p_o[0],(double)frame);
-      perspective->p_o[1]=interpolate(current_scene->interp->p_o[1],(double)frame);
-      perspective->p_o[2]=interpolate(current_scene->interp->p_o[2],(double)frame);
-      perspective->time  =interpolate(current_scene->interp->time,  (double)frame);
-      perspective->radius=interpolate(current_scene->interp->radius,(double)frame);
-      perspective->FOV   =interpolate(current_scene->interp->FOV,   (double)frame);
-      perspective->theta =interpolate(current_scene->interp->theta, (double)frame);
-      perspective->zeta  =interpolate(current_scene->interp->zeta,  (double)frame);
-      perspective->phi   =interpolate(current_scene->interp->phi,   (double)frame);
+  // Copy the next perspective to the camera
+  perspective_info *perspective  =render->camera->perspective;
+  scene_info       *current_scene=render->scenes;
+  int               r_val        =FALSE;
+  int               i_frame      =0;
+  while(current_scene!=NULL && !r_val){
+    if(frame>=current_scene->first_frame && frame<=current_scene->last_frame){
+       copy_perspective(current_scene->perspectives[frame-current_scene->first_frame],perspective);
+       r_val=TRUE;
     }
-    else
-      r_val=FALSE;
     current_scene=current_scene->next;
   }
-  if(!check_mode_for_flag(render->camera->camera_mode,CAMERA_PLANE_PARALLEL))
-    perspective->radius*=perspective->phi;
-  else
-    perspective->radius=1e8;
-
-  perspective->FOV   *=perspective->phi;
-  perspective->p_c[0] =perspective->p_o[0]+perspective->radius*cos(perspective->zeta)*sin(perspective->theta);
-  perspective->p_c[1] =perspective->p_o[1]+perspective->radius*cos(perspective->zeta)*cos(perspective->theta);
-  perspective->p_c[2] =perspective->p_o[2]+perspective->radius*sin(perspective->zeta);
-  perspective->d_o    =sqrt(pow(perspective->p_o[0]-perspective->p_c[0],2)+
-                            pow(perspective->p_o[1]-perspective->p_c[1],2)+
-                            pow(perspective->p_o[2]-perspective->p_c[2],2));
 
   // Perform snapshot and smooth-file reading
+  int    i_snap,j_snap,snap_best;
+  double snap_diff,snap_diff_best;
   if(!check_mode_for_flag(render->mode,SET_RENDER_RESCALE)){
     int *snap_list=(int *)SID_malloc(sizeof(int)*render->n_interpolate);
     // Determine which snapshot(s) to use
@@ -134,7 +106,7 @@ int set_render_state(render_info *render,int frame,int mode){
        }
     }
 
-    // Check and (if necessary) read snapshots and smooth files here
+    // Check (and if necessary, read) snapshots and smooth files here
     for(i_snap=0;i_snap<render->n_interpolate;i_snap++){
        if(render->snap_list[i_snap]<0){
           render->snap_list[i_snap]=snap_list[i_snap];

@@ -17,7 +17,7 @@ void seal_camera(render_info *render){
      render->camera->camera_mode|=CAMERA_STEREO;
 
   // Initialize the perspective information for this camera
-  copy_perspective(render->first_scene->first_perspective,render->camera->perspective);
+  copy_perspective(render->first_scene->perspectives[0],render->camera->perspective);
 
   // Decide how many depths to split the output into
   render->camera->n_depth=3+render->n_mark_properties;

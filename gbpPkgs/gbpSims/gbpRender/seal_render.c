@@ -34,9 +34,6 @@ void seal_render(render_info *render){
      SID_Bcast(render->snap_a_list,render->n_snap_a_list*sizeof(double),MASTER_RANK,SID.COMM_WORLD);
   }
 
-  // Seal the scenes
-  seal_scenes(render->scenes);
-
   // Seal the camera
   seal_camera(render);
 

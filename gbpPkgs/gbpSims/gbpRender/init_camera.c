@@ -16,7 +16,7 @@ void init_camera(camera_info **camera, int mode){
   (*camera)->camera_mode=mode;
 
   // Initialize the perspective information for this camera
-  init_perspective(&((*camera)->perspective),RENDER_INIT_PERSPECTIVE);
+  init_perspective(&((*camera)->perspective));
 
   // Initialze image information
   (*camera)->flag_velocity_space=FALSE;
