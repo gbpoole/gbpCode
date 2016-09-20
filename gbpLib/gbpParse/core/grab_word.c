@@ -4,30 +4,19 @@
 #include <gbpCommon.h>
 #include <gbpParse_core.h>
 
-int grab_word(char *line,
-	      int   n, 
-	      char *return_value){
-  int  error=ERROR_NONE;
-  char temp_char[2],temp_char_old[2],temp_string[1000];
-  int  j,k,flag=FALSE;
-  strcpy(temp_char_old," ");
-  for(k=0,j=0;j<strlen(line);j++) {
-    strncpy(temp_char,&(line[j]),1);
-    sprintf(temp_char,"%c",line[j]);
-    if(strcmp(temp_char," ")) {
-      if(!strcmp(temp_char_old," ")) {
-	k++;
-	if(k==n){
-	  sscanf(&(line[j]),"%s ",temp_string);
-          sprintf(return_value,"%s",temp_string);
-	  flag=TRUE;
-	  j=strlen(line);
-	}
-      }
-    }
-    strcpy(temp_char_old,temp_char);
-  }
-  if(!flag)
-    error=ERROR_LINE_TOO_SHORT;
-  return(error);
+int grab_word(char *line,int n,char *return_value){
+   char *word=NULL;
+   scan_to_nth_word(line,n,&word);
+   // Find word length
+   size_t length=(size_t)strlen(word);
+   size_t count =0;
+   for(size_t i_line=0;i_line<length;i_line++){
+      if(check_space(word+i_line))
+         break;
+      else
+         count++;
+   }
+   strncpy(return_value,word,count);
+   return_value[count]='\0';
+   return(ERROR_NONE);
 }

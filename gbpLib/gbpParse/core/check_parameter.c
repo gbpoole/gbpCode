@@ -5,17 +5,15 @@
 #include <gbpParse_core.h>
 
 int check_parameter(char *line){
-  char temp_char[2];
-  int  j,flag=TRUE,rval=FALSE;
-  for(j=0;j<strlen(line) && flag;j++) {
-    sprintf(temp_char,"%c",line[j]);
-    if(strcmp(temp_char," ")){
-      if(!strcmp(temp_char,GBPPARSE_PARAMETER_CHARACTER))
-        rval=TRUE;
-      flag=FALSE;
-    }
-  }
-  if(flag)
-    rval=TRUE;
-  return(rval);
+   int  line_length  =strlen(line);
+   int  r_val        =FALSE;
+   int  flag_continue=TRUE;
+   for(int i_line=0;i_line<line_length && flag_continue;i_line++){
+      if(!check_space(line+i_line)){
+         flag_continue=FALSE;
+         if(!strncmp(line+i_line,GBPPARSE_PARAMETER_CHARACTER,1))
+            r_val=TRUE;
+      }
+   }
+   return(r_val);
 }

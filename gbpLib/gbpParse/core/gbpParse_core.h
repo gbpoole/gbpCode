@@ -19,9 +19,11 @@ void rewrite_swap_endian(FILE *fp_in,FILE *fp_out,int n_items,int item_byte_size
 int count_lines(FILE *fp);
 int count_lines_data(FILE *fp);
 int count_lines_parameters(FILE *fp);
-int count_words(char   *line);
-int check_comment(char *line);
+int count_words    (char *line);
+int check_comment  (char *line);
+int check_space    (char *line);
 int check_parameter(char *line);
+int scan_to_nth_word(char *line,int n,char **word);
 int grab_word(char *line,
               int   n, 
               char *return_value);
@@ -46,7 +48,6 @@ int grab_long(char   *line,
 int grab_next_line(FILE *fp,char **line, size_t *n);
 int grab_next_line_data(FILE *fp,char **line, size_t *n);
 int grab_next_line_parameter(FILE *fp,char **line, size_t *n);
-int grab_nth_line(FILE *fp,int n,char *line);
 int grab_size_t(char   *line,
                 int     n, 
                 size_t *return_value);

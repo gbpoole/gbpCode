@@ -12,7 +12,9 @@ OBJFILES = swap_endian.o                \
            count_lines_paramters.o      \
            count_words.o                \
            check_comment.o              \
+           check_space.o                \
            check_parameter.o            \
+	       scan_to_nth_word.o           \
            grab_word.o                  \
            grab_tail.o                  \
            grab_double.o                \
@@ -23,7 +25,6 @@ OBJFILES = swap_endian.o                \
            grab_next_line.o             \
            grab_next_line_data.o        \
            grab_next_line_parameter.o   \
-           grab_nth_line.o              \
            grab_size_t.o                \
            grab_word.o                  \
            strip_path.o                 \

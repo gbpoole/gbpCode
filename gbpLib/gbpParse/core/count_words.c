@@ -4,20 +4,15 @@
 #include <gbpCommon.h>
 #include <gbpParse_core.h>
 
-int count_words(char   *line){
-  int  error=ERROR_NONE;
-  char temp_char[2],temp_char_old[2];
-  int  j,flag=FALSE;
-  int  n_words;
-  strcpy(temp_char_old," ");
-  for(n_words=0,j=0;j<strlen(line);j++) {
-    strncpy(temp_char,&(line[j]),1);
-    sprintf(temp_char,"%c",line[j]);
-    if(strcmp(temp_char," ")) {
-      if(!strcmp(temp_char_old," "))
-	n_words++;
-    }
-    strcpy(temp_char_old,temp_char);
-  }
-  return(n_words);
+int count_words(char *line){
+   int n_words  =0;
+   int flag_last=FALSE;
+   int flag_new =FALSE;
+   for(size_t i_line=0;i_line<strlen(line);i_line++){
+      flag_new=!check_space(line+i_line);
+      if(flag_new && !flag_last)
+         n_words++;
+      flag_last=flag_new;
+   }
+   return(n_words);
 }
