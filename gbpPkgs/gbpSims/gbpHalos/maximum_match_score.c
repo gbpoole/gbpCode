@@ -5,7 +5,6 @@
 #include <gbpLib.h>
 #include <gbpMath.h>
 #include <gbpHalos.h>
-#include <gbpTrees_build.h>
 #include <gsl/gsl_sf_zeta.h>
 
 #define READ_MATCHES_GOODNESS_A   1.4421650782960167E+01
