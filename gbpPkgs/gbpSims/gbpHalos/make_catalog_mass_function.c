@@ -167,8 +167,8 @@ int main(int argc, char *argv[]){
             if(group_SO_data!=NULL)
                fread_multifile(&fp_SO,group_SO_data,i_group);
             // Process group information
-            //double M_vir_FoF=properties_group->M_vir;
-            double M_vir_FoF=m_dark*(double)properties_group->n_particles*(1.-pow((double)properties_group->n_particles,-0.6));
+            double M_vir_FoF=properties_group->M_vir;
+            //double M_vir_FoF=m_dark*(double)properties_group->n_particles*(1.-pow((double)properties_group->n_particles,-0.6));
             groups[i_group]=take_log10(M_vir_FoF);
 
             // Read substructure hiearchy array (if defined)

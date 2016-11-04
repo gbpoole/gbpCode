@@ -158,6 +158,39 @@ void identify_progenitors(tree_horizontal_info **halos,
                }
             }
          }
+
+         // Now that all first and default forematch pointers have been set,
+         //    determine if we should over-ride any of the decisions made above.
+         //    Because of emerged halo finding, it may be the case that halos with
+         //    a good match to them presently don't have a progenitor.  
+         // Currently, the main error corrected here is the situation where a halo 
+         //    gets labelle as an emerged candidate from itself.  This can create a 
+         //    zipper effect, splitting a progenitor line into two.  We apply a 
+         //    minimal check just on 2-way matches to over-ride only the most 
+         //    obviously wrong cases.
+         for(int i_halo=0;i_halo<(*n_halos_1_matches);i_halo++){
+            tree_horizontal_info *halo_i=&(halos_i[i_halo]);
+            tree_horizontal_info *halo_j=halo_i->forematch_first.halo;
+            // ... if this halo has been matched to something ...
+            if(halo_j!=NULL){
+               match_info forematch_new;
+               forematch_new.halo        =halo_i;
+               forematch_new.score       =halo_i->forematch_first.score;
+               forematch_new.flag_two_way=halo_i->forematch_first.flag_two_way;
+               // Over-ride in the case where the first match is 2-way
+               if(halo_j->forematch_best.halo ==NULL                           && 
+                  halo_i->forematch_first.halo!=halo_i->forematch_default.halo &&
+                  halo_i->forematch_first.flag_two_way)
+                  memcpy(&(halo_j->forematch_best),&forematch_new,sizeof(match_info));
+               //// If this is the first match to the halo it's matched to,
+               ////    choose it as the best progenitor by default ...
+               //if(halo_j->forematch_best.halo==NULL)
+               //   memcpy(&(halo_j->forematch_best),&forematch_new,sizeof(match_info));
+               //// ... else, if this is a subsequent match, decide if it is better.
+               //else if(check_if_match_is_better(halo_j,&(halo_j->forematch_best),&forematch_new))
+               //   memcpy(&(halo_j->forematch_best),&forematch_new,sizeof(match_info));
+            }
+         }
       } // if flag_fix_bridges
       // ... else, set progenitors if bridge fixing is switched off ...
       else{

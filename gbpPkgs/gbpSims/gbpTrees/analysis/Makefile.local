@@ -104,6 +104,7 @@ OBJFILES  = average_tree_branches.o                            \
 	    write_treenode_markers.o                    \
 	    read_treenode_markers.o                     \
 	    find_treenode_snap_equals_given.o           \
+	    find_treenode_snap_equals_given_recursive.o \
 	    find_treenode_main_progenitor.o             \
 	    find_treenode_branch_root.o                 \
 	    find_treenode_branch_leaf.o                 \

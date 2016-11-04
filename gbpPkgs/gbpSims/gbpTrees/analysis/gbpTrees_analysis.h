@@ -124,6 +124,7 @@ int  check_treenode_if_fragmented(tree_node_info *halo);
 int  check_treenode_if_matched_to_emerged(tree_node_info *halo);
 int  check_treenode_if_dropped(tree_node_info *halo);
 int  find_treenode_snap_equals_given(tree_info *trees,tree_node_info *halo,int snap_tree_given,tree_node_info **treenode_return,int progenitor_mode);
+int  find_treenode_snap_equals_given_recursive(tree_info *trees,tree_node_info *halo,int snap_tree_given,tree_node_info **treenode_return,int progenitor_mode);
 int  find_treenode_main_progenitor(tree_info *trees,tree_node_info *halo,tree_node_info **main_progenitor);
 int  find_treenode_branch_root(tree_info *trees,tree_node_info *halo,tree_node_info **branch_root);
 int  find_treenode_branch_leaf(tree_info *trees,tree_node_info *halo,tree_node_info **branch_leaf);

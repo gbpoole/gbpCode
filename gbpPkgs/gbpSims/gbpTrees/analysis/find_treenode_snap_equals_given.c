@@ -11,9 +11,9 @@
 
 int find_treenode_snap_equals_given(tree_info *trees,tree_node_info *halo,int snap_tree_given,tree_node_info **treenode_return,int progenitor_mode){
    int flag_success  =FALSE;
-   (*treenode_return)=NULL;
+   (*treenode_return)=halo;
    if(halo!=NULL){
-      (*treenode_return)=halo;
+      /*
       if((*treenode_return)->snap_tree>snap_tree_given){
          // Descend down the first progenitor line if the requested progenitor_mode 
          //    is the one used to store the progenitor order.  We have to do the check on 
@@ -57,12 +57,16 @@ int find_treenode_snap_equals_given(tree_info *trees,tree_node_info *halo,int sn
             SID_trap_error("Unsupported progenitor mode (%d) in find_treenode_snap_equals_given() for trees with mode (%d).",ERROR_LOGIC,
                            progenitor_mode,trees->mode);
       }
+      // Move up the tree in this case.  Progenitor ordering does not matter.
       else if((*treenode_return)->snap_tree<snap_tree_given){
          while((*treenode_return)!=NULL && (*treenode_return)->snap_tree<snap_tree_given)
             (*treenode_return)=(*treenode_return)->descendant;
       }
       if(check_treenode_if_snap_equals_given((*treenode_return),snap_tree_given))
          flag_success=TRUE;
+      */
+      find_treenode_snap_equals_given_recursive(trees,halo,snap_tree_given,treenode_return,progenitor_mode);
+      flag_success=((*treenode_return)!=NULL);
    }
    return(flag_success);
 }
