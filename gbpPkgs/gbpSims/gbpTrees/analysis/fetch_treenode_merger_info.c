@@ -42,11 +42,7 @@ int  fetch_treenode_merger_info(tree_info       *trees,
          // Fetch peak particle counts for both halos
          int n_p_peak_secondary=(*halo_secondary)->n_particles_inclusive_peak;
          int n_p_peak_primary  =(*halo_primary)->n_particles_inclusive_peak;
-
-         // Make sure zeta<=1
-         int n_p_lo=MIN(n_p_peak_primary,n_p_peak_secondary);
-         int n_p_hi=MAX(n_p_peak_primary,n_p_peak_secondary);
-         (*zeta)=(double)n_p_lo/(double)n_p_hi;
+         (*zeta)=(double)n_p_peak_secondary/(double)n_p_peak_primary;
       }
 
       // Compute relative velocity

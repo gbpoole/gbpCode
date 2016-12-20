@@ -410,20 +410,20 @@ int main(int argc, char *argv[]){
        else
           descendant_snap=-1;
 
-       if(bridge_forematch_first_file>=0)
+       if(bridge_forematch_first_file>=0 && bridge_forematch_first_file<trees->n_snaps)
           bridge_forematch_first_snap=trees->snap_list[bridge_forematch_first_file];
        else
           bridge_forematch_first_snap=-1;
-       if(bridge_forematch_default_file>=0)
+       if(bridge_forematch_default_file>=0 && bridge_forematch_default_file<trees->n_snaps)
           bridge_forematch_default_snap=trees->snap_list[bridge_forematch_default_file];
        else
           bridge_forematch_default_snap=-1;
-       if(bridge_forematch_best_file>=0)
+       if(bridge_forematch_best_file>=0 && bridge_forematch_best_file<trees->n_snaps)
           bridge_forematch_best_snap=trees->snap_list[bridge_forematch_best_file];
        else
           bridge_forematch_best_snap=-1;
 
-       if(bridge_backmatch_file>=0)
+       if(bridge_backmatch_file>=0 && bridge_backmatch_file<trees->n_snaps)
           bridge_backmatch_snap=trees->snap_list[bridge_backmatch_file];
        else
           bridge_backmatch_snap=-1;
