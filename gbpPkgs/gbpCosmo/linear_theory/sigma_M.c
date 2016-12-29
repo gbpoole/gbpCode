@@ -105,7 +105,7 @@ double sigma_M(cosmo_info **cosmo,
   interp_info *interp_sigma_lnM=(interp_info *)ADaPS_fetch(*cosmo,"sigma_lnM_%s_%s_interp",mode_name,component_name);
 
   // Perform interpolation
-  double norm =linear_growth_factor(z,*cosmo);
+  double norm =linear_growth_factor(z,cosmo);
   double r_val=norm*interpolate(interp_sigma_lnM,take_ln(M_interp));
   return(r_val);
 }

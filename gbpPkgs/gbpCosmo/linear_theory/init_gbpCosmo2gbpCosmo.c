@@ -130,8 +130,8 @@ void init_gbpCosmo2gbpCosmo(cosmo_info      **cosmo_source,
 
    // Calculate growth factors needed for
    //    determining redshift mappings
-   gbpCosmo2gbpCosmo->D_prime_z_min=linear_growth_factor(z_min,                    *cosmo_target);
-   gbpCosmo2gbpCosmo->D_z_scaled   =linear_growth_factor(gbpCosmo2gbpCosmo->z_min_scaled,*cosmo_source);
+   gbpCosmo2gbpCosmo->D_prime_z_min=linear_growth_factor(z_min,                          cosmo_target);
+   gbpCosmo2gbpCosmo->D_z_scaled   =linear_growth_factor(gbpCosmo2gbpCosmo->z_min_scaled,cosmo_source);
    gbpCosmo2gbpCosmo->D_ratio      =gbpCosmo2gbpCosmo->D_prime_z_min/gbpCosmo2gbpCosmo->D_z_scaled;
 
    // Clean-up

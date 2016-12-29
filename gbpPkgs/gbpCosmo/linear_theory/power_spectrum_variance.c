@@ -177,7 +177,7 @@ double power_spectrum_variance(double       k_interp,
   interp_info *interp=(interp_info *)ADaPS_fetch(*cosmo,d2sigma2_name);
 
   // Set result
-  double norm=pow(linear_growth_factor(redshift,*cosmo),2.);
+  double norm=pow(linear_growth_factor(redshift,cosmo),2.);
   double rval=norm*interpolate(interp,take_log10(k_interp));
 
   return(rval);

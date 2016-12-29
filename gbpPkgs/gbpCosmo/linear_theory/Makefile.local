@@ -13,6 +13,7 @@ OBJFILES  = R_of_k.o                   \
 	        z_gbpCosmo2gbpCosmo.o      \
 	        L_gbpCosmo2gbpCosmo.o      \
 	        M_gbpCosmo2gbpCosmo.o      \
+	        merger_rate_B_n.o          \
 	        pspec_names.o              \
 	        power_spectrum.o           \
 	        power_spectrum_variance.o  \
@@ -23,9 +24,10 @@ OBJFILES  = R_of_k.o                   \
 	        ln_sigma_M.o               \
 	        ln_Inv_sigma_M.o           \
 	        dln_sigma_dlnM.o           \
-	        dlogDplus_dloga.o          \
 	        dDplus_da.o                \
+	        dDplus_dz.o                \
 	        Dplus.o                    \
+	        Dplus_unnormed.o           \
 	        linear_growth_factor.o     \
 	        W_k_tophat.o               \
 	        M_sc.o                     \

@@ -6,11 +6,11 @@
 #include <gbpMath.h>
 #include <gbpCosmo_linear_theory.h>
 
-double ln_sigma_M(cosmo_info *cosmo,
-                  double      M_interp,
-                  double      z,
-                  int         mode,
-                  int         component){
+double ln_sigma_M(cosmo_info **cosmo,
+                  double       M_interp,
+                  double       z,
+                  int          mode,
+                  int          component){
   char         mode_name[ADaPS_NAME_LENGTH];
   char         component_name[ADaPS_NAME_LENGTH];
   char         sigma_lnM_name[ADaPS_NAME_LENGTH];
@@ -20,11 +20,11 @@ double ln_sigma_M(cosmo_info *cosmo,
   // Initialize
   pspec_names(mode,component,mode_name,component_name);
   sprintf(sigma_lnM_name,"sigma_lnM_%s_%s_interp",mode_name,component_name);
-  if(!ADaPS_exist(cosmo,sigma_lnM_name))
-     init_sigma_M(&cosmo,
+  if(!ADaPS_exist(*cosmo,sigma_lnM_name))
+     init_sigma_M(cosmo,
                   mode,
                   component);
-  interp_sigma_lnM=(interp_info *)ADaPS_fetch(cosmo,sigma_lnM_name);
+  interp_sigma_lnM=(interp_info *)ADaPS_fetch(*cosmo,sigma_lnM_name);
 
   // Perform interpolation
   double norm;

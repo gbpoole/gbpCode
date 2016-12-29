@@ -33,7 +33,7 @@ double M_sc(double       z,
     if(!ADaPS_exist(*cosmo,sigma2_name))
       init_power_spectrum_variance(cosmo,mode,component);
     interp   =(interp_info *)ADaPS_fetch(*cosmo,sigma2_name);
-    b_z      =linear_growth_factor(z,*cosmo);
+    b_z      =linear_growth_factor(z,cosmo);
     r_val    =bisect_array(interp,delta_sc*delta_sc/(b_z*b_z),1e-4);
     M_sc_last=M_of_k(take_alog10(r_val),*cosmo);
     z_last   =z;

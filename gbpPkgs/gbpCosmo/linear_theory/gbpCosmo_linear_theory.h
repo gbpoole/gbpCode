@@ -65,6 +65,11 @@ void   init_power_spectrum_TF(cosmo_info **cosmo);
 void   init_transfer_function(cosmo_info **cosmo);
 double power_spectrum(double k, double z, cosmo_info **cosmo, int mode,int component);
 void   init_power_spectrum_variance(cosmo_info **cosmo,int mode,int component);
+double merger_rate_B_n(cosmo_info **cosmo,
+                       int          mode,
+                       double       z,
+                       double       M_0,
+                       double       zeta);
 double power_spectrum_normalization(cosmo_info *cosmo,
                                     int         mode,
                                     int         component);
@@ -90,29 +95,30 @@ double sigma_R(cosmo_info **cosmo,
                double       z,
                int          mode,
                int          component);
-double ln_sigma_M(cosmo_info *cosmo,
-                  double      M_interp,
-                  double      z,
-                  int         mode,
-                  int         component);
+double ln_sigma_M(cosmo_info **cosmo,
+                  double       M_interp,
+                  double       z,
+                  int          mode,
+                  int          component);
 double ln_Inv_sigma_M(cosmo_info **cosmo,
                   double      M_interp,
                   double      z,
                   int         mode,
                   int         component);
-double dln_sigma_dlnM(cosmo_info *cosmo,
-                      double      M_interp,
-                      double      z,
-                      int         mode,
-                      int         component);
-double dlogDplus_dloga(double      a,
-                       cosmo_info *cosmo);
-double dDplus_da(double      a,
-                 cosmo_info *cosmo);
-double Dplus(double      a,
-             cosmo_info *cosmo);
-double linear_growth_factor(double       redshift,
-                            cosmo_info  *cosmo);
+double dln_sigma_dlnM(cosmo_info **cosmo,
+                      double       M_interp,
+                      double       z,
+                      int          mode,
+                      int          component);
+double dDplus_da(double       a,
+                 cosmo_info **cosmo);
+double dDplus_dz(double       z,
+                 cosmo_info **cosmo);
+double Dplus(double       a,
+             cosmo_info **cosmo);
+double Dplus_unnormed(double a,cosmo_info **cosmo);
+double linear_growth_factor(double        redshift,
+                            cosmo_info  **cosmo);
 double sigma2_integrand(double  k,
                         void   *params_in);
 double W_k_tophat(double kR);

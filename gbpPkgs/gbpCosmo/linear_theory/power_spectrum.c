@@ -274,7 +274,7 @@ double power_spectrum(double       k_interp,
       // Compute the needed normalization
       double  norm;
       if(redshift!=0.)
-        norm=pow(linear_growth_factor(redshift,*cosmo),2.);
+        norm=pow(linear_growth_factor(redshift,cosmo),2.);
       else
         norm=1.;
       // Compute the power spectrum.  Exstrapolate from the

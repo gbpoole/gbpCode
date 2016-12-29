@@ -27,7 +27,7 @@ double ln_Inv_sigma_M(cosmo_info **cosmo,
   interp_ln_Inv_sigma=(interp_info *)ADaPS_fetch(*cosmo,d2ln_Inv_sigma_name);
 
   // Perform interpolation
-  double b_z=linear_growth_factor(z,*cosmo);
+  double b_z=linear_growth_factor(z,cosmo);
   r_val=interpolate(interp_ln_Inv_sigma,take_ln(M_interp))/b_z;
   return(r_val);
 }

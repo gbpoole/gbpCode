@@ -3,6 +3,7 @@
 #include <math.h>
 #include <gbpLib.h>
 #include <gbpMath.h>
+#include <gbpCosmo_linear_theory.h>
 #include <gbpCosmo_bias.h>
 /*
 double bias_model_BPR_integral(cosmo_info **cosmo,
@@ -64,30 +65,55 @@ double merger_rate_B_n(cosmo_info **cosmo,
    int    flag_done=FALSE;
 
    // Fakhouri & Ma 2008, eqn 10
-   if(check_mode_for_flag(mode,0)){
+   if(mode==0){
       if(flag_done)
          SID_trap_error("Mode flag (%d) is invalid in merger_rate_B_n().  Multiple model definitions.",ERROR_LOGIC,mode);
       flag_done=TRUE;
       int    mode           =PSPEC_LINEAR_TF;
       int    component      =PSPEC_ALL_MATTER;
-      //double M_prime        =M_0*zeta/(1.+zeta); // Option 'A' in Fakhouri et al 2008
-      double M_prime        =M_0/(1.+zeta); // Option 'B' in Fakhouri et al 2008
+      //double M_prime            =M_0*zeta/(1.+zeta); // Option 'A' in Fakhouri et al 2008
+      double M_prime            =M_0/(1.+zeta); // Option 'B' in Fakhouri et al 2008
       double a                  =a_of_z(z);
-      double ddc_dz             =1.686*take_ln(Dplus(a,*cosmo))*dDplus_dz(z,*cosmo);
-      double sigma_M_0          =sigma_M(*cosmo,M_0,    z,mode,component);
-      double sigma_M_prime      =sigma_M(*cosmo,M_prime,z,mode,component);
-      double dlnsigma_dlnM_prime=fabs(dln_sigma_dlnM(*cosmo,M_prime,z,mode,component));
-fprintf(stderr,"%le %le %le\n",Dplus(a,*cosmo),dDplus_dz(z,*cosmo),ddc_dz);
+      //double ddc_dz             =1.260-0.1134*pow(1.+z,-2.)-0.3654*exp(-1.16*z); // From taking the z-derivative of Eqn A7 in Neisenstein and Dekel, 2008
+      double ddc_dz             =-1.686*pow(Dplus(a,cosmo),-2.)*dDplus_dz(z,cosmo);
+      double sigma_M_0          =sigma_M(cosmo,M_0,    z,mode,component);
+      double sigma_M_prime      =sigma_M(cosmo,M_prime,z,mode,component);
+      double dlnsigma_dlnM_prime=fabs(dln_sigma_dlnM(cosmo,M_prime,z,mode,component));
+//fprintf(stderr,"%le %le %le -- %le %le %le\n",zeta,M_0,M_prime,(1./sigma_M_prime),dlnsigma_dlnM_prime,pow(1.-((sigma_M_0*sigma_M_0)/(sigma_M_prime*sigma_M_prime)),-1.5));
       B_n=sqrt(2./PI)*ddc_dz*(1./sigma_M_prime)*dlnsigma_dlnM_prime*pow(1.-((sigma_M_0*sigma_M_0)/(sigma_M_prime*sigma_M_prime)),-1.5);
    }
-   if(check_mode_for_flag(mode,1)){
+   // Fakhouri+ 2010
+   if(mode==1){
+      flag_done=TRUE;
       double A        = 0.0104;
       double zeta_tild= 9.72e-3;
       double alpha    = 0.133;
       double beta     =-1.995;
       double gamma    = 0.263;
       double eta      = 0.0993;
-      B_n      = A*pow(M_0/(1e12*M_SOL),alpha)*pow(zeta,beta)*take_aln(pow(zeta/zeta_tild,gamma))*pow(1+z,eta);
+      B_n      = A*pow(M_0/(1e12*M_SOL),alpha)*pow(zeta,beta)*exp(pow(zeta/zeta_tild,gamma))*pow(1+z,eta);
+   }
+   // Poole et al.
+   if(mode==2){
+      flag_done=TRUE;
+      double A        = 1.383501e-01;
+      double zeta_tild= 8.256743e-01;
+      double alpha    = 1.397954e-01;
+      double beta     =-1.686774e+00;
+      double gamma    = 9.093270e-01;
+      double eta      = 1.623032e-01;
+      B_n      = A*pow(M_0/(1e12*M_SOL),alpha)*pow(zeta,beta)*exp(pow(zeta/zeta_tild,gamma))*pow(1+z,eta);
+   }
+   // Fakhouri & Ma 2008, eqn 10
+   if(mode==3){
+      flag_done=TRUE;
+      double A        = 0.0289;
+      double zeta_tild= 0.098;
+      double alpha    = 0.083;
+      double beta     =-2.01;
+      double gamma    = 0.409;
+      double eta      = 0.371;
+      B_n      = A*pow(M_0/(1e12*M_SOL),alpha)*pow(zeta,beta)*exp(pow(zeta/zeta_tild,gamma))*pow(1+z,eta);
    }
    if(!flag_done)
       SID_trap_error("Mode flag (%d) is invalid in merger_rate_B_n().  No model definition.",ERROR_LOGIC,mode);

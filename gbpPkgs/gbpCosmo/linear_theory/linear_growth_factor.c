@@ -6,7 +6,7 @@
 #include <gbpMath.h>
 #include <gbpCosmo_linear_theory.h>
 
-double linear_growth_factor(double z,cosmo_info *cosmo){
+double linear_growth_factor(double z,cosmo_info **cosmo){
   // Repeat the integral only if we change 
   //    redshift from the last call.
   static double b_z   =  1.;

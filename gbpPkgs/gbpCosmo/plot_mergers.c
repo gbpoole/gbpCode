@@ -41,14 +41,19 @@ int main(int argc, char *argv[]){
   double m_per_mpc_h=M_PER_MPC/h_Hubble;
   int    i_column   =1;
   printf("# Column (%02d): zeta\n",    i_column++);
-  printf("#        (%02d): Merger rate B/n(zeta) (eqn 10 from Fakhouri & Ma, 2008)\n",i_column++);
+  printf("#        (%02d): Merger rate B/n(zeta) (eqn 10 from Fakhouri & Ma, 2008)\n",                i_column++);
   printf("#        (%02d): Merger rate B/n(zeta) (Fit to Millennium data from Fakhouri & Ma, 2010)\n",i_column++);
+  printf("#        (%02d): Merger rate B/n(zeta) (Fit to GiggleZ and Tiamat from Poole et al.)\n",    i_column++);
+  printf("#        (%02d): Merger rate B/n(zeta) (Fit to Millennium data from Fakhouri+ 2008)\n",     i_column++);
   double zeta=1.;
+  double mass=3e14;
   for(int i_zeta=0;i_zeta<20;i_zeta++,zeta*=0.7){
-        printf("%10.5le %10.5le %10.5le\n",
+        printf("%10.5le %10.5le %10.5le %10.5le %10.5le\n",
                zeta,
-               merger_rate_B_n(&cosmo,0,z,1e12*M_SOL,zeta),
-               merger_rate_B_n(&cosmo,1,z,1e12*M_SOL,zeta));
+               merger_rate_B_n(&cosmo,0,z,mass*M_SOL,zeta),
+               merger_rate_B_n(&cosmo,1,z,mass*M_SOL,zeta),
+               merger_rate_B_n(&cosmo,2,z,mass*M_SOL,zeta),
+               merger_rate_B_n(&cosmo,3,z,mass*M_SOL,zeta));
   }
   SID_log("Done.",SID_LOG_CLOSE);
 
