@@ -6,7 +6,7 @@
 #include <gbpCommon.h>
 #include <gbpSID.h>
 
-#define ADaPS_NAME_LENGTH    40
+#define ADaPS_NAME_LENGTH    256
 
 #define ADaPS_DEFAULT                 2
 #define ADaPS_COPY                    4
