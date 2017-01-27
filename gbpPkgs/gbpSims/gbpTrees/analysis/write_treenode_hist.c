@@ -76,7 +76,7 @@ void write_treenode_hist(tree_info *trees,const char *filename_out_root,treenode
            case 3:  // N
            case 4:  // N_peak
            case 5:  // M_descendant
-           case 6:{ // zeta
+           case 6:{ // xi
              double d_min=args_d[0];
              double dd   =args_d[1];
              bin_i       =d_min+((double)i_bin)*dd;

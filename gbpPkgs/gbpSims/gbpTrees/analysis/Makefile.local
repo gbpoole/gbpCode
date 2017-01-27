@@ -48,6 +48,7 @@ OBJFILES  = average_tree_branches.o                            \
 	    check_treenode_if_merger.o                  \
 	    check_treenode_if_central.o                 \
 	    check_treenode_if_satellite.o               \
+	    check_treenode_if_group.o                   \
 	    check_treenode_if_branch_start.o            \
 	    check_treenode_if_fragmented.o              \
 	    check_treenode_if_matched_to_emerged.o      \
@@ -71,7 +72,7 @@ OBJFILES  = average_tree_branches.o                            \
 	    fetch_treenode_sigmav.o                     \
 	    fetch_treenode_c_NFW.o                      \
 	    fetch_treenode_merger_info.o                \
-	    fetch_treenode_zeta.o                       \
+	    fetch_treenode_xi.o                       \
 	    fetch_treenode_M_peak.o                     \
 	    fetch_treenode_Vir_ratio.o                  \
 	    fetch_treenode_x_off.o                      \
@@ -106,7 +107,7 @@ OBJFILES  = average_tree_branches.o                            \
 	    find_treenode_snap_equals_given.o           \
 	    find_treenode_snap_equals_given_recursive.o \
 	    find_treenode_main_progenitor.o             \
-	    find_treenode_branch_root.o                 \
+	    find_treenode_last_snapshot.o               \
 	    find_treenode_branch_leaf.o                 \
 	    find_treenode_M_peak.o                      \
 	    find_treenode_formation.o                   \

@@ -63,7 +63,7 @@ void compute_trees_analysis_mergers(tree_info *trees,char *filename_out_root_in,
   double *sig_v_s;                init_treenode_info_data(list_halos,SID_FARG sig_v_s,                SID_DOUBLE,"Secondary velocity dispersion [km/s]");
   double *sig_v_p;                init_treenode_info_data(list_halos,SID_FARG sig_v_p,                SID_DOUBLE,"Primary   velocity dispersion [km/s]");
   double *v_rel;                  init_treenode_info_data(list_halos,SID_FARG v_rel,                  SID_DOUBLE,"Relative  velocity [km/s]");
-  double *zeta;                   init_treenode_info_data(list_halos,SID_FARG zeta,                   SID_DOUBLE,"zeta");
+  double *xi;                   init_treenode_info_data(list_halos,SID_FARG xi,                   SID_DOUBLE,"xi");
   double *secondary_peak_Mvir;    init_treenode_info_data(list_halos,SID_FARG secondary_peak_Mvir,    SID_DOUBLE,"Secondary peak M_vir [M_sol/h]");
   double *primary_peak_Mvir;      init_treenode_info_data(list_halos,SID_FARG primary_peak_Mvir,      SID_DOUBLE,"Primary   peak M_vir [M_sol/h]");
   double *remnant_Mvir;           init_treenode_info_data(list_halos,SID_FARG remnant_Mvir,           SID_DOUBLE,"Remnant        M_vir [M_sol/h]");
@@ -91,15 +91,15 @@ void compute_trees_analysis_mergers(tree_info *trees,char *filename_out_root_in,
            double sig_v_p_i;
            double sig_v_s_i;
            double v_rel_i;
-           double zeta_i;
+           double xi_i;
            tree_node_info *remnant_halo       =current_halo->descendant;
            tree_node_info *secondary_halo     =current_halo;
            tree_node_info *primary_halo       =current_halo->descendant->progenitor_primary;
            tree_node_info *secondary_halo_peak=secondary_halo; // temporary; will be replaced by peak-mass halo by fetch_treenode_merger_info()
            tree_node_info *primary_halo_peak  =primary_halo;   // temporary; will be replaced by peak-mass halo by fetch_treenode_merger_info()
            int flag_uninit=(primary_halo==NULL);
-           fetch_treenode_merger_info(trees,&secondary_halo_peak,&primary_halo_peak,&zeta_i,&v_rel_i,&sig_v_p_i,&sig_v_s_i);
-           if(flag_uninit) zeta_i=-2.;
+           fetch_treenode_merger_info(trees,&secondary_halo_peak,&primary_halo_peak,&xi_i,&v_rel_i,&sig_v_p_i,&sig_v_s_i);
+           if(flag_uninit) xi_i=-2.;
 
            // Set merger data
            secondary_peak_idx    [i_list]=fetch_treenode_file_index(trees,secondary_halo_peak);
@@ -119,15 +119,15 @@ void compute_trees_analysis_mergers(tree_info *trees,char *filename_out_root_in,
            sig_v_p               [i_list]=sig_v_p_i;
            sig_v_s               [i_list]=sig_v_s_i;
            v_rel                 [i_list]=v_rel_i; 
-           zeta                  [i_list]=zeta_i; 
+           xi                    [i_list]=xi_i; 
            secondary_peak_Mvir   [i_list]=fetch_treenode_M_vir                     (trees,secondary_halo_peak);
            primary_peak_Mvir     [i_list]=fetch_treenode_M_vir                     (trees,primary_halo_peak);
            remnant_Mvir          [i_list]=fetch_treenode_M_vir                     (trees,remnant_halo);
            secondary_peak_n_p    [i_list]=fetch_treenode_n_particles_peak          (trees,secondary_halo_peak);
            primary_peak_n_p      [i_list]=fetch_treenode_n_particles_peak          (trees,primary_halo_peak);
            remnant_n_p           [i_list]=fetch_treenode_n_particles_peak          (trees,remnant_halo);
-           secondary_n_p         [i_list]=fetch_treenode_n_particles               (trees,remnant_halo);
-           primary_n_p           [i_list]=fetch_treenode_n_particles               (trees,remnant_halo);
+           secondary_n_p         [i_list]=fetch_treenode_n_particles               (trees,secondary_halo);
+           primary_n_p           [i_list]=fetch_treenode_n_particles               (trees,primary_halo);
            secondary_peak_n_p_inc[i_list]=fetch_treenode_n_particles_inclusive_peak(trees,secondary_halo_peak);
            primary_peak_n_p_inc  [i_list]=fetch_treenode_n_particles_inclusive_peak(trees,primary_halo_peak);
            secondary_n_p_inc     [i_list]=fetch_treenode_n_particles_inclusive     (trees,secondary_halo);

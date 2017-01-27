@@ -192,7 +192,7 @@ void write_tree_branches(tree_info *trees,tree_node_info **list_in,int n_list_in
            tree_node_info *progenitor_formation      =NULL;
            tree_node_info *progenitor_first_accretion=NULL;
            tree_node_info *progenitor_last_accretion =NULL;
-           find_treenode_branch_root    (trees,current_halo,            &descendant_last);
+           find_treenode_last_snapshot  (trees,current_halo,            &descendant_last);
            find_treenode_main_progenitor(trees,current_halo,            &progenitor_main);
            find_treenode_accretion      (trees,current_halo,            &progenitor_first_accretion,&progenitor_last_accretion);
            find_treenode_M_peak         (trees,descendant_last,         &progenitor_peak_mass);

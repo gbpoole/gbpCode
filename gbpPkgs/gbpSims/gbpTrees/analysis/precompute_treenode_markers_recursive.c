@@ -148,11 +148,11 @@ int precompute_treenode_markers_recursive(tree_info *trees,tree_markers_info **m
          if(flag_is_a_merger){
             // Note: we do not check the return value of fetch_treenode_merger_info() 
             //    since errors from skips can generally be tollerated here.
-            double zeta;
-            fetch_treenode_merger_info(trees,&halo_secondary,&halo_primary,&zeta,NULL,NULL,NULL);
+            double xi;
+            fetch_treenode_merger_info(trees,&halo_secondary,&halo_primary,&xi,NULL,NULL,NULL);
             if(halo_secondary!=NULL && halo_primary!=NULL){
                // Set new 3:1+ merger marker ...
-               if(zeta>ONE_THIRD){
+               if(xi>ONE_THIRD){
                   markers_halo->merger_33pc_remnant=halo;           // Time of remnant
                   markers_halo->merger_33pc_merger =halo_secondary; // Time of secondary peak mass
                   markers_halo->merger_33pc_host   =halo_primary;   // Time of secondary peak mass
@@ -165,7 +165,7 @@ int precompute_treenode_markers_recursive(tree_info *trees,tree_markers_info **m
                }
 
                // Set new 10:1+ merger marker ...
-               if(zeta>0.1){
+               if(xi>0.1){
                   markers_halo->merger_10pc_remnant=halo;
                   markers_halo->merger_10pc_merger =halo_secondary;
                   markers_halo->merger_10pc_host   =halo_primary;

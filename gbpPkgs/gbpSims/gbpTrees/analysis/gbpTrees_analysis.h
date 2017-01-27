@@ -45,7 +45,7 @@ struct treenode_list_info{
 #define TREENODE_HIST_DEFAULT     0
 #define TREENODE_HIST_N_ARGS_MAX  3
 #define TREENODE_HIST_N_PROPS     7
-#define TREENODE_HIST_NAME_LENGTH 128
+#define TREENODE_HIST_NAME_LENGTH ADaPS_NAME_LENGTH
 typedef struct treenode_hist_info treenode_hist_info;
 struct treenode_hist_info{
   char    name[TREENODE_HIST_NAME_LENGTH];
@@ -70,9 +70,9 @@ struct treenode_hist_props_info{
    SID_Datatype arg_type[TREENODE_HIST_N_PROPS][TREENODE_HIST_N_ARGS_MAX];
 };
 #ifdef _MAIN
-treenode_hist_props_info treenode_hist_props={{"z","M","M_peak","N","N_peak","M0","zeta"},
-                                              {"$z$","$M_{\\rm{vir}}[h^{-1} M_\\odot]$","$M_{\\rm{peak}}[h^{-1} M_\\odot]$","$\\rm{n_p}$","$\\rm{n_{peak}}$","$M_{\\rm{0}}[h^{-1} M_\\odot]$","$\\zeta$"},
-                                              {"$\\log_{10}{z}$","$\\log_{10}{\\rm{M}_{\\rm{vir}}[h^{-1} \\rm{M}_\\odot]}$","$\\log_{10}{\\rm{M}_{\\rm{peak}}[h^{-1} \\rm{M}_\\odot]}$","$\\log_{10}{\\rm{n_p}}$","$\\log_{10}{\\rm{n_{peak}}}$","$\\log_{10}{\\rm{M}_{\\rm{0}}[h^{-1} \\rm{M}_\\odot]}$","$\\log_{10}{\\zeta}$"},
+treenode_hist_props_info treenode_hist_props={{"z","M","M_peak","N","N_peak","M0","xi"},
+                                              {"$z$","$M_{\\rm{vir}}[h^{-1} M_\\odot]$","$M_{\\rm{peak}}[h^{-1} M_\\odot]$","$\\rm{n_p}$","$\\rm{n_{peak}}$","$M_{\\rm{0}}[h^{-1} M_\\odot]$","$\\xi$"},
+                                              {"$\\log_{10}{z}$","$\\log_{10}{\\rm{M}_{\\rm{vir}}[h^{-1} \\rm{M}_\\odot]}$","$\\log_{10}{\\rm{M}_{\\rm{peak}}[h^{-1} \\rm{M}_\\odot]}$","$\\log_{10}{\\rm{n_p}}$","$\\log_{10}{\\rm{n_{peak}}}$","$\\log_{10}{\\rm{M}_{\\rm{0}}[h^{-1} \\rm{M}_\\odot]}$","$\\log_{10}{\\xi}$"},
                                               {  1,  3,  3,  3,  3,  3,  3},
                                               {{SID_INT,   SID_INT,   SID_INT},
                                                {SID_DOUBLE,SID_DOUBLE,SID_INT},
@@ -119,6 +119,7 @@ int  check_treenode_if_main_progenitor(tree_node_info *halo);
 int  check_treenode_if_merger(tree_node_info *halo);
 int  check_treenode_if_branch_start(tree_info *trees,tree_node_info *halo);
 int  check_treenode_if_satellite(tree_node_info *halo);
+int  check_treenode_if_group(tree_node_info *halo);
 int  check_treenode_if_central(tree_node_info *halo);
 int  check_treenode_if_fragmented(tree_node_info *halo);
 int  check_treenode_if_matched_to_emerged(tree_node_info *halo);
@@ -126,7 +127,7 @@ int  check_treenode_if_dropped(tree_node_info *halo);
 int  find_treenode_snap_equals_given(tree_info *trees,tree_node_info *halo,int snap_tree_given,tree_node_info **treenode_return,int progenitor_mode);
 int  find_treenode_snap_equals_given_recursive(tree_info *trees,tree_node_info *halo,int snap_tree_given,tree_node_info **treenode_return,int progenitor_mode);
 int  find_treenode_main_progenitor(tree_info *trees,tree_node_info *halo,tree_node_info **main_progenitor);
-int  find_treenode_branch_root(tree_info *trees,tree_node_info *halo,tree_node_info **branch_root);
+int  find_treenode_last_snapshot(tree_info *trees,tree_node_info *halo,tree_node_info **branch_root);
 int  find_treenode_branch_leaf(tree_info *trees,tree_node_info *halo,tree_node_info **branch_leaf);
 int  find_treenode_M_peak(tree_info       *trees,
                           tree_node_info  *halo,
@@ -239,8 +240,8 @@ int set_treenode_hist_index(tree_info *trees,treenode_hist_info *hist,tree_node_
 tree_info      *fetch_trees_reference   (tree_info *trees);
 tree_node_info *fetch_treenode_reference(tree_info *trees,tree_node_info *halo);
 int  fetch_treenode_merger_info(tree_info *trees,tree_node_info **halo_secondary,tree_node_info **halo_primary,
-                                double *zeta,double *v_rel,double *sig_v_p,double *sig_v_s);
-double fetch_treenode_zeta(tree_info *trees,tree_node_info *halo);
+                                double *xi,double *v_rel,double *sig_v_p,double *sig_v_s);
+double fetch_treenode_xi(tree_info *trees,tree_node_info *halo);
 double fetch_treenode_match_score(tree_info *trees,tree_node_info *halo);
 double fetch_treenode_delta_t(tree_info *trees,tree_node_info *halo_1,tree_node_info *halo_2);
 double fetch_treenode_delta_t_leaf(tree_info *trees,tree_node_info *halo);

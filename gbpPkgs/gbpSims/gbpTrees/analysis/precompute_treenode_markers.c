@@ -48,7 +48,7 @@ int precompute_treenode_markers(tree_info *trees,int mode){
    // Generate the markers starting recursively from each tree root
    SID_log("Generating %s markers...(%zd byte structue size)...",SID_LOG_OPEN|SID_LOG_TIMER,group_text,sizeof(tree_markers_info));
    for(int i_snap=0;i_snap<trees->n_snaps;i_snap++){
-      SID_log("Processing snapshot #%03d of %03d...",SID_LOG_OPEN|SID_LOG_TIMER,i_snap+1,trees->n_snaps);
+      //SID_log("Processing snapshot #%03d of %03d...",SID_LOG_OPEN|SID_LOG_TIMER,i_snap+1,trees->n_snaps);
       tree_node_info *halo_current=first_neighbours[i_snap];
       while(halo_current!=NULL){
          if(halo_current->descendant==NULL){
@@ -57,7 +57,7 @@ int precompute_treenode_markers(tree_info *trees,int mode){
          }
          halo_current=halo_current->next_neighbour;
       }
-      SID_log("Done.",SID_LOG_CLOSE);
+      //SID_log("Done.",SID_LOG_CLOSE);
    }
    SID_Barrier(SID.COMM_WORLD);
    SID_log("Done.",SID_LOG_CLOSE);

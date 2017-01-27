@@ -85,10 +85,10 @@ int set_treenode_hist_index(tree_info *trees,treenode_hist_info *hist,tree_node_
         i_d=(int)((d-d_min)/dd);
         break;
       }
-      case 6:{ // zeta=merger_ratio
+      case 6:{ // xi=merger_ratio
         double d_min=args_d[0];
         double dd   =args_d[1];
-        double d    =(double)fetch_treenode_zeta(trees,current_halo);
+        double d    =(double)fetch_treenode_xi(trees,current_halo);
         if(flag_log)
            d=take_log10(d);
         i_d=(int)((d-d_min)/dd);

@@ -13,18 +13,25 @@ int find_treenode_main_progenitor(tree_info *trees,tree_node_info *halo,tree_nod
    tree_node_info *branch_root;
    (*main_progenitor)=NULL;
    if(halo!=NULL){
-      if(find_treenode_branch_root(trees,halo,&branch_root)){
-         tree_node_info *track_halo =branch_root->descendant;
-         int             target_snap=halo->snap_tree;
-         while(track_halo!=NULL){
-            if(track_halo->snap_tree==target_snap) break;
-            track_halo=track_halo->progenitor_first;
-         }
-         if(track_halo!=NULL){
-            if(track_halo->snap_tree==target_snap){
-               //if(track_halo!=halo) // return NULL if the halo is it's own main progenitor
+      // Find the last snapshot of this halo
+      if(find_treenode_last_snapshot(trees,halo,&branch_root)){
+         if(branch_root!=NULL){
+            // Search for the main progenitor
+            tree_node_info *track_halo =branch_root->descendant;
+            int             target_snap=halo->snap_tree;
+            while(track_halo!=NULL){
+               if(track_halo->snap_tree==target_snap) break;
+               track_halo=track_halo->progenitor_first;
+            }
+            if(track_halo!=NULL){
+               // n.b.: It is possible that a halo is it's own main progenitor
+               //       at this point.
+               if(track_halo->snap_tree==target_snap){
                   (*main_progenitor)=track_halo;
-               return(TRUE);
+                  return(TRUE);
+               }
+               else
+                  return(FALSE);
             }
             else
                return(FALSE);
