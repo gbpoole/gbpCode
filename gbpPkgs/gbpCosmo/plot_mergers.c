@@ -11,23 +11,27 @@ int main(int argc, char *argv[]){
   SID_init(&argc,&argv,NULL,NULL);
 
   // Parse arguments and initialize
-  double z;
-  if(argc<2 || argc>3){
+  if(argc<3 || argc>4){
     fprintf(stderr,"\n Syntax: %s z [gbpCosmo_file.txt]\n",argv[0]);
     fprintf(stderr," ------\n\n");
     return(ERROR_SYNTAX);
   }
-  else
-    z=(double)atof(argv[1]);
+  double z=(double)atof(argv[1]);
+  double M=(double)atof(argv[2]);
 
-  SID_log("Computing merger rates for z=%.2lf...",SID_LOG_OPEN,z);
+  SID_log("Computing merger rates for z=%.2lf M=%le M_sol...",SID_LOG_OPEN,z,M);
 
   // Initialize cosmology
+  char cosmology_name[256];
   cosmo_info *cosmo=NULL;
-  if(argc==2)
+  if(argc==3){
      init_cosmo_default(&cosmo);
-  else if(argc==3)
-     read_gbpCosmo_file(&cosmo,argv[2]);
+     sprintf(cosmology_name,GBP_COSMOLOGY_DEFAULT);
+  }
+  else if(argc==4){
+     read_gbpCosmo_file(&cosmo,argv[3]);
+     sprintf(cosmology_name,argv[3]);
+  }
 
   // Initialize
   int     mode     =PSPEC_LINEAR_TF;
@@ -37,23 +41,21 @@ int main(int argc, char *argv[]){
   SID_log("Done.",SID_LOG_CLOSE);
 
   // Generate file
+  int i_column=1;
   SID_log("Writing table to stdout...",SID_LOG_OPEN);
-  double m_per_mpc_h=M_PER_MPC/h_Hubble;
-  int    i_column   =1;
-  printf("# Column (%02d): zeta\n",    i_column++);
+  printf("# Merger rates for {%s} cosmology; z=%le and M=%le M_sol\n",                                cosmology_name,z,M);
+  printf("# Column (%02d): zeta\n",                                                                   i_column++);
   printf("#        (%02d): Merger rate B/n(zeta) (eqn 10 from Fakhouri & Ma, 2008)\n",                i_column++);
   printf("#        (%02d): Merger rate B/n(zeta) (Fit to Millennium data from Fakhouri & Ma, 2010)\n",i_column++);
   printf("#        (%02d): Merger rate B/n(zeta) (Fit to GiggleZ and Tiamat from Poole et al.)\n",    i_column++);
   printf("#        (%02d): Merger rate B/n(zeta) (Fit to Millennium data from Fakhouri+ 2008)\n",     i_column++);
-  double zeta=1.;
-  double mass=3e14;
-  for(int i_zeta=0;i_zeta<20;i_zeta++,zeta*=0.7){
+  for(double zeta=1.;zeta>1e-4;zeta*=0.9){
         printf("%10.5le %10.5le %10.5le %10.5le %10.5le\n",
                zeta,
-               merger_rate_B_n(&cosmo,0,z,mass*M_SOL,zeta),
-               merger_rate_B_n(&cosmo,1,z,mass*M_SOL,zeta),
-               merger_rate_B_n(&cosmo,2,z,mass*M_SOL,zeta),
-               merger_rate_B_n(&cosmo,3,z,mass*M_SOL,zeta));
+               merger_rate_B_n(&cosmo,0,z,M*M_SOL,zeta),
+               merger_rate_B_n(&cosmo,1,z,M*M_SOL,zeta),
+               merger_rate_B_n(&cosmo,2,z,M*M_SOL,zeta),
+               merger_rate_B_n(&cosmo,3,z,M*M_SOL,zeta));
   }
   SID_log("Done.",SID_LOG_CLOSE);
 

@@ -360,7 +360,7 @@ int main(int argc, char *argv[]){
     if(flag_use_bias_model){
        double delta_c=1.686;
        double b_z_norm;
-       b_z_norm=linear_growth_factor(redshift_norm,cosmo)/linear_growth_factor(redshift,cosmo);
+       b_z_norm=linear_growth_factor(redshift_norm,&cosmo)/linear_growth_factor(redshift,&cosmo);
        bias    =bias_model(V_grouping*1e3,delta_c,redshift,&cosmo,BIAS_MODEL_TRK|BIAS_MODEL_VMAX_ORDINATE);
        n_halos_this_grouping=(int)((b_z_norm*(double)n_halos_per_grouping)/(double)bias);
     }
