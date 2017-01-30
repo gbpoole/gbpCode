@@ -152,6 +152,7 @@ int    init_precompute_treenode_markers(tree_info *trees,int mode);
 int    free_precompute_treenode_markers(tree_info *trees,int mode);
 int    precompute_treenode_markers(tree_info *trees,int mode);
 void   precompute_treenode_markers_peak_mass_recursive(tree_info          *trees,
+                                                       int                 flag_peak_mass_inclusive,
                                                        tree_markers_info **markers_array,
                                                        tree_node_info     *halo,
                                                        tree_node_info    **halo_peak_return,

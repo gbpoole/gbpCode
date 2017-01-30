@@ -10,6 +10,7 @@
 #include <gbpTrees_analysis.h>
 
 void precompute_treenode_markers_peak_mass_recursive(tree_info          *trees,
+                                                     int                 flag_peak_mode_inclusive,
                                                      tree_markers_info **markers_array,
                                                      tree_node_info     *halo,
                                                      tree_node_info    **halo_peak_return,
@@ -37,7 +38,7 @@ void precompute_treenode_markers_peak_mass_recursive(tree_info          *trees,
             tree_node_info *halo_peak_prog;
             int             n_particles_peak_prog;
             double          M_peak_prog;
-            precompute_treenode_markers_peak_mass_recursive(trees,markers_array,current_progenitor,&halo_peak_prog,&n_particles_peak_prog,&M_peak_prog);
+            precompute_treenode_markers_peak_mass_recursive(trees,flag_peak_mode_inclusive,markers_array,current_progenitor,&halo_peak_prog,&n_particles_peak_prog,&M_peak_prog);
             // Propagate along the line of the progenitor that has the largest peak particle count.
             if(n_particles_peak_prog>=n_particles_peak){
                n_particles_peak       =n_particles_peak_prog;
@@ -60,8 +61,15 @@ void precompute_treenode_markers_peak_mass_recursive(tree_info          *trees,
       }
 
       // Send this halo's information back to its descendant
-      if(halo_peak_return!=NULL)        (*halo_peak_return)       =markers_halo->peak_mass;
-      if(n_particles_peak_return!=NULL) (*n_particles_peak_return)=halo->n_particles_peak;
-      if(M_peak_return!=NULL)           (*M_peak_return)          =markers_halo->M_peak;
+      if(halo_peak_return!=NULL)        
+         (*halo_peak_return)=markers_halo->peak_mass;
+      if(n_particles_peak_return!=NULL){
+         if(flag_peak_mode_inclusive)
+            (*n_particles_peak_return)=halo->n_particles_inclusive_peak;
+         else
+            (*n_particles_peak_return)=halo->n_particles_peak;
+      }
+      if(M_peak_return!=NULL)
+         (*M_peak_return)=markers_halo->M_peak;
    }
 }
