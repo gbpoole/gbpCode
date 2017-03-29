@@ -33,44 +33,28 @@ int  fetch_treenode_merger_info(tree_info       *trees,
       }
    }
 
-   // Find the po secondary and primary
+   // For substructures, find the spots in the secondary and primary 
+   //    halo progenitor lines where we want to quantify the merger.
    int flag_success=FALSE;
    if((*halo_secondary)!=NULL && (*halo_primary)!=NULL){
       flag_success=TRUE;
-      // For groups, we want to make the comparison immediately before the merger
-      if(check_treenode_if_group((*halo_secondary))){
-         flag_success=find_treenode_snap_equals_given(trees,
-                                                      (*halo_primary),
-                                                      (*halo_secondary)->snap_tree,
-                                                      halo_primary,
-                                                      TREE_PROGENITOR_ORDER_N_PARTICLES);
-      }
-      // For substructure, we want to make comparisons at the secondary's peak inclusive mass point
-      else{
+      if(!check_treenode_if_group((*halo_secondary))){
          tree_markers_info *markers_secondary=fetch_treenode_precomputed_markers(trees,(*halo_secondary));
          (*halo_secondary)                   =markers_secondary->peak_mass;
          flag_success=find_treenode_snap_equals_given(trees,
                                                       (*halo_primary),
                                                       (*halo_secondary)->snap_tree,
                                                       halo_primary,
-                                                      TREE_PROGENITOR_ORDER_N_PARTICLES_INCLUSIVE_PEAK);
+                                                      TREE_PROGENITOR_ORDER_N_PARTICLES_PEAK);
       }
    }
 
    // Compute merger ratio (xi)
-   if((*halo_secondary)!=NULL && (*halo_primary)!=NULL){
+   if(flag_success){
       if(xi!=NULL){
          // Fetch peak particle counts for both halos
-         int n_p_secondary;
-         int n_p_primary;
-         if(check_treenode_if_group((*halo_secondary))){
-            n_p_secondary=(*halo_secondary)->n_particles;
-            n_p_primary  =(*halo_primary)->n_particles;
-         }
-         else{
-            n_p_secondary=(*halo_secondary)->n_particles_inclusive_peak;
-            n_p_primary  =(*halo_primary)->n_particles_inclusive_peak;
-         }
+         int n_p_secondary=(*halo_secondary)->n_particles_inclusive;
+         int n_p_primary  =(*halo_primary)->n_particles_inclusive;
          (*xi)=(double)n_p_secondary/(double)n_p_primary;
       }
 
@@ -92,7 +76,6 @@ int  fetch_treenode_merger_info(tree_info       *trees,
       if(sig_v_s!=NULL) (*sig_v_s)=fetch_treenode_sigmav(trees,(*halo_secondary));
    }
    else{
-      flag_success=FALSE;
       if(xi!=NULL)      (*xi)     =-1;
       if(v_rel!=NULL)   (*v_rel)  = 0.;
       if(sig_v_p!=NULL) (*sig_v_p)= 0.;

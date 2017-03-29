@@ -183,7 +183,7 @@ void parse_render_file(render_info **render, char *filename){
         else if(!strcmp(parameter,"flag_fade"))
           (*render)->flag_fade=TRUE;
         // Setting alpha_fade sets flag_fade by default
-        else if(!strcmp(parameter,"flag_fade")){
+        else if(!strcmp(parameter,"alpha_fade")){
           grab_double(line,i_word++,&d_value);
           (*render)->alpha_fade=d_value;
           (*render)->flag_fade =TRUE;

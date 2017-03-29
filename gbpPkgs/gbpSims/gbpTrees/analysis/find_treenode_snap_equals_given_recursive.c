@@ -9,38 +9,57 @@
 #include <gbpTrees_build.h>
 #include <gbpTrees_analysis.h>
 
-int find_treenode_snap_equals_given_recursive(tree_info *trees,tree_node_info *halo,int snap_tree_given,tree_node_info **treenode_return,int progenitor_mode){
-   if((*treenode_return)==NULL && halo->snap_tree==snap_tree_given) 
-      (*treenode_return)=halo;
-   if((*treenode_return)==NULL){
-      // Create sorted list
-      int              n_progenitors  =halo->n_progenitors;
-      tree_node_info **progenitor_list=(tree_node_info **)SID_malloc(sizeof(tree_node_info *)*n_progenitors);
-      int             *score          =(int             *)SID_malloc(sizeof(int             )*n_progenitors);
-      size_t          *score_index    =NULL;
-      for(int i_progenitor=0;i_progenitor<n_progenitors;i_progenitor++){
-         tree_node_info *current_progenitor=NULL;
-         if(i_progenitor==0)
-            current_progenitor=halo->progenitor_first;
-         else
-            current_progenitor=(progenitor_list[i_progenitor-1])->progenitor_next;
-         progenitor_list[i_progenitor]=current_progenitor;
-         if(((trees->mode)&(progenitor_mode))==progenitor_mode) // note that trees->mode has more going on than just progenitor_mode, so need to check it like this
-            score[i_progenitor]=(n_progenitors-i_progenitor);
-         else if(progenitor_mode==TREE_PROGENITOR_ORDER_N_PARTICLES_PEAK)
-            score[i_progenitor]=current_progenitor->n_particles_peak;
-         else if(progenitor_mode==TREE_PROGENITOR_ORDER_N_PARTICLES_INCLUSIVE_PEAK)
-            score[i_progenitor]=current_progenitor->n_particles_inclusive_peak;
+float set_halo_score_local(tree_info *trees,tree_node_info *current_progenitor,int progenitor_mode);
+float set_halo_score_local(tree_info *trees,tree_node_info *current_progenitor,int progenitor_mode){
+   if(current_progenitor!=NULL){
+      if(progenitor_mode==TREE_PROGENITOR_ORDER_N_PARTICLES)
+         return((float)(current_progenitor->n_particles));
+      else if(progenitor_mode==TREE_PROGENITOR_ORDER_N_PARTICLES_INCLUSIVE)
+         return((float)(current_progenitor->n_particles_inclusive));
+      else if(progenitor_mode==TREE_PROGENITOR_ORDER_N_PARTICLES_PEAK)
+         return((float)(current_progenitor->n_particles_peak));
+      else if(progenitor_mode==TREE_PROGENITOR_ORDER_N_PARTICLES_INCLUSIVE_PEAK)
+         return((float)(current_progenitor->n_particles_inclusive_peak));
+      else
+         SID_trap_error("Invalid progenitor_mode (%d) in find_treenode_snap_equals_given_recursive().",ERROR_LOGIC,progenitor_mode);
+   }
+   else
+      return(-1.);
+}
+
+float find_treenode_snap_equals_given_recursive(tree_info *trees,tree_node_info *halo,int snap_tree_given,tree_node_info **treenode_return,int progenitor_mode){
+   if(halo!=NULL){
+      // Proceed down this progenitor line only if we haven't reached the desired snapshot.
+      if(halo->snap_tree>snap_tree_given){
+         tree_node_info *best              = halo;
+         float           best_score        =-1.;
+         int             best_snap         =-1;
+         tree_node_info *current_progenitor=halo->progenitor_first;
+         while(current_progenitor!=NULL){
+            tree_node_info *prog_best=NULL;
+            float prog_score = find_treenode_snap_equals_given_recursive(trees,current_progenitor,snap_tree_given,&prog_best,progenitor_mode);
+            int   prog_snap  = prog_best->snap_tree;
+            if(prog_score>best_score || (abs(prog_snap-snap_tree_given)<abs(best_snap-snap_tree_given))){
+               best      =prog_best;
+               best_score=prog_score;
+               best_snap =prog_snap;
+            }
+            // Next progenitor
+            current_progenitor=current_progenitor->progenitor_next;
+         }
+         (*treenode_return)=best;
       }
-      // Sort progenitors by score
-      merge_sort(score,(size_t)n_progenitors,&score_index,SID_FLOAT,SORT_COMPUTE_INDEX,FALSE);
-      // Walk trees (note: halos are sorted in ascending order)
-      for(int i_progenitor=n_progenitors-1;i_progenitor>=n_progenitors && (*treenode_return)==NULL;i_progenitor--)
-         find_treenode_snap_equals_given_recursive(trees,progenitor_list[score_index[i_progenitor]],snap_tree_given,treenode_return,progenitor_mode);
-      // Free sorted list
-      SID_free(SID_FARG progenitor_list);
-      SID_free(SID_FARG score);
-      SID_free(SID_FARG score_index);
+      // This is as far down the line that we want to go.  Pass this halo up
+      //    the line as the best choice for this branch.
+      else
+         (*treenode_return)=halo;
+
+      // Return best progenitor information
+      return(set_halo_score_local(trees,(*treenode_return),progenitor_mode));
+   }
+   else{
+      (*treenode_return)=NULL;
+      return(-1.);
    }
 }
 

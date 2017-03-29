@@ -91,6 +91,7 @@ OBJFILES  = average_tree_branches.o                            \
 	    fetch_treenode_n_particles.o                \
 	    fetch_treenode_n_particles_inclusive.o      \
 	    fetch_treenode_n_particles_peak.o           \
+	    fetch_treenode_n_particles_peak_inclusive.o \
 	    fetch_treenode_n_particles_inclusive_peak.o \
 	    fetch_treenode_substructure_rank.o          \
 	    fetch_treenode_z.o                          \

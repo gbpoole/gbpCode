@@ -64,9 +64,9 @@ int write_treenode_list_properties_set_ith(tree_info *trees,int i_write,tree_nod
       if(data_i!=NULL)    *data_i   =fetch_treenode_n_particles_inclusive(trees,current_halo);
    }
    else if(i_write==(i_item++)){
-      if(data_name!=NULL) sprintf(data_name,"No. of particles inclusive peak");
+      if(data_name!=NULL) sprintf(data_name,"No. of particles peak inclusive");
       if(data_type!=NULL) *data_type=SID_INT;
-      if(data_i!=NULL)    *data_i   =fetch_treenode_n_particles_inclusive_peak(trees,current_halo);
+      if(data_i!=NULL)    *data_i   =fetch_treenode_n_particles_peak_inclusive(trees,current_halo);
    }
    else if(i_write==(i_item++)){
       if(data_name!=NULL) sprintf(data_name,"No. of particles descendant");

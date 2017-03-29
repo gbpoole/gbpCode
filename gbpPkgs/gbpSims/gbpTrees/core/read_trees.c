@@ -458,7 +458,7 @@ void read_trees(const char *filename_SSimPL_root,
   calc_sum_global(&((*trees)->n_subgroups_trees_local),&((*trees)->n_subgroups_trees),1,SID_INT,CALC_MODE_DEFAULT,SID.COMM_WORLD);
 
   // Finalize trees
-  finalize_trees((*trees),read_mode);
+  finalize_trees((*trees),TREE_PROGENITOR_ORDER_N_PARTICLES_INCLUSIVE,TREE_PROGENITOR_ORDER_N_PARTICLES_PEAK);
 
   // Compute some useful array size maxima
   calc_max((*trees)->n_groups_snap_local,     &((*trees)->max_n_groups_snap_local),     (*trees)->n_snaps,        SID_INT,CALC_MODE_DEFAULT);

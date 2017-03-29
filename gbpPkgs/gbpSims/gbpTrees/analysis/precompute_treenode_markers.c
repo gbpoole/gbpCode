@@ -52,8 +52,9 @@ int precompute_treenode_markers(tree_info *trees,int mode){
       tree_node_info *halo_current=first_neighbours[i_snap];
       while(halo_current!=NULL){
          if(halo_current->descendant==NULL){
-            precompute_treenode_markers_peak_mass_recursive(trees,TRUE,markers,halo_current,NULL,NULL,NULL);
-            precompute_treenode_markers_recursive          (trees,     markers,halo_current,NULL);
+            // We don't use peak inclusive size - just peak size - because peak inclusive sizes are biased by bridging events
+            precompute_treenode_markers_peak_mass_recursive(trees,FALSE,markers,halo_current,NULL,NULL,NULL);
+            precompute_treenode_markers_recursive          (trees,      markers,halo_current,NULL);
          }
          halo_current=halo_current->next_neighbour;
       }

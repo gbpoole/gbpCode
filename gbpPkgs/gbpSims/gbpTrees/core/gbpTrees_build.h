@@ -15,13 +15,14 @@
 #define TREE_SUBSTRUCTURE_ORDER_DEFAULT                  TTTP00
 #define TREE_PROGENITOR_ORDER_DELUCIA                    TTTP01
 #define TREE_PROGENITOR_ORDER_N_PARTICLES                TTTP02
+#define TREE_PROGENITOR_ORDER_N_PARTICLES_INCLUSIVE      TTTP03
 #define TREE_PROGENITOR_ORDER_N_PARTICLES_PEAK           TTTP04
 #define TREE_PROGENITOR_ORDER_N_PARTICLES_INCLUSIVE_PEAK TTTP05
 #define TREE_READ_EXTENDED_POINTERS                      TTTP06
 #define TREE_READ_HEADER_ONLY                            TTTP07
 #define TREE_MODE_REFERENCE                              TTTP08
 #define TREE_MODE_SUBSTRUCTURE_HIERARCHY_ON              TTTP09
-#define TREE_PROGENITOR_ORDER_DEFAULT                    TREE_PROGENITOR_ORDER_N_PARTICLES_INCLUSIVE_PEAK
+#define TREE_PROGENITOR_ORDER_DEFAULT                    TREE_PROGENITOR_ORDER_N_PARTICLES_PEAK
 #define TREE_MODE_DEFAULT                                (TREE_SUBSTRUCTURE_ORDER_DEFAULT|TREE_PROGENITOR_ORDER_DEFAULT)
 
 // If any of these are changed, don't forget to modify parse_match_type.c (TTTPXX means "two-to-the-power-XX")
@@ -908,7 +909,8 @@ void compute_trees_vertical(char   *filename_SSimPL_dir,
                             double  box_size,
                             int     n_dim_files);
 void finalize_trees(tree_info *trees,
-                    int        progenitor_mode);
+                    int        group_progenitor_mode,
+                    int        subgroup_progenitor_mode);
 void finalize_trees_vertical(tree_info *trees);
 void read_trees_run_parameters(const char *filename_root_out,
                                int  *i_read_start,

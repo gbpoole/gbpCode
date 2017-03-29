@@ -43,19 +43,21 @@ int main(int argc, char *argv[]){
   // Generate file
   int i_column=1;
   SID_log("Writing table to stdout...",SID_LOG_OPEN);
-  printf("# Merger rates for {%s} cosmology; z=%le and M=%le M_sol\n",                                cosmology_name,z,M);
-  printf("# Column (%02d): zeta\n",                                                                   i_column++);
-  printf("#        (%02d): Merger rate B/n(zeta) (eqn 10 from Fakhouri & Ma, 2008)\n",                i_column++);
-  printf("#        (%02d): Merger rate B/n(zeta) (Fit to Millennium data from Fakhouri & Ma, 2010)\n",i_column++);
-  printf("#        (%02d): Merger rate B/n(zeta) (Fit to GiggleZ and Tiamat from Poole et al.)\n",    i_column++);
-  printf("#        (%02d): Merger rate B/n(zeta) (Fit to Millennium data from Fakhouri+ 2008)\n",     i_column++);
-  for(double zeta=1.;zeta>1e-4;zeta*=0.9){
-        printf("%10.5le %10.5le %10.5le %10.5le %10.5le\n",
-               zeta,
-               merger_rate_B_n(&cosmo,0,z,M*M_SOL,zeta),
-               merger_rate_B_n(&cosmo,1,z,M*M_SOL,zeta),
-               merger_rate_B_n(&cosmo,2,z,M*M_SOL,zeta),
-               merger_rate_B_n(&cosmo,3,z,M*M_SOL,zeta));
+  printf("# Merger rates for {%s} cosmology; z=%le and M=%le M_sol\n",                              cosmology_name,z,M);
+  printf("# Column (%02d): xi\n",                                                                   i_column++);
+  printf("#        (%02d): Merger rate B/n(xi) (eqn 10 from Fakhouri & Ma, 2008; option A)\n",      i_column++);
+  printf("#        (%02d): Merger rate B/n(xi) (eqn 10 from Fakhouri & Ma, 2008; option B)\n",      i_column++);
+  printf("#        (%02d): Merger rate B/n(xi) (Fit to Millennium data from Fakhouri & Ma, 2010)\n",i_column++);
+  printf("#        (%02d): Merger rate B/n(xi) (Fit to GiggleZ and Tiamat from Poole et al.)\n",    i_column++);
+  printf("#        (%02d): Merger rate B/n(xi) (Fit to Millennium data from Fakhouri+ 2008)\n",     i_column++);
+  for(double xi=1.;xi>1e-4;xi*=0.9){
+        printf("%10.5le %10.5le %10.5le %10.5le %10.5le %10.5le\n",
+               xi,
+               merger_rate_B_n(&cosmo,0,z,M*M_SOL,xi),
+               merger_rate_B_n(&cosmo,1,z,M*M_SOL,xi),
+               merger_rate_B_n(&cosmo,2,z,M*M_SOL,xi),
+               merger_rate_B_n(&cosmo,3,z,M*M_SOL,xi),
+               merger_rate_B_n(&cosmo,4,z,M*M_SOL,xi));
   }
   SID_log("Done.",SID_LOG_CLOSE);
 

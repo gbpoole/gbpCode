@@ -27,7 +27,7 @@ void compute_trees_vertical(char   *filename_SSimPL_dir,
              filename_halo_version_root,
              filename_trees_name,
              TREE_SUBSTRUCTURE_ORDER_DEFAULT|
-             TREE_PROGENITOR_ORDER_N_PARTICLES_INCLUSIVE_PEAK,
+             TREE_PROGENITOR_ORDER_N_PARTICLES_PEAK,
              &trees);
 
   // Read ancillary data
