@@ -10,6 +10,16 @@
 #include <gbpTrees_analysis.h>
 #include <assert.h>
 
+int check_merger_type_local(tree_info *trees,tree_node_info *halo);
+int check_merger_type_local(tree_info *trees,tree_node_info *halo){
+  if(check_treenode_if_merger(halo))
+     return(1);
+  else if(check_treenode_if_satellite(halo) && fetch_treenode_snap_tree(trees,halo)==(trees->n_snaps-1))
+     return(2);
+  else
+     return(0);
+}
+
 void compute_trees_analysis_mergers(tree_info *trees,char *filename_out_root_in,int i_type,double logM_min,double dlogM,int n_logM){
 
   // Loop over both halo types
@@ -36,7 +46,7 @@ void compute_trees_analysis_mergers(tree_info *trees,char *filename_out_root_in,
      tree_node_info *current_halo=neighbour_list_start[i_snap];
      while(current_halo!=NULL){
         // Process each new merger
-        if(check_treenode_if_merger(current_halo))
+        if(check_merger_type_local(trees,current_halo)>0)
            n_mergers++;
         current_halo=current_halo->next_neighbour;
      }
@@ -86,15 +96,31 @@ void compute_trees_analysis_mergers(tree_info *trees,char *filename_out_root_in,
      tree_node_info *current_halo=neighbour_list_start[i_snap];
      while(current_halo!=NULL){
         // Process each new merger
-        if(check_treenode_if_merger(current_halo)){
+        int type_merger=check_merger_type_local(trees,current_halo);
+        if(type_merger>0){
            // Set the halos involved in the merger
            double sig_v_p_i;
            double sig_v_s_i;
            double v_rel_i;
            double xi_i;
-           tree_node_info *remnant_halo       =current_halo->descendant; // descendant must be defined if current_halo passed check_treenode_if_merger()
-           tree_node_info *secondary_halo     =current_halo;
-           tree_node_info *primary_halo       =current_halo->descendant->progenitor_primary; // primary must be defined if current_halo passed check_treenode_if_merger()
+           tree_node_info *remnant_halo  =NULL;
+           tree_node_info *secondary_halo=current_halo;
+           tree_node_info *primary_halo  =NULL;
+           // These are actual mergers in the trees.  They must have descendant set
+           //    if they made it here.
+           if(type_merger==1){
+              remnant_halo=current_halo->descendant; 
+              primary_halo=current_halo->descendant->progenitor_primary; 
+           }
+           // These are subhalos that are satellites in the last snapshot.  Assume that they
+           //    merge with their centrals.  They will stick-out in the output because they
+           //    don't have valid remnants.
+           else{
+              remnant_halo=NULL;
+              primary_halo=current_halo->parent_top->substructure_first;
+           }
+
+           // Set peak-halo points
            tree_node_info *secondary_halo_peak=secondary_halo; // temporary; will be replaced by peak-mass halo by fetch_treenode_merger_info()
            tree_node_info *primary_halo_peak  =primary_halo;   // temporary; will be replaced by peak-mass halo by fetch_treenode_merger_info()
            fetch_treenode_merger_info(trees,&secondary_halo_peak,&primary_halo_peak,&xi_i,&v_rel_i,&sig_v_p_i,&sig_v_s_i);
