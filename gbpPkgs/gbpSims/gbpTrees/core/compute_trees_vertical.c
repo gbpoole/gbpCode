@@ -26,14 +26,13 @@ void compute_trees_vertical(char   *filename_SSimPL_dir,
   read_trees(filename_SSimPL_dir,
              filename_halo_version_root,
              filename_trees_name,
-             TREE_SUBSTRUCTURE_ORDER_DEFAULT|
-             TREE_PROGENITOR_ORDER_N_PARTICLES_PEAK,
+             TREE_MODE_DEFAULT&(~TREE_MODE_SUBSTRUCTURE_HIERARCHY_ON), // flatten substructure heirarchy pointers
              &trees);
 
   // Read ancillary data
   read_trees_catalogs(trees,READ_TREES_CATALOGS_BOTH|READ_TREES_CATALOGS_SAGE);
 
-  // Build depth-first-index pointers
+  // Correct FoF masses and assign unique halo IDs
   finalize_trees_vertical(trees);
 
   // Write vertical trees

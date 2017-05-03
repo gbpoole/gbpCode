@@ -14,7 +14,7 @@ void finalize_trees_vertical(tree_info *trees){
   for(int i_snap=0;i_snap<trees->n_snaps;i_snap++){
      tree_node_info *current_halo=trees->first_neighbour_subgroups[i_snap];
      while(current_halo!=NULL){
-        tree_node_info *current_parent =current_halo->parent;
+        tree_node_info *current_parent =current_halo->parent_top;
         tree_node_info *current_central=current_parent->substructure_first;
         if(current_halo==current_central){
            halo_properties_SAGE_info *current_halo_properties  =&(trees->subgroup_properties_SAGE[current_halo->snap_tree][current_halo->neighbour_index]);
@@ -29,12 +29,13 @@ void finalize_trees_vertical(tree_info *trees){
   // ... assign ids ...
   SID_log("Assigning IDs...",SID_LOG_OPEN|SID_LOG_TIMER);
   for(int i_snap=0;i_snap<trees->n_snaps;i_snap++){
-     tree_node_info *current_halo;
-     current_halo=trees->first_neighbour_groups[i_snap];
+     // Process group trees
+     tree_node_info *current_halo=trees->first_neighbour_groups[i_snap];
      while(current_halo!=NULL){
         assign_unique_vertical_tree_ids(trees,current_halo);
         current_halo=current_halo->next_neighbour;
      }
+     // Process subgroup trees
      current_halo=trees->first_neighbour_subgroups[i_snap];
      while(current_halo!=NULL){
         assign_unique_vertical_tree_ids(trees,current_halo);

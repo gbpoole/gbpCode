@@ -122,10 +122,13 @@ void read_trees(const char *filename_SSimPL_root,
   }
 
   // Check if the halo files have substructure information.  If they do, we will read it
-  //    as we read the trees to set the substructure hierarchy pointers.
-  int flag_read_sub_pointers=check_if_substructure_hierarchy_defined(filename_SSimPL_root,filename_halos_version,i_read_stop);
-  if(flag_read_sub_pointers)
-     (*trees)->mode|=TREE_MODE_SUBSTRUCTURE_HIERARCHY_ON;
+  //    as we read the trees to set the substructure hierarchy pointers (if requested by the read_mode, that is).
+  int flag_read_sub_pointers=FALSE;
+  if(check_mode_for_flag((*trees)->mode,TREE_MODE_SUBSTRUCTURE_HIERARCHY_ON)){
+     flag_read_sub_pointers=check_if_substructure_hierarchy_defined(filename_SSimPL_root,filename_halos_version,i_read_stop);
+     if(!flag_read_sub_pointers)
+        (*trees)->mode&=(~TREE_MODE_SUBSTRUCTURE_HIERARCHY_ON);
+  }
 
   // Maintain a list of substructure pointers for
   //    setting substructure hierarchy pointers
@@ -316,7 +319,7 @@ void read_trees(const char *filename_SSimPL_root,
                                  i_group,                // Halo's file index
                                  group_descendant_snap,  // Descendant's snap
                                  group_file_index,       // Descendant's index
-                                 NULL,                   // Pointer to this halo's group.  NULL if halo is a group.
+                                 NULL,                   // Pointer to this halo's parent_top.  NULL if halo is a group.
                                  &group_node);           // Pointer to the new node
                group_node->n_particles_peak=group_n_particles_peak;
                flag_group_added=TRUE;
@@ -331,7 +334,7 @@ void read_trees(const char *filename_SSimPL_root,
                               i_subgroup+j_subgroup,    // Halo's file index
                               subgroup_descendant_snap, // Descendant's snap
                               subgroup_file_index,      // Descendant's index
-                              group_node,               // Pointer to this halo's group.  NULL if halo is a group.
+                              group_node,               // Pointer to this halo's parent_top.  NULL if halo is a group.
                               &subgroup_node);          // Pointer to the new node
             subgroup_node->n_particles_peak=subgroup_n_particles_peak;
          }

@@ -12,7 +12,7 @@
 void assign_unique_vertical_tree_ids(tree_info *trees,tree_node_info *halo){
 
   // Fetch this halo's properties
-  halo_properties_SAGE_info *halo_properties;
+  halo_properties_SAGE_info *halo_properties =NULL;
   tree_node_info            *group_halo_first=NULL;
   tree_node_info            *group_halo_next =NULL;
   if(halo->parent_top==NULL)

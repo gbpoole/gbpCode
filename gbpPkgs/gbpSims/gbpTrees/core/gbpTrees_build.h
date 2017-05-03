@@ -23,7 +23,7 @@
 #define TREE_MODE_REFERENCE                              TTTP08
 #define TREE_MODE_SUBSTRUCTURE_HIERARCHY_ON              TTTP09
 #define TREE_PROGENITOR_ORDER_DEFAULT                    TREE_PROGENITOR_ORDER_N_PARTICLES_PEAK
-#define TREE_MODE_DEFAULT                                (TREE_SUBSTRUCTURE_ORDER_DEFAULT|TREE_PROGENITOR_ORDER_DEFAULT)
+#define TREE_MODE_DEFAULT                                (TREE_SUBSTRUCTURE_ORDER_DEFAULT|TREE_PROGENITOR_ORDER_DEFAULT|TREE_MODE_SUBSTRUCTURE_HIERARCHY_ON)
 
 // If any of these are changed, don't forget to modify parse_match_type.c (TTTPXX means "two-to-the-power-XX")
 #define TREE_CASE_NO_PROGENITORS               TTTP00  // Set for halos that have no progenitors.

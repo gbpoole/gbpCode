@@ -9,11 +9,9 @@
 
 int write_forest_vertical_halos_recursive_local(tree_info *trees,tree_node_info *node,SID_fp *fp_out);
 int write_forest_vertical_halos_recursive_local(tree_info *trees,tree_node_info *node,SID_fp *fp_out){
-  int                      n_halos_written=0;
-
   // Fetch the halo properties 
   halo_properties_SAGE_info *halo;
-  if(node->parent==NULL)
+  if(node->parent_top==NULL)
      halo=&(trees->group_properties_SAGE[node->snap_tree][node->neighbour_index]);
   else
      halo=&(trees->subgroup_properties_SAGE[node->snap_tree][node->neighbour_index]);
@@ -22,7 +20,7 @@ int write_forest_vertical_halos_recursive_local(tree_info *trees,tree_node_info 
   SID_fwrite(halo,sizeof(halo_properties_SAGE_info),1,fp_out);
 
   // Increment the counter
-  n_halos_written++;
+  int n_halos_written=1;
 
   // Recurse over all progenitors.  Naturally leads
   //    to depth-first ordering.
@@ -44,7 +42,7 @@ void write_trees_vertical(tree_info     *trees,
   sprintf(filename_root_out,"%s/vertical",filename_root_trees_out);
   mkdir(filename_root_out,02755);
 
-  // Calculatet he total number of files to be written
+  // Calculate the total number of files to be written
   int n_files_write=grid_size*grid_size*grid_size;
 
   // Do groups first, then subgroups
