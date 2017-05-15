@@ -546,7 +546,7 @@ void render_frame(render_info  *render){
 
                        // Perform addition.  Add to all image depths <= the one the particle
                        //   is in so that the depths accumulate.  This way, absorption
-                       //   works the way it is coded and the last image represents the
+                       //   works the way it is coded and the first image represents the
                        //   final sum.
                        if(Y_image!=NULL){
                           for(int i_depth=0;i_depth<n_depth;i_depth++)

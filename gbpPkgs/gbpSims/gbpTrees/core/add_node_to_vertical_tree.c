@@ -17,16 +17,15 @@ int add_node_to_vertical_tree(tree_vertical_info  *tree,
                               int                  halo_snap,
                               int                  descendant_snap,                      
                               halo_properties_SAGE_info           *properties){
-  tree_vertical_node_info *new_node;
-  tree_vertical_node_info *last_node;
-  tree_vertical_node_info *next_node;
-  tree_vertical_node_info *last_progenitor;
-  tree_vertical_node_info *next_progenitor;
-  tree_vertical_node_info *descendant_halo_list;
-  tree_vertical_node_info *group_halo_list;
+  tree_vertical_node_info *last_node           =NULL;
+  tree_vertical_node_info *next_node           =NULL;
+  tree_vertical_node_info *last_progenitor     =NULL;
+  tree_vertical_node_info *next_progenitor     =NULL;
+  tree_vertical_node_info *descendant_halo_list=NULL;
+  tree_vertical_node_info *group_halo_list     =NULL;
 
   // Create new node
-  new_node=(tree_vertical_node_info *)SID_malloc(sizeof(tree_vertical_node_info));
+  tree_vertical_node_info *new_node=(tree_vertical_node_info *)SID_malloc(sizeof(tree_vertical_node_info));
 
   // Copy halo properties into new node
   memcpy(&(new_node->halo),properties,sizeof(halo_properties_SAGE_info));

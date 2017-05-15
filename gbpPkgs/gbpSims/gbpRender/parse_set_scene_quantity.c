@@ -86,19 +86,21 @@ void parse_set_scene_quantity(scene_info *scene,const char *quantity,char *line,
            else
               SID_trap_error("Invalid evolution parameters passed in line {%s}.",ERROR_LOGIC,line);
         }
-        else{
-           double theta_in=0.;
-           grab_double(line,i_word++,&theta_in);  
-           for(int i_frame=0;i_frame<scene->n_frames;i_frame++)
-              scene->perspectives[i_frame]->theta=theta_in;
-        }
-        // Set p_c values
-        for(int i_frame=0;i_frame<scene->n_frames;i_frame++){
-           perspective_info *perspective_i=scene->perspectives[i_frame];
-           perspective_i->p_c[0]=perspective_i->p_o[0]+perspective_i->radius*cos(perspective_i->zeta)*sin(perspective_i->theta);
-           perspective_i->p_c[1]=perspective_i->p_o[1]+perspective_i->radius*cos(perspective_i->zeta)*cos(perspective_i->theta);
-           perspective_i->p_c[2]=perspective_i->p_o[2]+perspective_i->radius*sin(perspective_i->zeta);
-        }
+        else
+           SID_trap_error("Invalid evolution parameters passed in line {%s}.",ERROR_LOGIC,line);
+     }
+     else{
+        double theta_in=0.;
+        grab_double(line,i_word++,&theta_in);  
+        for(int i_frame=0;i_frame<scene->n_frames;i_frame++)
+           scene->perspectives[i_frame]->theta=theta_in;
+     }
+     // Set p_c values
+     for(int i_frame=0;i_frame<scene->n_frames;i_frame++){
+        perspective_info *perspective_i=scene->perspectives[i_frame];
+        perspective_i->p_c[0]=perspective_i->p_o[0]+perspective_i->radius*cos(perspective_i->zeta)*sin(perspective_i->theta);
+        perspective_i->p_c[1]=perspective_i->p_o[1]+perspective_i->radius*cos(perspective_i->zeta)*cos(perspective_i->theta);
+        perspective_i->p_c[2]=perspective_i->p_o[2]+perspective_i->radius*sin(perspective_i->zeta);
      }
    }
    else

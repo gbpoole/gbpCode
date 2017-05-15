@@ -254,7 +254,7 @@ void parse_render_file(render_info **render, char *filename){
               SID_free(SID_FARG transfer_array_y);
             }
             else
-              SID_log_warning("Gamma arrays bust be >2 elements long.",ERROR_LOGIC);
+              SID_log_warning("Gamma arrays must be >2 elements long.",ERROR_LOGIC);
           }
           else if(!strcmp(variable,"Z_range")){
             grab_double(line,i_word++,&d_value);

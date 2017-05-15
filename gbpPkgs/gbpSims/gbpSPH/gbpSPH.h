@@ -322,6 +322,8 @@ void write_gadget_ascii(char       *filename,
                         size_t     *id_ordering);
 void write_gadget_csv(char       *filename_out,
                       plist_info *plist);
+void write_gadget_bin(char       *filename_out,
+                      plist_info *plist);
 void write_mark_file(plist_info *plist,
                      const char *mark_name,
                      const char *filename_out);
