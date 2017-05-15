@@ -40,8 +40,8 @@ void parse_render_file(render_info **render, char *filename){
   sprintf((*render)->filename_out_dir,"%s.images/",filename);
   n_lines=count_lines_data(fp);
   for(i_line=0;i_line<n_lines;i_line++){
-    SID_log("Processing line %d of %d...",SID_LOG_OPEN,i_line+1,n_lines);SID_Barrier(SID.COMM_WORLD);
     grab_next_line_data(fp,&line,&line_length);
+    SID_log("Processing line %d of %d {%s}...",SID_LOG_OPEN,i_line+1,n_lines,line);SID_Barrier(SID.COMM_WORLD);
     i_word=1;
     grab_word(line,i_word++,command);
     if(strlen(line)>0){
@@ -93,7 +93,7 @@ void parse_render_file(render_info **render, char *filename){
         }
         else if(!strcmp(parameter,"scene")){
           grab_word(line,i_word++,variable);
-          parse_set_scene_quantity((*render)->last_scene,variable,line,i_word);
+          parse_set_scene_quantity((*render)->camera,(*render)->last_scene,variable,line,i_word);
         }
         else if(!strcmp(parameter,"n_interpolate"))
           grab_int(line,i_word++,&((*render)->n_interpolate));
@@ -148,6 +148,7 @@ void parse_render_file(render_info **render, char *filename){
         else if(!strcmp(parameter,"force_periodic"))
           (*render)->flag_force_periodic=TRUE;
         else if(!strcmp(parameter,"camera")){
+          check_camera_sealed((*render)->camera,FALSE);
           grab_word(line,i_word++,variable);
           if(!strcmp(variable,"size")){
             grab_int(line,i_word++,&i_value);

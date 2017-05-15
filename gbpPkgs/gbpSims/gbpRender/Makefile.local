@@ -18,12 +18,14 @@ OBJFILES  = RGB_lookup.o                     \
 	    init_scene.o                         \
 	    free_scenes.o                        \
 	    init_camera.o                        \
+	    seal_scenes.o                        \
 	    seal_camera.o                        \
+	    seal_render.o                        \
 	    free_camera.o                        \
 	    init_render.o                        \
 	    free_render.o                        \
 	    add_render_scene.o                   \
-	    seal_render.o                        \
+		check_camera_sealed.o                \
 	    parse_render_file.o                  \
 	    parse_set_scene_quantity.o           \
 	    read_frame.o                         \

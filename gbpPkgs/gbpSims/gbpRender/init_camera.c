@@ -14,13 +14,14 @@ void init_camera(camera_info **camera, int mode){
   // Initialize camera
   (*camera)=(camera_info *)SID_malloc(sizeof(camera_info));
   (*camera)->camera_mode=mode;
+  (*camera)->sealed     =FALSE;
 
   // Initialize the perspective information for this camera
   init_perspective(&((*camera)->perspective));
 
   // Initialze image information
   (*camera)->flag_velocity_space=FALSE;
-  (*camera)->n_depth            =3;
+  (*camera)->n_depth            =0; 
   (*camera)->stereo_ratio       =0.;
   (*camera)->RGB_mode           =CAMERA_RGB_MODE_DEFAULT;
   (*camera)->RGB_gamma          =NULL;

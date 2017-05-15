@@ -24,7 +24,7 @@ void write_frame(render_info *render,int frame,int mode){
   if(!check_mode_for_flag(render->mode,SET_RENDER_RESCALE))
      write_path_file(render,frame);
 
-  // Write mono-images
+  // Write left, right &/or mono images
   for(int i_set=0;i_set<3;i_set++){
      // Set image set filesnames
      image_info **image_RGB        =NULL;
@@ -67,6 +67,8 @@ void write_frame(render_info *render,int frame,int mode){
      }
      else
         SID_trap_error("Undefined image set index in read_frame().",ERROR_LOGIC);
+
+     // Write a set of images for each depth
      for(int i_depth=0;i_depth<render->camera->n_depth;i_depth++){
         char filename_RGB[MAX_FILENAME_LENGTH];
         char filename_Y[MAX_FILENAME_LENGTH];
@@ -93,7 +95,7 @@ void write_frame(render_info *render,int frame,int mode){
            sprintf(filename_GY,         "GY_D_%02d_%s_%05d",         i_depth,set_label,frame);
            sprintf(filename_BY,         "BY_D_%02d_%s_%05d",         i_depth,set_label,frame);
            sprintf(filename_RGBY_MARKED,"RGBY_D_%02d_MARKED_%s_%05d",i_depth,set_label,frame);
-//           mode_png=mode&(~WRITE_IMAGE_PNG);
+           mode_png=mode&(~WRITE_IMAGE_PNG);
         }
         if(image_RGB!=NULL)
            write_image(image_RGB[i_depth],render->filename_out_dir,filename_RGB,mode&(~WRITE_IMAGE_PNG));

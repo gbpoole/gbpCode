@@ -101,17 +101,27 @@ struct movie_info{
 
 typedef struct perspective_info perspective_info;
 struct perspective_info{
-  double p_o[3];          // Object position
-  double p_c[3];          // Camera position; computed from p_o, radius zeta and theta
-  double d_o;             // Separation between object and camera
-  double radius;          // Separation between object and camera modulo phi
-  double theta;           // Rotation angle (azimuthal)   of camera position about x,y,z_o (after c-o transformation)
-  double zeta;            // Rotation angle (altitudinal) of camera position about x,y,z_o (after c-o transformation)
-  double phi;             // Zoom factor
-  double FOV;             // Field of view at object position
-  double time;            // Used for time-evolving movies
-  double focus_shift_x;   // After all transformations are applied, this shifts everything in the image-frame.  Useful
-  double focus_shift_y;   //    for cases where you want flag_comoving=FALSE but don't want (0,0,0) in the image-centre.
+  double p_o[3];             // Object position
+  double p_c[3];             // Camera position; computed from p_o, radius zeta and theta
+  double d_o;                // Separation between object and camera
+  double radius;             // Separation between object and camera modulo phi
+  double theta;              // Rotation angle (azimuthal)   of camera position about x,y,z_o (after c-o transformation)
+  double zeta;               // Rotation angle (altitudinal) of camera position about x,y,z_o (after c-o transformation)
+  double phi;                // Zoom factor
+  double FOV;                // Field of view at object position
+  double time;               // Used for time-evolving movies
+  double focus_shift_x;      // After all transformations are applied, this shifts everything in the image-frame.  Useful
+  double focus_shift_y;      //    for cases where you want flag_comoving=FALSE but don't want (0,0,0) in the image-centre.
+  // The following things are ancillary parameters that don't need to be
+  //    set by the user ... they are set when the scene is sealed.
+  double d_near_field;       // Distance to the near-field cut-off
+  double d_taper_field;      // Distance to the point where tapering starts.  Must be >= d_near_field.
+  double d_image_plane;      // Distance to the image plane
+  double stereo_offset;      // This is the lateral displacement that gets applied to the camera position for stereo renderings
+  double FOV_x_object_plane; // Field of view for the rendered frame in the object plane
+  double FOV_y_object_plane; // Field of view for the rendered frame in the object plane
+  double FOV_x_image_plane;  // Field of view for the rendered frame in the image  plane
+  double FOV_y_image_plane;  // Field of view for the rendered frame in the image  plane
 };
 
 typedef struct scene_info scene_info;
@@ -120,7 +130,7 @@ struct scene_info{
   int                first_frame;
   int                last_frame;
   perspective_info **perspectives;
-  int                sealed;  // Set to TRUE if scene initialization has been finalized
+  int                sealed;  // Set to TRUE only if scene initialization has been finalized
   int                flag_time_set;
   int                flag_p_o_set;
   int                flag_radius_set;
@@ -129,6 +139,7 @@ struct scene_info{
 
 typedef struct camera_info camera_info;
 struct camera_info{
+  int                sealed;  // Set to TRUE if camera initialization has been finalized
   int                camera_mode;
   char               colour_table[MAX_FILENAME_LENGTH];
   int                flag_velocity_space;
@@ -308,7 +319,7 @@ void init_perspective(perspective_info **perspective);
 void free_perspective(perspective_info **perspective);
 void copy_perspective(perspective_info *from,perspective_info *to);
 void init_scene(scene_info **scene,int n_frames);
-void seal_scenes(scene_info *scenes);
+void seal_scenes(render_info *render);
 void free_scenes(scene_info **scene);
 void init_camera(camera_info **camera, int mode);
 void seal_camera(render_info *render);
@@ -317,9 +328,10 @@ void init_render(render_info **render);
 void free_render(render_info **render);
 void add_render_scene(render_info *render,int n_frames);
 void seal_render(render_info *render);
+int  check_camera_sealed(camera_info *camera,int check_value);
 int  set_render_state(render_info *render,int frame,int mode);
 void parse_render_file(render_info **render, char *filename);
-void parse_set_scene_quantity(scene_info *scene,const char *quantity,char *line, int i_word_in);
+void parse_set_scene_quantity(camera_info *camera,scene_info *scene,const char *quantity,char *line, int i_word_in);
 void write_frame(render_info *render,int frame,int mode);
 void write_path_file(render_info *render,int frame);
 void read_frame(render_info *render,int frame);

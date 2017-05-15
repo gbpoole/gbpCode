@@ -8,15 +8,49 @@
 #include <gbpSPH.h>
 #include <gbpRender.h>
 
-void parse_set_scene_quantity(scene_info *scene,const char *quantity,char *line, int i_word_in){
-   char parameter[64];
+void parse_set_scene_quantity(camera_info *camera,scene_info *scene,const char *quantity,char *line, int i_word_in){
+   // Make sure that the camera definition is finalized before
+   //    setting anything here.
+   check_camera_sealed(camera,TRUE);
+
    // Interpret command
+   char parameter[64];
    int i_word=i_word_in;
    if(!strcmp(quantity,"time")){
+      grab_word(line,i_word,parameter);
       double time_in=1.;
-      grab_double(line,i_word++,&time_in);
-      for(int i_frame=0;i_frame<scene->n_frames;i_frame++)
-         scene->perspectives[i_frame]->time=time_in;
+      if(!strcmp(parameter,"evolve")){
+         i_word++;
+         grab_word(line,i_word,parameter);
+         if(!strcmp(parameter,"with_frame")){i_word++;
+            int n_params=count_words(line)-i_word+1;
+            if(n_params<=1)
+               SID_trap_error("Too-few evolution parameters passed in line {%s}.",ERROR_LOGIC,line);
+            if(n_params==2){
+               double val_min,val_max,dval;
+               grab_double(line,i_word++,&val_min);
+               grab_double(line,i_word++,&val_max);
+               dval=(val_max-val_min)/(double)(scene->n_frames-1);
+               for(int i_frame=0;i_frame<scene->n_frames;i_frame++){
+                  if(i_frame==0)
+                     scene->perspectives[i_frame]->time=val_min;
+                  else if(i_frame==(scene->n_frames-1))
+                     scene->perspectives[i_frame]->time=val_max;
+                  else
+                     scene->perspectives[i_frame]->time=val_min+dval*(double)i_frame;
+               }
+            }
+            else
+               SID_trap_error("Invalid evolution parameters passed in line {%s}.",ERROR_LOGIC,line);
+         }
+         else
+            SID_trap_error("Invalid evolution parameters passed in line {%s}.",ERROR_LOGIC,line);
+      }
+      else{
+         grab_double(line,i_word++,&time_in);
+         for(int i_frame=0;i_frame<scene->n_frames;i_frame++)
+            scene->perspectives[i_frame]->time=time_in;
+      }
       scene->flag_time_set=TRUE;
    }
    else if(!strcmp(quantity,"p_o")){
@@ -47,6 +81,9 @@ void parse_set_scene_quantity(scene_info *scene,const char *quantity,char *line,
          perspective_i->p_c[0]=perspective_i->p_o[0]+perspective_i->radius*cos(perspective_i->zeta)*sin(perspective_i->theta);
          perspective_i->p_c[1]=perspective_i->p_o[1]+perspective_i->radius*cos(perspective_i->zeta)*cos(perspective_i->theta);
          perspective_i->p_c[2]=perspective_i->p_o[2]+perspective_i->radius*sin(perspective_i->zeta);
+         perspective_i->d_o   =sqrt(pow(perspective_i->p_o[0]-perspective_i->p_c[0],2.)+
+                                    pow(perspective_i->p_o[1]-perspective_i->p_c[1],2.)+
+                                    pow(perspective_i->p_o[2]-perspective_i->p_c[2],2.));
       }
       SID_log("radius set to %le for all frames in scene.",SID_LOG_COMMENT,radius_in);
    }
@@ -63,7 +100,8 @@ void parse_set_scene_quantity(scene_info *scene,const char *quantity,char *line,
         SID_log("p_o not yet set when theta is set in line {%s}.",SID_LOG_COMMENT,line);
      if(!(scene->flag_radius_set))
         SID_log("radius not yet set when theta is set in line {%s}.",SID_LOG_COMMENT,line);
-     if(!strcmp(parameter,"evolve")){i_word++;
+     if(!strcmp(parameter,"evolve")){
+        i_word++;
         grab_word(line,i_word,parameter);
         if(!strcmp(parameter,"with_frame")){i_word++;
            int n_params=count_words(line)-i_word+1;

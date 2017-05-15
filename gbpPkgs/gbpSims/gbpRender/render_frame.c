@@ -9,12 +9,16 @@
 
 void render_frame(render_info  *render){
 
+  // Fetch some needed simulation stuff
+  double box_size         = ((double *)ADaPS_fetch(render->plist_list[0]->data,"box_size"))[0];
+  double h_Hubble         = render->h_Hubble;
+  double expansion_factor = render->camera->perspective->time;
+
   // Set some things depending on what space we're rendering in
   char   unit_text[32];
   int    kernel_flag        =SPH_KERNEL_GADGET;
   double unit_factor        =1.;
   int    flag_velocity_space=render->camera->flag_velocity_space;
-  double h_Hubble           =render->h_Hubble;
   if(flag_velocity_space){
      SID_log("Rendering in velocity-space.",SID_LOG_COMMENT);
      sprintf(unit_text,"km/s");
@@ -28,53 +32,31 @@ void render_frame(render_info  *render){
      unit_factor=M_PER_MPC/h_Hubble;
   }
 
-  // Put all the render distances into the Gadget units of the
-  //    relevant space (r or v-space)
-  double x_o          =render->camera->perspective->p_o[0];
-  double y_o          =render->camera->perspective->p_o[1];
-  double z_o          =render->camera->perspective->p_o[2];
-  double x_c          =render->camera->perspective->p_c[0];
-  double y_c          =render->camera->perspective->p_c[1];
-  double z_c          =render->camera->perspective->p_c[2];
-  double d_o          =sqrt(pow(render->camera->perspective->p_o[0]-render->camera->perspective->p_c[0],2.)+
-                            pow(render->camera->perspective->p_o[1]-render->camera->perspective->p_c[1],2.)+
-                            pow(render->camera->perspective->p_o[2]-render->camera->perspective->p_c[2],2.));
-  double FOV          =render->camera->perspective->FOV;
-  double focus_shift_x=render->camera->perspective->focus_shift_x;
-  double focus_shift_y=render->camera->perspective->focus_shift_y;
-  double f_absorption =render->f_absorption;
-  if(f_absorption<0.)
-     f_absorption=0.;
-  x_o          *=unit_factor;
-  y_o          *=unit_factor;
-  z_o          *=unit_factor;
-  x_c          *=unit_factor;
-  y_c          *=unit_factor;
-  z_c          *=unit_factor;
-  d_o          *=unit_factor;
-  FOV          *=unit_factor;
-  focus_shift_x*=unit_factor;
-  focus_shift_y*=unit_factor;
-
-  // Fetch a bunch of other things dictating how/what we are rendering
-  int     n_depth            =render->camera->n_depth;
-  int     n_depth_minus1     =n_depth-1;
-  int     nx                 =render->camera->width;
-  int     ny                 =render->camera->height;
-  int     v_mode             =render->v_mode;
-  int     w_mode             =render->w_mode;
-  int     camera_mode        =render->camera->camera_mode;
-  int     flag_comoving      =render->flag_comoving;
-  int     flag_fade          =render->flag_fade;
-  double  alpha_fade         =render->alpha_fade;
-  int     flag_force_periodic=render->flag_force_periodic;
-  int     flag_add_absorption=render->flag_add_absorption;
-  double  expansion_factor   =render->camera->perspective->time;
-  double  f_image_plane      =render->camera->f_image_plane;
-  double  d_near_field       =render->camera->f_near_field*d_o;
-  double  d_taper_field      =render->camera->f_taper_field*d_o;
-  double  d_image_plane      =d_o*f_image_plane;
-  double  box_size           =((double *)ADaPS_fetch(render->plist_list[0]->data,"box_size"))[0];
+  // Put all the render distances/sizes into the Gadget 
+  //    units of the relevant space (r or v-space)
+  double x_o               =unit_factor*render->camera->perspective->p_o[0];
+  double y_o               =unit_factor*render->camera->perspective->p_o[1];
+  double z_o               =unit_factor*render->camera->perspective->p_o[2];
+  double x_c               =unit_factor*render->camera->perspective->p_c[0];
+  double y_c               =unit_factor*render->camera->perspective->p_c[1];
+  double z_c               =unit_factor*render->camera->perspective->p_c[2];
+  double d_o               =unit_factor*render->camera->perspective->d_o;
+  double FOV_x_object_plane=unit_factor*render->camera->perspective->FOV_x_object_plane;
+  double FOV_y_object_plane=unit_factor*render->camera->perspective->FOV_y_object_plane;
+  double FOV_x_image_plane =unit_factor*render->camera->perspective->FOV_x_image_plane;
+  double FOV_y_image_plane =unit_factor*render->camera->perspective->FOV_y_image_plane;
+  double focus_shift_x     =unit_factor*render->camera->perspective->focus_shift_x;
+  double focus_shift_y     =unit_factor*render->camera->perspective->focus_shift_y;
+  double d_near_field      =unit_factor*render->camera->perspective->d_near_field;
+  double d_taper_field     =unit_factor*render->camera->perspective->d_taper_field;
+  double d_image_plane     =unit_factor*render->camera->perspective->d_image_plane;
+  double stereo_offset     =unit_factor*render->camera->perspective->stereo_offset;
+  if(d_near_field>0.)
+     SID_log("Near  field  = %le [%s]",SID_LOG_COMMENT,d_near_field /unit_factor,unit_text);
+  if(d_taper_field>0.)
+     SID_log("Taper field  = %le [%s]",SID_LOG_COMMENT,d_taper_field/unit_factor,unit_text);
+  if(d_near_field>0. || d_taper_field>0.)
+     SID_log("Image plane  = %le [%s]",SID_LOG_COMMENT,d_image_plane/unit_factor,unit_text);
 
   // Sanity check the taper distances
   double taper_width=d_taper_field-d_near_field;
@@ -83,30 +65,28 @@ void render_frame(render_info  *render){
                     d_near_field*unit_factor, unit_text,
                     d_taper_field*unit_factor,unit_text);
 
-  // Set FOV
-  double FOV_x_object_plane=0.;
-  double FOV_y_object_plane=0.;
-  double FOV_x_image_plane =0.;
-  double FOV_y_image_plane =0.;
-  if(d_near_field>0.)
-     SID_log("Near  field  = %le [%s]",SID_LOG_COMMENT,d_near_field /unit_factor,unit_text);
-  if(d_taper_field>0.)
-     SID_log("Taper field  = %le [%s]",SID_LOG_COMMENT,d_taper_field/unit_factor,unit_text);
-  if(d_near_field>0. || d_taper_field>0.)
-     SID_log("Image plane  = %le [%s]",SID_LOG_COMMENT,d_image_plane/unit_factor,unit_text);
-  SID_log("f_absorption = %le",SID_LOG_COMMENT,f_absorption);
-  if(nx>=ny){
-    FOV_y_object_plane=FOV;
-    FOV_x_object_plane=FOV_y_object_plane*(double)nx/(double)ny;    
-  }
-  else{
-    FOV_x_object_plane=FOV;
-    FOV_y_object_plane=FOV_x_object_plane*(double)nx/(double)ny;        
-  }
-  FOV_x_image_plane=FOV_x_object_plane*f_image_plane;
-  FOV_y_image_plane=FOV_y_object_plane*f_image_plane;
+  // Make sure absorption is >=0
+  double f_absorption =render->f_absorption;
+  if(f_absorption<0.)
+     f_absorption=0.;
+  if(f_absorption>0.)
+     SID_log("f_absorption = %le",SID_LOG_COMMENT,f_absorption);
 
-  // Compute image scales
+  // Fetch a bunch of other things dictating how/what we are rendering
+  int     flag_comoving      =render->flag_comoving;
+  int     flag_fade          =render->flag_fade;
+  int     flag_force_periodic=render->flag_force_periodic;
+  int     flag_add_absorption=render->flag_add_absorption;
+  int     v_mode             =render->v_mode;
+  int     w_mode             =render->w_mode;
+  double  alpha_fade         =render->alpha_fade;
+  int     camera_mode        =render->camera->camera_mode;
+  int     n_depth            =render->camera->n_depth;
+  double  f_image_plane      =render->camera->f_image_plane;
+
+  // Set image scales
+  int    nx          =render->camera->width;
+  int    ny          =render->camera->height;
   int    n_pixels    =nx*ny;
   double pixel_size_x=FOV_x_image_plane/(double)nx;
   double pixel_size_y=FOV_y_image_plane/(double)ny;
@@ -115,7 +95,7 @@ void render_frame(render_info  *render){
   if(fabs((pixel_size_x-pixel_size_y)/pixel_size_x)>1e-4)
     SID_log_warning("pixels are not square by %7.3f%%",0,fabs((pixel_size_x-pixel_size_y)/pixel_size_x)*1e2);
 
-  // Generate the smoothing kernal
+  // Generate (or read) the smoothing kernal
   set_sph_kernel(&(render->kernel_radius),
                  &(render->kernel_table_3d),
                  &(render->kernel_table),
@@ -135,13 +115,13 @@ void render_frame(render_info  *render){
      SID_log("Projecting to a %dx%d pixel array...",SID_LOG_OPEN|SID_LOG_TIMER,nx,ny);
 
      // Fetch pointers to arrays of the images we want to produce
-     double **temp_image   =NULL;
-     double **RGB_image    =NULL;
-     double **Y_image      =NULL;
-     double **RY_image     =NULL;
-     double **GY_image     =NULL;
-     double **BY_image     =NULL;
-     double   stereo_offset=0.;
+     double **temp_image          =NULL;
+     double **RGB_image           =NULL;
+     double **Y_image             =NULL;
+     double **RY_image            =NULL;
+     double **GY_image            =NULL;
+     double **BY_image            =NULL;
+     double   camera_stereo_offset=0.;
      switch(i_image){
        // Left image
        case 0:
@@ -175,7 +155,7 @@ void render_frame(render_info  *render){
             for(int i_depth=0;i_depth<n_depth;i_depth++)
                fetch_image_array(render->camera->image_BY_left,i_depth, &(BY_image[i_depth]));
          }
-         stereo_offset=-d_image_plane/render->camera->stereo_ratio;
+         camera_stereo_offset=-stereo_offset;
          break;
        case 1:
          // Right image
@@ -210,7 +190,7 @@ void render_frame(render_info  *render){
                for(int i_depth=0;i_depth<n_depth;i_depth++)
                   fetch_image_array(render->camera->image_BY_right,i_depth, &(BY_image[i_depth]));
             }
-            stereo_offset=d_image_plane/render->camera->stereo_ratio;
+            camera_stereo_offset=stereo_offset;
          }
          // Mono image (stereo turned off)
          else{
@@ -244,20 +224,13 @@ void render_frame(render_info  *render){
                for(int i_depth=0;i_depth<n_depth;i_depth++)
                   fetch_image_array(render->camera->image_BY,i_depth, &(BY_image[i_depth]));
             }
+            camera_stereo_offset=0.;
          }
-         break;
+       break;
      }
 
      // Compute geometrical information needed for the projection (this needs to be
      //    done separately in this loop because it changes for left/right cameras)
-     double x_o_in    =x_o;
-     double y_o_in    =y_o;
-     double z_o_in    =z_o;
-     double x_c_in    =x_c;
-     double y_c_in    =y_c;
-     double z_c_in    =z_c;
-     double FOV_x     =FOV_x_object_plane;
-     double FOV_y     =FOV_y_object_plane;
      double x_o_out   =0.;
      double y_o_out   =0.;
      double z_o_out   =0.;
@@ -270,18 +243,18 @@ void render_frame(render_info  *render){
      double theta     =0.;
      double theta_roll=0.;
      double d_o       =0.;
-     compute_perspective_transformation(x_o_in,
-                                        y_o_in,
-                                        z_o_in,
-                                        x_c_in,
-                                        y_c_in,
-                                        z_c_in,
+     compute_perspective_transformation(x_o,
+                                        y_o,
+                                        z_o,
+                                        x_c,
+                                        y_c,
+                                        z_c,
                                         unit_factor,
                                         unit_text,
                                         f_image_plane,
-                                        stereo_offset,
-                                        &FOV_x,
-                                        &FOV_y,
+                                        camera_stereo_offset,
+                                        &FOV_x_object_plane,
+                                        &FOV_y_object_plane,
                                         &d_o, // Includes f_image_plane correction
                                         &x_o_out,
                                         &y_o_out,
@@ -296,8 +269,8 @@ void render_frame(render_info  *render){
                                         &theta_roll);
 
      // Create depth array and cast it into the units of the render
+     // TODO: Move this into a separate routine.
      double *depth_array=(double *)SID_malloc(sizeof(double)*n_depth);
-     char   *depth_flags=(char   *)SID_malloc(sizeof(char)  *n_depth);
      for(int i_depth=0,i_mark=0;i_depth<n_depth;i_depth++){
         if(i_depth==0)
            depth_array[i_depth]=0.;
@@ -332,7 +305,7 @@ void render_frame(render_info  *render){
                               y_hat,
                               z_hat,
                               d_o,
-                              stereo_offset,
+                              camera_stereo_offset,
                               theta,
                               theta_roll,
                               box_size,
@@ -349,7 +322,7 @@ void render_frame(render_info  *render){
      // Set physical image-plane domain
      double xmin  = -FOV_x_image_plane/2.; // Things will be centred on (x_o,y_o,z_o) later
      double ymin  = -FOV_y_image_plane/2.; // Things will be centred on (x_o,y_o,z_o) later
-     xmin-=stereo_offset;
+     xmin-=camera_stereo_offset;
 
      // Initialize arrays needed for rendering (perform transformations
      //   of positions, generate weightings, etc.)
@@ -367,6 +340,7 @@ void render_frame(render_info  *render){
      size_t  n_particles  =0;
      int     flag_line_integral=TRUE;
      int     flag_weigh        =TRUE;
+
      // If we are including absorption, then the particles
      //   will need to be distributed differently, rendered
      //   in order for most distant to closest, etc ... so
@@ -386,7 +360,7 @@ void render_frame(render_info  *render){
                           focus_shift_x,
                           focus_shift_y,
                           d_near_field,
-                          stereo_offset,
+                          camera_stereo_offset,
                           flag_comoving,
                           flag_force_periodic,
                           camera_mode,
@@ -417,7 +391,7 @@ void render_frame(render_info  *render){
                             focus_shift_x,
                             focus_shift_y,
                             d_near_field,
-                            stereo_offset,
+                            camera_stereo_offset,
                             flag_comoving,
                             flag_force_periodic,
                             camera_mode,
@@ -463,6 +437,9 @@ void render_frame(render_info  *render){
      pcounter_info pcounter;
      SID_init_pcounter(&pcounter,n_particles,10);
 
+     // This array keeps track of which depth planes a particle gets added to
+     char *depth_flags=(char *)SID_malloc(sizeof(char)*n_depth);
+
      // Perform projection
      SID_log("Performing projection...",SID_LOG_OPEN|SID_LOG_TIMER);
      n_particles_used_local=0;
@@ -470,7 +447,7 @@ void render_frame(render_info  *render){
        size_t i_particle=z_index[n_particles-1-ii_particle];
        double z_i       =(double)z[i_particle];
 
-       // Only render particles that are in front of
+       // Only render particles that are behind
        //    the near-field cut-off
        if(z_i>d_near_field){
           n_particles_used_local++;
@@ -515,7 +492,7 @@ void render_frame(render_info  *render){
              double vw_i=v_i*w_i;
              double zw_i=z_i*w_i;
 
-             // Determine which image depth
+             // Determine which image depth(s)
              //    to add this particle to
              for(int i_depth=0;i_depth<n_depth;i_depth++){
                 if(z_i>=depth_array[i_depth])
@@ -535,6 +512,7 @@ void render_frame(render_info  *render){
                                     (pixel_pos_y-part_pos_y)*(pixel_pos_y-part_pos_y);
                      radius2*=radius2_norm;
                      if(radius2<radius_kernel_max2){
+
                        // Perform kernel interpolation
                        int    pos    =ky+kx*ny;
                        double f_table=sqrt(radius2)/radius_kernel_max;
