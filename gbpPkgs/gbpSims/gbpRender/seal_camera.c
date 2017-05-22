@@ -17,6 +17,10 @@ void seal_camera(render_info *render){
      if(render->camera->stereo_ratio>0.)
         render->camera->camera_mode|=CAMERA_STEREO;
 
+     // Compute the number of camera depths to generate
+     //   (we only need the count, so we just send 0)
+     set_camera_depths(render,0);
+
      // Initialize image buffers 
      if(check_mode_for_flag(render->camera->camera_mode,CAMERA_STEREO)){
        // LEFT

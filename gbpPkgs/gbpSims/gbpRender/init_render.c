@@ -33,6 +33,7 @@ void init_render(render_info **render){
   (*render)->snap_list          = NULL;
   (*render)->snap_number        =-1;
   (*render)->h_Hubble           = 1.;
+  (*render)->box_size           = 0.;
   (*render)->f_absorption       =-1.;
   (*render)->flag_read_marked   = FALSE;
   (*render)->flag_comoving      = TRUE;

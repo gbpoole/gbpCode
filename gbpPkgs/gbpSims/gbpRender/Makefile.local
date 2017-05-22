@@ -32,6 +32,7 @@ OBJFILES  = RGB_lookup.o                     \
 	    write_path_file.o                    \
 	    set_frame.o                          \
 	    set_render_scale.o                   \
+		set_camera_depths.o					 \
 	    set_sph_kernel.o                     \
 	    set_transfer_function.o              \
 	    read_gadget_binary_render.o          \

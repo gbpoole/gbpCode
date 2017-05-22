@@ -8,12 +8,7 @@
 #include <gbpRender.h>
 
 void init_make_map_noabs(render_info *render,
-                         double       x_o,
-                         double       y_o,
-                         double       z_o,
-                         double       x_c,
-                         double       y_c,
-                         double       z_c,
+                         int          stereo_offset_dir,
                          double       unit_factor,
                          const char  *unit_text,
                          double       f_image_plane,
@@ -63,17 +58,6 @@ void init_make_map_noabs(render_info *render,
   float   *y_temp;
   float   *z_temp;
   float   *h_smooth_temp;
-  double   x_hat;
-  double   y_hat;
-  double   z_hat;
-  double   theta;
-  double   theta_roll;
-  double   d_x_o;
-  double   d_y_o;
-  double   d_z_o;
-  double   d_o;
-  double   d_hat;
-  double   particle_radius;
   double   x_tmp,y_tmp,z_tmp;
   int      flag_log;
   double   z_test;
@@ -106,24 +90,22 @@ void init_make_map_noabs(render_info *render,
   (*flag_line_integral)=mq.flag_line_integral;
   ptype_used           =mq.ptype_used;
 
-  double x_o_in=x_o;
-  double y_o_in=y_o;
-  double z_o_in=z_o;
-  double x_c_in=x_c;
-  double y_c_in=y_c;
-  double z_c_in=z_c;
-  double FOV_x =FOV_x_in;
-  double FOV_y =FOV_y_in;
-  compute_perspective_transformation(x_o_in,
-                                     y_o_in,
-                                     z_o_in,
-                                     x_c_in,
-                                     y_c_in,
-                                     z_c_in,
-                                     unit_factor,
-                                     unit_text,
-                                     f_image_plane,
-                                     stereo_offset,
+  double FOV_x     = FOV_x_in;
+  double FOV_y     = FOV_y_in;
+  double d_o       = 0.;
+  double x_o       = 0.;
+  double y_o       = 0.;
+  double z_o       = 0.;
+  double x_c       = 0.;
+  double y_c       = 0.;
+  double z_c       = 0.;
+  double x_hat     = 0.;
+  double y_hat     = 0.;
+  double z_hat     = 0.;
+  double theta     = 0.;
+  double theta_roll= 0.;
+  compute_perspective_transformation(render,
+                                     stereo_offset_dir,
                                      &FOV_x,
                                      &FOV_y,
                                      &d_o,
@@ -138,6 +120,13 @@ void init_make_map_noabs(render_info *render,
                                      &z_hat,
                                      &theta,
                                      &theta_roll);
+  d_o*=unit_factor;
+  x_o*=unit_factor;
+  y_o*=unit_factor;
+  z_o*=unit_factor;
+  x_c =unit_factor;
+  y_c =unit_factor;
+  z_c =unit_factor;
 
   // The previous line sets d_o to the object distance.  Compute the distance to the image plane.
   double d_image_plane=d_o*f_image_plane;

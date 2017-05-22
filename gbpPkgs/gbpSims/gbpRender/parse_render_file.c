@@ -124,6 +124,8 @@ void parse_render_file(render_info **render, char *filename){
         }
         else if(!strcmp(parameter,"h_Hubble"))
           grab_double(line,i_word++,&((*render)->h_Hubble));
+        else if(!strcmp(parameter,"box_size"))
+          grab_double(line,i_word++,&((*render)->box_size));
         else if(!strcmp(parameter,"f_absorption")){
           if((*render)->flag_add_absorption)
              SID_trap_error("There are conflicting absorption criteria.",ERROR_LOGIC);

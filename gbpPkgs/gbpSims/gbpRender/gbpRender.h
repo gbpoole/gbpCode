@@ -146,6 +146,10 @@ struct camera_info{
   int                width;
   int                height;
   int                n_depth;
+  int                flag_depth_init;
+  double            *depth_array;
+  double            *depth_array_x;
+  double            *depth_array_y;
   double             stereo_ratio;
   double             f_near_field;
   double             f_taper_field;
@@ -269,6 +273,7 @@ struct render_info{
   halo_properties_info *mark_properties;
 
   double          h_Hubble;
+  double          box_size;
   double          f_absorption;
   int             w_mode;
   int             v_mode;
@@ -330,6 +335,14 @@ void add_render_scene(render_info *render,int n_frames);
 void seal_render(render_info *render);
 int  check_camera_sealed(camera_info *camera,int check_value);
 int  set_render_state(render_info *render,int frame,int mode);
+int set_render_depths(render_info *render,
+                      double x_hat,
+                      double y_hat,
+                      double z_hat,
+                      double theta,
+                      double theta_roll,
+                      double box_size,
+                      double expansion_factor);
 void parse_render_file(render_info **render, char *filename);
 void parse_set_scene_quantity(camera_info *camera,scene_info *scene,const char *quantity,char *line, int i_word_in);
 void write_frame(render_info *render,int frame,int mode);
@@ -384,6 +397,7 @@ void transform_particle(GBPREAL *x_i,
                         double   focus_shift_y,
                         int      flag_comoving,
                         int      flag_force_periodic);
+int  set_camera_depths(render_info *render,int flag_stereo_offset);
 void free_particle_map_quantities(map_quantities_info *mq);
 void init_particle_map_quantities(map_quantities_info *mq,render_info *render,ADaPS *transfer_list,int flag_comoving,double expansion_factor);
 void set_particle_map_quantities(render_info *render,map_quantities_info *mq,int mode,size_t i_particle,
@@ -396,38 +410,25 @@ void set_particle_map_quantities(render_info *render,map_quantities_info *mq,int
                                  float   *v_i,
                                  float   *w_i);
 float compute_f_stretch(double d_image_plane,float z_i,int flag_plane_parallel);
-void compute_perspective_transformation(double  x_o,
-                                        double  y_o,
-                                        double  z_o,
-                                        double  x_c,
-                                        double  y_c,
-                                        double  z_c,
-                                        double  unit_factor,
-                                        const char *unit_text,
-                                        double  f_image_plane,
-                                        double  stereo_offset,
-                                        double *FOV_x,
-                                        double *FOV_y,
-                                        double *d_o,
-                                        double *x_o_out,
-                                        double *y_o_out,
-                                        double *z_o_out,
-                                        double *x_c_out,
-                                        double *y_c_out,
-                                        double *z_c_out,
-                                        double *x_hat,
-                                        double *y_hat,
-                                        double *z_hat,
-                                        double *theta,
-                                        double *theta_roll);
+void compute_perspective_transformation(render_info *render,
+                                        int          flag_stereo_offset,
+                                        double      *FOV_x,
+                                        double      *FOV_y,
+                                        double      *d_o,
+                                        double      *x_o_out,
+                                        double      *y_o_out,
+                                        double      *z_o_out,
+                                        double      *x_c_out,
+                                        double      *y_c_out,
+                                        double      *z_c_out,
+                                        double      *x_hat,
+                                        double      *y_hat,
+                                        double      *z_hat,
+                                        double      *theta,
+                                        double      *theta_roll);
 int check_if_particle_marked(char **mark,int i_species,size_t i_particle,char *c_i);
 void init_make_map_noabs(render_info *render,
-                         double       x_o,
-                         double       y_o,
-                         double       z_o,
-                         double       x_c,
-                         double       y_c,
-                         double       z_c,
+                         int          stereo_offset_dir,
                          double       unit_factor,
                          const char  *unit_text,
                          double       f_image_plane,
@@ -464,12 +465,7 @@ void init_make_map_noabs(render_info *render,
                          int          *i_x_max_local_return,
                          size_t       *n_particles);
 void init_make_map_abs(render_info *render,
-                       double       x_o,
-                       double       y_o,
-                       double       z_o,
-                       double       x_c,
-                       double       y_c,
-                       double       z_c,
+                       int          stereo_offset_dir,
                        double       unit_factor,
                        const char  *unit_text,
                        double       f_image_plane,

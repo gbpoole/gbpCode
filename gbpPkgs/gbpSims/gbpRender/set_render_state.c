@@ -21,13 +21,24 @@ int set_render_state(render_info *render,int frame,int mode){
   scene_info       *current_scene=render->scenes;
   int               r_val        =FALSE;
   int               i_frame      =0;
+  int               i_scene      =0;
+  int               frame_start  =0;
+  int               frame_stop   =0;
   while(current_scene!=NULL && !r_val){
+    if(i_scene==0)
+        frame_start=current_scene->first_frame;
+    frame_stop=current_scene->last_frame;
     if(frame>=current_scene->first_frame && frame<=current_scene->last_frame){
        copy_perspective(current_scene->perspectives[frame-current_scene->first_frame],perspective);
        r_val=TRUE;
     }
     current_scene=current_scene->next;
+    i_scene++;
   }
+
+  // Make sure we're requesting a valid frame
+  if(!r_val)
+      SID_trap_error("Invalid frame (%d) requested in set_render_state() (min/max=%d/%d).",ERROR_LOGIC,frame,frame_start,frame_stop);
 
   // Perform snapshot and smooth-file reading
   int    i_snap,j_snap,snap_best;
@@ -120,15 +131,21 @@ int set_render_state(render_info *render,int frame,int mode){
     }
     SID_free(SID_FARG snap_list);
 
-    // Convert [Mpc/h] -> SI
+    // Fetch some info about the simulation that was stored in the Gadget files
     if(render->plist_list!=NULL){
        if(ADaPS_exist(render->plist_list[0]->data,"h_Hubble"))
           render->h_Hubble=((double *)ADaPS_fetch(render->plist_list[0]->data,"h_Hubble"))[0];
        else
           render->h_Hubble=1.;
+       if(ADaPS_exist(render->plist_list[0]->data,"box_size_raw"))
+          render->box_size=((double *)ADaPS_fetch(render->plist_list[0]->data,"box_size_raw"))[0];
+       else
+          render->box_size=0.;
     }
-    else
+    else{
        render->h_Hubble=1.;
+       render->box_size=0.;
+    }
 
     // Mark particles
     perform_marking(render);

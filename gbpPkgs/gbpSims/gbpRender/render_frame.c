@@ -10,7 +10,7 @@
 void render_frame(render_info  *render){
 
   // Fetch some needed simulation stuff
-  double box_size         = ((double *)ADaPS_fetch(render->plist_list[0]->data,"box_size"))[0];
+  double box_size         = ((double *)ADaPS_fetch(render->plist_list[0]->data,"box_size"))[0]; // This way, we are sure that box_size is in the same units as the particle quantities
   double h_Hubble         = render->h_Hubble;
   double expansion_factor = render->camera->perspective->time;
 
@@ -41,8 +41,6 @@ void render_frame(render_info  *render){
   double y_c               =unit_factor*render->camera->perspective->p_c[1];
   double z_c               =unit_factor*render->camera->perspective->p_c[2];
   double d_o               =unit_factor*render->camera->perspective->d_o;
-  double FOV_x_object_plane=unit_factor*render->camera->perspective->FOV_x_object_plane;
-  double FOV_y_object_plane=unit_factor*render->camera->perspective->FOV_y_object_plane;
   double FOV_x_image_plane =unit_factor*render->camera->perspective->FOV_x_image_plane;
   double FOV_y_image_plane =unit_factor*render->camera->perspective->FOV_y_image_plane;
   double focus_shift_x     =unit_factor*render->camera->perspective->focus_shift_x;
@@ -115,13 +113,13 @@ void render_frame(render_info  *render){
      SID_log("Projecting to a %dx%d pixel array...",SID_LOG_OPEN|SID_LOG_TIMER,nx,ny);
 
      // Fetch pointers to arrays of the images we want to produce
-     double **temp_image          =NULL;
-     double **RGB_image           =NULL;
-     double **Y_image             =NULL;
-     double **RY_image            =NULL;
-     double **GY_image            =NULL;
-     double **BY_image            =NULL;
-     double   camera_stereo_offset=0.;
+     double **temp_image         =NULL;
+     double **RGB_image          =NULL;
+     double **Y_image            =NULL;
+     double **RY_image           =NULL;
+     double **GY_image           =NULL;
+     double **BY_image           =NULL;
+     int      stereo_offset_dir  =0; // descibes the sence of the stereo offset (-1 is left, 0 is none, +1 is right)
      switch(i_image){
        // Left image
        case 0:
@@ -155,7 +153,7 @@ void render_frame(render_info  *render){
             for(int i_depth=0;i_depth<n_depth;i_depth++)
                fetch_image_array(render->camera->image_BY_left,i_depth, &(BY_image[i_depth]));
          }
-         camera_stereo_offset=-stereo_offset;
+         stereo_offset_dir=-1;
          break;
        case 1:
          // Right image
@@ -190,7 +188,7 @@ void render_frame(render_info  *render){
                for(int i_depth=0;i_depth<n_depth;i_depth++)
                   fetch_image_array(render->camera->image_BY_right,i_depth, &(BY_image[i_depth]));
             }
-            camera_stereo_offset=stereo_offset;
+            stereo_offset_dir=1;
          }
          // Mono image (stereo turned off)
          else{
@@ -224,35 +222,32 @@ void render_frame(render_info  *render){
                for(int i_depth=0;i_depth<n_depth;i_depth++)
                   fetch_image_array(render->camera->image_BY,i_depth, &(BY_image[i_depth]));
             }
-            camera_stereo_offset=0.;
+            stereo_offset_dir=0;
          }
        break;
      }
 
+     // Set stereo offset
+     double camera_stereo_offset=stereo_offset*(double)stereo_offset_dir;
+
      // Compute geometrical information needed for the projection (this needs to be
-     //    done separately in this loop because it changes for left/right cameras)
-     double x_o_out   =0.;
-     double y_o_out   =0.;
-     double z_o_out   =0.;
-     double x_c_out   =0.;
-     double y_c_out   =0.;
-     double z_c_out   =0.;
-     double x_hat     =0.;
-     double y_hat     =0.;
-     double z_hat     =0.;
-     double theta     =0.;
-     double theta_roll=0.;
-     double d_o       =0.;
-     compute_perspective_transformation(x_o,
-                                        y_o,
-                                        z_o,
-                                        x_c,
-                                        y_c,
-                                        z_c,
-                                        unit_factor,
-                                        unit_text,
-                                        f_image_plane,
-                                        camera_stereo_offset,
+     //    done separately in this loop because it changes for mono/left/right cameras)
+     double FOV_x_object_plane = 0.;
+     double FOV_y_object_plane = 0.;
+     double d_o                = 0.;
+     double x_o_out            = 0.;
+     double y_o_out            = 0.;
+     double z_o_out            = 0.;
+     double x_c_out            = 0.;
+     double y_c_out            = 0.;
+     double z_c_out            = 0.;
+     double x_hat              = 0.;
+     double y_hat              = 0.;
+     double z_hat              = 0.;
+     double theta              = 0.;
+     double theta_roll         = 0.;
+     compute_perspective_transformation(render,
+                                        stereo_offset_dir,
                                         &FOV_x_object_plane,
                                         &FOV_y_object_plane,
                                         &d_o, // Includes f_image_plane correction
@@ -268,60 +263,17 @@ void render_frame(render_info  *render){
                                         &theta,
                                         &theta_roll);
 
-     // Create depth array and cast it into the units of the render
-     // TODO: Move this into a separate routine.
+     // Generate depth array
+     set_camera_depths(render,stereo_offset_dir);
+
+     // Cast depth array into the units of the render
      double *depth_array=(double *)SID_malloc(sizeof(double)*n_depth);
-     for(int i_depth=0,i_mark=0;i_depth<n_depth;i_depth++){
-        if(i_depth==0)
-           depth_array[i_depth]=0.;
-        else if(i_depth==1)
-           depth_array[i_depth]=d_o;
-        else if(i_depth==2)
-           depth_array[i_depth]=d_image_plane;
-        else{
-           float x_m=0.;
-           float y_m=0.;
-           float z_m=0.;
-           if(flag_velocity_space){
-              x_m=(float)render->mark_properties[i_mark].velocity_COM[0];
-              y_m=(float)render->mark_properties[i_mark].velocity_COM[1];
-              z_m=(float)render->mark_properties[i_mark].velocity_COM[2];
-           }
-           else{
-              x_m=(float)render->mark_properties[i_mark].position_COM[0];
-              y_m=(float)render->mark_properties[i_mark].position_COM[1];
-              z_m=(float)render->mark_properties[i_mark].position_COM[2];
-           }
-           x_m*=unit_factor;
-           y_m*=unit_factor;
-           z_m*=unit_factor;
-           transform_particle(&x_m,
-                              &y_m,
-                              &z_m,
-                              x_o,
-                              y_o,
-                              z_o,
-                              x_hat,
-                              y_hat,
-                              z_hat,
-                              d_o,
-                              camera_stereo_offset,
-                              theta,
-                              theta_roll,
-                              box_size,
-                              expansion_factor,
-                              focus_shift_x,
-                              focus_shift_y,
-                              flag_comoving,
-                              flag_force_periodic);
-           depth_array[i_depth]=z_m;
-           i_mark++;
-        }
-     }
+     for(int i_depth=0;i_depth<n_depth;i_depth++)
+         depth_array[i_depth]=unit_factor*render->camera->depth_array[i_depth];
 
      // Set physical image-plane domain
-     double xmin  = -FOV_x_image_plane/2.; // Things will be centred on (x_o,y_o,z_o) later
-     double ymin  = -FOV_y_image_plane/2.; // Things will be centred on (x_o,y_o,z_o) later
+     double xmin = -0.5*FOV_x_image_plane; // Things will be centred on (x_o,y_o,z_o) later
+     double ymin = -0.5*FOV_y_image_plane; // Things will be centred on (x_o,y_o,z_o) later
      xmin-=camera_stereo_offset;
 
      // Initialize arrays needed for rendering (perform transformations
@@ -347,8 +299,7 @@ void render_frame(render_info  *render){
      //   we have to treat the two cases separately.
      if(flag_add_absorption)
         init_make_map_abs(render,
-                          x_o,y_o,z_o,
-                          x_c,y_c,z_c,
+                          stereo_offset_dir,
                           unit_factor,unit_text,
                           f_image_plane,
                           box_size,FOV_x_object_plane,FOV_y_object_plane,
@@ -378,8 +329,7 @@ void render_frame(render_info  *render){
                           &n_particles);
      else
         init_make_map_noabs(render,
-                            x_o,y_o,z_o,
-                            x_c,y_c,z_c,
+                            stereo_offset_dir,
                             unit_factor,unit_text,
                             f_image_plane,
                             box_size,FOV_x_object_plane,FOV_y_object_plane,
@@ -450,7 +400,6 @@ void render_frame(render_info  *render){
        // Only render particles that are behind
        //    the near-field cut-off
        if(z_i>d_near_field){
-          n_particles_used_local++;
 
           // Set pixel-space ranges and positions
           double part_h_z     =(double)h_smooth[i_particle];
@@ -494,16 +443,20 @@ void render_frame(render_info  *render){
 
              // Determine which image depth(s)
              //    to add this particle to
+             int flag_particle_used    =FALSE;
+             int flag_particle_in_depth=FALSE;
              for(int i_depth=0;i_depth<n_depth;i_depth++){
-                if(z_i>=depth_array[i_depth])
-                   depth_flags[i_depth]=TRUE;
+                if(z_i>=depth_array[i_depth]){
+                   depth_flags[i_depth]  =TRUE;
+                   flag_particle_in_depth=TRUE;
+                }
                 else
                    depth_flags[i_depth]=FALSE;
              }
 
              // Loop over the kernal
              double pixel_pos_x=xmin+(kx_min+0.5)*pixel_size_x;
-             for(int kx=kx_min;kx<=kx_max;kx++,pixel_pos_x+=pixel_size_x){
+             for(int kx=kx_min;kx<=kx_max && flag_particle_in_depth;kx++,pixel_pos_x+=pixel_size_x){
                if(kx>=0 && kx<nx){
                  double pixel_pos_y=ymin+(ky_min+0.5)*pixel_size_y;
                  for(int ky=ky_min;ky<=ky_max;ky++,pixel_pos_y+=pixel_size_y){
@@ -526,9 +479,12 @@ void render_frame(render_info  *render){
                        //   is in so that the depths accumulate.  This way, absorption
                        //   works the way it is coded and the first image represents the
                        //   final sum.
+                       flag_particle_used=TRUE; // depth has already been checked for
                        if(Y_image!=NULL){
-                          for(int i_depth=0;i_depth<n_depth;i_depth++)
-                             if(depth_flags[i_depth]) Y_image[i_depth][pos]+=(f_dim-f_absorption*Y_image[i_depth][pos])*w_k;
+                          for(int i_depth=0;i_depth<n_depth;i_depth++){
+                             if(depth_flags[i_depth])
+                                Y_image[i_depth][pos]+=(f_dim-f_absorption*Y_image[i_depth][pos])*w_k;
+                          }
                        }
                        if(temp_image!=NULL){
                           for(int i_depth=0;i_depth<n_depth;i_depth++)
@@ -552,6 +508,9 @@ void render_frame(render_info  *render){
                  } // loop over kernel
                } 
              } // loop over kernel
+             // Count the particles used
+             if(flag_particle_used)
+                n_particles_used_local++;
            } // check on fp_classify
         } // near-field selection
         SID_check_pcounter(&pcounter,ii_particle);
