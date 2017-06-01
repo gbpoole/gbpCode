@@ -9,6 +9,9 @@
 
 void render_frame(render_info  *render){
 
+  // Check that the camera is sealed
+  check_camera_sealed(render->camera,TRUE);
+
   // Fetch some needed simulation stuff
   double box_size         = ((double *)ADaPS_fetch(render->plist_list[0]->data,"box_size"))[0]; // This way, we are sure that box_size is in the same units as the particle quantities
   double h_Hubble         = render->h_Hubble;
@@ -40,7 +43,6 @@ void render_frame(render_info  *render){
   double x_c               =unit_factor*render->camera->perspective->p_c[0];
   double y_c               =unit_factor*render->camera->perspective->p_c[1];
   double z_c               =unit_factor*render->camera->perspective->p_c[2];
-  double d_o               =unit_factor*render->camera->perspective->d_o;
   double FOV_x_image_plane =unit_factor*render->camera->perspective->FOV_x_image_plane;
   double FOV_y_image_plane =unit_factor*render->camera->perspective->FOV_y_image_plane;
   double focus_shift_x     =unit_factor*render->camera->perspective->focus_shift_x;
@@ -262,6 +264,8 @@ void render_frame(render_info  *render){
                                         &z_hat,
                                         &theta,
                                         &theta_roll);
+     FOV_x_object_plane*=unit_factor;
+     FOV_y_object_plane*=unit_factor;
 
      // Generate depth array
      set_camera_depths(render,stereo_offset_dir);
@@ -269,7 +273,7 @@ void render_frame(render_info  *render){
      // Cast depth array into the units of the render
      double *depth_array=(double *)SID_malloc(sizeof(double)*n_depth);
      for(int i_depth=0;i_depth<n_depth;i_depth++)
-         depth_array[i_depth]=unit_factor*render->camera->depth_array[i_depth];
+         depth_array[i_depth]=MAX(0.,unit_factor*render->camera->depth_array[i_depth]);
 
      // Set physical image-plane domain
      double xmin = -0.5*FOV_x_image_plane; // Things will be centred on (x_o,y_o,z_o) later

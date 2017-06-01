@@ -10,8 +10,8 @@
 
 void add_render_scene(render_info *render,int n_frames){
 
-  // The camera needs to be sealed at this point
-  seal_camera(render);
+  // Make sure all previous scences are sealed
+  seal_scenes(render);
 
   scene_info *current_s=NULL;
   scene_info *last_s   =NULL;

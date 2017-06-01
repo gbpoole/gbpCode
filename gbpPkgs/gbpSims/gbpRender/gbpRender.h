@@ -108,7 +108,7 @@ struct perspective_info{
   double theta;              // Rotation angle (azimuthal)   of camera position about x,y,z_o (after c-o transformation)
   double zeta;               // Rotation angle (altitudinal) of camera position about x,y,z_o (after c-o transformation)
   double phi;                // Zoom factor
-  double FOV;                // Field of view at object position
+  double FOV;                // Minimum field of view at object position
   double time;               // Used for time-evolving movies
   double focus_shift_x;      // After all transformations are applied, this shifts everything in the image-frame.  Useful
   double focus_shift_y;      //    for cases where you want flag_comoving=FALSE but don't want (0,0,0) in the image-centre.
@@ -137,6 +137,7 @@ struct scene_info{
   scene_info        *next;
 };
 
+# define GBPRENDER_DEPTH_ARRAY_ID_SIZE 32
 typedef struct camera_info camera_info;
 struct camera_info{
   int                sealed;  // Set to TRUE if camera initialization has been finalized
@@ -147,9 +148,12 @@ struct camera_info{
   int                height;
   int                n_depth;
   int                flag_depth_init;
+  char             **depth_array_identifier; // each will be allocated with size GBPRENDER_DEPTH_ARRAY_ID_SIZE 
   double            *depth_array;
   double            *depth_array_x;
   double            *depth_array_y;
+  double            *depth_array_FOV_x;
+  double            *depth_array_FOV_y;
   double             stereo_ratio;
   double             f_near_field;
   double             f_taper_field;
@@ -346,7 +350,7 @@ int set_render_depths(render_info *render,
 void parse_render_file(render_info **render, char *filename);
 void parse_set_scene_quantity(camera_info *camera,scene_info *scene,const char *quantity,char *line, int i_word_in);
 void write_frame(render_info *render,int frame,int mode);
-void write_path_file(render_info *render,int frame);
+void write_frame_metadata(render_info *render,int frame,const char *set_label);
 void read_frame(render_info *render,int frame);
 void set_frame(camera_info *camera);
 void set_render_scale(render_info *render,double RGB_min,double RGB_max,double Y_min,double Y_max,double Z_min,double Z_max);
@@ -398,6 +402,7 @@ void transform_particle(GBPREAL *x_i,
                         int      flag_comoving,
                         int      flag_force_periodic);
 int  set_camera_depths(render_info *render,int flag_stereo_offset);
+int  free_camera_depths(camera_info *camera);
 void free_particle_map_quantities(map_quantities_info *mq);
 void init_particle_map_quantities(map_quantities_info *mq,render_info *render,ADaPS *transfer_list,int flag_comoving,double expansion_factor);
 void set_particle_map_quantities(render_info *render,map_quantities_info *mq,int mode,size_t i_particle,

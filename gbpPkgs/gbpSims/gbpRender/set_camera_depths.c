@@ -9,17 +9,25 @@
 #include <gbpRender.h>
 
 // This routine is not efficient, but it doesn't need to be
-int add_render_depth_local(render_info *render,double x,double y,double d_depth);
-int add_render_depth_local(render_info *render,double x,double y,double d_depth){
+int add_render_depth_local(render_info *render,const char *id,double FOV_x,double FOV_y,double x,double y,double d_depth);
+int add_render_depth_local(render_info *render,const char *id,double FOV_x,double FOV_y,double x,double y,double d_depth){
    int r_val=TRUE;
 
    render->camera->n_depth++;
-   render->camera->depth_array  =(double *)SID_realloc(render->camera->depth_array,  render->camera->n_depth);
-   render->camera->depth_array_x=(double *)SID_realloc(render->camera->depth_array_x,render->camera->n_depth);
-   render->camera->depth_array_y=(double *)SID_realloc(render->camera->depth_array_y,render->camera->n_depth);
-   render->camera->depth_array  [render->camera->n_depth-1]=d_depth;
-   render->camera->depth_array_x[render->camera->n_depth-1]=x;
-   render->camera->depth_array_y[render->camera->n_depth-1]=y;
+   render->camera->depth_array           =(double *)SID_realloc(render->camera->depth_array,           sizeof(double)*render->camera->n_depth);
+   render->camera->depth_array_identifier=(char  **)SID_realloc(render->camera->depth_array_identifier,sizeof(char *)*render->camera->n_depth);
+   render->camera->depth_array_x         =(double *)SID_realloc(render->camera->depth_array_x,         sizeof(double)*render->camera->n_depth);
+   render->camera->depth_array_y         =(double *)SID_realloc(render->camera->depth_array_y,         sizeof(double)*render->camera->n_depth);
+   render->camera->depth_array_FOV_x     =(double *)SID_realloc(render->camera->depth_array_FOV_x,     sizeof(double)*render->camera->n_depth);
+   render->camera->depth_array_FOV_y     =(double *)SID_realloc(render->camera->depth_array_FOV_y,     sizeof(double)*render->camera->n_depth);
+   render->camera->depth_array      [render->camera->n_depth-1]=d_depth;
+   render->camera->depth_array_x    [render->camera->n_depth-1]=x;
+   render->camera->depth_array_y    [render->camera->n_depth-1]=y;
+   render->camera->depth_array_FOV_x[render->camera->n_depth-1]=FOV_x;
+   render->camera->depth_array_FOV_y[render->camera->n_depth-1]=FOV_y;
+
+   render->camera->depth_array_identifier[render->camera->n_depth-1]=(char *)SID_malloc(sizeof(char)*GBPRENDER_DEPTH_ARRAY_ID_SIZE);
+   strcpy(render->camera->depth_array_identifier[render->camera->n_depth-1],id);
 
    return(r_val);
 }
@@ -28,9 +36,6 @@ int add_render_depth_local(render_info *render,double x,double y,double d_depth)
 //    updated for the camera because we need things like d_o
 int set_camera_depths(render_info *render,int flag_stereo_offset){
   int r_val=TRUE;
-
-  // Save the old count so we can check the non-initializing calls below
-  int n_depth_old=render->camera->n_depth;
 
   // Set a dummy value for now
   int mode = TRUE;
@@ -67,57 +72,76 @@ int set_camera_depths(render_info *render,int flag_stereo_offset){
                                      &theta,
                                      &theta_roll);
 
+  // Save the old count so we can check the non-initializing calls below
+  int n_depth_old=render->camera->n_depth;
+
   // Reset list to zero
-  render->camera->n_depth=0;
-  SID_free(SID_FARG render->camera->depth_array);
+  free_camera_depths(render->camera);
 
   // This must always be present
-  add_render_depth_local(render,0.,0.,0.);
+  add_render_depth_local(render,"full_frame",1.,1.,0.,0.,0.);
 
   // Add the object plane (if requested)
   if(check_mode_for_flag(mode,TRUE))
-     add_render_depth_local(render,0.,0.,render->camera->perspective->d_o);
+     add_render_depth_local(render,"object_plane",render->camera->perspective->FOV_x_object_plane,render->camera->perspective->FOV_y_object_plane,0.,0.,render->camera->perspective->d_o);
 
   // Add the image plane (if requested)
   if(check_mode_for_flag(mode,FALSE))
-     add_render_depth_local(render,0.,0.,render->camera->perspective->d_image_plane);
+     add_render_depth_local(render,"image_plane",render->camera->perspective->FOV_x_image_plane,render->camera->perspective->FOV_y_image_plane,0.,0.,render->camera->perspective->d_image_plane);
 
   // Add marked objects (if requested)
   if(check_mode_for_flag(mode,TRUE)){
-     for(int i_mark=0;i_mark<render->n_mark_properties;i_mark++){
-         float x_m=0.;
-         float y_m=0.;
-         float z_m=0.;
-         if(render->camera->flag_velocity_space){
-            x_m=(float)render->mark_properties[i_mark].velocity_COM[0];
-            y_m=(float)render->mark_properties[i_mark].velocity_COM[1];
-            z_m=(float)render->mark_properties[i_mark].velocity_COM[2];
+     mark_arg_info *current_arg=render->mark_arg_first;
+     int i_arg =0;
+     int i_mark=0;
+     while(current_arg!=NULL){
+         if(!strcmp(current_arg->type,"group_id") || !strcmp(current_arg->type,"subgroup_id")){
+             char mark_id[GBPRENDER_DEPTH_ARRAY_ID_SIZE];
+             if(!strcmp(current_arg->type,"group_id"))
+                sprintf(mark_id,"group_%d",current_arg->ival[0]);
+             else if(!strcmp(current_arg->type,"subgroup_id"))
+                sprintf(mark_id,"subgroup_%d",current_arg->ival[0]);
+             else
+                SID_trap_error("Invalid option.",ERROR_LOGIC);
+             float x_m=0.;
+             float y_m=0.;
+             float z_m=0.;
+             if(render->camera->flag_velocity_space){
+                x_m=(float)render->mark_properties[i_mark].velocity_COM[0];
+                y_m=(float)render->mark_properties[i_mark].velocity_COM[1];
+                z_m=(float)render->mark_properties[i_mark].velocity_COM[2];
+             }
+             else{
+                x_m=(float)render->mark_properties[i_mark].position_COM[0];
+                y_m=(float)render->mark_properties[i_mark].position_COM[1];
+                z_m=(float)render->mark_properties[i_mark].position_COM[2];
+             }
+             transform_particle(&x_m,
+                                &y_m,
+                                &z_m,
+                                render->camera->perspective->p_o[0],
+                                render->camera->perspective->p_o[1],
+                                render->camera->perspective->p_o[2],
+                                x_hat, 
+                                y_hat, 
+                                z_hat, 
+                                render->camera->perspective->d_o,
+                                0.,// lateral motions don't affect z_m, so we ignore render->camera->perspective->stereo_offset,
+                                theta,
+                                theta_roll, 
+                                render->box_size, 
+                                render->camera->perspective->time, 
+                                render->camera->perspective->focus_shift_x,
+                                render->camera->perspective->focus_shift_y,
+                                render->flag_comoving, 
+                                render->flag_force_periodic); 
+             float f_FOV=z_m/render->camera->perspective->d_image_plane;
+             fprintf(stderr,"TT: %le %le %le -- %le -- %le -- %le %le\n",x_m,y_m,z_m,render->camera->perspective->d_image_plane,f_FOV,render->camera->perspective->FOV_x_image_plane,render->camera->perspective->FOV_y_image_plane);
+             add_render_depth_local(render,mark_id,f_FOV*render->camera->perspective->FOV_x_image_plane,f_FOV*render->camera->perspective->FOV_x_image_plane,x_m,y_m,z_m);
+             i_mark++;
          }
-         else{
-            x_m=(float)render->mark_properties[i_mark].position_COM[0];
-            y_m=(float)render->mark_properties[i_mark].position_COM[1];
-            z_m=(float)render->mark_properties[i_mark].position_COM[2];
-         }
-         transform_particle(&x_m,
-                            &y_m,
-                            &z_m,
-                            render->camera->perspective->p_o[0],
-                            render->camera->perspective->p_o[1],
-                            render->camera->perspective->p_o[2],
-                            x_hat, 
-                            y_hat, 
-                            z_hat, 
-                            render->camera->perspective->d_o,
-                            0.,// lateral motions don't affect z_m, so we ignore render->camera->perspective->stereo_offset,
-                            theta,
-                            theta_roll, 
-                            render->box_size, 
-                            render->camera->perspective->time, 
-                            render->camera->perspective->focus_shift_x,
-                            render->camera->perspective->focus_shift_y,
-                            render->flag_comoving, 
-                            render->flag_force_periodic); 
-         add_render_depth_local(render,x_m,y_m,z_m);
+         current_arg=current_arg->next;
+         i_arg++;
      }
   }
 

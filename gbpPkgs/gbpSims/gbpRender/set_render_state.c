@@ -137,10 +137,12 @@ int set_render_state(render_info *render,int frame,int mode){
           render->h_Hubble=((double *)ADaPS_fetch(render->plist_list[0]->data,"h_Hubble"))[0];
        else
           render->h_Hubble=1.;
-       if(ADaPS_exist(render->plist_list[0]->data,"box_size_raw"))
+       if(ADaPS_exist(render->plist_list[0]->data,"box_size_raw")){
           render->box_size=((double *)ADaPS_fetch(render->plist_list[0]->data,"box_size_raw"))[0];
-       else
+       }
+       else{
           render->box_size=0.;
+       }
     }
     else{
        render->h_Hubble=1.;
@@ -150,6 +152,12 @@ int set_render_state(render_info *render,int frame,int mode){
     // Mark particles
     perform_marking(render);
   }
+
+  // This needs to be done near the end because
+  //    it may depend on marking info (processed
+  //    just above), etc.
+  if(!render->camera->sealed)
+    seal_camera(render);
 
   return(r_val);
 }

@@ -94,6 +94,10 @@ void free_camera(camera_info **camera){
     ADaPS_free(SID_FARG (*camera)->transfer_list);
   if((*camera)->Y_gamma!=NULL)
     free_interpolate(SID_FARG (*camera)->Y_gamma,NULL);
+
+  // Free camera depth information
+  free_camera_depths(*camera);
+
   SID_free((void **)camera);
   SID_log("Done.",SID_LOG_CLOSE);
 }

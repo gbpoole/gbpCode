@@ -168,6 +168,7 @@ void read_gadget_binary_render(char       *filename_root_in,
       // Hubble parameter 
       h_Hubble=(double)read_info.header.h_Hubble; 
       if(h_Hubble<1e-10) h_Hubble=1.;
+      box_size=read_info.header.box_size;
       ADaPS_store(&(plist->data),(void *)(&box_size),"box_size_raw",ADaPS_SCALAR_DOUBLE);
       box_size=read_info.header.box_size*plist->length_unit/h_Hubble;
       ADaPS_store(&(plist->data),(void *)(&box_size),"box_size",ADaPS_SCALAR_DOUBLE);

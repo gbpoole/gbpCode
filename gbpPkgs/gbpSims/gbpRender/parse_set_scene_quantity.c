@@ -9,9 +9,6 @@
 #include <gbpRender.h>
 
 void parse_set_scene_quantity(camera_info *camera,scene_info *scene,const char *quantity,char *line, int i_word_in){
-   // Make sure that the camera definition is finalized before
-   //    setting anything here.
-   check_camera_sealed(camera,TRUE);
 
    // Interpret command
    char parameter[64];

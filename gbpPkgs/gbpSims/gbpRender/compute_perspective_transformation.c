@@ -12,8 +12,8 @@
 //   with the object at (0,0,0)
 void compute_perspective_transformation(render_info *render,
                                         int          flag_stereo_offset,
-                                        double      *FOV_x,
-                                        double      *FOV_y,
+                                        double      *FOV_x, // return the object-plane FOV
+                                        double      *FOV_y, // return the object-plane FOV
                                         double      *d_o,
                                         double      *x_o_out,
                                         double      *y_o_out,
@@ -120,8 +120,10 @@ void compute_perspective_transformation(render_info *render,
   // If f_image_plane>1, then the object is in front of the image plane
   //    by that factor.  FOV is input at the object plane but used at the image
   //    plane, so we need to make it bigger by that factor as well. 
+  (*FOV_x) =render->camera->perspective->FOV_x_image_plane;
+  (*FOV_y) =render->camera->perspective->FOV_y_image_plane;
   (*d_o)  /=f_image_plane;
-  (*FOV_x)*=f_image_plane;
-  (*FOV_y)*=f_image_plane;
+  (*FOV_x)*=f_image_plane; // return the object-plane FOV
+  (*FOV_y)*=f_image_plane; // return the object-plane FOV
 }
 

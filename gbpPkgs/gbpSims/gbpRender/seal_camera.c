@@ -8,6 +8,9 @@
 #include <gbpSPH.h>
 #include <gbpRender.h>
 
+// Note that this depends on A LOT of things (some hidden, like any SSimPL information
+//    from marked halos, etc) ... so it should only be called once and as close to 
+//    last as possible.
 void seal_camera(render_info *render){
 
   if(!render->camera->sealed){

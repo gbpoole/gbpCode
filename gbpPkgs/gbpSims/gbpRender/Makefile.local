@@ -29,10 +29,11 @@ OBJFILES  = RGB_lookup.o                     \
 	    parse_render_file.o                  \
 	    parse_set_scene_quantity.o           \
 	    read_frame.o                         \
-	    write_path_file.o                    \
+	    write_frame_metadata.o               \
 	    set_frame.o                          \
 	    set_render_scale.o                   \
 		set_camera_depths.o					 \
+		free_camera_depths.o				 \
 	    set_sph_kernel.o                     \
 	    set_transfer_function.o              \
 	    read_gadget_binary_render.o          \
