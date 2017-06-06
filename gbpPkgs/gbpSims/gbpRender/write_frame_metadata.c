@@ -89,16 +89,16 @@ void write_frame_metadata(render_info *render,int frame,const char *set_label){
      fprintf(fp_out,"# Camera data about the image depths for frame %d\n",frame);
      fprintf(fp_out,"# Column (%02d): Depth\n",     i_column++);
      fprintf(fp_out,"#        (%02d): identifier\n",i_column++);
-     fprintf(fp_out,"#        (%02d): d\n",         i_column++);
-     fprintf(fp_out,"#        (%02d): x\n",         i_column++);
-     fprintf(fp_out,"#        (%02d): y\n",         i_column++);
+     fprintf(fp_out,"#        (%02d): d [Mpc/h]\n", i_column++);
+     fprintf(fp_out,"#        (%02d): x [fraction of frame width from left]\n",  i_column++);
+     fprintf(fp_out,"#        (%02d): y [fraction of frame width from bottom]\n",i_column++);
      for(int i_depth=0;i_depth<render->camera->n_depth;i_depth++){
          fprintf(fp_out,"%2d %-24s %le %le %le\n",
                  i_depth,
                  render->camera->depth_array[i_depth],
                  render->camera->depth_array_identifier[i_depth],
-                  0.5+render->camera->depth_array_x[i_depth]/render->camera->depth_array_FOV_x[i_depth],  // fraction of frame from left
-                 -0.5+render->camera->depth_array_y[i_depth]/render->camera->depth_array_FOV_y[i_depth]); // fraction of frame from bottom
+                     0.5+render->camera->depth_array_x[i_depth]/render->camera->depth_array_FOV_x[i_depth],  // fraction of frame from left
+                 1.-(0.5+render->camera->depth_array_y[i_depth]/render->camera->depth_array_FOV_y[i_depth])); // fraction of frame from *bottom*
      }
      fclose(fp_out);
   } 

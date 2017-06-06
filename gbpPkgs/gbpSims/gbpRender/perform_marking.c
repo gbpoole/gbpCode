@@ -501,6 +501,10 @@ void execute_marking_argument_local(render_info *render,mark_arg_info *arg,halo_
    else
       SID_trap_error("Invalid selection type {%s} in perform_marking().",ERROR_LOGIC,arg->type);
    for(int i_snap=0;i_snap<render->n_interpolate;i_snap++){
+      // TODO: This error is necessary because the interpolation (as coded presently) gets scrambled
+      //    if the same particles are not invovled in both snapshots.
+      if(render->n_interpolate>1)
+          SID_trap_error("n_interpolate>1 not supported in marking.",ERROR_LOGIC);
       if(render->n_interpolate>1)
          SID_log("Processing snapshot %d...",SID_LOG_OPEN|SID_LOG_TIMER);
       plist_info *plist=render->plist_list[i_snap];

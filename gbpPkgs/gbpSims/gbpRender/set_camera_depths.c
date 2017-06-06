@@ -136,7 +136,6 @@ int set_camera_depths(render_info *render,int flag_stereo_offset){
                                 render->flag_comoving, 
                                 render->flag_force_periodic); 
              float f_FOV=z_m/render->camera->perspective->d_image_plane;
-             fprintf(stderr,"TT: %le %le %le -- %le -- %le -- %le %le\n",x_m,y_m,z_m,render->camera->perspective->d_image_plane,f_FOV,render->camera->perspective->FOV_x_image_plane,render->camera->perspective->FOV_y_image_plane);
              add_render_depth_local(render,mark_id,f_FOV*render->camera->perspective->FOV_x_image_plane,f_FOV*render->camera->perspective->FOV_x_image_plane,x_m,y_m,z_m);
              i_mark++;
          }
