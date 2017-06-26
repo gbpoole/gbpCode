@@ -59,12 +59,13 @@ if ( ${GBP_QUEUE_TYPE} == 'PBS' ) then
   if ( $HOSTNAME == 'g2.hpc.swin.edu.au' ) then
      echo '#PBS -q '$ARG_QUEUE                                                                          >> $SUBT_FILE
   endif
-  echo '#PBS -V'                                                                                        >> $SUBT_FILE
   echo '#PBS -k oe'                                                                                     >> $SUBT_FILE
   echo '#PBS -d '"`pwd`"                                                                                >> $SUBT_FILE
   echo                                                                                                  >> $SUBT_FILE
-  echo 'setenv PATH            '$GBP_MPI_BIN':$PATH'                                                    >> $SUBT_FILE
-  echo 'setenv LD_LIBRARY_PATH '$GBP_MPI_LIB':$LD_LIBRARY_PATH'                                         >> $SUBT_FILE
+#  echo 'setenv PATH            '$GBP_MPI_BIN':$PATH'                                                    >> $SUBT_FILE
+  echo 'setenv PATH            '$PATH                                                                   >> $SUBT_FILE
+#  echo 'setenv LD_LIBRARY_PATH '$GBP_MPI_LIB':$LD_LIBRARY_PATH'                                         >> $SUBT_FILE
+  echo 'setenv LD_LIBRARY_PATH '$LD_LIBRARY_PATH                                                        >> $SUBT_FILE
   echo 'setenv NPROCS          '$NPROCS                                                                 >> $SUBT_FILE
   echo 'setenv NNODES          `uniq $PBS_NODEFILE | wc -l`'                                            >> $SUBT_FILE
   echo 'setenv DATE_START      `date`'                                                                  >> $SUBT_FILE
