@@ -33,7 +33,6 @@ int write_forest_vertical_halos_recursive_local(tree_info *trees,tree_node_info 
 }
 
 void write_trees_vertical(tree_info     *trees,
-                          double         box_size,
                           int            grid_size,
                           const char    *filename_root_trees_out){
 
@@ -91,9 +90,9 @@ void write_trees_vertical(tree_info     *trees,
         tree_node_info            *current_halo=first_node_in_forest[i_forest];
         halo_properties_SAGE_info *halo_properties=&(properties[current_halo->snap_tree][current_halo->neighbour_index]);
         // Decide which file this forest belongs to
-        int i_x=(int)((float)grid_size*(halo_properties->pos[0]/box_size));i_x=MIN(i_x,grid_size-1);
-        int i_y=(int)((float)grid_size*(halo_properties->pos[1]/box_size));i_y=MIN(i_y,grid_size-1);
-        int i_z=(int)((float)grid_size*(halo_properties->pos[2]/box_size));i_z=MIN(i_z,grid_size-1);
+        int i_x=(int)((float)grid_size*(halo_properties->pos[0]/trees->box_size));i_x=MIN(i_x,grid_size-1);
+        int i_y=(int)((float)grid_size*(halo_properties->pos[1]/trees->box_size));i_y=MIN(i_y,grid_size-1);
+        int i_z=(int)((float)grid_size*(halo_properties->pos[2]/trees->box_size));i_z=MIN(i_z,grid_size-1);
         int i_g=(i_z*grid_size+i_y)*grid_size+i_x;
         forest_count[i_g]++;
         file_out[i_forest]=i_g;

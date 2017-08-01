@@ -20,16 +20,13 @@ int main(int argc, char *argv[]){
   strcpy(filename_SSimPL_dir,       argv[1]);
   strcpy(filename_halo_version_root,argv[2]);
   strcpy(filename_trees_name,       argv[3]);
-  double box_size     =(double)atof(argv[4]);
-  int    n_dim_files  =        atoi(argv[5]);
+  int n_dim_files  =           atoi(argv[4]);
 
   SID_log("Constructing vertical merger trees...",SID_LOG_OPEN|SID_LOG_TIMER);
   compute_trees_vertical(filename_SSimPL_dir,
                          filename_halo_version_root,
                          filename_trees_name,
-                         box_size,
                          n_dim_files);
-
   SID_log("Done.",SID_LOG_CLOSE);
 
   SID_exit(ERROR_NONE);

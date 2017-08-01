@@ -12,7 +12,6 @@
 void compute_trees_vertical(char   *filename_SSimPL_dir,
                             char   *filename_halo_version_root,
                             char   *filename_trees_name,
-                            double  box_size,
                             int     n_dim_files){
   SID_log("Constructing vertical merger trees...",SID_LOG_OPEN|SID_LOG_TIMER);
 
@@ -37,7 +36,6 @@ void compute_trees_vertical(char   *filename_SSimPL_dir,
 
   // Write vertical trees
   write_trees_vertical(trees,
-                       box_size,
                        n_dim_files,
                        filename_trees_root);
 

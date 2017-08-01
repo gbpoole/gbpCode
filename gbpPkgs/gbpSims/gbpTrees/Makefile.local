@@ -31,7 +31,6 @@ BINFILES  = make_trees_stats               \
             make_trees_matches             \
             make_trees_vertical            \
             make_trees_horizontal          \
-            make_trees_grid                \
             make_trees_analysis_relaxation \
             make_single_matches            \
             make_forests                   \

@@ -91,7 +91,6 @@ int main(int argc, char *argv[]){
   compute_trees_vertical(filename_SSimPL_dir,
                          filename_halo_version_root,
                          filename_trees_name,
-                         box_size,
                          n_dim_files);
   SID_log("Done.",SID_LOG_CLOSE);
 

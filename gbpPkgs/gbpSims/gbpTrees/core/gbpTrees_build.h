@@ -906,7 +906,6 @@ void compute_forests(char *filename_root_out,int n_search_forests);
 void compute_trees_vertical(char   *filename_SSimPL_dir,
                             char   *filename_halo_version_root,
                             char   *filename_trees_name,
-                            double  box_size,
                             int     n_dim_files);
 void finalize_trees(tree_info *trees,
                     int        group_progenitor_mode,
@@ -930,7 +929,6 @@ void write_tree_run_parameters(char  *filename_root_out,
                                int    flag_compute_fragmented,
                                int    flag_compute_ghosts);
 void write_trees_vertical(tree_info     *trees,
-                          double         box_size,
                           int            grid_size,
                           const char    *filename_root_out);
 void write_a_list(const char *filename_snap_list_in,
