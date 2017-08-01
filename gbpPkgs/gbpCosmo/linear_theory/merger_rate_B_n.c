@@ -4,57 +4,6 @@
 #include <gbpLib.h>
 #include <gbpMath.h>
 #include <gbpCosmo_linear_theory.h>
-#include <gbpCosmo_bias.h>
-/*
-double bias_model_BPR_integral(cosmo_info **cosmo,
-                               double       z);
-double bias_model_BPR_integral(cosmo_info **cosmo,
-                               double       z){
-   double       z_max=10000.;
-   interp_info *interp;
-   if(!ADaPS_exist(*cosmo,"bias_model_BPR_Iz_interp")){
-      int     n_int;
-      int     i_int;
-      double  dz;
-      double  Omega_M,Omega_k,Omega_Lambda;
-      double  z_temp;
-      double *x_int;
-      double *y_int;
-      double  log_z;
-      double  dlog_z;
-      n_int       =250;
-      Omega_M     =((double *)ADaPS_fetch(*cosmo,"Omega_M"))[0];
-      Omega_k     =((double *)ADaPS_fetch(*cosmo,"Omega_k"))[0];
-      Omega_Lambda=((double *)ADaPS_fetch(*cosmo,"Omega_Lambda"))[0];
-      x_int       = (double *)SID_malloc(sizeof(double)*n_int);
-      y_int       = (double *)SID_malloc(sizeof(double)*n_int);
-      i_int=0;
-      x_int[i_int]=0.;
-      y_int[i_int]=pow((1.+x_int[i_int])/E_z(Omega_M,Omega_k,Omega_Lambda,x_int[i_int]),3.);
-      i_int++;
-      x_int[i_int]=take_log10(z_max)/(double)(n_int-1);
-      y_int[i_int]=pow((1.+x_int[i_int])/E_z(Omega_M,Omega_k,Omega_Lambda,x_int[i_int]),3.);
-      log_z    =take_log10(x_int[i_int]);
-      dlog_z   =(take_log10(z_max)-log_z)/(double)(n_int-2);
-      for(i_int++,log_z+=dlog_z;i_int<(n_int-1);i_int++,log_z+=dlog_z){
-        x_int[i_int]=take_alog10(log_z);
-        y_int[i_int]=pow((1.+x_int[i_int])/E_z(Omega_M,Omega_k,Omega_Lambda,x_int[i_int]),3.);
-      }
-      x_int[i_int]=z_max;
-      y_int[i_int]=pow((1.+x_int[i_int])/E_z(Omega_M,Omega_k,Omega_Lambda,x_int[i_int]),3.);
-      init_interpolate(x_int,y_int,(size_t)n_int,gsl_interp_cspline,&interp);
-      SID_free(SID_FARG x_int);
-      SID_free(SID_FARG y_int);
-      ADaPS_store_interp(cosmo,
-                         (void *)(interp),
-                         "bias_model_BPR_Iz_interp");
-          
-   }
-   else
-      interp=(interp_info *)ADaPS_fetch(*cosmo,"bias_model_BPR_Iz_interp");
-   return(interpolate_integral(interp,z,z_max));
-}
-*/
 
 double merger_rate_B_n(cosmo_info **cosmo,
                        int          mode_model,
