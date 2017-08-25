@@ -11,13 +11,13 @@ float compute_f_stretch(double d_image_plane,float z_i,int flag_plane_parallel){
    float f_i;
    switch(flag_plane_parallel){
       case FALSE:
-         if(z_i>0.)
+         if(z_i>0.) // save the divisions if we won't be rendering the particle anyways
             f_i=(float)d_image_plane/(float)z_i;
          else
-            f_i=0.;
+            f_i=1e5; // a random large number
          break;
       case TRUE:
-         f_i=1.;
+         f_i=1.f;
          break;
    }
    return(f_i);
