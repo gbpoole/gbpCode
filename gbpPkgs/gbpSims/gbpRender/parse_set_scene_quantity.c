@@ -19,9 +19,10 @@ void parse_set_scene_quantity(camera_info *camera,scene_info *scene,const char *
       if(!strcmp(parameter,"evolve")){
          i_word++;
          grab_word(line,i_word,parameter);
-         if(!strcmp(parameter,"with_frame")){i_word++;
+         if(!strcmp(parameter,"with_frame")){
+            i_word++;
             int n_params=count_words(line)-i_word+1;
-            if(n_params<=1)
+            if(n_params<2)
                SID_trap_error("Too-few evolution parameters passed in line {%s}.",ERROR_LOGIC,line);
             if(n_params==2){
                double val_min,val_max,dval;
@@ -42,7 +43,7 @@ void parse_set_scene_quantity(camera_info *camera,scene_info *scene,const char *
          }
          else
             SID_trap_error("Invalid evolution parameters passed in line {%s}.",ERROR_LOGIC,line);
-      }
+      } // if evolve
       else{
          grab_double(line,i_word++,&time_in);
          for(int i_frame=0;i_frame<scene->n_frames;i_frame++)
@@ -51,17 +52,68 @@ void parse_set_scene_quantity(camera_info *camera,scene_info *scene,const char *
       scene->flag_time_set=TRUE;
    }
    else if(!strcmp(quantity,"p_o")){
-      double p_o_in[3];
-      grab_double(line,i_word++,&(p_o_in[0]));
-      grab_double(line,i_word++,&(p_o_in[1]));
-      grab_double(line,i_word++,&(p_o_in[2]));
-      for(int i_frame=0;i_frame<scene->n_frames;i_frame++){
-         scene->perspectives[i_frame]->p_o[0]=p_o_in[0];
-         scene->perspectives[i_frame]->p_o[1]=p_o_in[1];
-         scene->perspectives[i_frame]->p_o[2]=p_o_in[2];
+      grab_word(line,i_word,parameter);
+      if(!strcmp(parameter,"evolve")){
+          i_word++;
+          grab_word(line,i_word,parameter);
+          if(!strcmp(parameter,"with_frame")){
+              i_word++;
+              int n_params=count_words(line)-i_word+1;
+              if(n_params<6)
+                  SID_trap_error("Too-few evolution parameters (%d) passed in line {%s}.",ERROR_LOGIC,n_params,line);
+              if(n_params==6){
+                double p_o_start[3];
+                double p_o_stop[3];
+                double dp_o[3];
+                grab_double(line,i_word++,&(p_o_start[0]));
+                grab_double(line,i_word++,&(p_o_start[1]));
+                grab_double(line,i_word++,&(p_o_start[2]));
+                grab_double(line,i_word++,&(p_o_stop[0]));
+                grab_double(line,i_word++,&(p_o_stop[1]));
+                grab_double(line,i_word++,&(p_o_stop[2]));
+                dp_o[0]=(p_o_stop[0]-p_o_start[0])/(double)(scene->n_frames-1);
+                dp_o[1]=(p_o_stop[1]-p_o_start[1])/(double)(scene->n_frames-1);
+                dp_o[2]=(p_o_stop[2]-p_o_start[2])/(double)(scene->n_frames-1);
+                for(int i_frame=0;i_frame<scene->n_frames;i_frame++){
+                  if(i_frame==0){
+                     scene->perspectives[i_frame]->p_o[0]=p_o_start[0];
+                     scene->perspectives[i_frame]->p_o[1]=p_o_start[1];
+                     scene->perspectives[i_frame]->p_o[2]=p_o_start[2];
+                  }
+                  else if(i_frame==(scene->n_frames-1)){
+                     scene->perspectives[i_frame]->p_o[0]=p_o_stop[0];
+                     scene->perspectives[i_frame]->p_o[1]=p_o_stop[1];
+                     scene->perspectives[i_frame]->p_o[2]=p_o_stop[2];
+                  }
+                  else{
+                     scene->perspectives[i_frame]->p_o[0]=p_o_start[0]+dp_o[0]*(double)i_frame;
+                     scene->perspectives[i_frame]->p_o[1]=p_o_start[1]+dp_o[1]*(double)i_frame;
+                     scene->perspectives[i_frame]->p_o[2]=p_o_start[2]+dp_o[2]*(double)i_frame;
+                  }
+                }
+                scene->flag_p_o_set=TRUE;
+                SID_log("p_o set to evolve from [%le,%le,%le] to [%le,%le,%le] for current scene.",SID_LOG_COMMENT,
+                        p_o_start[0],p_o_start[1],p_o_start[2],p_o_stop[0],p_o_stop[1],p_o_stop[2]);
+              }
+              else
+                  SID_trap_error("Invalid evolution parameters passed in line {%s}.",ERROR_LOGIC,line);
+          }
+          else
+            SID_trap_error("Invalid evolution parameters passed in line {%s}.",ERROR_LOGIC,line);
       }
-      scene->flag_p_o_set=TRUE;
-      SID_log("p_o set to [%le,%le,%le] for all frames in scene.",SID_LOG_COMMENT,p_o_in[0],p_o_in[1],p_o_in[2]);
+      else{    
+        double p_o_in[3];
+        grab_double(line,i_word++,&(p_o_in[0]));
+        grab_double(line,i_word++,&(p_o_in[1]));
+        grab_double(line,i_word++,&(p_o_in[2]));
+        for(int i_frame=0;i_frame<scene->n_frames;i_frame++){
+           scene->perspectives[i_frame]->p_o[0]=p_o_in[0];
+           scene->perspectives[i_frame]->p_o[1]=p_o_in[1];
+           scene->perspectives[i_frame]->p_o[2]=p_o_in[2];
+        }
+        scene->flag_p_o_set=TRUE;
+        SID_log("p_o set to [%le,%le,%le] for all frames in scene.",SID_LOG_COMMENT,p_o_in[0],p_o_in[1],p_o_in[2]);
+      }
    }
    else if(!strcmp(quantity,"radius")){
       // Checn that p_o has been set
