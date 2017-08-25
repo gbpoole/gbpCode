@@ -154,6 +154,7 @@ struct camera_info{
   double            *depth_array_y;
   double            *depth_array_FOV_x;
   double            *depth_array_FOV_y;
+  double            *depth_array_f_stretch;
   double             stereo_ratio;
   double             f_near_field;
   double             f_taper_field;

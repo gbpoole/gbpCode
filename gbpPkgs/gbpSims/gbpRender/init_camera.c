@@ -29,6 +29,7 @@ void init_camera(camera_info **camera, int mode){
   (*camera)->depth_array_y         =NULL; 
   (*camera)->depth_array_FOV_x     =NULL; 
   (*camera)->depth_array_FOV_y     =NULL; 
+  (*camera)->depth_array_f_stretch =NULL; 
   (*camera)->stereo_ratio          =0.;
   (*camera)->RGB_mode              =CAMERA_RGB_MODE_DEFAULT;
   (*camera)->RGB_gamma             =NULL;
