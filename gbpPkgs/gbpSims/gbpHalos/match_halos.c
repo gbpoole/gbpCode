@@ -622,14 +622,10 @@ void match_halos(plist_info  *plist_1_in,
                       flag=TRUE;
                       for(i_hist=0;i_hist<n_hist_array[i_group] && flag;i_hist++){
                          if(hist_list[i_hist]==file_index_2_j){
-                            switch(rank_1<n_score_lookup_table){
-                              case TRUE:
-                                 hist_score[i_hist]+=score_lookup_table[rank_1];
-                                 break;
-                              default:
-                                 hist_score[i_hist]+=(float)pow((double)(rank_1),match_weight_rank_index);
-                                 break;
-                            }
+                            if(rank_1<n_score_lookup_table)
+                                hist_score[i_hist]+=score_lookup_table[rank_1];
+                            else
+                                hist_score[i_hist]+=(float)pow((double)(rank_1),match_weight_rank_index);
                             hist_count[i_hist]++;
                             flag=FALSE;
                          }
@@ -671,14 +667,10 @@ void match_halos(plist_info  *plist_1_in,
                          break;
                       default:
                          hist_list[n_hist_array[i_group]]=file_index_2_j;
-                         switch(rank_1<n_score_lookup_table){
-                           case TRUE:
-                              hist_score[n_hist_array[i_group]]=score_lookup_table[rank_1];
-                              break;
-                           default:
-                              hist_score[n_hist_array[i_group]]=(float)pow((double)(rank_1),match_weight_rank_index);
-                              break;
-                         }
+                         if(rank_1<n_score_lookup_table)
+                            hist_score[n_hist_array[i_group]]=score_lookup_table[rank_1];
+                         else
+                            hist_score[n_hist_array[i_group]]=(float)pow((double)(rank_1),match_weight_rank_index);
                          hist_count[n_hist_array[i_group]]++;
                          n_hist_array[i_group]++;
                          break;

@@ -49,7 +49,8 @@ void init_render(render_info **render){
   (*render)->mark_arg_first     = NULL;
   (*render)->mark_arg_last      = NULL;
   (*render)->mark_properties    = NULL;
-  (*render)->n_mark_arg         = 0;
+  (*render)->mark_n_particles   = NULL;
+  (*render)->n_mark_args        = 0;
   (*render)->n_mark_properties  = 0;
 
   (*render)->kernel_radius      = NULL;

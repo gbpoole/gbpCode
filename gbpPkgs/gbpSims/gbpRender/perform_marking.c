@@ -428,33 +428,25 @@ void apply_mark_list(render_info   *render,
    size_t i_particle,j_particle;
    for(i_particle=j_particle=0;i_particle<n_ids_list && j_particle<n_species_local;i_particle++){
       size_t id_i;
-      switch(flag_long_ids){
-         case TRUE:
-            id_i=(size_t)(((size_t *)ids_list)[i_particle]);
-            break;
-         case FALSE:
-            id_i=(size_t)(((int    *)ids_list)[i_particle]);
-            break;
-      }
+      if(flag_long_ids)
+        id_i=(size_t)(((size_t *)ids_list)[i_particle]);
+      else 
+        id_i=(size_t)(((int    *)ids_list)[i_particle]);
       while(id_i>ids[ids_index[j_particle]] && j_particle<(n_species_local-1)) j_particle++;
       if   (id_i>ids[ids_index[j_particle]])                                   j_particle++;
       if(j_particle>=n_species_local) break;
       if(id_i==ids[ids_index[j_particle]]){
-         switch(value_list==NULL){
-            case TRUE:
-               mark[ids_index[j_particle]]=arg->value;
-               break;
-            case FALSE:
-               mark[ids_index[j_particle]]=value_list[i_particle];
-               break;
-         }
+         if(value_list==NULL)
+            mark[ids_index[j_particle]]=arg->value;
+         else 
+            mark[ids_index[j_particle]]=value_list[i_particle];
          (*mark_count)++;
       }
    }
 }
 
-void execute_marking_argument_local(render_info *render,mark_arg_info *arg,halo_properties_info *properties);
-void execute_marking_argument_local(render_info *render,mark_arg_info *arg,halo_properties_info *properties){
+void execute_marking_argument_local(render_info *render,mark_arg_info *arg,halo_properties_info *properties,size_t *n_particles_marked);
+void execute_marking_argument_local(render_info *render,mark_arg_info *arg,halo_properties_info *properties,size_t *n_particles_marked){
    int (*select_function)(int                i_group,
                           int                j_subgroup,
                           int                i_subgroup,
@@ -508,8 +500,8 @@ void execute_marking_argument_local(render_info *render,mark_arg_info *arg,halo_
       if(render->n_interpolate>1)
          SID_log("Processing snapshot %d...",SID_LOG_OPEN|SID_LOG_TIMER);
       plist_info *plist=render->plist_list[i_snap];
-      size_t mark_count =0;
       size_t n_particles=0;
+      (*n_particles_marked) =0;
       for(int i_type=0;i_type<N_GADGET_TYPE;i_type++){
          char species_name[256];
          strcpy(species_name,plist->species[i_type]);
@@ -529,7 +521,7 @@ void execute_marking_argument_local(render_info *render,mark_arg_info *arg,halo_
                if(!strcmp(arg->type,"all")){
                   for(size_t i_particle=0;i_particle<n_species_local;i_particle++)
                      mark[i_particle]=arg->value;
-                  mark_count +=n_species_local;
+                  (*n_particles_marked) +=n_species_local;
                }
                // ... set all particles in a sphere to a value.
                else if(!strcmp(arg->type,"sphere")){
@@ -562,7 +554,7 @@ void execute_marking_argument_local(render_info *render,mark_arg_info *arg,halo_
                      r2_i+=(double)(z[i_particle]-z_cen)*(double)(z[i_particle]-z_cen);
                      if(r2_i<=r2){
                         mark[i_particle]=arg->value;
-                        mark_count++;
+                        (*n_particles_marked)++;
                      }
                   }
                }
@@ -654,7 +646,7 @@ void execute_marking_argument_local(render_info *render,mark_arg_info *arg,halo_
                                 properties);
 
                   // Mark the particles in the list
-                  apply_mark_list(render,arg,i_snap,i_type,ids_list,val_list,n_ids_list,mark,&mark_count);
+                  apply_mark_list(render,arg,i_snap,i_type,ids_list,val_list,n_ids_list,mark,n_particles_marked);
 
                   // Free the list
                   SID_free(SID_FARG ids_list);
@@ -666,7 +658,7 @@ void execute_marking_argument_local(render_info *render,mark_arg_info *arg,halo_
             }
          }
       }
-      SID_log("(%lld of %lld particles marked)...",SID_LOG_CONTINUE,mark_count,n_particles);
+      SID_log("(%lld of %lld particles marked)...",SID_LOG_CONTINUE,(*n_particles_marked),n_particles);
       if(render->n_interpolate>1)
          SID_log("Done.",SID_LOG_CLOSE);
    }
@@ -674,29 +666,46 @@ void execute_marking_argument_local(render_info *render,mark_arg_info *arg,halo_
 }
 
 void perform_marking(render_info *render){
-   mark_arg_info *current_arg=render->mark_arg_first;
-   if(current_arg!=NULL){
-      SID_log("Performing particle marking...",SID_LOG_OPEN|SID_LOG_TIMER);
-      // Make sure the properties array is allocated
-      if(render->mark_properties==NULL && render->n_mark_properties>0)
-         render->mark_properties=(halo_properties_info *)SID_malloc(sizeof(halo_properties_info)*render->n_mark_properties);
+   // Execute each argument in turn
+   if(render->n_mark_args>0){
+      SID_log("Performing particle marking (%d arguments)...",SID_LOG_OPEN|SID_LOG_TIMER,render->n_mark_args);
+
+      // Make sure the properties array is allocated.
+      if(render->n_mark_properties>0 && render->mark_properties==NULL)
+        render->mark_properties=(halo_properties_info *)SID_calloc(sizeof(halo_properties_info)*render->n_mark_properties);
+      if(render->mark_n_particles==NULL)
+          render->mark_n_particles=(size_t *)SID_malloc(sizeof(size_t)*render->n_mark_args);
+
+      // For each marking argument ...
+      int i_arg            =0;
       int i_mark_properties=0;
+      mark_arg_info *current_arg=render->mark_arg_first;
       while(current_arg!=NULL){
-         // Set a pointer to a properties structure if we want it returned
+         // Fetch a pointer to a properties structure if we need it returned
          halo_properties_info *properties=NULL;
          if(current_arg->flag_keep_properties){
             if(i_mark_properties>=render->n_mark_properties)
                SID_trap_error("Marked properties array has been over-run (i.e. %d>=%d)",ERROR_LOGIC,i_mark_properties,render->n_mark_properties);
             properties=&(render->mark_properties[i_mark_properties++]);
          }
-         // Perform marking
-         execute_marking_argument_local(render,current_arg,properties);
+ 
+         // Perform marking for current argument
+         size_t n_particles_marked=0;
+         execute_marking_argument_local(render,current_arg,properties,&n_particles_marked);
+
+         // Save the number of particles that were marked
+         render->mark_n_particles[i_arg]=n_particles_marked;
+
+         // Advance to the next argument
          current_arg=current_arg->next;
+         i_arg++;
       }
 
-      // Sanity check
+      // Sanity checks
       if(i_mark_properties!=render->n_mark_properties)
          SID_trap_error("Marked properties array has not been properly populated (i.e. %d!=%d)",ERROR_LOGIC,i_mark_properties,render->n_mark_properties);
+      if(i_arg!=render->n_mark_args)
+         SID_trap_error("Marked properties array has not been properly populated (i.e. %d!=%d)",ERROR_LOGIC,i_arg,render->n_mark_properties);
 
       SID_log("Done.",SID_LOG_CLOSE);
    }

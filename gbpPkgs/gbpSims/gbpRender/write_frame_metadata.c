@@ -14,8 +14,8 @@ void write_frame_metadata(render_info *render,int frame,const char *set_label){
      char  filename[MAX_FILENAME_LENGTH];
      FILE *fp_out=NULL;
 
-     // Write render file
-     sprintf(filename,"%s/meta_render_%s_%05d.txt",render->filename_out_dir,set_label,frame);
+     // Write render data
+     sprintf(filename,"%s/meta_params_%s_%05d.txt",render->filename_out_dir,set_label,frame);
      fp_out=fopen(filename,"w");
      fprintf(fp_out,"%%n_interpolate          %d\n", render->n_interpolate);
      fprintf(fp_out,"%%n_frames               %d\n", render->n_frames);
@@ -35,11 +35,8 @@ void write_frame_metadata(render_info *render,int frame,const char *set_label){
      fprintf(fp_out,"%%f_absorption           %le\n",render->f_absorption);
      fprintf(fp_out,"%%w_mode                 %d\n", render->w_mode);
      fprintf(fp_out,"%%v_mode                 %d\n", render->v_mode);
-     fclose(fp_out);
 
-     // Write camera file
-     sprintf(filename,"%s/meta_camera_%s_%05d.txt",render->filename_out_dir,set_label,frame);
-     fp_out=fopen(filename,"w");
+     // Write camera data
      camera_info *camera=render->camera;
      fprintf(fp_out,"%%camera_mode         %d\n",     camera->camera_mode);
      fprintf(fp_out,"%%colour_table        %s\n",     camera->colour_table);
@@ -56,17 +53,14 @@ void write_frame_metadata(render_info *render,int frame,const char *set_label){
      fprintf(fp_out,"%%Y_mode              %d\n",     camera->Y_mode);
      fprintf(fp_out,"%%Y_param             %s\n",     camera->Y_param);
      fprintf(fp_out,"%%Y_range             %le %le\n",camera->Y_range[0],camera->Y_range[1]);
-     fclose(fp_out);
 
-     // Write perspective entry
-     sprintf(filename,"%s/meta_perspective_%s_%05d.txt",render->filename_out_dir,set_label,frame);
-     perspective_info *perspective=camera->perspective;
+     // Write perspective data
      int snap_best;
+     perspective_info *perspective=camera->perspective;
      pick_best_snap(perspective->time,render->snap_a_list,render->n_snap_a_list,&snap_best,NULL);
-     fp_out=fopen(filename,"w");
      fprintf(fp_out,"%%Frame             %d\n",   frame);
      fprintf(fp_out,"%%Snapshot          %d\n",   snap_best);
-     fprintf(fp_out,"%%Expansion factor  %11.5le\n",perspective->time);
+     fprintf(fp_out,"%%Expansion_factor  %11.5le\n",perspective->time);
      fprintf(fp_out,"%%p_o_x             %11.5le\n",perspective->p_o[0]);
      fprintf(fp_out,"%%p_o_y             %11.5le\n",perspective->p_o[1]);
      fprintf(fp_out,"%%p_o_z             %11.5le\n",perspective->p_o[2]);
@@ -96,11 +90,11 @@ void write_frame_metadata(render_info *render,int frame,const char *set_label){
      for(int i_depth=0;i_depth<render->camera->n_depth;i_depth++){
          fprintf(fp_out,"%2d %-24s %le %le %le %le\n",
                  i_depth,
-                 render->camera->depth_array[i_depth],
                  render->camera->depth_array_identifier[i_depth],
+                 render->camera->depth_array[i_depth],
                      0.5+render->camera->depth_array_x[i_depth]/render->camera->depth_array_FOV_x[i_depth],  // fraction of frame from left
-                 1.-(0.5+render->camera->depth_array_y[i_depth]/render->camera->depth_array_FOV_y[i_depth]),
-                 render->camera->depth_array_f_stretch[i_depth]); // fraction of frame from *bottom*
+                 1.-(0.5+render->camera->depth_array_y[i_depth]/render->camera->depth_array_FOV_y[i_depth]), // fraction of frame from *bottom*
+                 render->camera->depth_array_f_stretch[i_depth]); 
      }
      fclose(fp_out);
   } 

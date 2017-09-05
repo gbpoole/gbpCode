@@ -1,4 +1,4 @@
-#!/bin/csh -f
+#!/bin/csh 
 
 if ($#argv < 5) then
   echo
@@ -45,14 +45,13 @@ if ( ${GBP_QUEUE_TYPE} == 'PBS' ) then
   end
 
   set SUBT_FILE="`pwd`/`create_tmpfile`"
-  echo $SUBT_FILE `create_tmpfile`
 
-  echo "#\!/bin/csh"                                                                                     > $SUBT_FILE
+  echo "#\!/bin/bash"                                                                                    > $SUBT_FILE
   echo '#PBS -N '$ARG_CMD                                                                               >> $SUBT_FILE
   echo '#PBS -l nodes='$ARG_NNODE':ppn='$ARG_PPN',walltime='$ARG_HRS':00:00'                            >> $SUBT_FILE
   #echo '#PBS -l nodes=sstar203:ppn=1+sstar204:ppn=1,walltime='$ARG_HRS':00:00'                            >> $SUBT_FILE
   #echo '#PBS -l nodes=sstar203:ppn=16,walltime='$ARG_HRS':00:00'                            >> $SUBT_FILE
-  echo '#PBS -S /bin/csh'                                                                               >> $SUBT_FILE
+  #echo '#PBS -S /bin/bash'                                                                               >> $SUBT_FILE
   #echo '#PBS -l pmem=3gb'                                                                             >> $SUBT_FILE
   #echo '#PBS -l pmem=450GB'                                                                             >> $SUBT_FILE
   echo '#PBS -l pmem='$ARG_PMEM'Gb'                                                                         >> $SUBT_FILE
@@ -62,22 +61,26 @@ if ( ${GBP_QUEUE_TYPE} == 'PBS' ) then
   echo '#PBS -k oe'                                                                                     >> $SUBT_FILE
   echo '#PBS -d '"`pwd`"                                                                                >> $SUBT_FILE
   echo                                                                                                  >> $SUBT_FILE
-#  echo 'setenv PATH            '$GBP_MPI_BIN':$PATH'                                                    >> $SUBT_FILE
-  echo 'setenv PATH            '$PATH                                                                   >> $SUBT_FILE
-#  echo 'setenv LD_LIBRARY_PATH '$GBP_MPI_LIB':$LD_LIBRARY_PATH'                                         >> $SUBT_FILE
-  echo 'setenv LD_LIBRARY_PATH '$LD_LIBRARY_PATH                                                        >> $SUBT_FILE
-  echo 'setenv NPROCS          '$NPROCS                                                                 >> $SUBT_FILE
-  echo 'setenv NNODES          `uniq $PBS_NODEFILE | wc -l`'                                            >> $SUBT_FILE
-  echo 'setenv DATE_START      `date`'                                                                  >> $SUBT_FILE
-  #echo 'setenv MALLOC_CHECK_ 2'                                                                        >> $SUBT_FILE
+  echo 'source ~/.modules.bash.gbpHome'                                                                 >> $SUBT_FILE
+  echo 'module list  2>&1'                                                                 >> $SUBT_FILE
+  echo                                                                                                  >> $SUBT_FILE
+#  echo 'export PATH='$PATH                                                                   >> $SUBT_FILE
+#  echo 'export LD_LIBRARY_PATH '$GBP_MPI_LIB':$LD_LIBRARY_PATH'                                         >> $SUBT_FILE
+#  echo 'export LD_LIBRARY_PATH='$LD_LIBRARY_PATH                                                        >> $SUBT_FILE
+  echo 'export NPROCS='$NPROCS                                                                 >> $SUBT_FILE
+  echo 'export NNODES=`uniq $PBS_NODEFILE | wc -l`'                                            >> $SUBT_FILE
+  echo 'export DATE_START=`date`'                                                                  >> $SUBT_FILE
+  #echo 'export MALLOC_CHECK_ 2'                                                                        >> $SUBT_FILE
   echo                                                                                                  >> $SUBT_FILE
   echo 'cd   $PBS_O_WORKDIR'                                                                            >> $SUBT_FILE
   echo 'echo '-------------------------------''                                                         >> $SUBT_FILE
-  echo 'echo "DATE     is {"$DATE_START"}"'                                                             >> $SUBT_FILE
-  echo 'echo "PWD      is {"$PWD"}"'                                                                    >> $SUBT_FILE
-  echo 'echo "NNODES   is {"$NNODES"}"'                                                                 >> $SUBT_FILE
-  echo 'echo "NPROCS   is {"$NPROCS"}"'                                                                 >> $SUBT_FILE
-  echo 'echo "MPI_DIR  is {'$GBP_MPI_BIN'}"'                                                            >> $SUBT_FILE
+  echo 'echo "DATE        is {"$DATE_START"}"'                                                             >> $SUBT_FILE
+  echo 'echo "PWD         is {"$PWD"}"'                                                                    >> $SUBT_FILE
+  echo 'echo "NNODES      is {"$NNODES"}"'                                                                 >> $SUBT_FILE
+  echo 'echo "NPROCS      is {"$NPROCS"}"'                                                                 >> $SUBT_FILE
+  echo 'echo "MPI_DIR     is {'$GBP_MPI_BIN'}"'                                                            >> $SUBT_FILE
+  echo 'echo "PATH        is {'$PATH'}"'                                                                   >> $SUBT_FILE
+  echo 'echo "LD_LIB_PATH is {'$LD_LIBRARY_PATH'}"'                                                        >> $SUBT_FILE
   echo 'echo "Using the following nodes:"'                                                              >> $SUBT_FILE
   echo 'cat $PBS_NODEFILE | uniq'                                                                       >> $SUBT_FILE
   echo 'echo '-------------------------------''                                                         >> $SUBT_FILE
@@ -85,9 +88,6 @@ if ( ${GBP_QUEUE_TYPE} == 'PBS' ) then
   echo -n $CMD_STRING                                                                                   >> $SUBT_FILE
   echo                                                                                                  >> $SUBT_FILE
 else
-  # Set environment variables
-  #setenv PATH            $GBP_MPI_BIN:$PATH
-  #setenv LD_LIBRARY_PATH $GBP_MPI_LIB:$LD_LIBRARY_PATH
   # Set the mpiexec command
   set CMD_STRING = ( $GBP_MPI_BIN'mpiexec -mca btl tcp,self -n '$NPROCS' '$GBP_BIN'/mpi/'$ARG_CMD )
 

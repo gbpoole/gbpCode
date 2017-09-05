@@ -151,7 +151,7 @@ int set_render_state(render_info *render,int frame,int mode){
 
     // Mark particles
     perform_marking(render);
-  }
+  } // if not rescale
 
   // This needs to be done near the end because
   //    it may depend on marking info (processed

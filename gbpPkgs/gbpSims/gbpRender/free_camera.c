@@ -15,7 +15,7 @@ void free_camera(camera_info **camera){
   SID_free(SID_FARG (*camera)->mask_Y);
   SID_free(SID_FARG (*camera)->mask_RGBY);
   SID_free(SID_FARG (*camera)->mask_RGBY_MARKED);
-  for(int i_depth=0;i_depth<(*camera)->n_depth;i_depth++){
+  for(int i_depth=0;i_depth<(*camera)->n_depth_alloc;i_depth++){
      if((*camera)->image_RGB!=NULL)
         free_image(&((*camera)->image_RGB[i_depth]));
      if((*camera)->image_RGB_left!=NULL)

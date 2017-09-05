@@ -24,15 +24,18 @@ void seal_camera(render_info *render){
      //   (we only need the count, so we just send 0)
      set_camera_depths(render,0);
 
+     // Keep track of how many image depths we are allocating
+     render->camera->n_depth_alloc=render->camera->n_depth;
+
      // Initialize image buffers 
      if(check_mode_for_flag(render->camera->camera_mode,CAMERA_STEREO)){
        // LEFT
        int flag_images_defined=FALSE;
        if(check_mode_for_flag(render->camera->RGB_mode,CAMERA_RGB_MODE_1CHANNEL)){
-          render->camera->image_RGB_left =(image_info **)SID_malloc(sizeof(image_info *)*render->camera->n_depth);
-          render->camera->image_Y_left   =(image_info **)SID_malloc(sizeof(image_info *)*render->camera->n_depth);
-          render->camera->image_RGBY_left=(image_info **)SID_malloc(sizeof(image_info *)*render->camera->n_depth);
-          for(int i_depth=0;i_depth<render->camera->n_depth;i_depth++){
+          render->camera->image_RGB_left =(image_info **)SID_malloc(sizeof(image_info *)*render->camera->n_depth_alloc);
+          render->camera->image_Y_left   =(image_info **)SID_malloc(sizeof(image_info *)*render->camera->n_depth_alloc);
+          render->camera->image_RGBY_left=(image_info **)SID_malloc(sizeof(image_info *)*render->camera->n_depth_alloc);
+          for(int i_depth=0;i_depth<render->camera->n_depth_alloc;i_depth++){
              init_image(render->camera->width,render->camera->height,render->camera->colour_table,&(render->camera->image_RGB_left[i_depth]));
              init_image(render->camera->width,render->camera->height,"greyscale",                 &(render->camera->image_Y_left[i_depth]));
              init_image(render->camera->width,render->camera->height,render->camera->colour_table,&(render->camera->image_RGBY_left[i_depth]));
@@ -40,11 +43,11 @@ void seal_camera(render_info *render){
           flag_images_defined=TRUE;
        }
        if(check_mode_for_flag(render->camera->RGB_mode,CAMERA_RGB_MODE_MARKED)){
-          render->camera->image_RY_left         =(image_info **)SID_malloc(sizeof(image_info *)*render->camera->n_depth);
-          render->camera->image_GY_left         =(image_info **)SID_malloc(sizeof(image_info *)*render->camera->n_depth);
-          render->camera->image_BY_left         =(image_info **)SID_malloc(sizeof(image_info *)*render->camera->n_depth);
-          render->camera->image_RGBY_MARKED_left=(image_info **)SID_malloc(sizeof(image_info *)*render->camera->n_depth);
-          for(int i_depth=0;i_depth<render->camera->n_depth;i_depth++){
+          render->camera->image_RY_left         =(image_info **)SID_malloc(sizeof(image_info *)*render->camera->n_depth_alloc);
+          render->camera->image_GY_left         =(image_info **)SID_malloc(sizeof(image_info *)*render->camera->n_depth_alloc);
+          render->camera->image_BY_left         =(image_info **)SID_malloc(sizeof(image_info *)*render->camera->n_depth_alloc);
+          render->camera->image_RGBY_MARKED_left=(image_info **)SID_malloc(sizeof(image_info *)*render->camera->n_depth_alloc);
+          for(int i_depth=0;i_depth<render->camera->n_depth_alloc;i_depth++){
              init_image(render->camera->width,render->camera->height,"red",      &(render->camera->image_RY_left[i_depth]));
              init_image(render->camera->width,render->camera->height,"green",    &(render->camera->image_GY_left[i_depth]));
              init_image(render->camera->width,render->camera->height,"blue",     &(render->camera->image_BY_left[i_depth]));
@@ -57,10 +60,10 @@ void seal_camera(render_info *render){
        // RIGHT
        flag_images_defined=FALSE;
        if(check_mode_for_flag(render->camera->RGB_mode,CAMERA_RGB_MODE_1CHANNEL)){
-          render->camera->image_RGB_right =(image_info **)SID_malloc(sizeof(image_info *)*render->camera->n_depth);
-          render->camera->image_Y_right   =(image_info **)SID_malloc(sizeof(image_info *)*render->camera->n_depth);
-          render->camera->image_RGBY_right=(image_info **)SID_malloc(sizeof(image_info *)*render->camera->n_depth);
-          for(int i_depth=0;i_depth<render->camera->n_depth;i_depth++){
+          render->camera->image_RGB_right =(image_info **)SID_malloc(sizeof(image_info *)*render->camera->n_depth_alloc);
+          render->camera->image_Y_right   =(image_info **)SID_malloc(sizeof(image_info *)*render->camera->n_depth_alloc);
+          render->camera->image_RGBY_right=(image_info **)SID_malloc(sizeof(image_info *)*render->camera->n_depth_alloc);
+          for(int i_depth=0;i_depth<render->camera->n_depth_alloc;i_depth++){
              init_image(render->camera->width,render->camera->height,render->camera->colour_table,&(render->camera->image_RGB_right[i_depth]));
              init_image(render->camera->width,render->camera->height,"greyscale",                 &(render->camera->image_Y_right[i_depth]));
              init_image(render->camera->width,render->camera->height,render->camera->colour_table,&(render->camera->image_RGBY_right[i_depth]));
@@ -68,11 +71,11 @@ void seal_camera(render_info *render){
           flag_images_defined=TRUE;
        }
        if(check_mode_for_flag(render->camera->RGB_mode,CAMERA_RGB_MODE_MARKED)){
-          render->camera->image_RY_right         =(image_info **)SID_malloc(sizeof(image_info *)*render->camera->n_depth);
-          render->camera->image_GY_right         =(image_info **)SID_malloc(sizeof(image_info *)*render->camera->n_depth);
-          render->camera->image_BY_right         =(image_info **)SID_malloc(sizeof(image_info *)*render->camera->n_depth);
-          render->camera->image_RGBY_MARKED_right=(image_info **)SID_malloc(sizeof(image_info *)*render->camera->n_depth);
-          for(int i_depth=0;i_depth<render->camera->n_depth;i_depth++){
+          render->camera->image_RY_right         =(image_info **)SID_malloc(sizeof(image_info *)*render->camera->n_depth_alloc);
+          render->camera->image_GY_right         =(image_info **)SID_malloc(sizeof(image_info *)*render->camera->n_depth_alloc);
+          render->camera->image_BY_right         =(image_info **)SID_malloc(sizeof(image_info *)*render->camera->n_depth_alloc);
+          render->camera->image_RGBY_MARKED_right=(image_info **)SID_malloc(sizeof(image_info *)*render->camera->n_depth_alloc);
+          for(int i_depth=0;i_depth<render->camera->n_depth_alloc;i_depth++){
               init_image(render->camera->width,render->camera->height,"red",      &(render->camera->image_RY_right[i_depth]));
               init_image(render->camera->width,render->camera->height,"green",    &(render->camera->image_GY_right[i_depth]));
               init_image(render->camera->width,render->camera->height,"blue",     &(render->camera->image_BY_right[i_depth]));
@@ -86,10 +89,10 @@ void seal_camera(render_info *render){
      else{
         int flag_images_defined=FALSE;
         if(check_mode_for_flag(render->camera->RGB_mode,CAMERA_RGB_MODE_1CHANNEL)){
-           render->camera->image_RGB =(image_info **)SID_malloc(sizeof(image_info *)*render->camera->n_depth);
-           render->camera->image_Y   =(image_info **)SID_malloc(sizeof(image_info *)*render->camera->n_depth);
-           render->camera->image_RGBY=(image_info **)SID_malloc(sizeof(image_info *)*render->camera->n_depth);
-           for(int i_depth=0;i_depth<render->camera->n_depth;i_depth++){
+           render->camera->image_RGB =(image_info **)SID_malloc(sizeof(image_info *)*render->camera->n_depth_alloc);
+           render->camera->image_Y   =(image_info **)SID_malloc(sizeof(image_info *)*render->camera->n_depth_alloc);
+           render->camera->image_RGBY=(image_info **)SID_malloc(sizeof(image_info *)*render->camera->n_depth_alloc);
+           for(int i_depth=0;i_depth<render->camera->n_depth_alloc;i_depth++){
               init_image(render->camera->width,render->camera->height,render->camera->colour_table,&(render->camera->image_RGB[i_depth]));
               init_image(render->camera->width,render->camera->height,"greyscale",                 &(render->camera->image_Y[i_depth]));
               init_image(render->camera->width,render->camera->height,render->camera->colour_table,&(render->camera->image_RGBY[i_depth]));
@@ -97,11 +100,11 @@ void seal_camera(render_info *render){
            flag_images_defined=TRUE;
         }
         if(check_mode_for_flag(render->camera->RGB_mode,CAMERA_RGB_MODE_MARKED)){
-           render->camera->image_RY         =(image_info **)SID_malloc(sizeof(image_info *)*render->camera->n_depth);
-           render->camera->image_GY         =(image_info **)SID_malloc(sizeof(image_info *)*render->camera->n_depth);
-           render->camera->image_BY         =(image_info **)SID_malloc(sizeof(image_info *)*render->camera->n_depth);
-           render->camera->image_RGBY_MARKED=(image_info **)SID_malloc(sizeof(image_info *)*render->camera->n_depth);
-           for(int i_depth=0;i_depth<render->camera->n_depth;i_depth++){
+           render->camera->image_RY         =(image_info **)SID_malloc(sizeof(image_info *)*render->camera->n_depth_alloc);
+           render->camera->image_GY         =(image_info **)SID_malloc(sizeof(image_info *)*render->camera->n_depth_alloc);
+           render->camera->image_BY         =(image_info **)SID_malloc(sizeof(image_info *)*render->camera->n_depth_alloc);
+           render->camera->image_RGBY_MARKED=(image_info **)SID_malloc(sizeof(image_info *)*render->camera->n_depth_alloc);
+           for(int i_depth=0;i_depth<render->camera->n_depth_alloc;i_depth++){
               init_image(render->camera->width,render->camera->height,"red",      &(render->camera->image_RY[i_depth]));
               init_image(render->camera->width,render->camera->height,"green",    &(render->camera->image_GY[i_depth]));
               init_image(render->camera->width,render->camera->height,"blue",     &(render->camera->image_BY[i_depth]));

@@ -147,6 +147,7 @@ struct camera_info{
   int                width;
   int                height;
   int                n_depth;
+  int                n_depth_alloc;
   int                flag_depth_init;
   char             **depth_array_identifier; // each will be allocated with size GBPRENDER_DEPTH_ARRAY_ID_SIZE 
   double            *depth_array;
@@ -216,6 +217,7 @@ struct mark_arg_info{
    int            ival[8];
    char           value;
    int            flag_keep_properties;
+   int            marked_n_particles;
    mark_arg_info *next;
 };
 
@@ -273,9 +275,10 @@ struct render_info{
   // Marking info
   mark_arg_info        *mark_arg_first;
   mark_arg_info        *mark_arg_last;
-  int                   n_mark_arg;
+  int                   n_mark_args;
   int                   n_mark_properties;
   halo_properties_info *mark_properties;
+  size_t               *mark_n_particles;
 
   double          h_Hubble;
   double          box_size;

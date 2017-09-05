@@ -33,6 +33,7 @@ void free_render(render_info **render){
   // Marking information
   free_mark_arguments(&((*render)->mark_arg_first));
   SID_free(SID_FARG (*render)->mark_properties);
+  SID_free(SID_FARG (*render)->mark_n_particles);
 
   // Free colour information
   for(int i=0;i<(*render)->n_colour_list;i++){;

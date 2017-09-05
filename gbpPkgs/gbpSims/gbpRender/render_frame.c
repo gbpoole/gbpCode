@@ -81,7 +81,6 @@ void render_frame(render_info  *render){
   int     w_mode             =render->w_mode;
   double  alpha_fade         =render->alpha_fade;
   int     camera_mode        =render->camera->camera_mode;
-  int     n_depth            =render->camera->n_depth;
   double  f_image_plane      =render->camera->f_image_plane;
 
   // Set image scales
@@ -114,6 +113,28 @@ void render_frame(render_info  *render){
   for(;i_image<2;i_image++){
      SID_log("Projecting to a %dx%d pixel array...",SID_LOG_OPEN|SID_LOG_TIMER,nx,ny);
 
+     // Set the stereo offset
+     int stereo_offset_dir=0; // descibes the sence of the stereo offset (-1 is left, 0 is none, +1 is right)
+     switch(i_image){
+         case 0:
+            stereo_offset_dir=-1;
+            break;
+         case 1:
+            if(check_mode_for_flag(camera_mode,CAMERA_STEREO))
+                stereo_offset_dir=1;
+            else
+                stereo_offset_dir=0;
+            break;
+         // Shouldn't make it here
+         default:
+            SID_trap_error("Invalid value for i_image (%d).",ERROR_LOGIC,i_image);
+            break;
+     }
+
+     // Generate depth array
+     set_camera_depths(render,stereo_offset_dir);
+     int n_depth=render->camera->n_depth;
+
      // Fetch pointers to arrays of the images we want to produce
      double **temp_image         =NULL;
      double **RGB_image          =NULL;
@@ -121,7 +142,6 @@ void render_frame(render_info  *render){
      double **RY_image           =NULL;
      double **GY_image           =NULL;
      double **BY_image           =NULL;
-     int      stereo_offset_dir  =0; // descibes the sence of the stereo offset (-1 is left, 0 is none, +1 is right)
      switch(i_image){
        // Left image
        case 0:
@@ -155,7 +175,6 @@ void render_frame(render_info  *render){
             for(int i_depth=0;i_depth<n_depth;i_depth++)
                fetch_image_array(render->camera->image_BY_left,i_depth, &(BY_image[i_depth]));
          }
-         stereo_offset_dir=-1;
          break;
        case 1:
          // Right image
@@ -190,7 +209,6 @@ void render_frame(render_info  *render){
                for(int i_depth=0;i_depth<n_depth;i_depth++)
                   fetch_image_array(render->camera->image_BY_right,i_depth, &(BY_image[i_depth]));
             }
-            stereo_offset_dir=1;
          }
          // Mono image (stereo turned off)
          else{
@@ -224,7 +242,6 @@ void render_frame(render_info  *render){
                for(int i_depth=0;i_depth<n_depth;i_depth++)
                   fetch_image_array(render->camera->image_BY,i_depth, &(BY_image[i_depth]));
             }
-            stereo_offset_dir=0;
          }
        break;
      }
@@ -266,9 +283,6 @@ void render_frame(render_info  *render){
                                         &theta_roll);
      FOV_x_object_plane*=unit_factor;
      FOV_y_object_plane*=unit_factor;
-
-     // Generate depth array
-     set_camera_depths(render,stereo_offset_dir);
 
      // Cast depth array into the units of the render
      double *depth_array=(double *)SID_malloc(sizeof(double)*n_depth);

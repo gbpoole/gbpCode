@@ -37,6 +37,7 @@ int main(int argc, char *argv[]){
   else if(argc!=2)
     SID_trap_error("Invalid number of arguments.",ERROR_SYNTAX);
 
+
   SID_log("Rendering script file {%s}...",SID_LOG_OPEN|SID_LOG_TIMER,filename_script);
 
   // Parse the script file and initialize the render structure
