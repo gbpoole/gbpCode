@@ -1,0 +1,87 @@
+
+catalogs
+========
+
+The catalogs directory contains files wich describe the global properties and profiles of each FoF group and subgroup 
+given in the halos directory (see README.halo for more details).  These quantities are stored in 4 files for each snapshot:
+
+  subfind_###.catalog_groups_profiles
+  subfind_###.catalog_groups_properties
+  subfind_###.catalog_subgroups_profiles
+  subfind_###.catalog_subgroups_properties
+
+The "groups" files list information for the FoF groups and the "subgroups" files list information for the subfind substructures.  
+The "profiles" files list profiles for each structure and the "properties" files list the global properties of each structure.
+
+All files are binary files and have a structure that allows them to be split into multiple files.  When they are, they appear 
+in a directory together.  When they are not, they just appear as one file.  Those cases where only one file is present represent 
+snapshots with no halos.
+
+The "properties" files have the following structure:
+---------------------------------------------------
+
+header: 4 4-byte integers
+        the first  one gives i_sub, the number of this file in the list of n_sub subfiles
+        the second one gives n_sub, the number of files in the list of split files
+        the third  one gives N_i,   the number of groups/subgroups in this file
+        the forth  one gives N_tot, the number of groups/subgroups in all files for this snapshot
+
+body: N_i copies of the following data structure (same order as in the files in the halos directories)
+
+typedef struct halo_properties_info halo_properties_info;
+struct halo_properties_info{
+  long long id_MBP;                    // ID of most bound particle in structure
+  double    M_vir;                     // Bryan & Norman (ApJ 495, 80, 1998) virial mass [M_sol/h]
+  int       n_particles;               // Number of particles in the structure
+  float     position_COM[3];           // Centre-of-mass position      [Mpc/h]
+  float     position_MBP[3];           // Most bound particle position [Mpc/h]
+  float     velocity_COM[3];           // Centre-of-mass velocity      [km/s]
+  float     velocity_MBP[3];           // Most bound particle velocity [km/s]
+  float     R_vir;                     // Virial radius [Mpc/h]
+  float     R_halo;                    // Distance of last halo particle from MBP [Mpc/h]
+  float     R_max;                     // Radius of maximum circular velocity     [Mpc/h]
+  float     V_max;                     // Maximum circular velocity               [km/s]
+  float     sigma_v;                   // Total 3D velocity dispersion            [km/s]
+  float     spin[3];                   // Specific angular momentum vector        [Mpc/h*km/s]
+  float     q_triaxial;                // Triaxial shape parameter q=b/a
+  float     s_triaxial;                // Triaxial shape parameter s=c/a
+  float     shape_eigen_vectors[3][3]; // Normalized triaxial shape eigenvectors
+  char      padding[8];                // Alignment padding
+};
+
+The "profiles" files have the following structure:
+---------------------------------------------------
+
+header: 4 4-byte integers
+        the first  one gives i_sub, the number of this file in the list of n_sub subfiles
+        the second one gives n_sub, the number of files in the list of split files
+        the third  one gives N_i,   the number of groups/subgroups in this file
+        the forth  one gives N_tot, the number of groups/subgroups in all files for this snapshot
+
+body: N_i repetitions of the following 2 things for each group/subgroup: 
+
+1) a 4-byte integer giving N_bin, the number of profile bins
+2) N_bin repetitions of the following structure (one for each bin):
+
+typedef struct halo_profile_bin_info halo_profile_bin_info;
+struct halo_profile_bin_info{
+  float   r_med;                     // The median  radius of particles in this bin [Mpc/h]
+  float   r_max;                     // The maximum radius of particles in this bin [Mpc/h] 
+  int     n_particles;               // Number of particles in this bin
+  float   rho;                       // Density                        [M_sol*h^2/Mpc^3]
+  double  M_r;                       // Mass of particles within r_max [M_sol/h]
+  float   overdensity;               // Bryan & Norman overdensity within r_max
+  float   position_COM[3];           // Position of the centre-of-mass of particles within r_max [Mpc/h]
+  float   velocity_COM[3];           // Velocity of the centre-of-mass of particles within r_max [km/s]
+  float   sigma_rad;                 // Radial velocity dispersion of particles in this bin      [km/s]
+  float   sigma_tan;                 // Tangential velocity dispersion of particles in this bin  [km/s]
+  float   sigma_tot;                 // Total 3D velocity dispersion of particles in this bin    [km/s]
+  float   spin[3];                   // Specific angular momentum of particles within r_max      [Mpc/h*km/s]
+  float   q_triaxial;                // Triaxial shape parameter q=b/a of particles within r_max
+  float   s_triaxial;                // Triaxial shape parameter s=c/a of particles within r_max
+  float   shape_eigen_vectors[3][3]; // Normalized triaxial shape eigenvectors of particles within r_max
+};
+
+** n.b.: The median position (r_med) should be used for plotting specific quantities like the densities or 
+         velocity dispersions.  The maximum radius (r_max) should be used for integrated quantites like mass.
+

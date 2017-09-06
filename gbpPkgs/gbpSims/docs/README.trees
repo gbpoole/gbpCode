@@ -1,0 +1,226 @@
+
+trees
+=====
+
+The 'trees' directory for each simulation contains all the information regarding merger tree information for each run.  In most cases, 
+several versions are available for the purposes of convergence studies.  These versions differ in the choice of two tunable parameters 
+used for the tree building:
+
+   step size - This sets the number of snapshots that are skipped during processing and sets the number of snapshots used to 
+               build the trees.  The larger the step, the fewer snapshots that are used.
+   scan size - This sets the range  of snapshots over which matches are scanned for the purposes of fixing artifacts (eg. dropped 
+               or bridged halos).
+
+In some cases there are also *_NBF versions available.  These trees do not attempt to repair tree bridges and are really only useful 
+academically for studies of tree artifacts.  They probably should not be used for any other science.
+
+For all simulations, several links to notable cases are available.  These are:
+
+   version_full_res       - these cases use the MAXIMUM number of snaphsots and the LONGEST scan range available.  In otherwords, 
+                            these should be the most complete trees available for each simulation.
+   version_millennium_res - these cases use the same number of snapshots and the same scan range as was used for Millennium. 
+                            version_millennium_res_NBF should be a good match to the Millennium calculations.
+   version_minimal_res    - these cases use the MINIMUM number of snaphsots and the SHORTEST (non-zero) scan range available.  
+                            Good for quick testing of codes.
+   version_nominal_res    - these cases use the ideal number of snapshots and scan range needed for converged trees.  
+                            USE THIS FOR MOST SCIENCE.
+
+'matches' directory
+===================
+
+The 'trees' directory for each simulation also houses a 'matches' directory which has all the cross-snapshot matching information used 
+by the tree code.  Within this directory is a set of 3-digit-zero-padded directories - one per snapshot - and two header files (called 
+'group_matches_header.dat' and 'subgroup_matches_header.dat').  The header files (obviously: one for the group matching information, the 
+other for the subgroup matching information) each have the following format:
+
+header: 
+   i_read_start   - 4-byte int, first snapshot involved in the matching
+   i_read_stop    - 4-byte int, last  snapshot involved in the matching
+   n_search_total - 4-byte int, the range over which searches are performed
+   n_files        - 4-byte int, the total number of files present
+
+This is followed by the following information for each snapshot:
+
+sub-header: 
+   i_snap  - 4-byte int, gives the snapshot number of this entry
+   n_halos - 4-byte int, gives the number of groups/subgroups in this entry
+body:
+   n_halos*4-byte-int  - an array giving the number of particles in each halo
+   n_halos*4-byte-int  - an array giving the number of subgroups in each group (groups only!; not present in 'subgroup_matches_header.dat') 
+
+Within the directory for each snapshot are two files for each i_snapshot-j_snapshot combination for which matching has been performed 
+(i!=j; |i-j|<=n_search_total; the i'th snapshot is matched to the j'th snapshot) - one file for groups (named 'group_matches_III_JJJ.dat') 
+and one file for subgroups (named 'subgroup_matches_III_JJJ.dat').  These files each contain the following information:
+
+header:
+     i_snap    - the snapshot *FOR* which matches are being reported
+     j_snap    - the snapshot *TO*  which matches are being reported
+     n_halos_i - the number of halos in the i'th snapshot
+     n_halos_j - the number of halos in the j'th snapshot
+body:
+     match_ids       - n_halos_i*4-byte ints,  an array giving the index of each halos' match in the j'th snapshot
+     match_ids_index - n_halos_i*8-byte-uints, an array giving the sort indices of the match_ids array
+     match_score     - n_halos_i*4-byte-float, an array giving the matching score of each match
+
+Tree files
+==========
+
+Within the directory housing each set of trees are the following files:
+
+   a_list.txt          - a file listing the expansion factors used for this set of trees
+   run_parameters.txt  - a file listing a bunch of parameters used for this set of trees (eg. step and scan sizes)
+   4 forest files:     - forest_info_groups.txt 
+                       - forest_info_subgroups.txt
+                       - tree2forest_mapping_groups.txt
+                       - tree2forest_mapping_subgroups.txt
+
+directories hosting UP TO two versions of the trees (both versions are generally present only for the special cases listed above):
+
+   horizontal - this version of the trees gives one file for each snapshot indicating (on a snapshot-by-snapshot basis) how 
+                pointers are to be drawn to the appropriate descendant in subsequent snapshots for each halo
+   vertical   - this version follows the format of the Munich model trees, storing each tree as a self contained unit 
+                written in depth-first-order
+
+and a directory called 'analysis' with lists of all special cases in the trees (mergers, bridged halos, etc).  All files
+in this directory are txt files and have headers documenting what is in them.
+
+The formats for each of these files is as follows:
+
+  Horizontal Trees
+  ----------------
+
+The directory for this version of the trees has the following contents:
+
+   log.txt          - a log file summarizing a snapshot-by-snapshot tally of various statistics
+   log_preprop.txt  - this file should generally be ignored if present.  The log.txt file is more accurate.
+   trees            - a directory hosting the horizontal tree files
+
+The trees directory contains a binary file for each snapshot (with the naming format 'horizontal_trees_###.dat' where ### is 
+the zero-padded snapshot number), each with the following format:
+
+header: n_step               - 4-byte int, gives the step size used for the trees
+        n_search             - 4-byte int, gives the scan range for the trees
+        n_groups             - 4-byte int, gives the number of groups in this snapshot
+        n_subgroups          - 4-byte int, gives the number of subgroups in this snapshot
+        n_groups_max         - 4-byte int, gives the maximum number of groups    used in any snapshot to this point 
+        n_subgroups_max      - 4-byte int, gives the maximum number of subgroups used in any snapshot to this point 
+        max_tree_id_subgroup - 4-byte int, gives the highest subgroup tree ID in the trees to this point 
+        max_tree_id_group    - 4-byte int, gives the highest group    tree ID in the trees to this point
+
+where n_groups_max, n_subgroups_max, max_tree_id_subgroup, and max_tree_id_group are calculated counting down from the last snapshot.
+
+This is followed by an entry for each group.  The groups are in the same order as they are in the 'halos' and 'catalogs' 
+files (see the appropriate readme for these files).  The following is stored for each group:
+
+Each group entry starts with the following group tree information:
+    group_id            - 4-byte int, gives the unique id assigned to this group
+    group_type          - 4-byte int, gives the gives the tree type for this group (this is a BWS, defined below)
+    group_descendant_id - 4-byte int, gives the gives the unique group ID of this group's descendant
+    group_tree_id       - 4-byte int, gives the gives the unique iso-tree ID that this group belongs to
+    group_file_offset   - 4-byte int, gives the gives the number of snapshots from this group's descendant
+    group_file_index    - 4-byte int, gives the gives the file index of this group's descendant
+    n_subgroups         - 4-byte int, gives the gives the number of subgroups in this group
+
+Each subgroup in this group then list the following information (ie there are n_subgroups of these for each group):
+    subgroup_id            - 4-byte int, gives the unique id assigned to this subgroup
+    subgroup_type          - 4-byte int, gives the gives the tree type for this subgroup (this is a BWS, defined below)
+    subgroup_descendant_id - 4-byte int, gives the gives the unique subgroup ID of this subgroup's descendant
+    subgroup_tree_id       - 4-byte int, gives the gives the unique iso-tree ID that this subgroup belongs to
+    subgroup_file_offset   - 4-byte int, gives the gives the number of snapshots from this subgroup's descendant
+    subgroup_file_index    - 4-byte int, gives the gives the file index of this subgroup's descendant
+
+The group_type/subgroup_type entries classify the nature of each group/subgroup and are bit-wise-switches (BWSs) defined by the following:
+
+REE_CASE_NO_PROGENITORS               2^00  // Set for halos that have no progenitors.
+REE_CASE_MAIN_PROGENITOR              2^01  // Set for the progenitor with the highest match score.
+REE_CASE_MOST_MASSIVE                 2^02  // Marks the most massive substructure.
+REE_CASE_DOMINANT                     2^03  // Marks the dominant     substructure.
+REE_CASE_REMNANT                      2^04  // Set for halos with more than one progenitor.
+REE_CASE_MERGER_PRIMARY               2^05  // Set when a halo is deemed to be the primary   progenitor of a merger
+REE_CASE_MERGER                       2^06  // Set when a halo is deemed to be the secondary progenitor of a merger
+REE_CASE_STRAYED                      2^07  // Set for halos for which a descendant was not found
+REE_CASE_DROPPED                      2^08  // Set if file_offset>1 and TREE_CASE_MATCHED_TO_BRIDGE is not set
+REE_CASE_BRIDGED                      2^09  // Set for halos with multiple unique back-matches from halos with unique IDs
+REE_CASE_EMERGED                      2^10  // Set when a match is made identifying this halo as emerged
+REE_CASE_FRAGMENTED_NEW               2^11  // Set for halos that have been marked TREE_CASE_EMERGED_CANDIDATE but not TREE_CASE_EMERGED
+                                            //    (unless it's the backmatch with the most massive descendant; that halo is considered
+                                            //     to be the source of any fragmented halos)
+REE_CASE_FRAGMENTED_STRAYED           2^12  // Set for halos that are marked TREE_CASE_FRAGMENTED (see below), and whose
+                                            //    decendant_id!=a valid id (ie they are not a progenitor of anything).
+REE_CASE_FRAGMENTED_NORMAL            2^13  // Set for halos that are marked TREE_CASE_FRAGMENTED (see below), but
+                                            //    are otherwise part of a connected progenitor line
+REE_CASE_FRAGMENTED_OTHER             2^14  // Currently unused.  Saved for future use when we may mark other types of fragmented
+                                            //    halos (relic fragmented halos, for example).
+REE_CASE_EMERGED_CANDIDATE            2^15  // Set when a halo is identified as a unique back-match to a halo marked TREE_CASE_BRIDGED and
+                                            //    is not selected as the bridged halo's descendant.  This switch is turned off if the halo
+                                            //    is marked TREE_CASE_EMERGED or TREE_CASE_FRAGMENTED_NEW.
+REE_CASE_MATCHED_TO_EMERGED           2^16  // Set when a halo is matched to an emerged halo
+REE_CASE_2WAY_MATCH                   2^17  // Set when the match between a halo and it's descendant is mutual
+REE_CASE_SET_BY_BACKMATCH             2^18  // Set in cases where a descendant was set using backmatch information, rather
+                                            //    than forematch information.  In these cases, the halo's given matching score and
+                                            //    2way flag are from the back match info, not the forematch info.
+REE_CASE_DOMINANT_DROPPED             2^19  // Marks a group whose dominant substructure is presently dropped
+REE_CASE_GHOST                        2^20  // Marks ghost halos in ghost-populated trees
+REE_CASE_GHOST_NULL                   2^21  // Marks a ghost halo where a subgroup is it's own group.
+                                            //    This is a default behaviour that occurs when a group is strayed but one of
+                                            //    it's subgroups isn't.
+REE_CASE_REINIT_DOMINANT              2^22  // For internal use.  This should never be seen in the output.
+REE_CASE_UNPROCESSED                  2^23  // For internal use.  This should never be seen in the output.
+REE_CASE_INVALID                      2^24  // For internal use.  This should never be seen in the output.
+
+The reported BWS is the sum of any of these cases which is relevant to the group/subgroup.
+
+  Vertical Trees
+  --------------
+
+These trees are the same as the horizontal trees, but formated for use with codes such as the 'Munich'-format 
+(eg. SAGE) or 'Galform' semi-analytic models.  In each case, a set of 'isotrees' may be packaged together as
+a 'forest' to form one packaged 'tree' in the file.
+
+There are two versions of these trees in each case: one constructed just from the group merger tree information 
+(file format: group_trees_###.dat) and the other with the full subgroup information (file format: subgroup_trees_###.dat).  
+They are split-up into a gridded set of n^3 files, each one giving the trees present in one element of the simulation volume 
+split-up into an n^3 grid.  Membership is determined by the group centre; strictly speaking, subgroups of groups near the 
+boundaries of each volume element may lie outside the gridded volume elements.
+
+The format of each file is as follows:
+
+header:
+  n_trees   - 4-byte int, the number of trees present in this file
+  n_halos   - 4-byte int, the number of halos present in these trees
+  n_halos_i - n_trees*4-byte int, an array giving the number of halos in each tree
+body:
+  The body consists of a depth-first-ordered set of n_halos_i halo entries, each given by the following data structure:
+
+typedef struct halo_info halo_info;
+struct halo_info{
+
+  // merger tree pointers and match type
+  int descendant;
+  int progenitor_first;
+  int progenitor_next;
+  int group_halo_first;
+  int group_halo_next;
+
+  // properties of halo
+  int       n_particles;
+  float     M_Mean200; // Mean 200 values (Mvir=M_Crit200)
+  float     M_vir;     // This is the FoF mass for the most massive substructure
+  float     M_TopHat;
+  float     pos[3];
+  float     vel[3];
+  float     sigma_v;
+  float     v_max;
+  float     spin[3];
+  long long most_bound_id;
+
+  // original position in halo-finder output
+  int   snap_num;
+  int   file_num;
+  int   halo_index;
+  float half_mass;
+};
+
+Undefined pointers are set to '-1' (eg. the descendants of halos which are at the end-state of a tree).  This is how you can identify the start of individual isotrees within each packaged forest.
+
+

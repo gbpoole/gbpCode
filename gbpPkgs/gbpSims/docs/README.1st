@@ -1,0 +1,16 @@
+All the code in gbpSims assumes that a simulation is stored in 
+one directory with the following subdirectories:
+
+   - catalogs
+   - grids  
+   - halos  
+   - run  
+   - smooth
+   - snapshots  
+   - trees
+
+For the assumed file formats stored in each directory (with 
+name <DIR>), see the accompanying README.<DIR> file.
+
+Where possible, file formats are standard (or slight tweaks) of
+those naturally produced by Gadget & Subfind.

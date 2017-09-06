@@ -1,0 +1,80 @@
+
+halos
+=====
+
+The 'halos' directory contains files which list the results of the halo-finding process.  These halos are then used 
+for generating the global properties and profiles given in the catalogs directory (see README.catalogs for more details).  
+There are 4 files for each snapshot:
+
+  subfind_###.catalog_particles
+  subfind_###.catalog_groups
+  subfind_###.catalog_subgroups
+  subfind_###.catalog_PHKs
+
+The first three files are produced by subfind.  The "particles" files list the gadget particle IDs for the FoF groups.  
+The particles are listed in order of their gravitational potential.  Not all of the particles are used, since some of 
+them are not gravitationally bound to the system.  The "groups" file provides the number of bound particles, 
+first-particle-offsets and number of substructures for each FoF group.  The "subgroups" file provides the same information 
+(with the exception of the number of subgroups) for the subfind subgroups.
+
+All are binary files.
+
+The "particles" files have the following structure:
+--------------------------------------------------
+
+header: 2 integers
+        the first  one is a 4-byte integer that gives N_b, the byte-length of the particle IDs in the file.
+        the second one is an unsigned integer of length N_b giving N_p ... the number of particles in the file
+
+body: N_p integers of N_b bytes each, listing the particle IDs of all halos
+
+n.b.:  This byte-length business is necessary because the number of particles in some runs -- and hence it's particle IDs -- 
+       are too large to be stored by a 4-byte integer.
+
+The "groups" files have the following structure:
+-----------------------------------------------
+
+header: 2 integers
+        the first is a  4-byte integer giving N_groups, the number of FoF groups in the file
+        the second is a 4-byte integer giving the number of bytes used for the group particle offsets (N_b_go)
+
+body: 3 arrays, each N_groups long
+      the first  (4-byte unsigned int): 
+         lists the number of particles in each FoF group listed (contiguously) in the particles file
+      the second (4-byte unsigned int if N_b_go=4, 8-byte unsigned int if N_b_go=8): 
+         lists the offset of the first particle of each FoF group from the start of the particle list in the particles file
+      the third  (4-byte unsigned int):
+         lists the number of subgroups in each FoF group (these are described in the subgroups files)
+
+The "subgroups" files have the following structure:
+--------------------------------------------------
+
+header: 2 integers
+        the first  (4-byte integer) giving N_subgroups, the number of subfind subgroups in the file
+        the second (4-byte integer) giving the number of bytes used for the subgroup particle offsets (N_b_so)
+
+body: 2 arrays, each N_subgroups long
+      the first  (4-byte unsigned int):
+         lists the number of particles in each subfind subgroup listed (contiguously) in the particles file
+      the second (4-byte unsigned int if N_b_go=4, 8-byte unsigned int if N_b_go=8):
+         lists the offset of the first particle of each subgroup from the start of the 
+         particle list in the particles file
+
+The "PHKs" files:
+-----------------
+
+These files contain Peano-Hilbert Keys (PHKs) for each FoF group and are produced in post-processing.  
+They have the following format:
+
+header: 2 4-byte integers and an 8-byte unsigned integer
+        the first  gives N_groups,    the number of subfind FoF groups in the file
+        the second gives n_bits,      the number of bits-per-dimension used to compute the keys
+        the third  gives n_particles, the number of particles in the halo catalog
+
+body: an array of 4-4-8 byte triplets - one instance for each group - sorted in order of each group's PHK
+      the first  element (4-bytes) of the triplet gives the group's PHK
+      the second element (4-bytes) of the triplet gives the index of the group in the FoF halo catalog
+      the third  element (8-bytes) of the triplet gives the cumulative number of particles 
+                                   (including the current halo) in the array's halos
+
+

@@ -1,0 +1,8 @@
+
+snapshots
+=========
+
+The snapshots directory contains the snapshot files produced by the simulation.
+
+They are in the standard gadget-2 binary format, as detailed in the gadget-2 User's Manual.
+

@@ -1,0 +1,12 @@
+
+run
+===
+
+The 'run' directory contains the following files: 
+  1) a 'run.txt' file listing some relevant parameters of the run (box size in [Mpc/h], No. of particles, particle mass)
+  2) a 'a_list.txt' file listing the expansion factors of the simulation snapshots
+  3) a 'cosmology.txt' file giving the cosmology used by the simulation (in gbpCode format).
+  4) a 'README' file giving an alternate summary of some of the information stored in the above files.
+  5) a 'transfer_function.txt' file giving the transfer function (CAMB/gbpCode format) used to set the ICs of the simulation.
+  6) (in some cases) a '.gdt' file with the initial conditions of the run
+  

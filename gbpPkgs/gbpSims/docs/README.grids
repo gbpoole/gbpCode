@@ -1,0 +1,28 @@
+
+grids
+=====
+
+The grids directory contains the results of smoothing the simulations onto density and velocity fields.  
+A nearest grid-point (NGP) kernal was used in all cases.  All files are binary and have the 
+following structure:
+
+header: 4-byte-int:	n_x dimensions of the grid
+        4-byte-int:	n_y dimensions of the grid
+        4-byte-int:	n_z dimensions of the grid
+        8-byte-double:	L_x physical size of the grid (in units of comoving h^{-1} Mpc)
+        8-byte-double:	L_y physical size of the grid (in units of comoving h^{-1} Mpc)
+        8-byte-double:	L_z physical size of the grid (in units of comoving h^{-1} Mpc)
+        4-byte-int:	the number of grids in the file
+
+After the header, there is the following information for each grid:
+
+1) GRID_IDENTIFIER_SIZE-byte string: name of the grid (where GRID_IDENTIFIER_SIZE=32)
+2) n_x*n_y*n_z*4-byte-floats for each grid.  C-standard (ie. not FORTRAN-standard) array indexing is used
+
+Generally, the following grids are present (in this order):
+
+1) rho_r_dark - the dark matter density in units of 10^{10} (h^-1 Mpc)^-3
+2) v_x_r_dark - mass-weighted dark matter velocity x-component (units of km/s)
+3) v_y_r_dark - mass-weighted dark matter velocity y-component (units of km/s)
+4) v_z_r_dark - mass-weighted dark matter velocity z-component (units of km/s)
+

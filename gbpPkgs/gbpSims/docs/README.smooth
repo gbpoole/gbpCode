@@ -1,0 +1,27 @@
+
+smooth
+======
+
+The smooth directory contains files produced by subfind which give the local density and velocity dispersion 
+of each particle in a given snapshot.
+
+There is a directory for each snapshot with a variable number of files (each ending with .#, where # is a number 
+from 0->N_files) for each.  The number of files (N_files) is stored in the header of every file.
+
+All are binary files.
+
+header: 4 integers
+        the first  one is a  4-byte integer that gives N_i, the number of particles in this particular file.
+        the second one is a  4-byte offset that is not used
+        the third  one is an 8-byte signed integer giving the number of particles in all N_files files.
+        the forth  one is a  4-byte integer giving the number of files over which this snapshot's smooth data is distributed
+
+body: 4 arrays, each N_i long
+      the first  one is either a 4-byte or 8-byte integer array listing the particle IDs in this particular file
+      the second one is a 4-byte float array                    listing the smoothing lengths of each particle
+      the third  one is a 4-byte float array                    listing the densities of each particle
+      the forth  one is a 4-byte float array                    listing the velocity dispersions of each particle
+
+n.b.: 1) Whether the particle list is 4-byte or 8-byte is set by the byte-length of the snapshot IDs.
+      2) All units are system units
+
