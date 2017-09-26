@@ -46,6 +46,7 @@ endif(NOT gbpCode_LIBDIRS)
 # Build the libraries
 list(LENGTH gbpCode_LIBDIRS len_lib)
 math(EXPR n_lib "${len_lib}-1")
+set (SOURCES_ALL "")
 foreach(i_lib RANGE ${n_lib})
     list(GET gbpCode_LIBDIRS  ${i_lib} _libdir)
     list(GET gbpCode_LIBNAMES ${i_lib} _libname)
@@ -54,23 +55,45 @@ foreach(i_lib RANGE ${n_lib})
     # Assemble the list of sources
     file(GLOB_RECURSE _SOURCES ${_libdir}/*.[ch,cu,cpp,hh])
     list(LENGTH _SOURCES N_FILES)
+
+    # Validate source list:
+    #  1) Make sure files were found
+    if(NOT _SOURCES)
+        message(FATAL_ERROR "No source files were found.")
+    endif(NOT _SOURCES)
+
+    #  2) Make sure the same file has not beed added to
+    #     multiple libraries
+    foreach(_SOURCE ${_SOURCES})
+        if(${_SOURCE} IN_LIST SOURCES_ALL)
+            message(FATAL_ERROR "The following file has been added to multiple libraries: ${_SOURCE}")
+        endif(${_SOURCE} IN_LIST SOURCES_ALL)
+    endforeach(_SOURCE in ${_SOURCES})
+
+    # Accumulate a list of all source files used so far
+    list(APPEND SOURCES_ALL _SOURCES)
+
+    # Sources assembled sucessfully
     message(STATUS "   ${N_FILES} files added to library.")
 
     # Create library
     add_library(${_libname} SHARED ${_SOURCES})
 
+    # Add the directories of all header files to the include path
+    set (_INC_DIRS "")
+    foreach(_SOURCE ${_SOURCES})
+        get_filename_component(_SOURCE_EXT ${_SOURCE} EXT)
+        if((${_SOURCE_EXT} STREQUAL ".h") OR (${_SOURCE_EXT} STREQUAL ".hh"))
+            get_filename_component(_SOURCE_DIR ${_SOURCE} DIRECTORY)
+            list(APPEND _INC_DIRS ${_SOURCE_DIR})
+        endif((${_SOURCE_EXT} STREQUAL ".h") OR (${_SOURCE_EXT} STREQUAL ".hh"))
+    endforeach(_SOURCE in ${_SOURCES})
+    list(REMOVE_DUPLICATES _INC_DIRS)
+    target_include_directories(${_libname} PUBLIC ${_INC_DIRS})
+    list(LENGTH _INC_DIRS N_INC)
+    message(STATUS "   ${N_INC} directories added to library's include list.")
+
+    # Finished initializing library
     message(STATUS "Finished initializing ${_libname}.")
 endforeach (i_lib RANGE ${n_lib})
 
-#set (gbpCode_INCLUDE_DIRS "")
-#set (gbpCode_INCLUDE_DIRS "")
-#foreach (_headerFile ${gbpCode_HEADERS})
-#    get_filename_component(_dir ${_headerFile} PATH)
-#    list (APPEND gbpCode_INCLUDE_DIRS ${_dir})
-#    target_include_directories(gbpCode_INCLUDE_DIRS 
-#endforeach()
-#list(REMOVE_DUPLICATES gbpCode_INCLUDE_DIRS)
-#message(STATUS gbpCode_LIB_DIRS)
-##add_executable (gbpCodeExe ${gbpCode_SOURCES})
-#include_directories(${gbpCode_INCLUDE_DIRS})
-#
