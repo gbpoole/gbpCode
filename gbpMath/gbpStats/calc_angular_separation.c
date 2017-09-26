@@ -1,4 +1,4 @@
-#include <common.h>
+#include <gbpCommon.h>
 #include <math.h>
 
 // Code from Chris Blake for computing the angle (in degrees) between

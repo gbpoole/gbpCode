@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <common.h>
+#include <gbpCommon.h>
 
 void prep_profile_custom(double  *ordinate,
 			int      n_data,

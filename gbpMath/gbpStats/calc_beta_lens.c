@@ -1,5 +1,5 @@
 /* Needed for computing the lensing Sigma_crit */
-#include <common.h>
+#include <gbpCommon.h>
 #include <math.h>
 
 double calc_beta_lens(double D_lens,

@@ -1,4 +1,4 @@
-#include <common.h>
+#include <gbpCommon.h>
 #include <math.h>
 
 double calc_ram_pressure(double rho_gas,

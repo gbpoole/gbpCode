@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <common.h>
+#include <gbpCommon.h>
 
 void make_histogram(double  *data,
 		    int      n_data,
