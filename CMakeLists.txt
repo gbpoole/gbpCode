@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.5)
 
 # Include all the macros we will use
-include("macros.cmake")
+set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_SOURCE_DIR}/cmake;${CMAKE_SOURCE_DIR}")
+include("macros")
 
 # Set default compilers (must come before project line)
 set(CMAKE_C_COMPILER   "gcc")
@@ -36,7 +37,6 @@ include_directories(${GSL_INCLUDE_DIRS})
 link_libraries(${GSL_LIBRARIES})
 
 # FITS
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR};${CMAKE_MODULE_PATH}")
 find_package(CFITSIO REQUIRED)
 include_directories(${fits_INCLUDE_DIRS})
 
