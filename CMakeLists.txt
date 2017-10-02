@@ -118,7 +118,7 @@ message(STATUS "")
 # ======= End of 3rd party initialization =======
 
 # ============= Process the project =============
-collect_header_directories( ${CMAKE_SOURCE_DIR} )
+find_header_directories( ${CMAKE_SOURCE_DIR} )
 process_targets( ${CMAKE_SOURCE_DIR} )
 # ===============================================
 

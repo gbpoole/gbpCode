@@ -1,6 +1,8 @@
 INSTALL GUIDE FOR gbpCode AND ITS PACKAGES
 ==========================================
 
+# Warning: This document is very out of date.  An update will happen when cmake is implemented.
+
 Installing gbpCode
 ==================
 
@@ -14,54 +16,6 @@ Installing gbpCode
 
    gbpCode assumes that this is always set, so ideally put this in your .cshrc or .bashrc so that you 
    just need to define it once and not worry about it after that.
-
-3) Source the gbpCode start-up file:
-
-   for cshell: source ${GBP_SRC}/.cshrc.gbpCode
-   for bash:   source ${GBP_SRC}/.bashrc.gbpCode
-
-   Again, ideally put this command in your .cshrc or .bashrc so that gbpCode is always ready
-   to go for you.
-
-** N.B.: If you are having troubles installing the code then almost certainly, your problem can
-         be accomodated by editing these files.  Follow the instructions in 4) below to do so.  If
-         you start hacking other things, you are likely making things hard on yourself.
-
-4) OPTIONAL: if you want to compile gbpCode with some/all the bells-and-whistles, you'll need to tell the
-   code which optional libraries you have installed.  Presently GSL is the only MANDITORY library.  To
-   turn-on the functionality tied to the optional libraries, create a .cshrc.myCode (if you're using cshell; or 
-   .bashrc.myCode if you are using bash) file from the default ${GBP_SRC}/.cshrc.gbpCode (or ${GBP_SRC}/.bashrc.gbpCode)
-   files as follows:
-
-   for cshell: > cp ${GBP_SRC}/.cshrc.gbpCode  ${GBP_SRC}/.cshrc.myCode
-   for bash:   > cp ${GBP_SRC}/.bashrc.gbpCode ${GBP_SRC}/.bashrc.myCode
-
-   (This is necessary so that the default X.gbpCode file is not overwritten if you pull from the repo again someday to
-   update to the latest version.  Make sure that you source this new file instead of the default file in the instructions 
-   given in 3) above from now on.)
-
-   You then need to edit this X.myCode file to switch-on the needed libraries and to define the paths to them.  Look for
-   any definitions of "USE_XXX" and "GBP_XXX_DIR" and switch them to "USE_XXX=1" and set the path for each library you want to use.  
-   SEE BELOW ON SPECIFIC INSTRUCTIONS FOR INSTALLING EACH LIBRARY.
-
-4) gbpCode is designed to support fully MPI and serial compiles of the code.  Serial compile is the default.  Do this as follows:
-
-   > cd $GBP_SRC
-   > make clean ; make
-
-All serial executables will end-up in ${GBP_SRC}/myBin by default. Libraries will end-up in ${GBP_SRC}/myLib
-
-5) gbpCode is designed to seamlessly support both MPI and serial compiles of the code.  If you want an MPI compile, make
-   sure you have the MPI libraries set up (see 4 above; I use OpenMPI almost exclusively but the code has been compiled
-   with other MPI implementations) and type:
-
-   > cd $GBP_SRC
-   > make clean ; make USE_MPI=1
-
-   All parallel executables will end-up in ${GBP_SRC}/myBin/mpi by default. Libraries will end-up in ${GBP_SRC}/myLib/mpi
-
-** Be warned however, not all executables necessarily support parallel running at this time.  They will compile, but
-   behavior may be undefined.  This will be straighted-out eventually.
 
 Installing required/optional libraries
 ======================================
@@ -148,6 +102,8 @@ to compile it.
 
 Installing additional packages:
 ==============================
+
+# TODO: implement 'mylocal.cmake' files.
 
 gbpCode was designed so that you can add packages to it.  Once you have gbpCode installed and compiling correctly,
 it is pretty easy to add additional packages.

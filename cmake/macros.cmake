@@ -32,7 +32,7 @@ endmacro()
 
 # Macro to assemble a list of all directories
 #    with a header file
-macro(collect_header_directories cur_dir )
+macro(find_header_directories cur_dir )
     # Perform some initialization on the first call
     if( ${cur_dir} STREQUAL ${CMAKE_SOURCE_DIR} )
         message(STATUS "Assembling a list of project header directories..." )
@@ -45,7 +45,7 @@ macro(collect_header_directories cur_dir )
 
     # Recurse through all directories
     foreach(_dir_name ${ALLDIRS} )
-        collect_header_directories( ${cur_dir}/${_dir_name} ) 
+        find_header_directories( ${cur_dir}/${_dir_name} ) 
     endforeach()
 
     # Add the directories we have assembled to the project
@@ -55,12 +55,6 @@ macro(collect_header_directories cur_dir )
         message(STATUS "Done." )
         message(STATUS "" )
     endif()
-endmacro()
-
-# Main macro which initializes all project targets
-macro(process_targets cur_dir )
-    build_libraries( ${cur_dir} )
-    build_executables( ${cur_dir} )
 endmacro()
 
 # Macro for adding sources to a library build
@@ -113,42 +107,53 @@ macro(build_library lib_name cur_dir )
     message(STATUS "" )
 endmacro()
 
-# Main macro for recursively building libraries
-macro(build_libraries cur_dir )
+# Main macro which initializes all project targets
+macro(process_targets cur_dir )
+
+    # First, add libraries (because they
+    # may be dependencies for other targets)
     set_dir_state(${cur_dir})
     foreach(_lib_name ${LIBDIRS} )
         build_library( ${_lib_name} ${cur_dir}/${_lib_name} ) 
     endforeach()
-endmacro()
 
-# Main macro for recursively building libraries
-macro(build_executables cur_dir )
+    # Set-up the dependencies for the executables
+    #   The list needs to be reversed so that 
+    #   dependencies between dependencies are 
+    #   properly resolved.
+    # n.b.: We are assuming that libraries are
+    #       listed in order of dependancy.
+    set(_DEPLIST_REV "" )
+    list(APPEND  _DEPLIST_REV ${DEPLIST} )
+    list(REVERSE _DEPLIST_REV)
+
+    # Then, add any executables that are in this directory
     set_dir_state(${cur_dir})
+    foreach( _exe_file_nopath ${EXEFILES} )
+        # Add the path to the _exe_file_nopath
+        set( _exe_file ${cur_dir}/${_exe_file_nopath} )
 
-    # Add any executables that are in this directory
-    foreach(_exe_file ${EXEFILES})
         # Add executable to the target list
-        get_filename_component(_exe_name ${_exe_file} NAME)
-        message(STATUS "Adding executable " ${_exe_name} " (dependencies: " "${_DEPLIST_REV}" ")")
-        add_executable(${_exe_name} ${cur_dir}/${_exe_file})
+        get_filename_component( _exe_name ${_exe_file} NAME_WE )
+        message(STATUS "Adding executable " ${_exe_name} " from " ${_exe_file} " (dependencies: " "${_DEPLIST_REV}" ")")
+        add_executable(${_exe_name} ${_exe_file})
 
-        # Add dependencies.  The list needs to be reversed
-        #   so that dependencies between dependencies
-        #   are properly resolved.
-        #   n.b.: We are assuming that libraries are
-        #         listed in order of dependancy.
-        list(APPEND _DEPLIST_REV ${DEPLIST} )
-        list(REVERSE _DEPLIST_REV)
+        # Add dependencies. 
         target_link_libraries(${_exe_name} ${_DEPLIST_REV})
         if(DEPLIST)
             add_dependencies(${_exe_name} ${DEPLIST})
         endif()
     endforeach()
 
-    # Recurse through all the subdirectories
-    foreach(_lib_name ${ALLDIRS} )
-        build_executables( ${cur_dir}/${_lib_name} ) 
+    # Assemble data directory
+
+    # Recurse over all directories
+    set_dir_state(${cur_dir})
+    foreach( _dir_i ${ALLDIRS} )
+        message(STATUS "test:" ${cur_dir}/${_dir_i})
+        process_targets( ${cur_dir}/${_dir_i} )
     endforeach()
+
 endmacro()
 
 # Macro for printing variables

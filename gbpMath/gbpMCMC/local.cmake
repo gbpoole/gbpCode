@@ -58,9 +58,9 @@ list(APPEND SRCFILES "read_MCMC_covariance.c" )
 
 # Add executable source files (those with a main())
 # eg. list(APPEND EXEFILES "file" )
-list(APPEND EXEFILES "example_line_fit" )
-list(APPEND EXEFILES "covariance2ascii" )
-list(APPEND EXEFILES "reanalyze_MCMC" )
+list(APPEND EXEFILES "example_line_fit.c" )
+list(APPEND EXEFILES "covariance2ascii.c" )
+list(APPEND EXEFILES "reanalyze_MCMC.c" )
 
 # Add data files
 # eg. list(APPEND DATAFILES "file" )
