@@ -24,6 +24,8 @@ list(APPEND SRCDIRS "gbpPHKs" )
 list(APPEND SRCDIRS "gbpMCMC" )
 if(USE_FFTW)
     list(APPEND SRCDIRS "gbpFFT" )
+else()
+    message(STATUS "fftw not found.  Skipping config of gbpFFT." )
 endif()
 
 # Add header files

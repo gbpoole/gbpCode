@@ -10,9 +10,21 @@ set(DATASUBDIR "" )
 
 # Add subdirectories that are roots to libraries
 # eg. list(APPEND LIBDIRS "dir" )
+list(APPEND LIBDIRS "gbpCosmo" )
 list(APPEND LIBDIRS "gbpSPH" ) 
 list(APPEND LIBDIRS "gbpHalos" ) 
 list(APPEND LIBDIRS "gbpTrees" )
+if(USE_GDLIB)
+    list(APPEND LIBDIRS "gbpRender" )
+else()
+    message(STATUS "libgd not found.  Skipping config of gbpRender." )
+endif()
+if(USE_FFTW)
+    list(APPEND LIBDIRS "gbpClustering" )
+    list(APPEND LIBDIRS "gbpSwapEndian" )
+else()
+    message(STATUS "fftw not found.  Skipping config of gbpClustering & gbpSwapEndian." )
+endif()
 
 # Add directories that contribute source files 
 # eg. list(APPEND SRCDIRS "dir" )
@@ -36,6 +48,7 @@ list(APPEND LIBDIRS "gbpTrees" )
 
 # Set data subdirectory
 # eg. set(DATASUBDIR "dir" )
+# -- NONE FOR THIS DIR --
 
 # Add subdirectories that we want to decend into
 #   but which we won't scan for sources, etc

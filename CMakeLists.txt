@@ -1,3 +1,5 @@
+# This is the CMakeList.txt file used by all gbpCode projects
+
 cmake_minimum_required(VERSION 3.5)
 
 # Include all the macros we will use
@@ -18,56 +20,67 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu99")
 #set(CMAKE_VERBOSE_MAKEFILE ON)
 
 # Generate compile commands .json file
+# (nneded by things like clang-tidy)
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
 # =========== Add 3rd-party libraries ===========
 message(STATUS "")
 message(STATUS "Initializeing 3rd-party libraries...")
 
-# MPI
-if(USE_MPI)
-    find_package(MPI REQUIRED)
-    include_directories(${MPI_INCLUDE_PATH})
-    link_libraries(${MPI_C_LIBRARIES})
-endif(USE_MPI)
-
 # GSL
 find_package(GSL REQUIRED)
 include_directories(${GSL_INCLUDE_DIRS})
 link_libraries(${GSL_LIBRARIES})
 
+# MPI
+option(USE_MPI "Use MPI" OFF)
+if(USE_MPI)
+    find_package(MPI REQUIRED)
+    include_directories(${MPI_INCLUDE_PATH})
+    link_libraries(${MPI_C_LIBRARIES})
+endif()
+
+# LIBGD
+option(USE_GDLIB "Use libgd" ON)
+if(USE_GDLIB)
+    find_package(GD REQUIRED)
+    include_directories(${GD_INCLUDE_DIRS})
+    link_libraries(${GD_LIBRARIES})
+endif()
+
 # FITS
-find_package(CFITSIO REQUIRED)
-include_directories(${fits_INCLUDE_DIRS})
+option(USE_CFITSIO "Use CFITSIO" ON)
+if(USE_CFITSIO)
+    find_package(CFITSIO REQUIRED)
+    include_directories(${fits_INCLUDE_DIRS})
+endif()
 
 # HDF5
-find_package(HDF5 REQUIRED COMPONENTS C HL)
-include_directories(${HDF5_INCLUDE_DIRS})
-link_libraries(${HDF5_C_LIBRARIES} ${HDF5_C_HL_LIBRARIES})
-add_definitions(${HDF5_DEFINITIONS})
-
-# THIS IS A TEMPORARY HACK TO OVERCOME A BUG IN SOME VERSIONS OF CMAKE
-if(NOT (${HDF5_C_HL_LIBRARIES} MATCHES "libhdf5_hl"))
-    list(GET HDF5_C_LIBRARIES 0 HDF5_LIB)
-    get_filename_component(HDF5_LIBDIR ${HDF5_LIB} DIRECTORY)
-    link_libraries("${HDF5_LIBDIR}/libhdf5_hl.so")
+option(USE_HDF5 "Use HDF5" ON)
+if(USE_HDF5)
+    find_package(HDF5 REQUIRED COMPONENTS C HL)
+    include_directories(${HDF5_INCLUDE_DIRS})
+    link_libraries(${HDF5_C_LIBRARIES} ${HDF5_C_HL_LIBRARIES})
+    add_definitions(${HDF5_DEFINITIONS})
+    # THIS IS A TEMPORARY HACK TO OVERCOME A BUG IN SOME VERSIONS OF CMAKE
+    if(NOT (${HDF5_C_HL_LIBRARIES} MATCHES "libhdf5_hl"))
+        list(GET HDF5_C_LIBRARIES 0 HDF5_LIB)
+        get_filename_component(HDF5_LIBDIR ${HDF5_LIB} DIRECTORY)
+        link_libraries("${HDF5_LIBDIR}/libhdf5_hl.so")
+    endif()
 endif()
 
 # FFTW
+option(USE_FFTW "Use FFTW" ON)
 if(USE_FFTW)
     add_definitions(-DUSE_FFTW)
     find_package(FFTW REQUIRED)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${FFTW_C_FLAGS}")
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${FFTW_EXE_LINKER_FLAGS}")
-    #add_definitions(-DUSE_FFTW)
-    #find_path(FFTW_INCLUDE_DIRS sfftw.h PATHS "${FFTW_ROOT}/*" NO_DEFAULT_PATH)
-    #find_path(FFTW_INCLUDE_DIRS sfftw.h)
-    #find_library(FFTW_LIBRARIES libsfftw.a PATHS "${FFTW_ROOT}/*" NO_DEFAULT_PATH)
-    #find_library(FFTW_LIBRARIES libsfftw.a)
+    include_directories(${FFTW_INCLUDES})
+    link_libraries(${FFTW_LIBRARIES})
 endif()
 
 # OpenMP
-option(USE_OpenMP "Use OpenMP" OFF)
+option(USE_OPENMP "Use OpenMP" OFF)
 if(USE_OPENMP)
     add_definitions(-DUSE_OPENMP)
     find_package(OpenMP REQUIRED)

@@ -39,5 +39,5 @@ list(APPEND LIBDIRS "gbpMath" )
 # Add subdirectories that we want to decend into
 #   but which we won't scan for sources, etc
 # eg. list(APPEND PASSDIRS "dir" )
-list(APPEND PASSDIRS "gbpPkgs" )
+list(APPEND PASSDIRS "gbpAstro" )
 

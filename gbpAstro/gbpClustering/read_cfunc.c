@@ -8,7 +8,7 @@
 #include <gbpHalos.h>
 #include <gbpClustering.h>
 
-void read_cfunc(cfunc_info *cfunc,char *filename_in_root,int j_run){
+void read_cfunc(cfunc_info *cfunc,const char *filename_in_root,int j_run){
    // Now that all 4 runs are done, let's write the results
    SID_log("Reading correlation functions {%s;run=%d}...",SID_LOG_OPEN|SID_LOG_TIMER,filename_in_root,j_run);
 

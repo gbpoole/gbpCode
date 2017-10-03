@@ -10,14 +10,10 @@ size_t index_FFT_k(field_info *FFT,int *i_k){
     if(j_d==1)      i_d=0;
     else if(j_d==0) i_d=1;
 #endif
-    switch(i_d==FFT->n_d-1 && FFT->flag_padded){
-      case FALSE:
-        index_out*=FFT->n_k_local[i_d];
-        break;
-      case TRUE:
+    if(i_d==FFT->n_d-1 && FFT->flag_padded)
         index_out*=(FFT->n_k_local[i_d]+1);
-        break;
-    }
+    else 
+        index_out*=FFT->n_k_local[i_d];
     index_out+=i_k[i_d];
   }
   return(index_out);
