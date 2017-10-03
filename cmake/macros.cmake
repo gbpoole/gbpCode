@@ -8,11 +8,29 @@ set(MACROS_LOADED ON)
 
 # Macro to get all the information we
 #    need about a given directory
-macro(set_dir_state dir)
+macro(set_dir_state cur_dir)
     # Read a file which specifies the content
     #   and subdirectory structure of the
     #   given directory.
-    include( ${dir}/local.cmake )
+    include( ${cur_dir}/local.cmake )
+
+    # Add the path to all source files
+    set(SRCFILES_WITH_PATH "" )
+    foreach( _src_file_nopath ${SRCFILES} )
+        list(APPEND SRCFILES_WITH_PATH ${cur_dir}/${_src_file_nopath} )
+    endforeach()
+
+    # Add the path to all executable files
+    set(EXEFILES_WITH_PATH "" )
+    foreach( _exe_file_nopath ${EXEFILES} )
+        list(APPEND EXEFILES_WITH_PATH ${cur_dir}/${_exe_file_nopath} )
+    endforeach()
+
+    # Add the path to all data files
+    set(DATAFILES_WITH_PATH "" )
+    foreach( _data_file_nopath ${DATAFILES} )
+        list(APPEND DATAFILES_WITH_PATH ${cur_dir}/data/${_data_file_nopath} )
+    endforeach()
 
     # Create a list of all the subdirectories
     set(ALLDIRS "" )
@@ -62,10 +80,14 @@ endmacro()
 
 # Macro for adding sources to a library build
 macro(collect_library_sources lib_name cur_dir )
+    set(LIBRARY_SOURCES "" )
+    collect_library_sources_recurse( ${lib_name} ${cur_dir} )
+endmacro()
+macro(collect_library_sources_recurse lib_name cur_dir )
     set_dir_state( ${cur_dir} )
 
     # Report if there are any files being added from this directory
-    if( SRCFILES OR INCFILES )
+    if( SRCFILES )
         message(STATUS "   Adding source files in " ${cur_dir} " to " ${lib_name} )
     endif()
 
@@ -78,27 +100,67 @@ macro(collect_library_sources lib_name cur_dir )
 
     # Add any source files in this directory
     #   to the library's file list
-    foreach(_SRC ${SRCFILES} )
-        list(APPEND LIBRARY_SOURCES ${cur_dir}/${_SRC} )
+    foreach(_src ${SRCFILES_WITH_PATH} )
+        list(APPEND LIBRARY_SOURCES ${_src} )
     endforeach()
 
     # Recurse over the source directories 
     foreach( _dir_name ${SRCDIRS} )
-        collect_library_sources( ${lib_name} ${cur_dir}/${_dir_name}  )
+        collect_library_sources_recurse( ${lib_name} ${cur_dir}/${_dir_name}  )
+    endforeach()
+endmacro()
+
+# Macros for adding sources to a library build
+macro(collect_executables cur_dir )
+    set(EXE_LIST "" )
+    collect_executables_recurse( ${cur_dir} )
+endmacro()
+macro(collect_executables_recurse cur_dir )
+    # Add any executables in this directory to the list
+    set_dir_state( ${cur_dir} )
+    foreach(_exe ${EXEFILES_WITH_PATH} )
+        list(APPEND EXE_LIST ${_exe} )
+    endforeach()
+
+    # Recurse over the source directories 
+    foreach( _dir_name ${SRCDIRS} )
+        collect_executables_recurse( ${cur_dir}/${_dir_name}  )
+    endforeach()
+endmacro()
+
+# Macros for adding sources to a library build
+macro(collect_data_files cur_dir )
+    set(DATAFILE_LIST "" )
+    collect_data_files_recurse( ${cur_dir} )
+endmacro()
+macro(collect_data_files_recurse cur_dir )
+    # Add any executables in this directory to the list
+    set_dir_state( ${cur_dir} )
+    foreach(_data_file ${DATAFILES_WITH_PATH} )
+        list(APPEND DATAFILE_LIST ${_data_file} )
+    endforeach()
+
+    # Recurse over the source directories 
+    foreach( _dir_name ${SRCDIRS} )
+        collect_data_files_recurse( ${cur_dir}/${_dir_name}  )
     endforeach()
 endmacro()
 
 # Macro for initializing a specific library
-macro(build_library lib_name cur_dir )
+macro(build_library cur_dir )
+
+    # Assume that the library name is given by the directory name
+    get_filename_component( lib_name ${cur_dir} NAME )
+
+    # Write a status message
     message(STATUS "" )
     message(STATUS "Initializing " ${lib_name} )
-    set(LIBRARY_SOURCES "" )
 
     # Collect the sources for the library
     collect_library_sources( ${lib_name} ${cur_dir} )
 
     # Add the library to the list of targets
-    set_dir_state(${cur_dir})
+    set_dir_state(${cur_dir}) # Needed to get DATADIR
     add_library(${lib_name} STATIC ${LIBRARY_SOURCES})
     target_compile_options(${lib_name} PRIVATE -DGBP_DATA_DIR=\"${DATADIR}\" )
     install(TARGETS ${lib_name} DESTINATION lib )
@@ -111,35 +173,27 @@ macro(build_library lib_name cur_dir )
     endif()
     list(APPEND DEPLIST ${lib_name} )
 
-    # Status message
-    message(STATUS "Done." )
-endmacro()
-
-# Main macro which initializes all project targets
-macro(process_targets cur_dir )
-
-    # First, add libraries (because they
-    # may be dependencies for other targets)
-    set_dir_state(${cur_dir})
-    foreach(_lib_name ${LIBDIRS} )
-        build_library( ${_lib_name} ${cur_dir}/${_lib_name} ) 
-    endforeach()
-
-    # Set-up the dependencies for the executables
-    #   The list needs to be reversed so that 
-    #   dependencies between dependencies are 
-    #   properly resolved.
+    # The dependency list needs to be reversed so that 
+    #   dependencies between dependencies are properly
+    #   resolved.
     # n.b.: We are assuming that libraries are
     #       listed in order of dependancy.
     set(_DEPLIST_REV "" )
     list(APPEND  _DEPLIST_REV ${DEPLIST} )
     list(REVERSE _DEPLIST_REV)
 
-    # Then, add any executables that are in this directory
-    set_dir_state(${cur_dir})
-    foreach( _exe_file_nopath ${EXEFILES} )
-        # Add the path to _exe_file_nopath
-        set( _exe_file ${cur_dir}/${_exe_file_nopath} )
+    # Status message
+    message(STATUS "Done." )
+endmacro()
+
+# Build list of executables
+macro(build_executables cur_dir )
+    # Collect the executables for this directory
+    collect_executables( ${cur_dir} )
+
+    # Add each executable to the target list
+    set_dir_state(${cur_dir}) # Needed for DATADIR
+    foreach( _exe_file ${EXE_LIST} )
         get_filename_component( _exe_name ${_exe_file} NAME_WE )
 
         # Add executable to the target list
@@ -154,20 +208,43 @@ macro(process_targets cur_dir )
             add_dependencies(${_exe_name} ${DEPLIST})
         endif()
     endforeach()
+endmacro()
 
-    # Assemble data directory
+# Build list of data files
+macro(build_data_files cur_dir )
+    # Collect the data files for this directory
+    collect_data_files( ${cur_dir} )
+
+    # Add each data file to the target list
     set_dir_state(${cur_dir})
-    foreach( _data_file_nopath ${DATAFILES} )
-        # Add the path to _data_file_nopath
-        set( _data_file ${cur_dir}/data/${_data_file_nopath} )
-        get_filename_component( _data_name    ${_data_file} NAME )
+    foreach( _data_file ${DATAFILE_LIST} )
+        get_filename_component( _data_name ${_data_file} NAME )
         message(STATUS "Adding data file " ${_data_name} )
         configure_file( ${_data_file} data/${DATASUBDIR}/${_data_name} COPYONLY )
     endforeach()
+endmacro()
 
-    # Recurse over all directories
+# Main macro which initializes all project targets
+macro(process_targets cur_dir )
+
+    # Add all targets associated with liobrary directories
     set_dir_state(${cur_dir})
-    foreach( _dir_i ${ALLDIRS} )
+    foreach(_lib_name ${LIBDIRS} )
+        build_library( ${cur_dir}/${_lib_name} ) 
+        build_executables( ${cur_dir}/${_lib_name} ) 
+        build_data_files( ${cur_dir}/${_lib_name} ) 
+    endforeach()
+
+    # Add targets associated with the current pass-through directory
+    if(SRC_FILES)
+        build_library( ${cur_dir} )
+    endif()
+    build_executables( ${cur_dir} ) 
+    build_data_files( ${cur_dir} ) 
+
+    # Recurse over all pass-through directories
+    set_dir_state(${cur_dir})
+    foreach( _dir_i ${PASSDIRS} )
         process_targets( ${cur_dir}/${_dir_i} )
     endforeach()
 endmacro()

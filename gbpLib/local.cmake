@@ -49,7 +49,7 @@ list(APPEND INCFILES "gbpLib.h")
 
 # Set data subdirectory
 # eg. set(DATASUBDIR "dir" )
-set(DATASUBDIR "gbpLib" )
+# -- NONE FOR THIS DIR --
 
 # Add subdirectories that we want to decend into
 #   but which we won't scan for sources, etc

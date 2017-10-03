@@ -10,11 +10,9 @@ set(DATASUBDIR "" )
 
 # Add subdirectories that are roots to libraries
 # eg. list(APPEND LIBDIRS "dir" )
-list(APPEND LIBDIRS "gbpCosmo" ) 
-if(USE_FFTW)
-    list(APPEND LIBDIRS "gbpClustering" )
-    list(APPEND LIBDIRS "gbpSwapEndian" )
-endif()
+list(APPEND LIBDIRS "gbpSPH" ) 
+list(APPEND LIBDIRS "gbpHalos" ) 
+list(APPEND LIBDIRS "gbpTrees" )
 
 # Add directories that contribute source files 
 # eg. list(APPEND SRCDIRS "dir" )
@@ -42,5 +40,5 @@ endif()
 # Add subdirectories that we want to decend into
 #   but which we won't scan for sources, etc
 # eg. list(APPEND PASSDIRS "dir" )
-list(APPEND PASSDIRS  "gbpSims" ) 
+# -- NONE FOR THIS DIR --
 
