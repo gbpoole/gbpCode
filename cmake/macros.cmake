@@ -19,6 +19,10 @@ macro(set_dir_state dir)
     list(APPEND ALLDIRS ${LIBDIRS} )
     list(APPEND ALLDIRS ${SRCDIRS} )
     list(APPEND ALLDIRS ${PASSDIRS} )
+
+    # Set the full path to the final 
+    # data directory install destination
+    set(DATADIR ${CMAKE_INSTALL_PREFIX}/data/${DATASUBDIR} )
 endmacro()
 
 # Macro which adds a directory to the project's
@@ -53,7 +57,6 @@ macro(find_header_directories cur_dir )
 
     if( ${cur_dir} STREQUAL ${CMAKE_SOURCE_DIR} )
         message(STATUS "Done." )
-        message(STATUS "" )
     endif()
 endmacro()
 
@@ -87,12 +90,18 @@ endmacro()
 
 # Macro for initializing a specific library
 macro(build_library lib_name cur_dir )
+    message(STATUS "" )
     message(STATUS "Initializing " ${lib_name} )
     set(LIBRARY_SOURCES "" )
 
-    # Collect the sources for the library and add it to targets
+    # Collect the sources for the library
     collect_library_sources( ${lib_name} ${cur_dir} )
+
+    # Add the library to the list of targets
+    set_dir_state(${cur_dir})
     add_library(${lib_name} STATIC ${LIBRARY_SOURCES})
+    target_compile_options(${lib_name} PRIVATE -DGBP_DATA_DIR=\"${DATADIR}\" )
+    install(TARGETS ${lib_name} DESTINATION lib )
 
     # Take care of dependancies.  We are assuming that
     #   libraries were listed in order of dependancy.
@@ -104,7 +113,6 @@ macro(build_library lib_name cur_dir )
 
     # Status message
     message(STATUS "Done." )
-    message(STATUS "" )
 endmacro()
 
 # Main macro which initializes all project targets
@@ -130,13 +138,15 @@ macro(process_targets cur_dir )
     # Then, add any executables that are in this directory
     set_dir_state(${cur_dir})
     foreach( _exe_file_nopath ${EXEFILES} )
-        # Add the path to the _exe_file_nopath
+        # Add the path to _exe_file_nopath
         set( _exe_file ${cur_dir}/${_exe_file_nopath} )
+        get_filename_component( _exe_name ${_exe_file} NAME_WE )
 
         # Add executable to the target list
-        get_filename_component( _exe_name ${_exe_file} NAME_WE )
-        message(STATUS "Adding executable " ${_exe_name} " from " ${_exe_file} " (dependencies: " "${_DEPLIST_REV}" ")")
+        message(STATUS "Adding executable " ${_exe_name} " (dependencies: " "${_DEPLIST_REV}" ")")
         add_executable(${_exe_name} ${_exe_file})
+        target_compile_options(${_exe_name} PRIVATE -DGBP_DATA_DIR=\"${DATADIR}\" )
+        install(TARGETS ${_exe_name} DESTINATION bin )
 
         # Add dependencies. 
         target_link_libraries(${_exe_name} ${_DEPLIST_REV})
@@ -146,14 +156,20 @@ macro(process_targets cur_dir )
     endforeach()
 
     # Assemble data directory
+    set_dir_state(${cur_dir})
+    foreach( _data_file_nopath ${DATAFILES} )
+        # Add the path to _data_file_nopath
+        set( _data_file ${cur_dir}/data/${_data_file_nopath} )
+        get_filename_component( _data_name    ${_data_file} NAME )
+        message(STATUS "Adding data file " ${_data_name} )
+        configure_file( ${_data_file} data/${DATASUBDIR}/${_data_name} COPYONLY )
+    endforeach()
 
     # Recurse over all directories
     set_dir_state(${cur_dir})
     foreach( _dir_i ${ALLDIRS} )
-        message(STATUS "test:" ${cur_dir}/${_dir_i})
         process_targets( ${cur_dir}/${_dir_i} )
     endforeach()
-
 endmacro()
 
 # Macro for printing variables

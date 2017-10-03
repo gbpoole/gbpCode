@@ -6,6 +6,7 @@ set(SRCFILES   "" )
 set(EXEFILES   "" )
 set(DATAFILES  "" )
 set(PASSDIRS   "" )
+set(DATASUBDIR "" )
 
 # Add subdirectories that are roots to libraries
 # eg. list(APPEND LIBDIRS "dir" )
@@ -30,6 +31,9 @@ set(PASSDIRS   "" )
 # Add data files
 # eg. list(APPEND DATAFILES "file" )
 # -- NONE FOR THIS DIR --
+
+# Set data subdirectory
+# eg. set(DATASUBDIR "dir" )
 
 # Add subdirectories that we want to decend into
 #   but which we won't scan for sources, etc

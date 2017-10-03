@@ -6,6 +6,7 @@ set(SRCFILES   "" )
 set(EXEFILES   "" )
 set(DATAFILES  "" )
 set(PASSDIRS   "" )
+set(DATASUBDIR "" )
 
 # Add subdirectories that are roots to libraries
 # eg. list(APPEND LIBDIRS "dir" )

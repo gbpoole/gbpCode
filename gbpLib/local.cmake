@@ -7,6 +7,7 @@ set(EXEFILES   "" )
 set(TARGETDEPS "" )
 set(DATAFILES  "" )
 set(PASSDIRS   "" )
+set(DATASUBDIR "" )
 
 # Add subdirectories that are roots to libraries
 # eg. list(APPEND LIBDIRS "dirname")
@@ -45,6 +46,10 @@ list(APPEND INCFILES "gbpLib.h")
 # Add data files
 # eg. list(APPEND TARGETDEPS "dep_name")
 # -- NONE FOR THIS DIR --
+
+# Set data subdirectory
+# eg. set(DATASUBDIR "dir" )
+set(DATASUBDIR "gbpLib" )
 
 # Add subdirectories that we want to decend into
 #   but which we won't scan for sources, etc
