@@ -12,10 +12,10 @@ void compute_FFT(field_info *FFT){
   }
 
   // Perform the FFT
-  #if USE_MPI
-    rfftwnd_mpi(FFT->plan,1,FFT->field_local,NULL,FFTW_TRANSPOSED_ORDER);
+  #ifdef USE_DOUBLE
+    fftw_execute((const fftw_plan)FFT->plan);
   #else
-    rfftwnd_one_real_to_complex(FFT->plan,FFT->field_local,NULL);
+    fftwf_execute((const fftwf_plan)FFT->plan);
   #endif
 
   if(flag_log_message)

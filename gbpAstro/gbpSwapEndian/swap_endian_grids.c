@@ -45,15 +45,15 @@ void swap_endian_grids(const char *filename_in,const char *filename_out,int mode
      rewind(fp_in);
 
      // Create a read buffer
-     char *buffer=(char *)SID_malloc(sizeof(char)*grid_size*sizeof(fftw_real));
+     char *buffer=(char *)SID_malloc(sizeof(char)*grid_size*sizeof(GBPREAL));
 
      // Process the file
      rewrite_swap_endian(fp_in,fp_out,3,sizeof(int),   buffer);
      rewrite_swap_endian(fp_in,fp_out,3,sizeof(double),buffer);
      rewrite_swap_endian(fp_in,fp_out,2,sizeof(int),   buffer);
      for(int i_grid=0;i_grid<n_grids;i_grid++){
-        rewrite_swap_endian(fp_in,fp_out,GRID_IDENTIFIER_SIZE,sizeof(char),     buffer);
-        rewrite_swap_endian(fp_in,fp_out,grid_size,           sizeof(fftw_real),buffer);
+        rewrite_swap_endian(fp_in,fp_out,GRID_IDENTIFIER_SIZE,sizeof(char),   buffer);
+        rewrite_swap_endian(fp_in,fp_out,grid_size,           sizeof(GBPREAL),buffer);
      }
 
      // Free the read buffer

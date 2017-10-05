@@ -52,7 +52,7 @@ int main(int argc, char *argv[]){
   if(ng1!=ng2) SID_trap_error("The number of grids don't match (ie. %d!=%d)",ERROR_LOGIC,ng1,ng2);
 
   int i_x,i_y,i_z;
-  fftw_real d1,d2;
+  GBPREAL d1,d2;
   int i_grid;
   char *grid_identifier_1;
   char *grid_identifier_2;
@@ -67,8 +67,8 @@ int main(int argc, char *argv[]){
      for(i_x=0;i_x<nx1;i_x++){
         for(i_y=0;i_y<ny1;i_y++){
            for(i_z=0;i_z<nz1;i_z++){
-                fread_verify(&d1,sizeof(fftw_real),1,fp1);
-                fread_verify(&d2,sizeof(fftw_real),1,fp2);
+                fread_verify(&d1,sizeof(GBPREAL),1,fp1);
+                fread_verify(&d2,sizeof(GBPREAL),1,fp2);
                 if(d2!=d1)
                    fprintf(stdout,"%3d %4d %4d %4d %le %le %le\n",i_grid,i_x,i_y,i_z,(double)d1,(double)d2,(double)(d2-d1));
            }

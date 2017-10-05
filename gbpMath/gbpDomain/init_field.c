@@ -20,16 +20,6 @@ void init_field(int        n_d,
   int  flag_active;
   int  n_active;
   int  min_size,max_size;
-  int  total_local_size_int;
-
-  // Make sure that fftw and gbpLib are compiled with the same precision
-  #if USE_FFTW
-    if(sizeof(fftw_real)!=sizeof(GBPREAL))
-      SID_trap_error("Size of an fftw_real (%lld) is not the same the size of a REAL (%lld).  Fix installation!",
-                     ERROR_LOGIC,
-                     sizeof(fftw_real),
-                     sizeof(GBPREAL));
-  #endif
 
   SID_log("Initializing ",SID_LOG_OPEN);
   for(i_d=0;i_d<n_d;i_d++){
@@ -38,11 +28,7 @@ void init_field(int        n_d,
     else
       SID_log("%d element %d-d FFT ",SID_LOG_CONTINUE,n[i_d],n_d);
   }
-  #if USE_FFTW
-    SID_log("(%d byte precision)...",SID_LOG_CONTINUE,(int)sizeof(fftw_real));
-  #else
-    SID_log("(%d byte precision)...",SID_LOG_CONTINUE,(int)sizeof(GBPREAL));
-  #endif
+  SID_log("(%d byte precision)...",SID_LOG_CONTINUE,(int)sizeof(GBPREAL));
 
   // Initialize FFT sizes
   FFT->n_d            =n_d;
@@ -66,35 +52,39 @@ void init_field(int        n_d,
 
   // Initialize FFTW
   #if USE_MPI
-    #if USE_FFTW
-      FFT->plan =rfftwnd_mpi_create_plan(SID.COMM_WORLD->comm,
-                                         FFT->n_d,FFT->n,
-                                         FFTW_REAL_TO_COMPLEX,
-                                         FFTW_ESTIMATE);
-      FFT->iplan=rfftwnd_mpi_create_plan(SID.COMM_WORLD->comm,
-                                         FFT->n_d,FFT->n,
-                                         FFTW_COMPLEX_TO_REAL,
-                                         FFTW_ESTIMATE);
-      rfftwnd_mpi_local_sizes(FFT->plan,
-          		      &(n_x_local), 
-          		      &(i_x_start_local),
-          		      &(n_y_transpose_local),
-          		      &(i_y_start_transpose_local),
-          		      &total_local_size_int);
+
+    #ifdef USE_DOUBLE   
+    fftw_mpi_init();
+    FFT->total_local_size=
+    fftw_mpi_local_size_many_transposed(FFT->n_d, 
+                                        FFT->n, 
+                                        1,
+                                        FFTW_MPI_DEFAULT_BLOCK,FFTW_MPI_DEFAULT_BLOCK,
+                                        SID.COMM_WORLD->comm,
+                                        &(n_x_local), 
+                                        &(i_x_start_local),
+                                        &(n_y_transpose_local),
+                                        &(i_y_start_transpose_local));
     #else
-      n_x_local                =0;
-      i_x_start_local          =0;
-      n_y_transpose_local      =0;
-      i_y_start_transpose_local=0;
-      total_local_size_int     =0;
-      SID_trap_error("Parallel FFTs are not supported without FFTW support.",ERROR_LOGIC);
+    fftwf_mpi_init();
+    FFT->total_local_size=
+    fftwf_mpi_local_size_many_transposed(FFT->n_d, 
+                                        FFT->n, 
+                                        1,
+                                        FFTW_MPI_DEFAULT_BLOCK,FFTW_MPI_DEFAULT_BLOCK,
+                                        SID.COMM_WORLD->comm,
+                                        &(n_x_local), 
+                                        &(i_x_start_local),
+                                        &(n_y_transpose_local),
+                                        &(i_y_start_transpose_local));
     #endif
-    FFT->total_local_size=(size_t)total_local_size_int;
+                                        
     // Set empty slabs to start at 0 to make ignoring them simple.
     if(n_x_local==0)
       i_x_start_local=0;
     if(n_y_transpose_local==0)
       i_y_start_transpose_local=0;
+
     // Modify the local slab dimensions according to what FFTW chose.
     FFT->i_R_start_local[0]=i_x_start_local;
     FFT->n_R_local[0]      =n_x_local;
@@ -102,6 +92,20 @@ void init_field(int        n_d,
       FFT->i_k_start_local[1]=i_y_start_transpose_local;
       FFT->n_k_local[1]      =n_y_transpose_local;
     }
+
+    // Allocate field
+    FFT->field_local =fftwf_alloc_real(FFT->total_local_size); 
+    FFT->cfield_local=(fftw_complex *)FFT->field_local;
+
+    // Generate plans
+    #ifdef USE_DOUBLE
+        FFT->plan =fftw_mpi_plan_dft_r2c(FFT->n_d,FFT->n,FFT->field_local,FFT->cfield_local,SID.COMM_WORLD->comm,FFTW_ESTIMATE);
+        FFT->iplan=fftw_mpi_plan_dft_c2r(FFT->n_d,FFT->n,FFT->cfield_local,FFT->field_local,SID.COMM_WORLD->comm,FFTW_ESTIMATE);
+    #else
+        FFT->plan =fftwf_mpi_plan_dft_r2c(FFT->n_d,FFT->n,FFT->field_local,FFT->cfield_local,SID.COMM_WORLD->comm,FFTW_ESTIMATE);
+        FFT->iplan=fftwf_mpi_plan_dft_c2r(FFT->n_d,FFT->n,FFT->cfield_local,FFT->field_local,SID.COMM_WORLD->comm,FFTW_ESTIMATE);
+    #endif
+
   #else
     for(i_d=0,FFT->total_local_size=1;i_d<FFT->n_d;i_d++){
       if(i_d<FFT->n_d-1)
@@ -109,15 +113,13 @@ void init_field(int        n_d,
       else
         FFT->total_local_size*=2*(FFT->n[i_d]/2+1);
     }
-    #if USE_FFTW
-      FFT->plan =rfftwnd_create_plan(FFT->n_d,FFT->n,FFTW_REAL_TO_COMPLEX,FFTW_ESTIMATE|FFTW_IN_PLACE);
-      FFT->iplan=rfftwnd_create_plan(FFT->n_d,FFT->n,FFTW_COMPLEX_TO_REAL,FFTW_ESTIMATE|FFTW_IN_PLACE);
+    #ifdef USE_DOUBLE
+        FFT->plan =fftw_plan_dft_r2c(FFT->n_d,FFT->n,FFT->field_local,FFT->cfield_local,FFTW_ESTIMATE);
+        FFT->iplan=fftw_plan_dft_c2r(FFT->n_d,FFT->n,FFT->cfield_local,FFT->field_local,FFTW_ESTIMATE);
+    #else
+        FFT->plan =fftwf_plan_dft_r2c(FFT->n_d,FFT->n,FFT->field_local,FFT->cfield_local,FFTW_ESTIMATE);
+        FFT->iplan=fftwf_plan_dft_c2r(FFT->n_d,FFT->n,FFT->cfield_local,FFT->field_local,FFTW_ESTIMATE);
     #endif
-  #endif
-  #if USE_FFTW
-    FFT->field_local =(fftw_real *)SID_calloc(sizeof(fftw_real)*FFT->total_local_size); 
-  #else
-    FFT->field_local =(GBPREAL   *)SID_calloc(sizeof(GBPREAL)*FFT->total_local_size); 
   #endif
 
   // Upper limits of slab decomposition
@@ -143,12 +145,7 @@ void init_field(int        n_d,
     FFT->n_field_k_local*=(size_t)FFT->n_k_local[i_d];
   }
 
-  // A pointer for referencing the field as a complex array
-  #if USE_FFTW
-     FFT->cfield_local=(fftw_complex *)FFT->field_local;
-  #else
-     FFT->cfield_local=(GBPREAL      *)FFT->field_local;
-  #endif
+  // Clear the field
   clear_field(FFT);
 
   // Initialize the FFT's real-space grid
@@ -190,11 +187,9 @@ void init_field(int        n_d,
     FFT->slab.x_max_local  =FFT->R_field[0][FFT->i_R_stop_local[0]+1];
   else
     FFT->slab.x_max_local  =FFT->slab.x_min_local;
-  //FFT->slab.x_max          =FFT->R_field[0][FFT->n[0]];
   SID_Allreduce(&(FFT->slab.x_max_local),&(FFT->slab.x_max),1,SID_DOUBLE,SID_MAX,SID.COMM_WORLD);
 
 #if USE_MPI
-
   // All ranks are not necessarily assigned any slices, so
   //   we need to figure out what ranks are to the right and the left for
   //   buffer exchanges

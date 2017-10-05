@@ -1,22 +1,6 @@
 #ifndef GBPFFT_AWAKE
 #define GBPFFT_AWAKE
 #include <gbpDomain.h>
-#ifndef GBPFFTW_AWAKE
-  #define GBPFFTW_AWAKE
-  #if USE_MPI
-    #if USE_DOUBLE
-      #include <drfftw_mpi.h>
-    #else
-      #include <srfftw_mpi.h>
-    #endif
-  #else
-    #if USE_DOUBLE
-      #include <drfftw.h>
-    #else
-      #include <srfftw.h>
-    #endif
-  #endif
-#endif
 
 // Function definitions
 #ifdef __cplusplus

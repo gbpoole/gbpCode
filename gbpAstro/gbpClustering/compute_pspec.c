@@ -1,9 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <gbpLib.h>
+#include <gbpMath.h>
 #include <gbpCosmo.h>
 #include <gbpSPH.h>
 #include <gbpClustering.h>
+
+#define c_re(c) ((c)[0])
+#define c_im(c) ((c)[1])
 
 void compute_pspec(plist_info  *plist,
                    const char  *species_name,
@@ -69,10 +73,10 @@ void compute_pspec(plist_info  *plist,
   size_t      receive_left_size=0;
   size_t      receive_right_size=0;
   size_t      index_best;
-  fftw_real  *send_left;
-  fftw_real  *send_right;
-  fftw_real  *receive_left=NULL;
-  fftw_real  *receive_right=NULL;
+  GBPREAL    *send_left;
+  GBPREAL    *send_right;
+  GBPREAL    *receive_left=NULL;
+  GBPREAL    *receive_right=NULL;
   double       r_i,r_min,r_i_max=0;
   double       W_i;
   int          index_i;
@@ -201,8 +205,8 @@ void compute_pspec(plist_info  *plist,
         mode_powspec=(int)((k_mag-k_min_1D)/dk_1D);
         if(mode_powspec<(n_k_1D) && mode_powspec>=0){
           k_1D_local[mode_powspec]  +=k_mag;
-          P_k_1D_local[mode_powspec]+=(pow((double)FFT->cfield_local[index_FFT_k(FFT,j_i)].re,2.)+
-                                       pow((double)FFT->cfield_local[index_FFT_k(FFT,j_i)].im,2.));
+          P_k_1D_local[mode_powspec]+=(pow((double)c_re(FFT->cfield_local[index_FFT_k(FFT,j_i)]),2.)+
+                                       pow((double)c_im(FFT->cfield_local[index_FFT_k(FFT,j_i)]),2.));
           n_modes_1D_local[mode_powspec]++;
         }
       }
@@ -247,7 +251,6 @@ void compute_pspec(plist_info  *plist,
 //  SID_log("Performing 2-d bining of power spectrum...",SID_LOG_OPEN|SID_LOG_TIMER);
   k_2D_local=(double *)SID_malloc(sizeof(double)*((n_k_2D)*(n_k_2D)));
   k_2D      =(double *)SID_malloc(sizeof(double)*((n_k_2D)*(n_k_2D)));
-/*
   for(i_k=0;i_k<(n_k_2D)*(n_k_2D);i_k++){
     k_2D_local[i_k]=0.;
     k_2D[i_k]      =0.;
@@ -272,8 +275,8 @@ void compute_pspec(plist_info  *plist,
         if(mode_x<(n_k_2D) && mode_x>=0 && mode_y<(n_k_2D) && mode_y>=0){
           mode_powspec=mode_y*(n_k_2D)+mode_x;
           k_2D_local[mode_powspec]  +=k_mag_field_FFT(FFT,i_i);
-          P_k_2D_local[mode_powspec]+=(pow((double)FFT->cfield_local[index_FFT_k(FFT,j_i)].re,2.)+
-                                       pow((double)FFT->cfield_local[index_FFT_k(FFT,j_i)].im,2.));
+          P_k_2D_local[mode_powspec]+=(pow((double)c_re(FFT->cfield_local[index_FFT_k(FFT,j_i)]),2.)+
+                                       pow((double)c_im(FFT->cfield_local[index_FFT_k(FFT,j_i)]),2.));
           n_modes_2D_local[mode_powspec]++;
         }
       }
@@ -308,7 +311,6 @@ void compute_pspec(plist_info  *plist,
     P_k_2D[i_k] -=shot_noise;
   }
   SID_log("Done.",SID_LOG_CLOSE);
-*/
   
   SID_free(SID_FARG k_1D_local);
   SID_free(SID_FARG k_2D);

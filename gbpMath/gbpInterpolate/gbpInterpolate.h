@@ -2,6 +2,7 @@
 #define GBPINTERPOLATE_AWAKE
 #include <gbpLib.h>
 #include <gsl/gsl_interp.h>
+#include <gsl/gsl_integration.h>
 
 typedef struct interp_struct interp_info;
 struct interp_struct{

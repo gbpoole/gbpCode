@@ -15,15 +15,23 @@ void free_field(field_info *FFT){
   SID_free(SID_FARG FFT->i_k_stop_local);
 
   // Free FFTs
-  #if USE_FFTW
-    #if USE_MPI
-      rfftwnd_mpi_destroy_plan(FFT->plan);
-      rfftwnd_mpi_destroy_plan(FFT->iplan);
-    #else
-      rfftwnd_destroy_plan(FFT->plan);
-      rfftwnd_destroy_plan(FFT->iplan);
-    #endif
+#ifdef USE_DOUBLE
+  fftw_destroy_plan(FFT->plan);
+  fftw_destroy_plan(FFT->iplan);
+  #if USE_MPI
+    fftw_mpi_cleanup();
+  #else
+    fftw_cleanup();
   #endif
+#else
+  fftwf_destroy_plan(FFT->plan);
+  fftwf_destroy_plan(FFT->iplan);
+  #if USE_MPI
+    fftwf_mpi_cleanup();
+  #else
+    fftwf_cleanup();
+  #endif
+#endif
 
   // Free field arrays
   for(i_d=0;i_d<FFT->n_d;i_d++){

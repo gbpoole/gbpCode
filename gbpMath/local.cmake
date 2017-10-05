@@ -13,6 +13,11 @@ set(PASSDIRS   "" )
 
 # Add directories that contribute source files 
 # eg. list(APPEND SRCDIRS "dir" )
+if(USE_FFTW)
+    list(APPEND SRCDIRS "gbpFFT" )
+else()
+    message(STATUS "fftw not found.  Skipping config of gbpFFT." )
+endif()
 list(APPEND SRCDIRS "gbpDomain" )
 list(APPEND SRCDIRS "gbpSort" )
 list(APPEND SRCDIRS "gbpStats" )
@@ -22,11 +27,6 @@ list(APPEND SRCDIRS "gbpHist" )
 list(APPEND SRCDIRS "gbpRNG" )
 list(APPEND SRCDIRS "gbpPHKs" )
 list(APPEND SRCDIRS "gbpMCMC" )
-if(USE_FFTW)
-    list(APPEND SRCDIRS "gbpFFT" )
-else()
-    message(STATUS "fftw not found.  Skipping config of gbpFFT." )
-endif()
 
 # Add header files
 # eg. list(APPEND INCFILES "file" )

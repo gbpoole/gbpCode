@@ -15,6 +15,11 @@ project (gbpCode)
 
 # Compiler flags
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu99")
+set(CMAKE_CXX_FLAGS "-std=c++11")
+
+# The following line is needed to deal with this annoying problem:
+#    https://developers.redhat.com/blog/2015/02/05/gcc5-and-the-c11-abi/
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_GLIBCXX_USE_CXX11_ABI=0")
 
 # Uncomment for a verbose run
 #set(CMAKE_VERBOSE_MAKEFILE ON)
@@ -22,6 +27,12 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu99")
 # Generate compile commands .json file
 # (nneded by things like clang-tidy)
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
+
+# Use double precision liberally?
+option(USE_DOUBLE "Use double liberally" OFF)
+if(USE_DOUBE)
+    add_definitions(-DUSE_DOUBLE)
+endif()
 
 # =========== Add 3rd-party libraries ===========
 message(STATUS "")
@@ -35,6 +46,7 @@ link_libraries(${GSL_LIBRARIES})
 # MPI
 option(USE_MPI "Use MPI" OFF)
 if(USE_MPI)
+    add_definitions(-DUSE_MPI)
     find_package(MPI REQUIRED)
     include_directories(${MPI_INCLUDE_PATH})
     link_libraries(${MPI_C_LIBRARIES})
@@ -78,6 +90,14 @@ if(USE_FFTW)
     include_directories(${FFTW_INCLUDES})
     link_libraries(${FFTW_LIBRARIES})
 endif()
+#find_path(FFTW_INCLUDE_DIRS fftw3.h PATHS "${FFTW_ROOT}/*" NO_DEFAULT_PATH)
+#find_path(FFTW_INCLUDE_DIRS fftw3.h)
+#find_library(FFTW_LIBRARIES fftw3f PATHS "${FFTW_ROOT}/*" NO_DEFAULT_PATH)
+#find_library(FFTW_LIBRARIES fftw3f)
+#find_library(FFTW_MPI_LIBRARIES fftw3f_mpi PATHS "${FFTW_ROOT}/*" NO_DEFAULT_PATH)
+#find_library(FFTW_MPI_LIBRARIES fftw3f_mpi)
+#include_directories(${FFTW_INCLUDE_DIRS})
+#link_libraries(${FFTW_LIBRARIES} ${FFTW_MPI_LIBRARIES})
 
 # OpenMP
 option(USE_OPENMP "Use OpenMP" OFF)

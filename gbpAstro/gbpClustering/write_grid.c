@@ -50,7 +50,7 @@ void write_grid(field_info *field,const char *filename_out_root,int i_grid,int n
    int     i_rank;
    size_t  alloc_size;
    size_t  alloc_size_local;
-   alloc_size_local=(size_t)field->n_field_R_local*sizeof(fftw_real);
+   alloc_size_local=(size_t)field->n_field_R_local*sizeof(GBPREAL);
    SID_Allreduce(&alloc_size_local,&alloc_size,1,SID_SIZE_T,SID_MAX,SID.COMM_WORLD);
    buffer=SID_malloc(alloc_size);
    SID_set_verbosity(SID_SET_VERBOSITY_RELATIVE,-1);

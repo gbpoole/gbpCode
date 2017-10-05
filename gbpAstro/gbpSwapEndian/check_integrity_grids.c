@@ -33,12 +33,12 @@ void check_integrity_grids(const char *filename_in){
   int grid_size=n[0]*n[1]*n[2];
 
   // Create a read buffer
-  char *buffer=(char *)SID_malloc(sizeof(char)*grid_size*sizeof(fftw_real));
+  char *buffer=(char *)SID_malloc(sizeof(char)*grid_size*sizeof(GBPREAL));
 
   // Process the file
   for(int i_grid=0;i_grid<n_grids;i_grid++){
-     fread_verify(buffer,GRID_IDENTIFIER_SIZE,sizeof(char),     fp_in);n_bytes+=GRID_IDENTIFIER_SIZE*sizeof(char);
-     fread_verify(buffer,grid_size,           sizeof(fftw_real),fp_in);n_bytes+=grid_size*sizeof(fftw_real);
+     fread_verify(buffer,GRID_IDENTIFIER_SIZE,sizeof(char),   fp_in);n_bytes+=GRID_IDENTIFIER_SIZE*sizeof(char);
+     fread_verify(buffer,grid_size,           sizeof(GBPREAL),fp_in);n_bytes+=grid_size*sizeof(GBPREAL);
   }
 
   // Check that we are at the end of the file
