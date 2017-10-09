@@ -79,7 +79,7 @@ int generate_MCMC_chain(MCMC_info *MCMC){
   }
 //fprintf(stderr,"%d %le %d\n",flag_success,MCMC->ln_Pr_new,check_mode_for_flag(MCMC->mode,MCMC_MODE_PARALLEL));
   //if(!check_mode_for_flag(MCMC->mode,MCMC_MODE_PARALLEL))
-    SID_Bcast(&flag_success,sizeof(int),MASTER_RANK,MCMC->comm);
+    SID_Bcast(&flag_success, 1, SID_INT, MCMC->comm, MASTER_RANK);
 
   // ... if it is, then update the chain ...
   if(flag_success){

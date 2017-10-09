@@ -145,9 +145,9 @@ void generate_randoms(cfunc_info *cfunc,plist_info *plist,const char *species_na
          n_species_report =n_species_local;
          n_random_report  =n_boundary;
          n_boundary_report=n_random_local;
-         SID_Bcast(&n_species_report, sizeof(size_t),i_rank,SID.COMM_WORLD);
-         SID_Bcast(&n_random_report,  sizeof(size_t),i_rank,SID.COMM_WORLD);
-         SID_Bcast(&n_boundary_report,sizeof(size_t),i_rank,SID.COMM_WORLD);
+          SID_Bcast(&n_species_report, 1, SID_SIZE_T, SID.COMM_WORLD, i_rank);
+          SID_Bcast(&n_random_report,  1, SID_SIZE_T, SID.COMM_WORLD, i_rank);
+          SID_Bcast(&n_boundary_report,1, SID_SIZE_T, SID.COMM_WORLD, i_rank);
          SID_log("Rank #%03d: n_species=%6zd n_random=%6zd n_boundary=%zd",SID_LOG_COMMENT,i_rank,n_species_report,n_random_report,n_boundary_report);
       }
       SID_log("",SID_LOG_SILENT_CLOSE);
@@ -200,10 +200,10 @@ void generate_randoms(cfunc_info *cfunc,plist_info *plist,const char *species_na
          memcpy(x_random_buffer,x_random,sizeof(GBPREAL)*n_random_local);
          memcpy(y_random_buffer,y_random,sizeof(GBPREAL)*n_random_local);
          memcpy(z_random_buffer,z_random,sizeof(GBPREAL)*n_random_local);
-         SID_Bcast(&n_random_buffer,sizeof(int),                    i_rank,SID.COMM_WORLD);
-         SID_Bcast(x_random_buffer, sizeof(GBPREAL)*n_random_buffer,i_rank,SID.COMM_WORLD);
-         SID_Bcast(y_random_buffer, sizeof(GBPREAL)*n_random_buffer,i_rank,SID.COMM_WORLD);
-         SID_Bcast(z_random_buffer, sizeof(GBPREAL)*n_random_buffer,i_rank,SID.COMM_WORLD);
+          SID_Bcast(&n_random_buffer,1,               SID_INT,  SID.COMM_WORLD, i_rank);
+          SID_Bcast(x_random_buffer, n_random_buffer, SID_REAL, SID.COMM_WORLD, i_rank);
+          SID_Bcast(y_random_buffer, n_random_buffer, SID_REAL, SID.COMM_WORLD, i_rank);
+          SID_Bcast(z_random_buffer, n_random_buffer, SID_REAL, SID.COMM_WORLD, i_rank);
          for(i=0;i<n_random_buffer;i++)
             fprintf(fp_randoms,"%le %le %le\n",x_random_buffer[i],y_random_buffer[i],z_random_buffer[i]);
       }

@@ -83,10 +83,10 @@ void read_smooth(plist_info *plist,
      offset           =header.offset;
      n_particles_total=header.n_particles_total;
      n_files          =MAX(1,header.n_files);
-     SID_Bcast(&n_particles_file, (int)sizeof(int),      read_rank,SID.COMM_WORLD);
-     SID_Bcast(&offset,           (int)sizeof(int),      read_rank,SID.COMM_WORLD);
-     SID_Bcast(&n_particles_total,(int)sizeof(long long),read_rank,SID.COMM_WORLD);
-     SID_Bcast(&n_files,          (int)sizeof(int),      read_rank,SID.COMM_WORLD);
+      SID_Bcast(&n_particles_file, 1, SID_INT, SID.COMM_WORLD, read_rank);
+      SID_Bcast(&offset, 1, SID_INT, SID.COMM_WORLD, read_rank);
+      SID_Bcast(&n_particles_total, 1, SID_LONG_LONG, SID.COMM_WORLD, read_rank);
+      SID_Bcast(&n_files, 1, SID_INT, SID.COMM_WORLD, read_rank);
 
      // Fetch the number of particles and their ids
      species_name     =plist->species[GADGET_TYPE_DARK];
@@ -153,10 +153,10 @@ void read_smooth(plist_info *plist,
           offset           =header.offset;
           n_particles_total=header.n_particles_total;
           n_files          =MAX(1,header.n_files);
-          SID_Bcast(&n_particles_file, (int)sizeof(int),      read_rank,SID.COMM_WORLD);
-          SID_Bcast(&offset,           (int)sizeof(int),      read_rank,SID.COMM_WORLD);
-          SID_Bcast(&n_particles_total,(int)sizeof(long long),read_rank,SID.COMM_WORLD);
-          SID_Bcast(&n_files,          (int)sizeof(int),      read_rank,SID.COMM_WORLD);
+           SID_Bcast(&n_particles_file, 1, SID_INT, SID.COMM_WORLD, read_rank);
+           SID_Bcast(&offset, 1, SID_INT, SID.COMM_WORLD, read_rank);
+           SID_Bcast(&n_particles_total, 1, SID_LONG_LONG, SID.COMM_WORLD, read_rank);
+           SID_Bcast(&n_files, 1, SID_INT, SID.COMM_WORLD, read_rank);
 
           // Read IDs
           if(flag_LONGIDs){
@@ -168,7 +168,7 @@ void read_smooth(plist_info *plist,
               fread_verify(id_buf,sizeof(long long),n_particles_file,fp);
             }
             SID_Barrier(SID.COMM_WORLD);
-            SID_Bcast(id_buf_L,(int)(n_particles_file*sizeof(long long)),read_rank,SID.COMM_WORLD);
+              SID_Bcast(id_buf_L, (int) n_particles_file , SID_LONG_LONG, SID.COMM_WORLD, read_rank);
             merge_sort(id_buf_L,(size_t)n_particles_file,&id_buf_index,SID_SIZE_T,SORT_COMPUTE_INDEX,FALSE);
           }
           else{
@@ -180,7 +180,7 @@ void read_smooth(plist_info *plist,
               fread_verify(id_buf,sizeof(int),n_particles_file,fp);
             }
             SID_Barrier(SID.COMM_WORLD);
-            SID_Bcast(id_buf_i,(int)(n_particles_file*sizeof(int)),read_rank,SID.COMM_WORLD);
+              SID_Bcast(id_buf_i, (int) n_particles_file , SID_INT, SID.COMM_WORLD, read_rank);
             merge_sort(id_buf_i,(size_t)n_particles_file,&id_buf_index,SID_INT,SORT_COMPUTE_INDEX,FALSE);
           }
 
@@ -221,10 +221,10 @@ void read_smooth(plist_info *plist,
             fread_verify(&n_files,          sizeof(int),      1,fp);
             n_files=MAX(1,n_files);
           }
-          SID_Bcast(&n_particles_file, (int)sizeof(int),      read_rank,SID.COMM_WORLD);
-          SID_Bcast(&offset,           (int)sizeof(int),      read_rank,SID.COMM_WORLD);
-          SID_Bcast(&n_particles_total,(int)sizeof(long long),read_rank,SID.COMM_WORLD);
-          SID_Bcast(&n_files,          (int)sizeof(int),      read_rank,SID.COMM_WORLD);
+           SID_Bcast(&n_particles_file, 1, SID_INT, SID.COMM_WORLD, read_rank);
+           SID_Bcast(&offset, 1, SID_INT, SID.COMM_WORLD, read_rank);
+           SID_Bcast(&n_particles_total, 1, SID_LONG_LONG, SID.COMM_WORLD, read_rank);
+           SID_Bcast(&n_files, 1, SID_INT, SID.COMM_WORLD, read_rank);
           buffer=SID_malloc(sizeof(float)*n_particles_file);
           for(i_quantity=0;i_quantity<n_quantities;i_quantity++){
             int flag_log_quantity;
@@ -253,7 +253,7 @@ void read_smooth(plist_info *plist,
             if(SID.My_rank==read_rank)
               fread_verify(buffer,sizeof(float),n_particles_file,fp);
             SID_Barrier(SID.COMM_WORLD);
-            SID_Bcast(buffer,(int)(n_particles_file*sizeof(float)),read_rank,SID.COMM_WORLD);
+              SID_Bcast(buffer, (int) n_particles_file , SID_FLOAT, SID.COMM_WORLD, read_rank);
 
             // Place in final array
             if(n_mark_i>0){

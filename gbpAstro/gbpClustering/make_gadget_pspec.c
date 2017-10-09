@@ -190,8 +190,8 @@ void read_gadget_binary_local(char       *filename_root_in,
                   fread_verify(pos_buffer,sizeof(GBPREAL),3*i_step,fp_pos);
                   fread_verify(vel_buffer,sizeof(GBPREAL),3*i_step,fp_vel);
                }
-               SID_Bcast(pos_buffer,sizeof(GBPREAL)*3*i_step,MASTER_RANK,SID.COMM_WORLD);
-               SID_Bcast(vel_buffer,sizeof(GBPREAL)*3*i_step,MASTER_RANK,SID.COMM_WORLD);
+                SID_Bcast(pos_buffer, 3 * i_step, SID_REAL, SID.COMM_WORLD, MASTER_RANK);
+                SID_Bcast(vel_buffer, 3 * i_step, SID_REAL, SID.COMM_WORLD, MASTER_RANK);
                for(i_buffer=0;i_buffer<i_step;i_buffer++){
                   index=3*i_buffer;
                   pos_test=x_vspace_local(pos_buffer[index],vel_buffer[index],h_Hubble,redshift,cosmo);
@@ -209,7 +209,7 @@ void read_gadget_binary_local(char       *filename_root_in,
                i_step=MIN(READ_BUFFER_SIZE_LOCAL,header.n_file[i_type]-i_particle);
                if(SID.I_am_Master)
                   fread_verify(pos_buffer,sizeof(GBPREAL),3*i_step,fp_pos);
-               SID_Bcast(pos_buffer,sizeof(GBPREAL)*3*i_step,MASTER_RANK,SID.COMM_WORLD);
+                SID_Bcast(pos_buffer, 3 * i_step, SID_REAL, SID.COMM_WORLD, MASTER_RANK);
                for(i_buffer=0;i_buffer<i_step;i_buffer++){
                   pos_test=pos_buffer[3*i_buffer];
                   if(pos_test<0)         pos_test+=box_size;
@@ -234,7 +234,7 @@ void read_gadget_binary_local(char       *filename_root_in,
        for(i_rank=0;i_rank<SID.n_proc;i_rank++){
           size_t n_report;
           n_report=n_local;
-          SID_Bcast(&n_report,sizeof(size_t),i_rank,SID.COMM_WORLD);
+           SID_Bcast(&n_report, 1, SID_SIZE_T, SID.COMM_WORLD, i_rank);
           SID_log("rank #%04d: n_particles=%zd",SID_LOG_COMMENT,i_rank,n_report);
        }
        SID_log("Done.",SID_LOG_SILENT_CLOSE);
@@ -294,9 +294,9 @@ void read_gadget_binary_local(char       *filename_root_in,
                if(i_coord>0)
                   fread_verify(vel_buffer,sizeof(GBPREAL),3*i_step,fp_vel);
             }
-            SID_Bcast(pos_buffer,sizeof(GBPREAL)*3*i_step,MASTER_RANK,SID.COMM_WORLD);
+             SID_Bcast(pos_buffer, 3 * i_step, SID_REAL, SID.COMM_WORLD, MASTER_RANK);
             if(i_coord>0)
-               SID_Bcast(vel_buffer,sizeof(GBPREAL)*3*i_step,MASTER_RANK,SID.COMM_WORLD);
+                SID_Bcast(vel_buffer, 3 * i_step, SID_REAL, SID.COMM_WORLD, MASTER_RANK);
             for(i_buffer=0;i_buffer<i_step;i_buffer++){
                double x_test;
                double y_test;

@@ -198,13 +198,13 @@ void write_gadget_binary(char        *filename_in,
           }
         }
       }
-      SID_Bcast(&i_p,   sizeof(size_t),i_rank,SID.COMM_WORLD);
-      SID_Bcast(&i_file,sizeof(int),   i_rank,SID.COMM_WORLD);
+        SID_Bcast(&i_p, 1, SID_SIZE_T, SID.COMM_WORLD, i_rank);
+        SID_Bcast(&i_file, 1, SID_INT, SID.COMM_WORLD, i_rank);
       for(j=0;j<n_files;j++){
-        SID_Bcast(  n_of_type_file[j],             N_GADGET_TYPE*sizeof(size_t),i_rank,SID.COMM_WORLD);
-        SID_Bcast(&(n_particles_file[j]),                        sizeof(size_t),i_rank,SID.COMM_WORLD);
-        SID_Bcast(&(n_particles_multimass_file[j]),              sizeof(size_t),i_rank,SID.COMM_WORLD);
-        SID_Bcast(&(n_gas_file[j]),                              sizeof(size_t),i_rank,SID.COMM_WORLD);
+          SID_Bcast(n_of_type_file[j], N_GADGET_TYPE , SID_SIZE_T, SID.COMM_WORLD, i_rank);
+          SID_Bcast(&(n_particles_file[j]), 1, SID_SIZE_T, SID.COMM_WORLD, i_rank);
+          SID_Bcast(&(n_particles_multimass_file[j]), 1, SID_SIZE_T, SID.COMM_WORLD, i_rank);
+          SID_Bcast(&(n_gas_file[j]), 1, SID_SIZE_T, SID.COMM_WORLD, i_rank);
       }
     }
   }
@@ -391,9 +391,9 @@ void write_gadget_binary(char        *filename_in,
           SID_log("Error writing headers!",SID_LOG_COMMENT);
       }
     }
-    SID_Bcast(&flag_LONGIDS,   sizeof(int),   MASTER_RANK,SID.COMM_WORLD);
-    SID_Bcast(&box_size,       sizeof(double),MASTER_RANK,SID.COMM_WORLD);
-    SID_Bcast(&box_size_offset,sizeof(double),MASTER_RANK,SID.COMM_WORLD);
+      SID_Bcast(&flag_LONGIDS, 1, SID_INT, SID.COMM_WORLD, MASTER_RANK);
+      SID_Bcast(&box_size, 1, SID_DOUBLE, SID.COMM_WORLD, MASTER_RANK);
+      SID_Bcast(&box_size_offset, 1, SID_DOUBLE, SID.COMM_WORLD, MASTER_RANK);
     if(flag_LONGIDS)
       SID_log("(using LONG IDS)...",SID_LOG_CONTINUE);      
     SID_log("Done.",SID_LOG_CLOSE);      
@@ -589,7 +589,7 @@ void write_gadget_binary(char        *filename_in,
             }
             fclose(fp);
           }
-          SID_Bcast(&i_p,sizeof(size_t),i_rank,SID.COMM_WORLD);
+            SID_Bcast(&i_p, 1, SID_SIZE_T, SID.COMM_WORLD, i_rank);
         }
       }
       if(SID.I_am_Master && flag_recordlength_written){

@@ -273,8 +273,8 @@ void init_make_map_abs(render_info *render,
   for(i_rank=0;i_rank<SID.n_proc;i_rank++){
      i_x_min_send=i_x_min_local;
      i_x_max_send=i_x_max_local;
-     SID_Bcast(&i_x_min_send,sizeof(int),i_rank,SID.COMM_WORLD);
-     SID_Bcast(&i_x_max_send,sizeof(int),i_rank,SID.COMM_WORLD);
+      SID_Bcast(&i_x_min_send, 1, SID_INT, SID.COMM_WORLD, i_rank);
+      SID_Bcast(&i_x_max_send, 1, SID_INT, SID.COMM_WORLD, i_rank);
      i_x_min_rank[i_rank]=i_x_min_send;
      i_x_max_rank[i_rank]=i_x_max_send;
   }

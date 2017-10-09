@@ -284,8 +284,8 @@ void read_atable(const char *filename_in,plist_info *plist,int x_column,int y_co
                int    PHK_max_bcast;
                PHK_min_bcast=PHK_min_local;
                PHK_max_bcast=PHK_max_local;
-               SID_Bcast(&PHK_min_bcast,sizeof(int),i_rank,SID.COMM_WORLD);
-               SID_Bcast(&PHK_max_bcast,sizeof(int),i_rank,SID.COMM_WORLD);
+                SID_Bcast(&PHK_min_bcast, 1, SID_INT, SID.COMM_WORLD, i_rank);
+                SID_Bcast(&PHK_max_bcast, 1, SID_INT, SID.COMM_WORLD, i_rank);
                for(i_halo=0,n_halos_bcast=0;i_halo<n_halos_allocate;i_halo++){
                   if(PHK_halo[i_halo]>=(size_t)PHK_min_bcast && PHK_halo[i_halo]<=(size_t)PHK_max_bcast) n_halos_bcast++;
                }
@@ -494,10 +494,10 @@ void read_atable(const char *filename_in,plist_info *plist,int x_column,int y_co
             n_boundary_report=n_boundary;
             PHK_min_report   =PHK_min_local;
             PHK_max_report   =PHK_max_local;
-            SID_Bcast(&n_halos_report,   sizeof(size_t),i_rank,SID.COMM_WORLD);
-            SID_Bcast(&n_boundary_report,sizeof(size_t),i_rank,SID.COMM_WORLD);
-            SID_Bcast(&PHK_min_report,   sizeof(int),   i_rank,SID.COMM_WORLD);
-            SID_Bcast(&PHK_max_report,   sizeof(int),   i_rank,SID.COMM_WORLD);
+             SID_Bcast(&n_halos_report,    1, SID_SIZE_T, SID.COMM_WORLD, i_rank);
+             SID_Bcast(&n_boundary_report, 1, SID_SIZE_T, SID.COMM_WORLD, i_rank);
+             SID_Bcast(&PHK_min_report,    1, SID_INT,    SID.COMM_WORLD, i_rank);
+             SID_Bcast(&PHK_max_report,    1, SID_INT,    SID.COMM_WORLD, i_rank);
             SID_log("Rank #%03d: n_objects=%6zd n_boundary=%6zd PHK=%d->%d",SID_LOG_COMMENT,i_rank,n_halos_report,n_boundary_report,PHK_min_report,PHK_max_report);
          }
          SID_log("",SID_LOG_SILENT_CLOSE);

@@ -19,7 +19,7 @@ int check_if_substructure_hierarchy_defined(const char *filename_SSimPL_root,con
      flag_read_sub_pointers=!feof(fp_test);
      fclose(fp_test);
   }
-  SID_Bcast(&flag_read_sub_pointers,sizeof(int),MASTER_RANK,SID.COMM_WORLD);
+    SID_Bcast(&flag_read_sub_pointers, 1, SID_INT, SID.COMM_WORLD, MASTER_RANK);
   if(flag_read_sub_pointers)
      SID_log("Substructure hierarchy pointers present and will be used.",SID_LOG_COMMENT);
   else

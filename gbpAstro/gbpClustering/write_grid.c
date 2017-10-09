@@ -60,8 +60,8 @@ void write_grid(field_info *field,const char *filename_out_root,int i_grid,int n
       size_t alloc_size_i;
       memcpy(buffer,field->field_local,alloc_size_local);
       alloc_size_i=alloc_size_local;
-      SID_Bcast(&alloc_size_i,sizeof(size_t),i_rank,SID.COMM_WORLD);
-      SID_Bcast(buffer,alloc_size_i,i_rank,SID.COMM_WORLD);
+       SID_Bcast(&alloc_size_i, 1, SID_SIZE_T, SID.COMM_WORLD, i_rank);
+       SID_Bcast(buffer, alloc_size_i, SID_CHAR, SID.COMM_WORLD, i_rank);
       if(SID.I_am_Master)
          fwrite(buffer,alloc_size_i,1,fp_out);
    }

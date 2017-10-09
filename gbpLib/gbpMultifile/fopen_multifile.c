@@ -51,7 +51,7 @@ int fopen_multifile(const char        *filename_root,
          fp_out->fp_multifile=NULL;
       }
    }
-   SID_Bcast(fp_out,sizeof(fp_multifile_info),MASTER_RANK,SID.COMM_WORLD);
+    SID_Bcast(fp_out, sizeof(fp_multifile_info), SID_CHAR, SID.COMM_WORLD, MASTER_RANK);
 
    // Set the data size
    fp_out->data_size=data_size;

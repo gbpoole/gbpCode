@@ -861,10 +861,10 @@ void analyze_MCMC(MCMC_info *MCMC){
 
    // Compute best fit models and their likelihoods
    if(MCMC->map_P_to_M!=NULL){
-      SID_Bcast(P_best,n_P*sizeof(double),my_chain,MCMC->comm);
+       SID_Bcast(P_best, n_P , SID_DOUBLE, MCMC->comm, my_chain);
       MCMC->map_P_to_M(P_best,MCMC,M_best_parameters);
       MCMC->compute_MCMC_ln_likelihood(MCMC,M_best_parameters,P_best,MCMC->ln_likelihood_DS_best,MCMC->n_DoF_DS_best,&(MCMC->ln_likelihood_best),&(MCMC->n_DoF_best));
-      SID_Bcast(P_peak,n_P*sizeof(double),my_chain,MCMC->comm);
+       SID_Bcast(P_peak, n_P , SID_DOUBLE, MCMC->comm, my_chain);
       MCMC->map_P_to_M(P_peak,MCMC,M_peak_parameters);
       MCMC->compute_MCMC_ln_likelihood(MCMC,M_peak_parameters,P_peak,MCMC->ln_likelihood_DS_peak,MCMC->n_DoF_DS_peak,&(MCMC->ln_likelihood_peak),&(MCMC->n_DoF_peak));
    }

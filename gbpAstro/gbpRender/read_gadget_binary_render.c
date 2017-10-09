@@ -276,9 +276,9 @@ void read_gadget_binary_render(char       *filename_root_in,
                   n_file_missing++;
                }
             }
-            SID_Bcast(&flag_file_missing,(int)sizeof(int),read_rank,SID.COMM_WORLD);
+             SID_Bcast(&flag_file_missing, 1, SID_INT, SID.COMM_WORLD, read_rank);
             if(!flag_file_missing){
-               SID_Bcast(&header,(int)sizeof(gadget_header_info),read_rank,SID.COMM_WORLD);
+                SID_Bcast(&header, (int) sizeof(gadget_header_info), SID_CHAR, SID.COMM_WORLD, read_rank);
                for(i=0;i<N_GADGET_TYPE;i++){
                   for(i_particle=0;i_particle<header.n_file[i];i_particle++,k_particle++){
                      scatter_rank=(int)(random_number(RNG)*(GBPREAL)SID.n_proc);
@@ -437,13 +437,13 @@ void read_gadget_binary_render(char       *filename_root_in,
                n_file_missing++;
             }
          }
-         SID_Bcast(&n_particles_file, (int)sizeof(size_t),read_rank,SID.COMM_WORLD);
-         SID_Bcast(&flag_file_empty,  (int)sizeof(int),   read_rank,SID.COMM_WORLD);
-         SID_Bcast(&flag_file_missing,(int)sizeof(int),   read_rank,SID.COMM_WORLD);
+          SID_Bcast(&n_particles_file, 1, SID_SIZE_T, SID.COMM_WORLD, read_rank);
+          SID_Bcast(&flag_file_empty, 1, SID_INT, SID.COMM_WORLD, read_rank);
+          SID_Bcast(&flag_file_missing, 1, SID_INT, SID.COMM_WORLD, read_rank);
 
          if(!flag_file_empty && !flag_file_missing){
-            SID_Bcast(&record_length_positions,4,                        read_rank,SID.COMM_WORLD);
-            SID_Bcast(&header,           (int)sizeof(gadget_header_info),read_rank,SID.COMM_WORLD);
+             SID_Bcast(&record_length_positions, 4, SID_CHAR, SID.COMM_WORLD, read_rank);
+             SID_Bcast(&header, (int) sizeof(gadget_header_info), SID_CHAR, SID.COMM_WORLD, read_rank);
             // Initialize buffer
             buffer=SID_malloc((size_t)record_length_positions); // This is large enough to hold any of the blocks
             if(check_mode_for_flag(mode,READ_GADGET_RENDER_SCATTER)){
@@ -490,8 +490,8 @@ void read_gadget_binary_render(char       *filename_root_in,
                      SID_trap_error("IDs record lengths don't match (ie. %d!=%d)",ERROR_LOGIC,record_length_open,record_length_close);
                }
                SID_Barrier(SID.COMM_WORLD);
-               SID_Bcast(&record_length_open,4,    read_rank,SID.COMM_WORLD);
-               SID_Bcast(buffer,record_length_open,read_rank,SID.COMM_WORLD);
+                SID_Bcast(&record_length_open, 4, SID_CHAR, SID.COMM_WORLD, read_rank);
+                SID_Bcast(buffer, record_length_open, SID_CHAR, SID.COMM_WORLD, read_rank);
                if(record_length_open/(int)(n_particles_file)==sizeof(long long)){
                   flag_LONGIDs=TRUE;
                   ids_long    =(long long *)buffer;
@@ -558,8 +558,8 @@ void read_gadget_binary_render(char       *filename_root_in,
                   if(record_length_open!=record_length_close)
                      SID_log_warning("Problem with GADGET record size (close of positions)",ERROR_LOGIC);
                }
-               SID_Bcast(&record_length_open,(int)sizeof(int),       read_rank,SID.COMM_WORLD);
-               SID_Bcast(buffer2,            (int)record_length_open,read_rank,SID.COMM_WORLD);
+                SID_Bcast(&record_length_open, 1, SID_INT, SID.COMM_WORLD, read_rank);
+                SID_Bcast(buffer2, (int) record_length_open, SID_CHAR, SID.COMM_WORLD, read_rank);
                if(check_mode_for_flag(mode,READ_GADGET_RENDER_SCATTER)){  
                   for(i=0,jj=0;i<N_GADGET_TYPE;i++){
                      for(j=0,k=0;j<header.n_file[i];j++,jj++){
@@ -635,8 +635,8 @@ void read_gadget_binary_render(char       *filename_root_in,
                   if(record_length_open!=record_length_close)
                      SID_log_warning("Problem with GADGET record size (close of velocities)",ERROR_LOGIC);
                }
-               SID_Bcast(&record_length_open,sizeof(int),read_rank,SID.COMM_WORLD);
-               SID_Bcast(buffer2,record_length_open,read_rank,SID.COMM_WORLD);
+                SID_Bcast(&record_length_open, 1, SID_INT, SID.COMM_WORLD, read_rank);
+                SID_Bcast(buffer2, record_length_open, SID_CHAR, SID.COMM_WORLD, read_rank);
                if(check_mode_for_flag(mode,READ_GADGET_RENDER_SCATTER)){  
                   for(i=0,jj=0;i<N_GADGET_TYPE;i++){
                      for(j=0,k=0;j<header.n_file[i];j++,jj++){
@@ -713,8 +713,8 @@ void read_gadget_binary_render(char       *filename_root_in,
                      SID_log_warning("Problem with GADGET record size (close of IDs)",ERROR_LOGIC);
                }
                SID_Barrier(SID.COMM_WORLD);
-               SID_Bcast(&record_length_open,(int)sizeof(int),read_rank,SID.COMM_WORLD);
-               SID_Bcast(buffer2,(int)record_length_open,read_rank,SID.COMM_WORLD);
+                SID_Bcast(&record_length_open, 1, SID_INT, SID.COMM_WORLD, read_rank);
+                SID_Bcast(buffer2, (int) record_length_open, SID_CHAR, SID.COMM_WORLD, read_rank);
 
                // Decide what kind of IDs we have
                if(record_length_open/(int)(n_particles_file)==sizeof(long long)){

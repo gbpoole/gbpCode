@@ -34,11 +34,11 @@ void read_groups(char        *filename_groups_root,
    int     n_keys_boundary         =0;
    va_list vargs;
    va_start(vargs,catalog_name);
- 
+
    SID_profile_start("read_groups",SID_PROFILE_DEFAULT);
 
    //SID_set_verbosity(SID_SET_VERBOSITY_DEFAULT);
- 
+
    // Set filenames
    char filename_cat[5];
    char filename_groups[256];
@@ -48,7 +48,7 @@ void read_groups(char        *filename_groups_root,
    sprintf(filename_groups,   "%s_%s.catalog_groups",   filename_groups_root,filename_cat);
    sprintf(filename_subgroups,"%s_%s.catalog_subgroups",filename_groups_root,filename_cat);
    sprintf(filename_ids,      "%s_%s.catalog_particles",filename_groups_root,filename_cat);
- 
+
    // Create flags from mode
    int flag_read_groups      =TRUE;
    int flag_read_ids         =TRUE;
@@ -74,7 +74,7 @@ void read_groups(char        *filename_groups_root,
       PHK_min_local_in=va_arg(vargs,int);
       PHK_max_local_in=va_arg(vargs,int);
    }
- 
+
    // Read catalog file
    SID_log("Reading group data...",SID_LOG_OPEN|SID_LOG_TIMER);
 
@@ -95,8 +95,8 @@ void read_groups(char        *filename_groups_root,
          fread_verify(&group_offset_byte_size,sizeof(int),1,fp_groups);
       }
       fclose(fp_groups);
-      SID_Bcast(&n_groups,              sizeof(int),MASTER_RANK,SID.COMM_WORLD);
-      SID_Bcast(&group_offset_byte_size,sizeof(int),MASTER_RANK,SID.COMM_WORLD);
+       SID_Bcast(&n_groups,               1, SID_INT, SID.COMM_WORLD, MASTER_RANK);
+       SID_Bcast(&group_offset_byte_size, 1, SID_INT, SID.COMM_WORLD, MASTER_RANK);
    }
    else
       SID_trap_error("Could not open {%s}!\n",ERROR_LOGIC,filename_groups);
@@ -116,8 +116,8 @@ void read_groups(char        *filename_groups_root,
          fread_verify(&subgroup_offset_byte_size,sizeof(int),1,fp_subgroups);
       }
       fclose(fp_subgroups);
-      SID_Bcast(&n_subgroups,              sizeof(int),MASTER_RANK,SID.COMM_WORLD);
-      SID_Bcast(&subgroup_offset_byte_size,sizeof(int),MASTER_RANK,SID.COMM_WORLD);
+       SID_Bcast(&n_subgroups,               1, SID_INT, SID.COMM_WORLD, MASTER_RANK);
+       SID_Bcast(&subgroup_offset_byte_size, 1, SID_INT, SID.COMM_WORLD, MASTER_RANK);
    }
    else
       SID_trap_error("Could not open {%s}!\n",ERROR_LOGIC,filename_subgroups);
@@ -142,8 +142,8 @@ void read_groups(char        *filename_groups_root,
             fread_verify(&n_ids,sizeof(size_t),1,fp_ids);
       }
       fclose(fp_ids);
-      SID_Bcast(&id_byte_size,sizeof(int),   MASTER_RANK,SID.COMM_WORLD);
-      SID_Bcast(&n_ids,       sizeof(size_t),MASTER_RANK,SID.COMM_WORLD);
+       SID_Bcast(&id_byte_size, 1, SID_INT,    SID.COMM_WORLD, MASTER_RANK);
+       SID_Bcast(&n_ids,        1, SID_SIZE_T, SID.COMM_WORLD, MASTER_RANK);
       header_size_ids=sizeof(int)+id_byte_size;
       if(id_byte_size>sizeof(size_t))
          SID_trap_error("Internal type size not sufficent for the ids in {%s}.",ERROR_LOGIC,filename_ids);
@@ -192,7 +192,7 @@ void read_groups(char        *filename_groups_root,
    if(flag_PHK_distribute){
      SID_log("Reading PHKs...",SID_LOG_OPEN);
 
-     // Open the file and check for success.  The first pointer will read the 
+     // Open the file and check for success.  The first pointer will read the
      //   PH key array while the second pointer will read the sorted particle counts.
      sprintf(filename_in_PHKs,"%s_%03d.catalog_PHKs",filename_groups_root,i_file);
      fp_PHKs=fopen(filename_in_PHKs,"r");
@@ -209,9 +209,9 @@ void read_groups(char        *filename_groups_root,
         }
         else
           fseeko(fp_PHKs,(off_t)(2*sizeof(int)+sizeof(size_t)),SEEK_SET);
-        SID_Bcast(&n_groups,   sizeof(int),   MASTER_RANK,SID.COMM_WORLD);
-        SID_Bcast(&n_bits_PHK, sizeof(int),   MASTER_RANK,SID.COMM_WORLD);
-        SID_Bcast(&n_particles,sizeof(size_t),MASTER_RANK,SID.COMM_WORLD);
+         SID_Bcast(&n_groups,    1, SID_INT,    SID.COMM_WORLD, MASTER_RANK);
+         SID_Bcast(&n_bits_PHK,  1, SID_INT,    SID.COMM_WORLD, MASTER_RANK);
+         SID_Bcast(&n_particles, 1, SID_SIZE_T, SID.COMM_WORLD, MASTER_RANK);
         SID_log("(%d groups, %lld particles; %d-bit keys)...",SID_LOG_CONTINUE,n_groups,n_particles,n_bits_PHK);
 
         // Create read buffer
@@ -283,19 +283,19 @@ void read_groups(char        *filename_groups_root,
               }
 
               // Bring the file pointers of all ranks up to date
-              SID_Bcast(&n_seek,  sizeof(int),i_rank,SID.COMM_WORLD);
-              SID_Bcast(&n_buffer,sizeof(int),i_rank,SID.COMM_WORLD);
+               SID_Bcast(&n_seek,   1, SID_INT, SID.COMM_WORLD, i_rank);
+               SID_Bcast(&n_buffer, 1, SID_INT, SID.COMM_WORLD, i_rank);
               if(i_rank!=SID.My_rank && n_seek>0)
                  fseeko(fp_PHKs,(off_t)(n_seek*unit_size),SEEK_CUR);
-              SID_Bcast(buffer,n_buffer*unit_size,i_rank,SID.COMM_WORLD);
+               SID_Bcast(buffer, n_buffer * unit_size, SID_CHAR, SID.COMM_WORLD, i_rank);
 
               // Bring the particle and group counters up to date
-              SID_Bcast(&n_particles_base,sizeof(size_t),i_rank,SID.COMM_WORLD);
-              SID_Bcast(&n_groups_left,   sizeof(int),   i_rank,SID.COMM_WORLD);
-              SID_Bcast(&n_particles_left,sizeof(size_t),i_rank,SID.COMM_WORLD);
-              SID_Bcast(&i_group,         sizeof(int),   i_rank,SID.COMM_WORLD);
-              SID_Bcast(&i_buffer,        sizeof(int),   i_rank,SID.COMM_WORLD);
-              SID_Bcast(&PHK_last,        sizeof(int),   i_rank,SID.COMM_WORLD);
+               SID_Bcast(&n_particles_base, 1, SID_SIZE_T, SID.COMM_WORLD, i_rank);
+               SID_Bcast(&n_groups_left,    1,    SID_INT, SID.COMM_WORLD, i_rank);
+               SID_Bcast(&n_particles_left, 1, SID_SIZE_T, SID.COMM_WORLD, i_rank);
+               SID_Bcast(&i_group,          1,    SID_INT, SID.COMM_WORLD, i_rank);
+               SID_Bcast(&i_buffer,         1,    SID_INT, SID.COMM_WORLD, i_rank);
+               SID_Bcast(&PHK_last,         1,    SID_INT, SID.COMM_WORLD, i_rank);
            } // Loop over rank
 
            // Make sure the last rank covers up to the last possible
@@ -333,7 +333,7 @@ void read_groups(char        *filename_groups_root,
                                       ERROR_LOGIC,SID.My_rank,n_bits_PHK,PHK_min_local,PHK_max_local);
                     PHK_last_rank=PHK_max_local;
                  }
-                 SID_Bcast(&PHK_last_rank,sizeof(int),i_rank,SID.COMM_WORLD);
+                  SID_Bcast(&PHK_last_rank, 1, SID_INT, SID.COMM_WORLD, i_rank);
               }
            }
            int    i_group         =0;
@@ -347,7 +347,7 @@ void read_groups(char        *filename_groups_root,
                  i_buffer=0;
                  if(SID.I_am_Master)
                     fread_verify(buffer,unit_size,n_buffer,fp_PHKs);
-                 SID_Bcast(buffer,n_buffer*unit_size,MASTER_RANK,SID.COMM_WORLD);
+                  SID_Bcast(buffer, n_buffer * unit_size, SID_CHAR, SID.COMM_WORLD, MASTER_RANK);
               }
               int    PHK_i        =((int    *)(&(buffer[i_buffer*unit_size]              )))[0];
               int    PHK_index_i  =((int    *)(&(buffer[i_buffer*unit_size+1*sizeof(int)])))[0];
@@ -367,9 +367,9 @@ void read_groups(char        *filename_groups_root,
            SID_Allreduce(&n_particles_local,&n_particles_check,1,SID_SIZE_T,SID_SUM,SID.COMM_WORLD);
            n_particles_left=n_particles-n_particles_check;
            n_groups_left   =n_groups   -n_groups_check;
-        } 
+        }
 
-        // If this rank has been given dummy PHKs larger than allowed range, 
+        // If this rank has been given dummy PHKs larger than allowed range,
         //    set n_bits=0 to avoid throwing errors later
         PHK_t PHK_max=PHK_N_KEYS_3D(n_bits_PHK)-1;
         if(PHK_min_local>PHK_max || PHK_max_local>PHK_max)
@@ -386,8 +386,8 @@ void read_groups(char        *filename_groups_root,
            for(int i_rank=0;i_rank<SID.n_proc;i_rank++){
               int PHK_min_i=PHK_min_local;
               int PHK_max_i=PHK_max_local;
-              SID_Bcast(&PHK_min_i,sizeof(int),i_rank,SID.COMM_WORLD);
-              SID_Bcast(&PHK_max_i,sizeof(int),i_rank,SID.COMM_WORLD);
+               SID_Bcast(&PHK_min_i, 1, SID_INT, SID.COMM_WORLD, i_rank);
+               SID_Bcast(&PHK_max_i, 1, SID_INT, SID.COMM_WORLD, i_rank);
               SID_log("PHK range for rank %4d: %d->%d",SID_LOG_COMMENT,i_rank,PHK_min_i,PHK_max_i);
            }
         }
@@ -410,7 +410,7 @@ void read_groups(char        *filename_groups_root,
               i_buffer=0;
               if(SID.I_am_Master)
                  fread_verify(buffer,unit_size,n_buffer,fp_PHKs);
-              SID_Bcast(buffer,n_buffer*unit_size,MASTER_RANK,SID.COMM_WORLD);
+               SID_Bcast(buffer, n_buffer * unit_size,SID_CHAR, SID.COMM_WORLD, MASTER_RANK);
            }
            int PHK_i        =((int    *)(&(buffer[i_buffer*unit_size]              )))[0];
            int PHK_index_i  =((int    *)(&(buffer[i_buffer*unit_size+1*sizeof(int)])))[0];
@@ -541,8 +541,8 @@ void read_groups(char        *filename_groups_root,
              n_particles+=(size_t)group_length_i;
           }
         }
-        SID_Bcast(&n_groups,   sizeof(int),   MASTER_RANK,SID.COMM_WORLD);
-        SID_Bcast(&n_particles,sizeof(size_t),MASTER_RANK,SID.COMM_WORLD);
+         SID_Bcast(&n_groups,    1,SID_INT,    SID.COMM_WORLD, MASTER_RANK);
+         SID_Bcast(&n_particles, 1,SID_SIZE_T, SID.COMM_WORLD, MASTER_RANK);
         n_groups_local   =0;
         n_particles_local=0;
         int    n_seek          =0;
@@ -568,10 +568,10 @@ void read_groups(char        *filename_groups_root,
               }
               n_particles_left-=n_particles_local;
            }
-           SID_Bcast(&n_particles_left,sizeof(size_t),i_rank,SID.COMM_WORLD);
-           SID_Bcast(&n_seek,          sizeof(int),   i_rank,SID.COMM_WORLD);
-           SID_Bcast(&i_group,         sizeof(int),   i_rank,SID.COMM_WORLD);
-           SID_Bcast(&last_used_rank,  sizeof(int),   i_rank,SID.COMM_WORLD);
+            SID_Bcast(&n_particles_left, 1, SID_SIZE_T, SID.COMM_WORLD, i_rank);
+            SID_Bcast(&n_seek,           1,    SID_INT, SID.COMM_WORLD, i_rank);
+            SID_Bcast(&i_group,          1,    SID_INT, SID.COMM_WORLD, i_rank);
+            SID_Bcast(&last_used_rank,   1,    SID_INT, SID.COMM_WORLD, i_rank);
            if(i_rank==SID.My_rank)
               n_seek=0;
         }
@@ -613,7 +613,7 @@ void read_groups(char        *filename_groups_root,
              storage_index_group[j_group]=j_group;
            }
         }
-        SID_Bcast(&i_group,sizeof(int),i_rank,SID.COMM_WORLD);
+         SID_Bcast(&i_group, 1, SID_INT, SID.COMM_WORLD, i_rank);
      }
      SID_log("(%d groups, %lld particles)...Done.",SID_LOG_CLOSE,n_groups,n_particles);
    }
@@ -645,7 +645,7 @@ void read_groups(char        *filename_groups_root,
 
    // Read the files ...
    if(flag_read_groups||flag_read_subgroups){
- 
+
       // Read the group file ...
       if(flag_read_groups){
          SID_log("Reading group file {%s}...%d-byte particle offsets...",SID_LOG_OPEN,filename_groups,group_offset_byte_size);
@@ -679,7 +679,7 @@ void read_groups(char        *filename_groups_root,
                   n_buffer=MIN(n_buffer_max,n_groups-i_group);
                   if(SID.I_am_Master)
                      fread_verify(buffer_i,sizeof(int),n_buffer,fp_groups);
-                  SID_Bcast(buffer_i,n_buffer*sizeof(int),MASTER_RANK,SID.COMM_WORLD);
+                   SID_Bcast(buffer_i, n_buffer , SID_INT, SID.COMM_WORLD, MASTER_RANK);
                }
                if(j_group<n_groups_local){
                   if(read_index_group[j_group]==i_group){
@@ -719,7 +719,7 @@ void read_groups(char        *filename_groups_root,
                   n_buffer=MIN(n_buffer_max,n_groups-i_group);
                   if(SID.I_am_Master)
                      fread_verify(buffer,group_offset_byte_size,n_buffer,fp_groups);
-                  SID_Bcast(buffer,n_buffer*group_offset_byte_size,MASTER_RANK,SID.COMM_WORLD);
+                   SID_Bcast(buffer, n_buffer * group_offset_byte_size, SID_CHAR, SID.COMM_WORLD, MASTER_RANK);
                }
                if(j_group<n_groups_local){
                   if(read_index_group[j_group]==i_group){
@@ -761,7 +761,7 @@ void read_groups(char        *filename_groups_root,
                   n_buffer=MIN(n_buffer_max,n_groups-i_group);
                   if(SID.I_am_Master)
                      fread_verify(buffer,sizeof(int),n_buffer,fp_groups);
-                  SID_Bcast(buffer,n_buffer*sizeof(int),MASTER_RANK,SID.COMM_WORLD);
+                   SID_Bcast(buffer, n_buffer , SID_INT, SID.COMM_WORLD, MASTER_RANK);
                }
                if(j_group<n_groups_local){
                   if(read_index_group[j_group]==i_group){
@@ -771,7 +771,7 @@ void read_groups(char        *filename_groups_root,
                      test[storage_index_group[j_group]]++;
                      j_group++;
                   }
-                  else 
+                  else
                      read_seek_subgroup[j_group]+=buffer_i[i_buffer];
                }
                else
@@ -868,9 +868,9 @@ void read_groups(char        *filename_groups_root,
                   n_groups_report   =n_groups_local;
                   n_subgroups_report=n_subgroups_local;
                   n_particles_report=n_particles_local;
-                  SID_Bcast(&n_groups_report,   sizeof(int),   i_rank,SID.COMM_WORLD);
-                  SID_Bcast(&n_subgroups_report,sizeof(int),   i_rank,SID.COMM_WORLD);
-                  SID_Bcast(&n_particles_report,sizeof(size_t),i_rank,SID.COMM_WORLD);
+                   SID_Bcast(&n_groups_report, 1, SID_INT, SID.COMM_WORLD, i_rank);
+                   SID_Bcast(&n_subgroups_report, 1, SID_INT, SID.COMM_WORLD, i_rank);
+                   SID_Bcast(&n_particles_report, 1, SID_SIZE_T, SID.COMM_WORLD, i_rank);
                   SID_log("(i_rank,n_groups,n_subgroups,n_particles)=(%3d,%7d,%7d,%9lld)",SID_LOG_COMMENT,
                           i_rank,n_groups_report,n_subgroups_report,n_particles_report);
                }
@@ -895,7 +895,7 @@ void read_groups(char        *filename_groups_root,
          }
          fclose(fp_groups);
       }
- 
+
       // Store some decomposition header information
       ADaPS_store(&(plist->data),&n_groups_local,   "n_groups_%s",   ADaPS_SCALAR_INT,catalog_name);
       ADaPS_store(&(plist->data),&n_subgroups_local,"n_subgroups_%s",ADaPS_SCALAR_INT,catalog_name);
@@ -937,7 +937,7 @@ void read_groups(char        *filename_groups_root,
                   index_subgroup=storage_index_subgroup[j_group];
                   fseeko(fp_subgroups,(off_t)(read_seek_subgroup[j_group]*sizeof(int)),SEEK_CUR);
                   fread_verify(&(subgroup_length[index_subgroup]),sizeof(int),n_subgroups_group[index_group],fp_subgroups);
-                  for(int i_test=index_subgroup,j_test=0;j_test<n_subgroups_group[index_group];i_test++,j_test++) 
+                  for(int i_test=index_subgroup,j_test=0;j_test<n_subgroups_group[index_group];i_test++,j_test++)
                      test[i_test]++;
                   j_group++;
                }
@@ -1141,7 +1141,7 @@ void read_groups(char        *filename_groups_root,
                if(SID.I_am_Master){
                   for(int i_buffer=0;i_buffer<n_buffer;i_buffer++){
                      if(buffer_ranks[i_buffer]<0){
-                        fprintf(stderr,"ERROR %d %d\n",i_buffer,i_group+i_buffer);               
+                        fprintf(stderr,"ERROR %d %d\n",i_buffer,i_group+i_buffer);
                         SID_trap_error("!",ERROR_LOGIC);
                      }
                   }
@@ -1205,7 +1205,7 @@ void read_groups(char        *filename_groups_root,
             SID_free(SID_FARG buffer);
             if(!flag_long_ids)
                SID_free(SID_FARG buffer_int);
-               
+
             // Check for indexing inconsistancies
             if(flag_read_MBP_ids_only){
                for(int i_group=0,i_particle=0;i_group<n_groups_local;i_group++,i_particle++){
@@ -1216,7 +1216,7 @@ void read_groups(char        *filename_groups_root,
             else{
                size_t i_particle=0;
                for(int i_group=0;i_group<n_groups_local;i_group++){
-                  for(int j_particle=0;j_particle<group_length[i_group];i_particle++,j_particle++){ 
+                  for(int j_particle=0;j_particle<group_length[i_group];i_particle++,j_particle++){
                      if(i_particle>=n_particles_local)
                         SID_trap_error("Particle ID indexing error (2): rank=%d %d %d %d",ERROR_LOGIC,SID.My_rank,i_group,i_particle,n_particles_local);
                      if(test[i_particle]!=1)
@@ -1278,7 +1278,7 @@ void read_groups(char        *filename_groups_root,
    SID_free(SID_FARG storage_index_subgroup);
    SID_free(SID_FARG storage_index_particles);
    va_end(vargs);
-   
+
    SID_log("Done.",SID_LOG_CLOSE);
    SID_profile_stop(SID_PROFILE_DEFAULT);
 }
