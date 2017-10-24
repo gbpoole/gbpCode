@@ -14,6 +14,12 @@ macro(set_dir_state cur_dir)
     #   given directory.
     include( ${cur_dir}/local.cmake )
 
+    # Add the path to all header files
+    set(INCFILES_WITH_PATH "" )
+    foreach( _inc_file_nopath ${INCFILES} )
+        list(APPEND INCFILES_WITH_PATH ${cur_dir}/${_inc_file_nopath} )
+    endforeach()
+
     # Add the path to all source files
     set(SRCFILES_WITH_PATH "" )
     foreach( _src_file_nopath ${SRCFILES} )
@@ -48,26 +54,28 @@ endmacro()
 macro(add_header_directory cur_dir )
     if( INCFILES )
         list(APPEND INC_DIRS_PROJECT ${cur_dir} )
+        list(APPEND INC_FILES_PROJECT ${INCFILES_WITH_PATH} )
         message(STATUS "   -> " ${cur_dir} )
     endif()
 endmacro()
 
 # Macro to assemble a list of all directories
-#    with a header file
-macro(find_header_directories cur_dir )
+#    with a header file and their filenames
+macro(process_headers cur_dir )
     # Perform some initialization on the first call
     if( ${cur_dir} STREQUAL ${CMAKE_SOURCE_DIR} )
         message(STATUS "Assembling a list of project header directories..." )
         set(INC_DIRS_PROJECT "" )
+        set(INC_FILES_PROJECT "" )
     endif()
 
     # Process this directory
     set_dir_state(${cur_dir})
-    add_header_directory( ${cur_dir} ${INCFILES} )
+    add_header_directory( ${cur_dir} )
 
     # Recurse through all directories
     foreach(_dir_name ${ALLDIRS} )
-        find_header_directories( ${cur_dir}/${_dir_name} ) 
+        process_headers( ${cur_dir}/${_dir_name} ) 
     endforeach()
 
     # Add the directories we have assembled to the project
@@ -155,6 +163,7 @@ macro(build_library lib_name cur_dir )
 
     # Collect the sources for the library
     collect_library_sources( ${lib_name} ${cur_dir} )
+    list(APPEND LIBRARY_SOURCES ${INC_FILES_PROJECT} )
 
     # Add the library to the list of targets
     set_dir_state(${cur_dir}) # Needed to get DATADIR
@@ -195,7 +204,7 @@ macro(build_executables cur_dir )
 
         # Add executable to the target list
         message(STATUS "Adding executable " ${_exe_name} " (dependencies: " "${_DEPLIST_REV}" ")")
-        add_executable(${_exe_name} ${_exe_file})
+        add_executable(${_exe_name} ${_exe_file} ${INC_FILES_PROJECT})
         target_compile_options(${_exe_name} PRIVATE -DGBP_DATA_DIR=\"${DATADIR}\" )
         install(TARGETS ${_exe_name} DESTINATION bin )
 
@@ -224,7 +233,7 @@ endmacro()
 # Main macro which initializes all project targets
 macro(process_targets cur_dir )
 
-    # Add all targets associated with liobrary directories
+    # Build all targets associated with library directories
     set_dir_state(${cur_dir})
     foreach(_lib_name ${LIBDIRS} )
         build_library( ${_lib_name} ${cur_dir}/${_lib_name} ) 
@@ -232,7 +241,7 @@ macro(process_targets cur_dir )
         build_data_files( ${cur_dir}/${_lib_name} ) 
     endforeach()
 
-    # Add targets associated with the current pass-through directory
+    # Build targets associated with the current pass-through directory
     set_dir_state(${cur_dir})
     if(SRC_FILES OR SRCDIRS)
         get_filename_component( _lib_name ${cur_dir} NAME )
