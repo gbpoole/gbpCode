@@ -25,7 +25,6 @@ halo_properties_info *fetch_treenode_properties(tree_info *trees,tree_node_info 
             SID_trap_error("Subgroup properties are not defined in fetch_treenode_properties().  They probably have not been read.",ERROR_LOGIC);
       }
    }
-   else
-      return(NULL);
+   return(NULL);
 }
 

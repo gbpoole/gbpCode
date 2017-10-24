@@ -30,7 +30,6 @@ float fetch_treenode_descendant_f_goodness(tree_info *trees,tree_node_info *halo
             SID_trap_error("Subgroup descendant scores are not defined.  They probably have not been read.",ERROR_LOGIC);
       }
    }
-   else
-      return(-1.);
+   return(-1.);
 }
 

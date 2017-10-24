@@ -22,7 +22,8 @@ void compute_treenode_list_marker_stats(tree_info *trees,treenode_list_info *lis
    int  *n_bins=(int  *)SID_calloc(sizeof(int)*(*n_hist));
    for(int i_stat=0;i_stat<n_stats;i_stat++){
       n_bins[i_hist]=trees->n_snaps;
-      hist[i_hist++]=(int *)SID_calloc(sizeof(int)*n_bins[i_hist]);
+      hist[i_hist]  =(int *)SID_calloc(sizeof(int)*n_bins[i_hist]);
+      i_hist++;
    }
 
    // Allocate histogram arrays -- mass
@@ -31,7 +32,8 @@ void compute_treenode_list_marker_stats(tree_info *trees,treenode_list_info *lis
    double dlogM   =0.1;
    for(int i_M=0;i_M<n_M;i_M++){
       n_bins[i_hist]=n_M_bins;
-      hist[i_hist++]=(int *)SID_calloc(sizeof(int)*n_bins[i_hist]);
+      hist[i_hist]  =(int *)SID_calloc(sizeof(int)*n_bins[i_hist]);
+      i_hist++;
    }
 
    // Allocate histogram counts

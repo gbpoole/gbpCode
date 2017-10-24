@@ -148,7 +148,7 @@ int main(int argc,char *argv[]){
   SID_log("Writing {%s}...",SID_LOG_OPEN,filename_out);
   fp_out=fopen(filename_out,"w");
   for(i_tree=0;i_tree<n_trees_group_total;i_tree++){
-     fprintf(fp_out,"%7d %7lld\n",i_tree,n_halos_tree_groups[i_tree]);
+     fprintf(fp_out,"%7d %7zu\n",i_tree,n_halos_tree_groups[i_tree]);
   }
   fclose(fp_out);
   SID_log("Done.",SID_LOG_CLOSE);
@@ -156,7 +156,7 @@ int main(int argc,char *argv[]){
   sprintf(filename_out,"subgroups.out");
   fp_out=fopen(filename_out,"w");
   for(i_tree=0;i_tree<n_trees_subgroup_total;i_tree++){
-     fprintf(fp_out,"%7d %7lld\n",i_tree,n_halos_tree_subgroups[i_tree]);
+     fprintf(fp_out,"%7d %7zu\n",i_tree,n_halos_tree_subgroups[i_tree]);
   }
   fclose(fp_out);
   SID_log("Done.",SID_LOG_CLOSE);

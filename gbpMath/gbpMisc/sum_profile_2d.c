@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <gbpCommon.h>
+#include <gbpSID.h>
 
 void sum_profile_2d(double  *r_max,
 		    double  *data,

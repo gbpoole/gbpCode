@@ -1,4 +1,5 @@
 #include <string.h>
+#include <gbpParse.h>
 #include <gbpMultifile.h>
 
 int fopen_multifile(const char        *filename_root,

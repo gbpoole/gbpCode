@@ -134,8 +134,8 @@ void write_tree_branches(tree_info *trees,tree_node_info **list_in,int n_list_in
            else
               fprintf(fp_props_out,"# Properties for subgroup catalog {%s}\n",catalog_name);
            fprintf(fp_props_out,"#\n");
-           fprintf(fp_props_out,"# Column (%02d): Catalog item number\n",i_column,write_name);i_column++;
-           fprintf(fp_props_out,"#        (%02d): Track index\n",        i_column,write_name);i_column++;
+           fprintf(fp_props_out,"# Column (%02d): Catalog item number\n",i_column);i_column++;
+           fprintf(fp_props_out,"#        (%02d): Track index\n",        i_column);i_column++;
         }
         fprintf(fp_props_out,"#        (%02d): Snapshot No. at t_%s\n",               i_column,write_name);i_column++;
         fprintf(fp_props_out,"#        (%02d): Index No.    at t_%s\n",               i_column,write_name);i_column++;

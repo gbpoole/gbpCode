@@ -241,7 +241,7 @@ void display_gadget_info(plist_info  *plist){
                 min_i=(size_t)MIN(min_i,((size_t *)ADaPS_fetch(plist->data,var_name))[j]);
                 max_i=(size_t)MAX(max_i,((size_t *)ADaPS_fetch(plist->data,var_name))[j]);
               }
-              fprintf(stderr,"%11s  %11lld  %11lld\n",var_name,min_i,max_i);
+              fprintf(stderr,"%11s  %11zu  %11zu\n",var_name,min_i,max_i);
             }
           }
         }

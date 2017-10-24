@@ -58,7 +58,7 @@ void check_for_tree_matches_local(char *filename_root_out,int i_read_start,int i
                     sprintf(group_text_prefix,"");
                     break;
                  }
-                 if(filename_out_dir!=NULL)
+                 if(filename_root_out!=NULL)
                     sprintf(filename_out,"%s/%sgroup_matches_%s_%s.dat",filename_out_dir_snap,group_text_prefix,filename_cat1_order,filename_cat2_order);
                  else
                     sprintf(filename_out,"%s_%sgroup_matches_%s_%s.dat",filename_out_name,    group_text_prefix,filename_cat1_order,filename_cat2_order);

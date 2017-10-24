@@ -1,5 +1,7 @@
 #ifndef GBPPARSE_CORE_AWAKE
 #define GBPPARSE_CORE_AWAKE
+#include <stdio.h>
+#include <gbpSID.h>
 
 // Bad things will happen if the following two are the same
 #define GBPPARSE_COMMENT_CHARACTER   "#"

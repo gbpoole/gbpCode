@@ -46,9 +46,9 @@ int main(int argc, char *argv[]){
 
   char   filename_halos[MAX_FILENAME_LENGTH];
   if(halo_type==0)
-     sprintf(filename_halos,"%s/halos/%s_%03d.catalog_groups",   filename_SSimPL_root,filename_halo_version,snapshot,filename_halo_version);
+     sprintf(filename_halos,"%s/halos/%s_%03d.catalog_groups",   filename_SSimPL_root,filename_halo_version,snapshot);
   else
-     sprintf(filename_halos,"%s/halos/%s_%03d.catalog_subgroups",filename_SSimPL_root,filename_halo_version,snapshot,filename_halo_version);
+     sprintf(filename_halos,"%s/halos/%s_%03d.catalog_subgroups",filename_SSimPL_root,filename_halo_version,snapshot);
   FILE   *fp_groups=fopen(filename_halos,"r");
   int     n_groups;
   int     offset_size;
@@ -69,7 +69,7 @@ int main(int argc, char *argv[]){
   fclose(fp_groups);
 
   char filename_ids[MAX_FILENAME_LENGTH];
-  sprintf(filename_ids,"%s/halos/%s_%03d.catalog_particles",filename_SSimPL_root,filename_halo_version,snapshot,filename_halo_version);
+  sprintf(filename_ids,"%s/halos/%s_%03d.catalog_particles",filename_SSimPL_root,filename_halo_version,snapshot);
   FILE  *fp_ids=fopen(filename_ids,"r");
   int    id_byte_size;
   size_t n_ids;

@@ -36,7 +36,7 @@ endif()
 
 # =========== Add 3rd-party libraries ===========
 message(STATUS "")
-message(STATUS "Initializeing 3rd-party libraries...")
+message(STATUS "Initializing 3rd-party libraries...")
 
 # GSL
 find_package(GSL REQUIRED)

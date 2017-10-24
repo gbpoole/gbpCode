@@ -44,7 +44,7 @@ int main(int argc,char *argv[]){
       }
       else
          fread_verify(&id_i,sizeof(long int),1,fp_ids);
-      fprintf(stdout,"%zd %zd %zd %lld\n",i_particle,i_group,i_subgroup,id_i);
+      fprintf(stdout,"%zd %zd %zd %zu\n",i_particle,i_group,i_subgroup,id_i);
    }
    fclose(fp_groups);
    fclose(fp_subgroups);

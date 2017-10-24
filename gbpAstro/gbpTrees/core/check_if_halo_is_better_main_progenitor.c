@@ -20,6 +20,6 @@ int check_if_halo_is_better_main_progenitor(tree_horizontal_info *target_halo,
 
    // Use best match criterion to decide the best main progenitor.  This does 
    //   a slightly better job in some cases due to the 2-way match check.
-   if(check_if_match_is_better(target_halo,old_progenitor,new_progenitor));
+   return(check_if_match_is_better(target_halo,old_progenitor,new_progenitor));
 }
 

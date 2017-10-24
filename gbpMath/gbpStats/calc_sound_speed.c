@@ -1,5 +1,5 @@
-#include <gbpCommon.h>
 #include <math.h>
+#include <gbpSID.h>
 
 double calc_sound_speed(double gamma,
                         double T_gas){

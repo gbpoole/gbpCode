@@ -1,4 +1,4 @@
-#include <gbpCommon.h>
+#include <gbpSID.h>
 #include <gbpRNG.h>
 
 void free_RNG(RNG_info *RNG){

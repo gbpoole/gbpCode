@@ -9,7 +9,7 @@
 #include <gbpTrees_build.h>
 #include <gbpTrees_analysis.h>
 
-int free_precompute_treenode_markers(tree_info *trees,int mode){
+void free_precompute_treenode_markers(tree_info *trees,int mode){
    // Set-up to work with groups or subgroups
    tree_markers_info **markers;
    if(check_mode_for_flag(mode,PRECOMPUTE_TREENODE_MARKER_GROUPS))

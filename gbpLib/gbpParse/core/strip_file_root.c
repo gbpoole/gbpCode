@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <gbpCommon.h>
+#include <gbpSID.h>
 #include <gbpParse_core.h>
 
 void strip_file_root(char *string){
@@ -17,7 +17,7 @@ void strip_file_root(char *string){
     sprintf(temp_char,"%c",string[i_char]);
     if(!strcmp(temp_char,"/")){
       if(i_char<string_start)
-         sprintf(&(string[i_char+1]),"\0");
+         sprintf(&(string[i_char+1]),"");
       flag_continue=FALSE;
     }
   }

@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <gbpLib.h>
-#include <gbpCommon.h>
 #include <gbpMath.h>
 #include <gbpSPH.h>
 

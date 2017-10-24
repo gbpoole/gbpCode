@@ -6,7 +6,6 @@
   #endif
 #endif
 #include <stdio.h>
-#include <gbpCommon.h>
 #include <gbpSID.h>
 #include <gbpParse_core.h>
 

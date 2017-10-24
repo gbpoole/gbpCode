@@ -62,7 +62,7 @@ int main(int argc, char *argv[]){
   // Set the output file
   char filename_base[MAX_FILENAME_LENGTH];
   char filename_out[MAX_FILENAME_LENGTH];
-  sprintf(filename_base,filename_SSimPL_root);
+  strcpy(filename_base,filename_SSimPL_root);
   if(!strcmp(&(filename_base[strlen(filename_base)-1]),"/"))
      strcpy(&(filename_base[strlen(filename_base)-1]),"\0");
   strip_path(filename_base);

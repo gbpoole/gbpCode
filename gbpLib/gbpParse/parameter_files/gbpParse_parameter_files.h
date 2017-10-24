@@ -40,7 +40,7 @@ void init_parameter_item(parameter_item_info **param_item,
                          SID_Datatype          data_type,
                          int                   mode);
 void free_parameter_item(parameter_item_info **param_item);
-int  free_parameter_list(parameter_list_info **param_list);
+void free_parameter_list(parameter_list_info **param_list);
 void add_parameter_to_list(parameter_list_info *param_list,
                            const char          *name,
                            SID_Datatype         data_type,

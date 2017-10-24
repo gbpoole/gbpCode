@@ -72,8 +72,8 @@ int main(int argc, char *argv[]){
     }
     // Process catalogs
     if(flag_process_catalogs){
-       sprintf(filename_in, "%s/catalogs/",filename_SSimPL_in, filename_halo_type);
-       sprintf(filename_out,"%s/catalogs/",filename_SSimPL_out,filename_halo_type);
+       sprintf(filename_in, "%s/catalogs/",filename_SSimPL_in);
+       sprintf(filename_out,"%s/catalogs/",filename_SSimPL_out);
        swap_endian_catalogs(filename_in,filename_out,filename_halo_type,i_snap,mode);
     }
     // Process grids

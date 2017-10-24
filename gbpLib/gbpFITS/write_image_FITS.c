@@ -19,7 +19,7 @@ int write_image_FITS(void *image,SID_Datatype dtype,int n_D,int *D_in,const char
   int   bit_pix;
 
   // Delete the file if it already exists
-  if(fp_test=fopen(filename,"r")) {
+  if((fp_test=fopen(filename,"r"))) {
     fclose(fp_test);
     remove(filename);
   }

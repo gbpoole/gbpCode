@@ -49,8 +49,8 @@ int main(int argc, char *argv[]){
   // Set filenames 
   char filename_cat1[MAX_FILENAME_LENGTH];
   char filename_cat2[MAX_FILENAME_LENGTH];
-  sprintf(filename_cat1,"%s_%03d.catalog_%sgroups_properties",filename_catalog_root,prefix_text,i_read);
-  sprintf(filename_cat2,"%s_%03d.catalog_%sgroups_properties",filename_catalog_root,prefix_text,j_read);
+  sprintf(filename_cat1,"%s_%03d.catalog_%sgroups_properties",filename_catalog_root,i_read,prefix_text);
+  sprintf(filename_cat2,"%s_%03d.catalog_%sgroups_properties",filename_catalog_root,j_read,prefix_text);
 
   // Contents of the halo properties structure
   //struct halo_properties_info{

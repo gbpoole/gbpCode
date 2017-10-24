@@ -2,7 +2,7 @@
 /* Generate a random field with a Gaussian distribution */
 /********************************************************/
 #include <math.h>
-#include <gbpCommon.h>
+#include <gbpSID.h>
 #include <gbpRNG.h>
 
 GBPREAL random_gaussian(RNG_info *RNG){

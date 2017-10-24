@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <gbpCommon.h>
+#include <gbpSID.h>
 #include <gbpParse_core.h>
 
 int grab_double(char *line,int n,double *return_value){

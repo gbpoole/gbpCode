@@ -4,10 +4,10 @@
 
 void fclose_catalog(fp_catalog_info *fp_in){
 
-   sprintf(fp_in->filename_properties_root,"\0");
-   sprintf(fp_in->filename_properties_base,"\0");
-   sprintf(fp_in->filename_profiles_root,  "\0");
-   sprintf(fp_in->filename_profiles_base,  "\0"); 
+   sprintf(fp_in->filename_properties_root,"");
+   sprintf(fp_in->filename_properties_base,"");
+   sprintf(fp_in->filename_profiles_root,  "");
+   sprintf(fp_in->filename_profiles_base,  ""); 
    if(fp_in->fp_properties!=NULL) fclose(fp_in->fp_properties);
    if(fp_in->fp_profiles!=NULL)   fclose(fp_in->fp_profiles);
    fp_in->fp_properties       =NULL;

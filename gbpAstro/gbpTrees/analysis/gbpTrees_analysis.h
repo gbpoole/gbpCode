@@ -148,9 +148,9 @@ int  find_treenode_accretion(tree_info       *trees,
                              tree_node_info **join_current_group);
 
 // Precomputed marker routines
-int    init_precompute_treenode_markers(tree_info *trees,int mode);
-int    free_precompute_treenode_markers(tree_info *trees,int mode);
-int    precompute_treenode_markers(tree_info *trees,int mode);
+void   init_precompute_treenode_markers(tree_info *trees,int mode);
+void   free_precompute_treenode_markers(tree_info *trees,int mode);
+void   precompute_treenode_markers(tree_info *trees,int mode);
 void   precompute_treenode_markers_peak_mass_recursive(tree_info          *trees,
                                                        int                 flag_peak_mass_inclusive,
                                                        tree_markers_info **markers_array,
@@ -158,7 +158,7 @@ void   precompute_treenode_markers_peak_mass_recursive(tree_info          *trees
                                                        tree_node_info    **halo_peak_return,
                                                        int                *n_particles_peak_return,
                                                        double             *M_peak_return);
-int    precompute_treenode_markers_recursive(tree_info          *trees,
+void   precompute_treenode_markers_recursive(tree_info          *trees,
                                              tree_markers_info **markers_array,
                                              tree_node_info     *halo,
                                              tree_markers_info **markers_descendant);

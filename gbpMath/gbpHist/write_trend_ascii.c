@@ -37,7 +37,7 @@ void write_trend_ascii(trend_info *trend,const char *filename_output_root){
    finalize_histogram(hist_ordinate);
    for(int i_bin=0;i_bin<hist_ordinate->n_bins;i_bin++){
       if(SID.I_am_Master)
-         fprintf(fp_out,"%3d %le %le %d",
+         fprintf(fp_out,"%3d %le %le %zu",
                         i_bin,
                         histogram_bin_x_lo(hist_ordinate,i_bin),
                         histogram_bin_x_hi(hist_ordinate,i_bin),
@@ -56,7 +56,7 @@ void write_trend_ascii(trend_info *trend,const char *filename_output_root){
          compute_histogram_range(hist_i,68.,GBP_HISTOGRAM_RANGE_HIST,&x_peak,&x_68_lo,&x_68_hi);
          compute_histogram_range(hist_i,95.,GBP_HISTOGRAM_RANGE_HIST,&x_peak,&x_95_lo,&x_95_hi);
          if(SID.I_am_Master)
-            fprintf(fp_out," %d %le %le %le %le %le",
+            fprintf(fp_out," %zu %le %le %le %le %le",
                            hist_i->count_hist,
                            x_peak,
                            x_68_lo,

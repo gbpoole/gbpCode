@@ -55,9 +55,9 @@ int main(int argc, char *argv[]){
   int    n_sub_i;
 
   if(SID.I_am_Master){
-    sprintf(filename_subgroups,"%s_%03d.catalog_subgroups",filename_root,snap_number,prefix_text);
-    sprintf(filename_groups,   "%s_%03d.catalog_groups",   filename_root,snap_number,prefix_text);
-    sprintf(filename_particles,"%s_%03d.catalog_particles",filename_root,snap_number,prefix_text);
+    sprintf(filename_subgroups,"%s_%03d.catalog_subgroups",filename_root,snap_number);
+    sprintf(filename_groups,   "%s_%03d.catalog_groups",   filename_root,snap_number);
+    sprintf(filename_particles,"%s_%03d.catalog_particles",filename_root,snap_number);
     SID_log("Selected subgroup  file:{%s}",SID_LOG_COMMENT,filename_subgroups);
     SID_log("Selected group     file:{%s}",SID_LOG_COMMENT,filename_groups);
     SID_log("Selected particles file:{%s}",SID_LOG_COMMENT,filename_particles);

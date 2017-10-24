@@ -1,6 +1,7 @@
 #define  _MAIN
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <math.h>
 #include <gbpLib.h>
 #include <gbpMath.h>
@@ -30,7 +31,7 @@ int main(int argc, char *argv[]){
   }
   else if(argc==4){
      read_gbpCosmo_file(&cosmo,argv[3]);
-     sprintf(cosmology_name,argv[3]);
+     strcpy(cosmology_name,argv[3]);
   }
 
   // Initialize

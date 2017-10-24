@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#include <gbpCommon.h>
+#include <gbpSID.h>
 
 void seconds2ascii(int n_secs, char *string){
   int  n_mins;

@@ -131,9 +131,9 @@ int main(int argc, char *argv[]){
     fread_verify(&n_groups,              sizeof(int),   1,fp_in);
     fread_verify(&n_bits,                sizeof(int),   1,fp_in);
     fread_verify(&n_particles_cumulative,sizeof(size_t),1,fp_in);
-    fprintf(fp_out,"# n_groups   = %d\n",n_groups);
-    fprintf(fp_out,"# n_bits     = %d\n",n_bits);
-    fprintf(fp_out,"# n_particles= %d\n",n_particles_cumulative);
+    fprintf(fp_out,"# n_groups   = %d\n", n_groups);
+    fprintf(fp_out,"# n_bits     = %d\n", n_bits);
+    fprintf(fp_out,"# n_particles= %zu\n",n_particles_cumulative);
 
     // Read/write each group in turn
     int    PHK_group;
@@ -143,7 +143,7 @@ int main(int argc, char *argv[]){
        fread_verify(&PHK_group,             sizeof(int),   1,fp_in);
        fread_verify(&index_temp,            sizeof(int),   1,fp_in);
        fread_verify(&n_particles_cumulative,sizeof(size_t),1,fp_in);
-       fprintf(fp_out,"%6d %6d %6d %lld\n",i_group,PHK_group,index_temp,n_particles_cumulative);
+       fprintf(fp_out,"%6d %6d %6d %zu\n",i_group,PHK_group,index_temp,n_particles_cumulative);
     }
     fclose(fp_in);
     fclose(fp_out);

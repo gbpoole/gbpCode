@@ -15,7 +15,6 @@ set(DATASUBDIR "" )
 
 # Add directories that contribute source files 
 # eg. list(APPEND SRCDIRS "dirname")
-list(APPEND SRCDIRS "gbpCommon" )
 list(APPEND SRCDIRS "gbpSID" )
 list(APPEND SRCDIRS "gbpParse" )
 list(APPEND SRCDIRS "gbpADaPS" )

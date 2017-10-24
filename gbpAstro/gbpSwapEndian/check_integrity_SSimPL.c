@@ -38,7 +38,7 @@ int main(int argc, char *argv[]){
     }
     // Process catalogs
     if(flag_process_catalogs){
-       sprintf(filename_in, "%s/catalogs/",filename_SSimPL_in, filename_halo_type);
+       sprintf(filename_in, "%s/catalogs/",filename_SSimPL_in);
        check_integrity_catalogs(filename_in,filename_halo_type,i_snap);
     }
     // Process grids

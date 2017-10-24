@@ -45,7 +45,7 @@ void autotune_MCMC_randomize(MCMC_info *MCMC){
   char   format_string[128];
   if(MCMC->my_chain==SID.My_rank){
      SID_log("New initial parameters:",SID_LOG_ALLRANKS|SID_LOG_OPEN);
-     sprintf(format_string,"%s = %%13.6le (was %%13.6le; change=%%7.2lf%%%)",MCMC->P_name_format);
+     sprintf(format_string,"%s = %%13.6le (was %%13.6le; change=%%7.2lf%%%%)",MCMC->P_name_format);
      for(i_P=0;i_P<MCMC->n_P;i_P++)
         SID_log(format_string,SID_LOG_ALLRANKS|SID_LOG_COMMENT,MCMC->P_names[i_P],P_new[i_P],P_old[i_P],P_diff[i_P]);
      SID_log("",SID_LOG_ALLRANKS|SID_LOG_NOPRINT|SID_LOG_CLOSE);

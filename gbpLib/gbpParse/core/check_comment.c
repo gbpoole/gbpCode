@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <gbpCommon.h>
+#include <gbpSID.h>
 #include <gbpParse_core.h>
 
 int check_comment(char *line){

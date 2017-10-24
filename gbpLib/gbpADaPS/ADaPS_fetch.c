@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdarg.h>
-#include <gbpCommon.h>
+#include <gbpSID.h>
 #include <gbpADaPS.h>
 
 void *ADaPS_fetch(ADaPS      *list,

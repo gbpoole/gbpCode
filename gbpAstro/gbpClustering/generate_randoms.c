@@ -186,7 +186,7 @@ void generate_randoms(cfunc_info *cfunc,plist_info *plist,const char *species_na
       fp_randoms=fopen(filename_out_randoms,"w");
       fprintf(fp_randoms,"# Random catalog.\n");
       fprintf(fp_randoms,"# Box size=%4.3lf [Mpc/h]\n",cfunc->box_size);
-      fprintf(fp_randoms,"# N_random=%d\n",            n_random);
+      fprintf(fp_randoms,"# N_random=%zu\n",           n_random);
       fprintf(fp_randoms,"# Column (1): x-position\n");
       fprintf(fp_randoms,"#        (2): y-position\n");
       fprintf(fp_randoms,"#        (3): z-position\n");

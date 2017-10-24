@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <string.h>
-#include <gbpCommon.h>
 #include <gbpSID.h>
 #include <gbpFITS.h>
 

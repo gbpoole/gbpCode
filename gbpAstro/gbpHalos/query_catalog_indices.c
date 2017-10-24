@@ -70,7 +70,7 @@ int main(int argc, char *argv[]){
     for(i_particle=0;i_particle<n_particles_i;i_particle++){
        size_t index_i;
        fread_verify(&index_i,sizeof(size_t),1,fp_in);
-       fprintf(stderr,"%4d %lld\n",i_particle,index_i);
+       fprintf(stderr,"%4d %zu\n",i_particle,index_i);
     }
    
     fclose(fp_in);

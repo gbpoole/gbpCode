@@ -36,8 +36,8 @@ int main(int argc, char *argv[]){
     for(int i_snap=0;i_snap<n_snaps;i_snap++){
        char filename_group_properties[MAX_FILENAME_LENGTH];
        char filename_subgroup_properties[MAX_FILENAME_LENGTH];
-       sprintf(filename_group_properties,   "%s/catalogs/%s",filename_SSimPL,filename_halo_type,i_snap);
-       sprintf(filename_subgroup_properties,"%s/catalogs/%s",filename_SSimPL,filename_halo_type,i_snap);
+       sprintf(filename_group_properties,   "%s/catalogs/%s",filename_SSimPL,filename_halo_type);
+       sprintf(filename_subgroup_properties,"%s/catalogs/%s",filename_SSimPL,filename_halo_type);
        fp_catalog_info fp_group_properties;
        fp_catalog_info fp_subgroup_properties;
        fopen_catalog(filename_group_properties,

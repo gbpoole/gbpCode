@@ -310,7 +310,7 @@ void write_duplicates_local(const char *filename_out_root,
          if(SID.I_am_Master){
             int i_buffer;
             for(i_buffer=0;i_buffer<n_buffer;i_buffer++){
-               fprintf(fp_out,"%10lld %7d %7d %2d %le\n",
+               fprintf(fp_out,"%10zu %7d %7d %2d %le\n",
                               buffer_ids[i_buffer],
                               buffer_group[i_buffer],
                               buffer_subgroup[i_buffer],

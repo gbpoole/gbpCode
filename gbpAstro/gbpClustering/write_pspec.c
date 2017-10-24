@@ -106,8 +106,8 @@ void write_pspec(pspec_info *pspec,const char *filename_out_root,plist_info *pli
       fwrite(&(pspec->dk_2D),   sizeof(double),1,fp_out);
       fwrite(pspec->n_modes_2D, sizeof(int),   pspec->n_k_2D*pspec->n_k_2D,fp_out);
       for(i_run=0;i_run<4;i_run++){
-         fwrite(&(pspec->flag_processed),sizeof(double),pspec->n_k_2D*pspec->n_k_2D,fp_out);
-         if(pspec->flag_processed){
+         fwrite(&(pspec->flag_processed[i_run]),sizeof(double),pspec->n_k_2D*pspec->n_k_2D,fp_out);
+         if(pspec->flag_processed[i_run]){
             fwrite(pspec->P_k_2D[i_run],    sizeof(double),pspec->n_k_2D*pspec->n_k_2D,fp_out);
             fwrite(pspec->dP_k_2D[i_run],   sizeof(double),pspec->n_k_2D*pspec->n_k_2D,fp_out);
          }

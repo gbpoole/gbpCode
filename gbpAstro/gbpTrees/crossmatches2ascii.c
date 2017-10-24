@@ -36,7 +36,7 @@ int main(int argc, char *argv[]){
   strcpy(filename_in[0],argv[1]);
   strcpy(filename_in[1],argv[2]);
   strcpy(filename_out,  argv[3]);
-  SID_log("Creating ascii version of {%s}...",SID_LOG_OPEN|SID_LOG_TIMER,filename_in);
+  SID_log("Creating ascii cross-match of {%s} & {%s}...",SID_LOG_OPEN|SID_LOG_TIMER,filename_in[0],filename_in[1]);
 
   // Allocate arrays
   int    **match    =(int    **)SID_malloc(2*sizeof(int *));
@@ -100,7 +100,7 @@ int main(int argc, char *argv[]){
   // Print results
   SID_log("Writing to {%s}...",SID_LOG_OPEN|SID_LOG_TIMER,filename_out);
   FILE *fp_out=fopen(filename_out,"w");
-  fprintf(fp_out,"# Ascii dump of {%s}\n",filename_in);
+  fprintf(fp_out,"# Ascii cross-match of {%s} & {%s}\n",filename_in[0],filename_in[1]);
   int i_column=1;
   fprintf(fp_out,"#\n");
   fprintf(fp_out,"# Column (%02d): Halo index in catalog A\n",i_column++);
@@ -109,7 +109,7 @@ int main(int argc, char *argv[]){
   fprintf(fp_out,"#        (%02d): Halo match score\n",       i_column++);
   fprintf(fp_out,"#        (%02d): 2-way match?\n",           i_column++);
   for(k_read=0;k_read<n_groups_i;k_read++)
-     fprintf(fp_out,"%7d %7d %7lld %10.3le %d\n",k_read,match[0][k_read],indices[0][k_read],score[0][k_read],flag_2way[k_read]);
+     fprintf(fp_out,"%7d %7d %7zu %10.3le %d\n",k_read,match[0][k_read],indices[0][k_read],score[0][k_read],flag_2way[k_read]);
   fclose(fp_out);
   SID_log("Done.",SID_LOG_CLOSE);
 

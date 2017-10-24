@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <gbpCommon.h>
+#include <gbpSID.h>
 #include <gbpADaPS.h>
 
 void ADaPS_deallocate(ADaPS **remove){

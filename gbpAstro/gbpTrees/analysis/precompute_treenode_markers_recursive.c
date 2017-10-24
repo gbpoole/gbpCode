@@ -9,7 +9,7 @@
 #include <gbpTrees_build.h>
 #include <gbpTrees_analysis.h>
 
-int precompute_treenode_markers_recursive(tree_info *trees,tree_markers_info **markers_array,tree_node_info *halo,tree_markers_info **markers_descendant){
+void precompute_treenode_markers_recursive(tree_info *trees,tree_markers_info **markers_array,tree_node_info *halo,tree_markers_info **markers_descendant){
    // note: - "markers_descendant" arrives as the descendat halo's markers but is used to return back a progenitor's markers
    //       - the initial call of this recursive function should be only on halos where halo->descendant==NULL
    //       - ** the values of M_peak MUST be calculated before this function is called.

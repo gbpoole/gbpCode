@@ -15,5 +15,6 @@ int find_treesnap_snap(tree_info *trees,int snap){
          return(i_snap_tree);
    }
    SID_trap_error("Could not find snapshot %d in the tree snap_list.",ERROR_LOGIC,snap);
+   return(-1);
 }
 

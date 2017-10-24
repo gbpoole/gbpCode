@@ -3,8 +3,8 @@
 
 void fclose_multifile(fp_multifile_info *fp_in){
 
-   sprintf(fp_in->filename_root,"\0");
-   sprintf(fp_in->filename_base,"\0");
+   sprintf(fp_in->filename_root,"");
+   sprintf(fp_in->filename_base,"");
    if(fp_in->fp_multifile!=NULL) fclose(fp_in->fp_multifile);
    fp_in->fp_multifile  =NULL;
    fp_in->i_file        =0;

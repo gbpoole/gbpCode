@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#include <gbpCommon.h>
+#include <gbpSID.h>
 #include <gbpADaPS.h>
 
 void ADaPS_status(ADaPS *list){

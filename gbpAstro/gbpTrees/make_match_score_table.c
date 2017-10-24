@@ -35,7 +35,7 @@ int main(int argc, char *argv[]){
   FILE *fp=stdout;
   int   i_column=1;
   fprintf(fp,"# Table of match score values.\n");
-  fprintf(fp,"# Match Rank Index=\n",MATCH_SCORE_RANK_INDEX);
+  fprintf(fp,"# Match Rank Index=%lf\n",MATCH_SCORE_RANK_INDEX);
   fprintf(fp,"# Column (%02d): n_particles\n",i_column++);
   fprintf(fp,"#        (%02d): max score       (n_particles)\n",i_column++);
   fprintf(fp,"#        (%02d): max score       (0.90*n_particles)\n",i_column++);

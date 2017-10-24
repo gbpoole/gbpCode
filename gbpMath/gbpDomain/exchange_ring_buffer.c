@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include <string.h>
-#include <gbpCommon.h>
 #include <gbpSID.h>
 #include <gbpDomain.h>
 

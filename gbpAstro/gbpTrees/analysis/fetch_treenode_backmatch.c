@@ -24,7 +24,6 @@ tree_node_info *fetch_treenode_backmatch(tree_info *trees,tree_node_info *halo){
             SID_trap_error("Subgroup backmatch pointers are not defined.  They probably have not been read.",ERROR_LOGIC);
       }
    }
-   else
-      return(NULL);
+   return(NULL);
 }
 

@@ -1,4 +1,4 @@
-#include <gbpCommon.h>
+#include <gbpSID.h>
 #include <math.h>
 
 double calc_Sigma_crit(double Da,

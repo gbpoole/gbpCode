@@ -1,5 +1,5 @@
-#include <gbpCommon.h>
 #include <math.h>
+#include <gbpSID.h>
 
 double calc_tcool(double rho_gas,
                   double T_gas){

@@ -9,7 +9,7 @@
 #include <gbpTrees_build.h>
 #include <gbpTrees_analysis.h>
 
-int init_precompute_treenode_markers(tree_info *trees,int mode){
+void init_precompute_treenode_markers(tree_info *trees,int mode){
    // Sanity check
    if(check_mode_for_flag(mode,PRECOMPUTE_TREENODE_MARKER_GROUPS) &&
       check_mode_for_flag(mode,PRECOMPUTE_TREENODE_MARKER_SUBGROUPS))

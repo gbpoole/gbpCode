@@ -68,7 +68,7 @@ void read_gadget_binary_local(char       *filename_root_in,
     // Number of particles and masses for each species in all files
     size_t n_all[N_GADGET_TYPE];
     for(i_type=0;i_type<N_GADGET_TYPE;i_type++){
-      n_all[i_type]     =(size_t)header.n_all_lo_word[i_type]+((size_t)header.n_all_hi_word[i_type])<<32;
+      n_all[i_type]     =(size_t)header.n_all_lo_word[i_type]+(((size_t)header.n_all_hi_word[i_type])<<32);
       mass_array[i_type]=(GBPREAL)header.mass_array[i_type];
     }
 
@@ -493,7 +493,7 @@ int main(int argc, char *argv[]){
      else
         n_load=header.n_files;
      for(i_species=0,n_total=0,n_used=0;i_species<N_GADGET_TYPE;i_species++){
-        n_all[i_species]=(size_t)header.n_all_lo_word[i_species]+((size_t)header.n_all_hi_word[i_species])<<32;
+        n_all[i_species]=(size_t)header.n_all_lo_word[i_species]+(((size_t)header.n_all_hi_word[i_species])<<32);
         n_total+=n_all[i_species];
         if(n_all[i_species]>0){
            n_used++;

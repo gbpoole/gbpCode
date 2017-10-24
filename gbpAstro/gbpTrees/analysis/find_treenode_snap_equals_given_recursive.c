@@ -23,8 +23,7 @@ float set_halo_score_local(tree_info *trees,tree_node_info *current_progenitor,i
       else
          SID_trap_error("Invalid progenitor_mode (%d) in find_treenode_snap_equals_given_recursive().",ERROR_LOGIC,progenitor_mode);
    }
-   else
-      return(-1.);
+   return(-1.);
 }
 
 float find_treenode_snap_equals_given_recursive(tree_info *trees,tree_node_info *halo,int snap_tree_given,tree_node_info **treenode_return,int progenitor_mode){
@@ -57,9 +56,7 @@ float find_treenode_snap_equals_given_recursive(tree_info *trees,tree_node_info 
       // Return best progenitor information
       return(set_halo_score_local(trees,(*treenode_return),progenitor_mode));
    }
-   else{
-      (*treenode_return)=NULL;
-      return(-1.);
-   }
+   (*treenode_return)=NULL;
+   return(-1.);
 }
 

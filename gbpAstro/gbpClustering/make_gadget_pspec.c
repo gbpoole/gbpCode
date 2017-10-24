@@ -522,7 +522,7 @@ int main(int argc, char *argv[]){
   size_t  n_total;
   size_t  n_all[N_GADGET_TYPE];
   for(i_species=0,n_total=0;i_species<N_GADGET_TYPE;i_species++){
-     n_all[i_species]=(size_t)header.n_all_lo_word[i_species]+((size_t)header.n_all_hi_word[i_species])<<32;
+     n_all[i_species]=(size_t)header.n_all_lo_word[i_species]+(((size_t)header.n_all_hi_word[i_species])<<32);
      if(i_species>0) SID_set_verbosity(SID_SET_VERBOSITY_RELATIVE,-1);
      init_pspec(&(pspec[i_species]),NULL,cosmo,
                 distribution_scheme,

@@ -141,8 +141,8 @@ void check_integrity_catalogs_profiles_local(const char *filename_in_root,const 
   SID_log("Done.",SID_LOG_CLOSE);
 }
 
-int check_integrity_catalogs_SO_local(const char *filename_in_root,const char *filename_halo_type,const char *prefix,int snap_number);
-int check_integrity_catalogs_SO_local(const char *filename_in_root,const char *filename_halo_type,const char *prefix,int snap_number){
+void check_integrity_catalogs_SO_local(const char *filename_in_root,const char *filename_halo_type,const char *prefix,int snap_number);
+void check_integrity_catalogs_SO_local(const char *filename_in_root,const char *filename_halo_type,const char *prefix,int snap_number){
   SID_log("Swapping endian of %sgroup SO properties...",SID_LOG_OPEN,prefix);
 
   // Set filenames
@@ -156,7 +156,7 @@ int check_integrity_catalogs_SO_local(const char *filename_in_root,const char *f
      sprintf(filename_in,"%s/%s_%03d.catalog_%sgroups_SO",filename_in_root,filename_halo_type,snap_number,prefix);
      if((fp_in=fopen(filename_in,"r"))==NULL){
         SID_log("not present.",SID_LOG_CLOSE);
-        return(FALSE);
+        return;
      }
      flag_type=TRUE;
   }
@@ -204,7 +204,6 @@ int check_integrity_catalogs_SO_local(const char *filename_in_root,const char *f
      fclose(fp_in);
   }
   SID_log("Done.",SID_LOG_CLOSE);
-
 }
 
 void check_integrity_catalogs(const char *filename_in_root,const char *filename_halo_type,int snap_number){

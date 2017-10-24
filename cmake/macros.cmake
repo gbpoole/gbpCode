@@ -147,10 +147,7 @@ macro(collect_data_files_recurse cur_dir )
 endmacro()
 
 # Macro for initializing a specific library
-macro(build_library cur_dir )
-
-    # Assume that the library name is given by the directory name
-    get_filename_component( lib_name ${cur_dir} NAME )
+macro(build_library lib_name cur_dir )
 
     # Write a status message
     message(STATUS "" )
@@ -230,14 +227,16 @@ macro(process_targets cur_dir )
     # Add all targets associated with liobrary directories
     set_dir_state(${cur_dir})
     foreach(_lib_name ${LIBDIRS} )
-        build_library( ${cur_dir}/${_lib_name} ) 
+        build_library( ${_lib_name} ${cur_dir}/${_lib_name} ) 
         build_executables( ${cur_dir}/${_lib_name} ) 
         build_data_files( ${cur_dir}/${_lib_name} ) 
     endforeach()
 
     # Add targets associated with the current pass-through directory
-    if(SRC_FILES)
-        build_library( ${cur_dir} )
+    set_dir_state(${cur_dir})
+    if(SRC_FILES OR SRCDIRS)
+        get_filename_component( _lib_name ${cur_dir} NAME )
+        build_library( ${_lib_name} ${cur_dir} )
     endif()
     build_executables( ${cur_dir} ) 
     build_data_files( ${cur_dir} ) 

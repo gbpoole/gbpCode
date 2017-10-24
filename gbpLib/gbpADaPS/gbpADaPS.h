@@ -3,7 +3,6 @@
 #ifndef ADaPS_ON
 #define ADaPS_ON
 
-#include <gbpCommon.h>
 #include <gbpSID.h>
 
 #define ADaPS_NAME_LENGTH    256

@@ -1,6 +1,5 @@
 #ifndef MULTIFILE_AWAKE
 #define MULTIFILE_AWAKE
-#include <gbpCommon.h>
 #include <gbpSID.h>
 
 // V Preprocessor definitions V

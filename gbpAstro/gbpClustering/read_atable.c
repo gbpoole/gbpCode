@@ -471,7 +471,7 @@ void read_atable(const char *filename_in,plist_info *plist,int x_column,int y_co
          }
          SID_Allreduce(SID_IN_PLACE,&flag_test,1,SID_INT,SID_SUM,SID.COMM_WORLD);
          if(flag_test!=1){
-            fprintf(stderr,"[%03d] %d %d %d\n",SID.My_rank,PHK_i,PHK_min_local,PHK_max_local);
+            fprintf(stderr,"[%03d] %d %d %d\n",SID.My_rank,(int)PHK_i,PHK_min_local,PHK_max_local);
             SID_trap_error("Read error.",ERROR_LOGIC);
          }
       }

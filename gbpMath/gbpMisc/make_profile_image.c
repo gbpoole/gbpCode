@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include <gbpCommon.h>
+#include <gbpSID.h>
 
 void make_profile_image(double  *image,
  		        int     *bin_image,

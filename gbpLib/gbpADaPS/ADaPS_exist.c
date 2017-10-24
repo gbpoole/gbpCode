@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdarg.h>
-#include <gbpCommon.h>
+#include <gbpSID.h>
 #include <gbpADaPS.h>
 
 int ADaPS_exist(ADaPS      *list,
