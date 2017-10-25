@@ -59,33 +59,6 @@ macro(add_header_directory cur_dir )
     endif()
 endmacro()
 
-# Macro to assemble a list of all directories
-#    with a header file and their filenames
-macro(process_headers cur_dir )
-    # Perform some initialization on the first call
-    if( ${cur_dir} STREQUAL ${CMAKE_SOURCE_DIR} )
-        message(STATUS "Assembling a list of project header directories..." )
-        set(INC_DIRS_PROJECT "" )
-        set(INC_FILES_PROJECT "" )
-    endif()
-
-    # Process this directory
-    set_dir_state(${cur_dir})
-    add_header_directory( ${cur_dir} )
-
-    # Recurse through all directories
-    foreach(_dir_name ${ALLDIRS} )
-        process_headers( ${cur_dir}/${_dir_name} ) 
-    endforeach()
-
-    # Add the directories we have assembled to the project
-    include_directories( ${INC_DIRS_PROJECT} )
-
-    if( ${cur_dir} STREQUAL ${CMAKE_SOURCE_DIR} )
-        message(STATUS "Done." )
-    endif()
-endmacro()
-
 # Macro for adding sources to a library build
 macro(collect_library_sources lib_name cur_dir )
     set(LIBRARY_SOURCES "" )
@@ -163,6 +136,11 @@ macro(build_library lib_name cur_dir )
 
     # Collect the sources for the library
     collect_library_sources( ${lib_name} ${cur_dir} )
+
+    # Add to the collection of project source files
+    list(APPEND SRC_FILES_PROJECT ${LIBRARY_SOURCES} )
+
+    # Add header files to the project, so CLion can integrate them
     list(APPEND LIBRARY_SOURCES ${INC_FILES_PROJECT} )
 
     # Add the library to the list of targets
@@ -197,6 +175,9 @@ macro(build_executables cur_dir )
     # Collect the executables for this directory
     collect_executables( ${cur_dir} )
 
+    # Add to the collection of project source files
+    list(APPEND SRC_FILES_PROJECT ${EXE_LIST} )
+
     # Add each executable to the target list
     set_dir_state(${cur_dir}) # Needed for DATADIR
     foreach( _exe_file ${EXE_LIST} )
@@ -230,8 +211,39 @@ macro(build_data_files cur_dir )
     endforeach()
 endmacro()
 
+# Macro to assemble a list of all directories
+#    with a header file and their filenames
+macro(process_headers cur_dir )
+    # Perform some initialization on the first call
+    if( ${cur_dir} STREQUAL ${CMAKE_SOURCE_DIR} )
+        message(STATUS "Assembling a list of project header directories..." )
+        set(INC_DIRS_PROJECT "" )
+        set(INC_FILES_PROJECT "" )
+    endif()
+
+    # Process this directory
+    set_dir_state(${cur_dir})
+    add_header_directory( ${cur_dir} )
+
+    # Recurse through all directories
+    foreach(_dir_name ${ALLDIRS} )
+        process_headers( ${cur_dir}/${_dir_name} ) 
+    endforeach()
+
+    # Add the directories we have assembled to the project
+    include_directories( ${INC_DIRS_PROJECT} )
+
+    if( ${cur_dir} STREQUAL ${CMAKE_SOURCE_DIR} )
+        message(STATUS "Done." )
+    endif()
+endmacro()
+
 # Main macro which initializes all project targets
 macro(process_targets cur_dir )
+    # Perform some initialization on the first call
+    if( ${cur_dir} STREQUAL ${CMAKE_SOURCE_DIR} )
+        set(SRC_FILES_PROJECT "" )
+    endif()
 
     # Build all targets associated with library directories
     set_dir_state(${cur_dir})

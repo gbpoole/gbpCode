@@ -3,7 +3,7 @@
 cmake_minimum_required(VERSION 3.5)
 
 # Include all the macros we will use
-set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_SOURCE_DIR}/cmake;${CMAKE_SOURCE_DIR}")
+set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_SOURCE_DIR}/.cmake;${CMAKE_SOURCE_DIR}")
 include("macros")
 
 # Set default compilers (must come before project line)
@@ -143,7 +143,29 @@ message(STATUS "")
 # ======= End of 3rd party initialization =======
 
 # ============= Process the project =============
+# (look in .cmake/macros.cmake for these functions)
 process_headers( ${CMAKE_SOURCE_DIR} )
 process_targets( ${CMAKE_SOURCE_DIR} )
-# ===============================================
+
+# =========== Add some custom targets ===========
+message(STATUS "")
+message(STATUS "Adding custom targets...")
+
+# Create a master list of all source and header files
+set(ALL_FILES_PROJECT "" )
+list(APPEND ALL_FILES_PROJECT ${INC_FILES_PROJECT} )
+list(APPEND ALL_FILES_PROJECT ${SRC_FILES_PROJECT} )
+
+# Clang-format
+message(STATUS "  -> clang-format")
+add_custom_target(
+        clang-format
+        COMMAND clang-format
+        -style=file
+        -i
+        ${ALL_FILES_PROJECT}
+)
+message(STATUS "Finished initializing custom targets.")
+message(STATUS "")
+
 
