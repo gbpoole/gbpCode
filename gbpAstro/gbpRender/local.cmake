@@ -84,8 +84,8 @@ list(APPEND SRCFILES "set_render_state.c" )
 
 # Add executable source files (those with a main())
 # eg. list(APPEND EXEFILES "file" )
-list(APPEND EXEFILES "make_colour_bar" )
-list(APPEND EXEFILES "render" )
+list(APPEND EXEFILES "make_colour_bar.c" )
+list(APPEND EXEFILES "render.c" )
 
 # Add data files
 # eg. list(APPEND DATAFILES "file" )
