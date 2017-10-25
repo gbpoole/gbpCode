@@ -9,10 +9,9 @@
 #include <gbpTrees_build.h>
 #include <gbpTrees_analysis.h>
 
-tree_info *fetch_trees_reference(tree_info *trees){
-   if(trees->trees_reference!=NULL)
-      return(trees->trees_reference);
-   else
-      return(trees);
+tree_info *fetch_trees_reference(tree_info *trees) {
+    if(trees->trees_reference != NULL)
+        return (trees->trees_reference);
+    else
+        return (trees);
 }
-

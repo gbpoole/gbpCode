@@ -9,9 +9,8 @@
 #include <gbpTrees_build.h>
 #include <gbpTrees_analysis.h>
 
-int fetch_treenode_tree_case(tree_info *trees,tree_node_info *halo){
-   if(halo!=NULL)
-      return(halo->tree_case);
-   return(-1);
+int fetch_treenode_tree_case(tree_info *trees, tree_node_info *halo) {
+    if(halo != NULL)
+        return (halo->tree_case);
+    return (-1);
 }
-

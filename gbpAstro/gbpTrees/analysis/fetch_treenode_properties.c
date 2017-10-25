@@ -9,22 +9,20 @@
 #include <gbpTrees_build.h>
 #include <gbpTrees_analysis.h>
 
-halo_properties_info *fetch_treenode_properties(tree_info *trees,tree_node_info *halo){
-   if(halo!=NULL){
-      halo_properties_info *properties;
-      if(halo->parent_top==NULL){
-         if(trees->group_properties!=NULL)
-            return(&(trees->group_properties[halo->snap_tree][halo->neighbour_index]));
-         else
-            SID_trap_error("Group properties are not defined in fetch_treenode_properties().  They probably have not been read.",ERROR_LOGIC);
-      }
-      else{
-         if(trees->subgroup_properties!=NULL)
-            return(&(trees->subgroup_properties[halo->snap_tree][halo->neighbour_index]));
-         else
-            SID_trap_error("Subgroup properties are not defined in fetch_treenode_properties().  They probably have not been read.",ERROR_LOGIC);
-      }
-   }
-   return(NULL);
+halo_properties_info *fetch_treenode_properties(tree_info *trees, tree_node_info *halo) {
+    if(halo != NULL) {
+        halo_properties_info *properties;
+        if(halo->parent_top == NULL) {
+            if(trees->group_properties != NULL)
+                return (&(trees->group_properties[halo->snap_tree][halo->neighbour_index]));
+            else
+                SID_trap_error("Group properties are not defined in fetch_treenode_properties().  They probably have not been read.", ERROR_LOGIC);
+        } else {
+            if(trees->subgroup_properties != NULL)
+                return (&(trees->subgroup_properties[halo->snap_tree][halo->neighbour_index]));
+            else
+                SID_trap_error("Subgroup properties are not defined in fetch_treenode_properties().  They probably have not been read.", ERROR_LOGIC);
+        }
+    }
+    return (NULL);
 }
-

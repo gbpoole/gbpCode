@@ -6,11 +6,6 @@
 #include <gbpMath.h>
 #include <gbpCosmo_linear_theory.h>
 
-double sigma_R(cosmo_info **cosmo,
-               double       R,
-               double       z,
-               int          mode,
-               int          component){
-  return(sigma_M(cosmo,M_of_R(R,*cosmo),z,mode,component));
+double sigma_R(cosmo_info **cosmo, double R, double z, int mode, int component) {
+    return (sigma_M(cosmo, M_of_R(R, *cosmo), z, mode, component));
 }
-

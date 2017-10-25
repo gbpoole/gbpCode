@@ -4,8 +4,7 @@
 #include <gbpSID.h>
 #include <gbpParse_parameter_files.h>
 
-void free_parameter_item(parameter_item_info **param_item){
-   SID_free(SID_FARG (*param_item)->data);
-   SID_free(SID_FARG (*param_item));
+void free_parameter_item(parameter_item_info **param_item) {
+    SID_free(SID_FARG(*param_item)->data);
+    SID_free(SID_FARG(*param_item));
 }
-

@@ -6,7 +6,6 @@
 #include <gbpMath.h>
 #include <gbpCosmo_linear_theory.h>
 
-double Dplus(double a,cosmo_info **cosmo){
-   return(Dplus_unnormed(a,cosmo)/Dplus_unnormed(1.,cosmo));
+double Dplus(double a, cosmo_info **cosmo) {
+    return (Dplus_unnormed(a, cosmo) / Dplus_unnormed(1., cosmo));
 }
-

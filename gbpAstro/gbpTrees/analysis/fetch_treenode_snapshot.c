@@ -9,9 +9,8 @@
 #include <gbpTrees_build.h>
 #include <gbpTrees_analysis.h>
 
-int fetch_treenode_snapshot(tree_info *trees,tree_node_info *halo){
-   if(halo!=NULL)
-      return(trees->snap_list[halo->snap_tree]);
-   return(-1);
+int fetch_treenode_snapshot(tree_info *trees, tree_node_info *halo) {
+    if(halo != NULL)
+        return (trees->snap_list[halo->snap_tree]);
+    return (-1);
 }
-

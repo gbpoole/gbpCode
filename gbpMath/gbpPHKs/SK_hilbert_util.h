@@ -9,24 +9,22 @@
  * Useful Hilbert Index functions.
  */
 
-
 /***********************************************************************\
- *    Includes                                                         * 
+ *    Includes                                                         *
 \***********************************************************************/
 #include "hilbert_Moore.h"
 #include <stdint.h>
 #include <math.h>
 
 /***********************************************************************\
- *    Global defines, structure definitions and typedefs               * 
+ *    Global defines, structure definitions and typedefs               *
 \***********************************************************************/
 
 /** Define the datatype for the Hilbert Key */
 typedef bitmask_t hikey_t;
 
-
 /***********************************************************************\
- *    Prototypes of global functions                                   * 
+ *    Prototypes of global functions                                   *
 \***********************************************************************/
 
 /**
@@ -41,10 +39,7 @@ typedef bitmask_t hikey_t;
  *
  * \return Returns the contracted Hilbert Key
  */
-extern hikey_t
-hilbert_util_contract(unsigned int trgt_level,
-                      unsigned int src_level,
-                      hikey_t hikey);
+extern hikey_t hilbert_util_contract(unsigned int trgt_level, unsigned int src_level, hikey_t hikey);
 
 /**
  * \brief Prolongs a given Hilber index of a given depth to a higher
@@ -57,10 +52,7 @@ hilbert_util_contract(unsigned int trgt_level,
  *
  * \return Returns the contracted SFC Key.
  */
-extern hikey_t
-hilbert_util_prolongMin(unsigned int trgt_level,
-                        unsigned int src_level,
-                        hikey_t key);
+extern hikey_t hilbert_util_prolongMin(unsigned int trgt_level, unsigned int src_level, hikey_t key);
 
 /**
  * \brief Prolongs a given Hilbert index of a given depth to a higher
@@ -74,11 +66,7 @@ hilbert_util_prolongMin(unsigned int trgt_level,
  *
  * \return Returns the contracted SFC Key.
  */
-extern hikey_t
-hilbert_util_prolongMax(unsigned int trgt_level,
-                        unsigned int src_level,
-                        hikey_t key);
-
+extern hikey_t hilbert_util_prolongMax(unsigned int trgt_level, unsigned int src_level, hikey_t key);
 
 /**
  * \brief Takes the position of a particle and projects that to the
@@ -95,11 +83,7 @@ hilbert_util_prolongMax(unsigned int trgt_level,
  *
  * \return Returns the according Hilbert Key.
  */
-extern hikey_t
-hilbert_util_calcHikey(double x,
-                       double y,
-                       double z,
-                       unsigned bits);
+extern hikey_t hilbert_util_calcHikey(double x, double y, double z, unsigned bits);
 
 /**
  * \brief Takes a grid position (x,y,z) and converts that to the
@@ -111,11 +95,7 @@ hilbert_util_calcHikey(double x,
  * \param bits  The number of bits used per dimension for the Hilbert
  *              Key, this gives effectively the grid level.
  */
-extern hikey_t
-hilbert_util_calcHikey_grid(uint32_t x,
-                            uint32_t y,
-                            uint32_t z,
-                            unsigned bits);
+extern hikey_t hilbert_util_calcHikey_grid(uint32_t x, uint32_t y, uint32_t z, unsigned bits);
 
 /**
  * \brief Converts a given key to positiono integers.
@@ -127,8 +107,7 @@ hilbert_util_calcHikey_grid(uint32_t x,
  * \return Nothing, but the array pos is pointing to will be filled with
  *         the position integers.
  */
-extern void
-hilbert_util_calcPos(hikey_t key, unsigned bits, unsigned *pos);
+extern void hilbert_util_calcPos(hikey_t key, unsigned bits, unsigned *pos);
 
 /**
  * \brief Takes a Hilbert Key and gives back the Hilbert Keys of all
@@ -148,8 +127,6 @@ hilbert_util_calcPos(hikey_t key, unsigned bits, unsigned *pos);
  *
  * \return Nothing.
  */
-extern void
-hilbert_util_getShell(hikey_t base, hikey_t *shell, unsigned bits);
-
+extern void hilbert_util_getShell(hikey_t base, hikey_t *shell, unsigned bits);
 
 #endif /* HILBERT_UTIL_H */

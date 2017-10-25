@@ -9,9 +9,8 @@
 #include <gbpTrees_build.h>
 #include <gbpTrees_analysis.h>
 
-int fetch_treenode_file_index(tree_info *trees,tree_node_info *halo){
-   if(halo!=NULL)
-      return(halo->file_index);
-   return(-1);
+int fetch_treenode_file_index(tree_info *trees, tree_node_info *halo) {
+    if(halo != NULL)
+        return (halo->file_index);
+    return (-1);
 }
-

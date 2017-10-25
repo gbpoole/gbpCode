@@ -9,9 +9,8 @@
 #include <gbpTrees_build.h>
 #include <gbpTrees_analysis.h>
 
-double fetch_treenode_redshift(tree_info *trees,tree_node_info *halo){
-   if(halo!=NULL)
-      return(trees->z_list[halo->snap_tree]);
-   return(-1000.);
+double fetch_treenode_redshift(tree_info *trees, tree_node_info *halo) {
+    if(halo != NULL)
+        return (trees->z_list[halo->snap_tree]);
+    return (-1000.);
 }
-

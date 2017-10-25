@@ -8,11 +8,10 @@
 #include <gbpSPH.h>
 #include <gbpRender.h>
 
-void free_mark_arguments(mark_arg_info **argument){
-   while((*argument)!=NULL){
-      mark_arg_info *next=(*argument)->next;
-      SID_free(SID_FARG (*argument));
-      (*argument)=next;
-   }
+void free_mark_arguments(mark_arg_info **argument) {
+    while((*argument) != NULL) {
+        mark_arg_info *next = (*argument)->next;
+        SID_free(SID_FARG(*argument));
+        (*argument) = next;
+    }
 }
-

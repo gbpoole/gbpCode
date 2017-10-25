@@ -4,15 +4,15 @@
 #include <gbpSID.h>
 #include <gbpParse_core.h>
 
-int count_words(char *line){
-   int n_words  =0;
-   int flag_last=FALSE;
-   int flag_new =FALSE;
-   for(size_t i_line=0;i_line<strlen(line);i_line++){
-      flag_new=!check_space(line+i_line);
-      if(flag_new && !flag_last)
-         n_words++;
-      flag_last=flag_new;
-   }
-   return(n_words);
+int count_words(char *line) {
+    int n_words   = 0;
+    int flag_last = FALSE;
+    int flag_new  = FALSE;
+    for(size_t i_line = 0; i_line < strlen(line); i_line++) {
+        flag_new = !check_space(line + i_line);
+        if(flag_new && !flag_last)
+            n_words++;
+        flag_last = flag_new;
+    }
+    return (n_words);
 }

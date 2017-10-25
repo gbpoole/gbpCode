@@ -9,9 +9,8 @@
  * Definitions of the space filling curve functions and types.
  */
 
-
 /**********************************************************************\
- *    Includes                                                        * 
+ *    Includes                                                        *
 \**********************************************************************/
 /*
 #ifdef HAVE_STDINT_H
@@ -23,7 +22,7 @@
 #include <stdint.h>
 
 /**********************************************************************\
- *    Global defines, structure definitions and typedefs              * 
+ *    Global defines, structure definitions and typedefs              *
 \**********************************************************************/
 
 /** Descriptive string of the Hilbert curve type */
@@ -34,9 +33,9 @@
 
 /** This defines the type of the space filling curve */
 typedef enum {
-	/** For Hilbert Curves */
-	SFC_CURVE_HILBERT = 0,
-	SFC_CURVE_PLAIN = 1
+    /** For Hilbert Curves */
+    SFC_CURVE_HILBERT = 0,
+    SFC_CURVE_PLAIN   = 1
 } sfc_curve_t;
 
 /** Used to print a SFC key */
@@ -45,9 +44,8 @@ typedef enum {
 /** The SFC key type */
 typedef uint64_t sfc_key_t;
 
-
 /**********************************************************************\
- *    Global defines, structure definitions and typedefs              * 
+ *    Global defines, structure definitions and typedefs              *
 \**********************************************************************/
 /**
  * \brief Returns a string describing the curve type.
@@ -57,8 +55,7 @@ typedef uint64_t sfc_key_t;
  * \return A static string describing the curve type. The calling
  *         function must not try to change the string.
  */
-extern const char*
-sfc_curve_typestr(sfc_curve_t ctype);
+extern const char *sfc_curve_typestr(sfc_curve_t ctype);
 
 /**
  * \brief Contract a given SFC index of a given depth to a lower
@@ -71,11 +68,7 @@ sfc_curve_typestr(sfc_curve_t ctype);
  *
  * \return Returns the contracted SFC Key.
  */
-extern sfc_key_t
-sfc_curve_contract(uint32_t trgt_level,
-                   uint32_t src_level,
-                   sfc_curve_t ctype,
-                   sfc_key_t key);
+extern sfc_key_t sfc_curve_contract(uint32_t trgt_level, uint32_t src_level, sfc_curve_t ctype, sfc_key_t key);
 
 /**
  * \brief Prolongs a given SFC index of a given depth to a higher
@@ -89,11 +82,7 @@ sfc_curve_contract(uint32_t trgt_level,
  *
  * \return Returns the contracted SFC Key.
  */
-extern sfc_key_t
-sfc_curve_prolongMin(uint32_t trgt_level,
-                     uint32_t src_level,
-                     sfc_curve_t ctype,
-                     sfc_key_t key);
+extern sfc_key_t sfc_curve_prolongMin(uint32_t trgt_level, uint32_t src_level, sfc_curve_t ctype, sfc_key_t key);
 
 /**
  * \brief Prolongs a given SFC index of a given depth to a higher
@@ -107,11 +96,7 @@ sfc_curve_prolongMin(uint32_t trgt_level,
  *
  * \return Returns the contracted SFC Key.
  */
-extern sfc_key_t
-sfc_curve_prolongMax(uint32_t trgt_level,
-                     uint32_t src_level,
-                     sfc_curve_t ctype,
-                     sfc_key_t key);
+extern sfc_key_t sfc_curve_prolongMax(uint32_t trgt_level, uint32_t src_level, sfc_curve_t ctype, sfc_key_t key);
 
 /**
  * \brief Takes the position of a particle and projects that to the
@@ -129,12 +114,7 @@ sfc_curve_prolongMax(uint32_t trgt_level,
  *
  * \return Returns the according SFC Key.
  */
-extern sfc_key_t
-sfc_curve_calcKey(sfc_curve_t ctype,
-                  double x,
-                  double y,
-                  double z,
-                  uint32_t bits);
+extern sfc_key_t sfc_curve_calcKey(sfc_curve_t ctype, double x, double y, double z, uint32_t bits);
 /**
  * \brief Takes the grid position and converts that to the
  *        according SFC Index at a given level.
@@ -148,12 +128,7 @@ sfc_curve_calcKey(sfc_curve_t ctype,
  *
  * \return Returns the according SFC Key.
  */
-extern sfc_key_t
-sfc_curve_calcKey_grid(sfc_curve_t ctype,
-                       uint32_t x,
-                       uint32_t y,
-                       uint32_t z,
-                       uint32_t bits);
+extern sfc_key_t sfc_curve_calcKey_grid(sfc_curve_t ctype, uint32_t x, uint32_t y, uint32_t z, uint32_t bits);
 
 /**
  * \brief Takes a key and converts that to position integers.
@@ -172,11 +147,7 @@ sfc_curve_calcKey_grid(sfc_curve_t ctype,
  * \return Nothing, but the array pos is pointing to will be filled with
  *         the position integers.
  */
-extern void
-sfc_curve_calcPos(sfc_curve_t ctype,
-                  sfc_key_t key,
-                  uint32_t bits,
-                  uint32_t *pos);
+extern void sfc_curve_calcPos(sfc_curve_t ctype, sfc_key_t key, uint32_t bits, uint32_t *pos);
 
 /**
  * \brief Takes a SFC Key and gives back the Keys of all neighbouring
@@ -196,11 +167,7 @@ sfc_curve_calcPos(sfc_curve_t ctype,
  *
  * \return Nothing.
  */
-extern void
-sfc_curve_getShell(sfc_curve_t ctype,
-                   sfc_key_t base,
-                   sfc_key_t *shell,
-                   uint32_t bits);
+extern void sfc_curve_getShell(sfc_curve_t ctype, sfc_key_t base, sfc_key_t *shell, uint32_t bits);
 
 /**
  * \brief A helper function to compare two keys.
@@ -211,8 +178,6 @@ sfc_curve_getShell(sfc_curve_t ctype,
  * \return If k1<k2, -1 is returned, if k1 and k2 match, 0 is returned,
  *         1 otherwise.
  */
-extern int
-sfc_curve_comp_key(const void *k1, const void *k2);
-
+extern int sfc_curve_comp_key(const void *k1, const void *k2);
 
 #endif /* SFC_CURVE_H */

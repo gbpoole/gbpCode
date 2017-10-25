@@ -9,10 +9,9 @@
 #include <gbpTrees_build.h>
 #include <gbpTrees_analysis.h>
 
-float fetch_treenode_progenitor_f_goodness(tree_info *trees,tree_node_info *halo){
-   if(halo!=NULL)
-      return(fetch_treenode_descendant_f_goodness(trees,halo->progenitor_first));
-   else
-      return(-1.);
+float fetch_treenode_progenitor_f_goodness(tree_info *trees, tree_node_info *halo) {
+    if(halo != NULL)
+        return (fetch_treenode_descendant_f_goodness(trees, halo->progenitor_first));
+    else
+        return (-1.);
 }
-

@@ -6,13 +6,12 @@
 #include <gbpMath.h>
 #include <gbpCosmo_linear_theory.h>
 
-double M_gbpCosmo2gbpCosmo(double M,gbpCosmo2gbpCosmo_info *cosmo2cosmo){
-  double M_prime=M;
+double M_gbpCosmo2gbpCosmo(double M, gbpCosmo2gbpCosmo_info *cosmo2cosmo) {
+    double M_prime = M;
 
-  // Perform scaling if it is given
-  if(cosmo2cosmo!=NULL)
-     M_prime=M_prime*cosmo2cosmo->s_M;
+    // Perform scaling if it is given
+    if(cosmo2cosmo != NULL)
+        M_prime = M_prime * cosmo2cosmo->s_M;
 
-  return(M_prime);
+    return (M_prime);
 }
-

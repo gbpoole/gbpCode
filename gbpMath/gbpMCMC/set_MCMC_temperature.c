@@ -6,7 +6,6 @@
 #include <gbpRNG.h>
 #include <gbpMCMC.h>
 
-void set_MCMC_temperature(MCMC_info *MCMC,double temperature){
-  MCMC->temperature=temperature;
+void set_MCMC_temperature(MCMC_info *MCMC, double temperature) {
+    MCMC->temperature = temperature;
 }
-

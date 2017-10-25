@@ -9,39 +9,33 @@
 #include <gbpHalos.h>
 #include <gbpTrees_build.h>
 
-void compute_trees_vertical(char   *filename_SSimPL_dir,
-                            char   *filename_halo_version_root,
-                            char   *filename_trees_name,
-                            int     n_dim_files){
-  SID_log("Constructing vertical merger trees...",SID_LOG_OPEN|SID_LOG_TIMER);
+void compute_trees_vertical(char *filename_SSimPL_dir, char *filename_halo_version_root, char *filename_trees_name, int n_dim_files) {
+    SID_log("Constructing vertical merger trees...", SID_LOG_OPEN | SID_LOG_TIMER);
 
-  char filename_trees_root[MAX_FILENAME_LENGTH];
-  char filename_halos_root[MAX_FILENAME_LENGTH];
-  sprintf(filename_trees_root,"%s/trees/%s",filename_SSimPL_dir,filename_trees_name);
-  sprintf(filename_halos_root,"%s/halos/%s",filename_SSimPL_dir,filename_halo_version_root);
+    char filename_trees_root[MAX_FILENAME_LENGTH];
+    char filename_halos_root[MAX_FILENAME_LENGTH];
+    sprintf(filename_trees_root, "%s/trees/%s", filename_SSimPL_dir, filename_trees_name);
+    sprintf(filename_halos_root, "%s/halos/%s", filename_SSimPL_dir, filename_halo_version_root);
 
-  // Read the horizontal trees into RAM
-  tree_info *trees;
-  read_trees(filename_SSimPL_dir,
-             filename_halo_version_root,
-             filename_trees_name,
-             TREE_MODE_DEFAULT&(~TREE_MODE_SUBSTRUCTURE_HIERARCHY_ON), // flatten substructure heirarchy pointers
-             &trees);
+    // Read the horizontal trees into RAM
+    tree_info *trees;
+    read_trees(filename_SSimPL_dir,
+               filename_halo_version_root,
+               filename_trees_name,
+               TREE_MODE_DEFAULT & (~TREE_MODE_SUBSTRUCTURE_HIERARCHY_ON), // flatten substructure heirarchy pointers
+               &trees);
 
-  // Read ancillary data
-  read_trees_catalogs(trees,READ_TREES_CATALOGS_BOTH|READ_TREES_CATALOGS_SAGE);
+    // Read ancillary data
+    read_trees_catalogs(trees, READ_TREES_CATALOGS_BOTH | READ_TREES_CATALOGS_SAGE);
 
-  // Correct FoF masses and assign unique halo IDs
-  finalize_trees_vertical(trees);
+    // Correct FoF masses and assign unique halo IDs
+    finalize_trees_vertical(trees);
 
-  // Write vertical trees
-  write_trees_vertical(trees,
-                       n_dim_files,
-                       filename_trees_root);
+    // Write vertical trees
+    write_trees_vertical(trees, n_dim_files, filename_trees_root);
 
-  // Clean-up
-  free_trees(&trees);
+    // Clean-up
+    free_trees(&trees);
 
-  SID_log("Done.",SID_LOG_CLOSE);
+    SID_log("Done.", SID_LOG_CLOSE);
 }
-

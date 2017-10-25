@@ -9,9 +9,8 @@
 #include <gbpTrees_build.h>
 #include <gbpTrees_analysis.h>
 
-int check_treenode_if_group(tree_node_info *halo){
-   if(halo!=NULL)
-      return(halo->parent_top==NULL);
-   return(FALSE);
+int check_treenode_if_group(tree_node_info *halo) {
+    if(halo != NULL)
+        return (halo->parent_top == NULL);
+    return (FALSE);
 }
-

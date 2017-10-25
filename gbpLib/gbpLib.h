@@ -4,10 +4,10 @@
 #include <gbpADaPS.h>
 #include <gbpParse.h>
 #if USE_CFITSIO
-  #include <gbpFITS.h>
+#include <gbpFITS.h>
 #endif
 #if USE_HDF5
-  #include <gbpHDF5.h>
+#include <gbpHDF5.h>
 #endif
 #include <gbpMultifile.h>
 #endif

@@ -7,7 +7,6 @@
 #include <gbpCosmo.h>
 #include <gbpRender.h>
 
-double RGB_lookup(render_info *render,char colour,int channel){
-   return(render->colour_f_RGB[colour][channel]);
+double RGB_lookup(render_info *render, char colour, int channel) {
+    return (render->colour_f_RGB[colour][channel]);
 }
-

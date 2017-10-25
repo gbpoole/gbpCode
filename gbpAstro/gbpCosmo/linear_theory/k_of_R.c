@@ -6,7 +6,6 @@
 #include <gbpMath.h>
 #include <gbpCosmo_linear_theory.h>
 
-double k_of_R(double R){
-  return(TWO_PI/R);
+double k_of_R(double R) {
+    return (TWO_PI / R);
 }
-

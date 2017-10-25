@@ -6,7 +6,6 @@
 #include <gbpRNG.h>
 #include <gbpMCMC.h>
 
-void set_MCMC_coverage_size(MCMC_info *MCMC,int coverage_size){
-  MCMC->coverage_size=coverage_size;
+void set_MCMC_coverage_size(MCMC_info *MCMC, int coverage_size) {
+    MCMC->coverage_size = coverage_size;
 }
-

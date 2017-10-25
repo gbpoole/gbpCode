@@ -5,7 +5,6 @@
 #include <gbpMath.h>
 #include <gbpCosmo_core.h>
 
-double D_angular(double z,cosmo_info *cosmo){
-  return(D_comove_transverse(z,cosmo)/(1.+z));
+double D_angular(double z, cosmo_info *cosmo) {
+    return (D_comove_transverse(z, cosmo) / (1. + z));
 }
-

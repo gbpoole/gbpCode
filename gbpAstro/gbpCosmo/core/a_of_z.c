@@ -5,7 +5,6 @@
 #include <gbpMath.h>
 #include <gbpCosmo_core.h>
 
-double a_of_z(double z){
-  return(1./(1.+z));
+double a_of_z(double z) {
+    return (1. / (1. + z));
 }
-

@@ -7,9 +7,9 @@
 #include <gbpCosmo.h>
 #include <gbpRender.h>
 
-void fetch_image_array(image_info **image,int i_depth,double **values){
-   if(image!=NULL)
-      (*values)=image[i_depth]->values;
-   else
-      (*values)=NULL;
+void fetch_image_array(image_info **image, int i_depth, double **values) {
+    if(image != NULL)
+        (*values) = image[i_depth]->values;
+    else
+        (*values) = NULL;
 }
