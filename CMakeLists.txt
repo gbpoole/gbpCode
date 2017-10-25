@@ -26,7 +26,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_GLIBCXX_USE_CXX11_ABI=0")
 
 # Generate compile commands .json file
 # (nneded by things like clang-tidy)
-set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Use double precision liberally?
 option(USE_DOUBLE "Use double liberally" OFF)
@@ -165,6 +165,24 @@ add_custom_target(
         -i
         ${ALL_FILES_PROJECT}
 )
+
+# Clang-tidy
+message(STATUS "  -> clang-tidy-suggest")
+add_custom_target(
+        clang-tidy-suggest
+        COMMAND clang-tidy
+        -p ${CMAKE_CURRENT_BINARY_DIR}
+        ${SRC_FILES_PROJECT}
+)
+message(STATUS "  -> clang-tidy-fix")
+add_custom_target(
+        clang-tidy-fix
+        COMMAND clang-tidy
+        -p ${CMAKE_CURRENT_BINARY_DIR}
+        -fix
+        ${SRC_FILES_PROJECT}
+)
+
 message(STATUS "Finished initializing custom targets.")
 message(STATUS "")
 
