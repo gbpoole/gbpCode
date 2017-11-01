@@ -598,8 +598,10 @@ void read_atable(const char *filename_in,
 
         // Sanity check
         if(n_halos_local != n_halos_allocate)
-            SID_trap_error(
-                "The number of halos read does not correspond to what was allocated (ie. %zd!=%zd).", SID_ERROR_LOGIC, n_halos_local, n_halos_allocate);
+            SID_trap_error("The number of halos read does not correspond to what was allocated (ie. %zd!=%zd).",
+                           SID_ERROR_LOGIC,
+                           n_halos_local,
+                           n_halos_allocate);
 
         // Sort the local PHKs
         size_t *PHK_index;

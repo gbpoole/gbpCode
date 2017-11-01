@@ -318,10 +318,12 @@ void compute_MCMC(MCMC_info *MCMC) {
             for(i_P = 0; i_P < n_P; i_P++) {
                 fread_verify(P_name_test, sizeof(char), MCMC_NAME_SIZE, fp_run);
                 if(strcmp(P_name_test, MCMC->P_names[i_P]))
-                    SID_trap_error("Parameter #%d's names are inconsistant (i.e. {%s}!={%s}).", SID_ERROR_LOGIC, i_P, MCMC->P_names[i_P], P_name_test);
+                    SID_trap_error(
+                        "Parameter #%d's names are inconsistant (i.e. {%s}!={%s}).", SID_ERROR_LOGIC, i_P, MCMC->P_names[i_P], P_name_test);
                 fread_verify(&P_init_test, sizeof(double), 1, fp_run);
                 // if(P_init_test!=MCMC->P_init[i_P])
-                //   SID_trap_error("Parameter #%d's initial values are inconsistant (i.e. %le!=%le).",SID_ERROR_LOGIC,i_P,MCMC->P_init[i_P],P_init_test);
+                //   SID_trap_error("Parameter #%d's initial values are inconsistant (i.e.
+                //   %le!=%le).",SID_ERROR_LOGIC,i_P,MCMC->P_init[i_P],P_init_test);
                 fread_verify(&P_min_test, sizeof(double), 1, fp_run);
                 if(P_min_test != MCMC->P_limit_min[i_P])
                     SID_trap_error(
@@ -387,8 +389,11 @@ void compute_MCMC(MCMC_info *MCMC) {
                 }
                 fread_verify(&n_arrays_test, sizeof(int), 1, fp_run);
                 if(n_arrays_test != current_DS->n_arrays)
-                    SID_trap_error(
-                        "The number of arrays in dataset #%d is inconsistant (i.e. %d!=%d).", SID_ERROR_LOGIC, i_DS, n_arrays_test, current_DS->n_arrays);
+                    SID_trap_error("The number of arrays in dataset #%d is inconsistant (i.e. %d!=%d).",
+                                   SID_ERROR_LOGIC,
+                                   i_DS,
+                                   n_arrays_test,
+                                   current_DS->n_arrays);
                 for(i_array = 0; i_array < current_DS->n_arrays; i_array++) {
                     fread_verify(array_name_test, sizeof(char), MCMC_NAME_SIZE, fp_run);
                     if(strcmp(array_name_test, current_DS->array_name[i_array]))

@@ -201,7 +201,8 @@ void write_match_results(char *      filename_out_dir,
                 // Sanity check
                 for(i_buffer = 0; i_buffer < n_buffer; i_buffer++) {
                     if(buffer_float[i_buffer] < 0.)
-                        SID_trap_error("Illegal match_score result (%f) for group No. %d.", SID_ERROR_LOGIC, buffer_float[i_buffer], i_group + i_buffer);
+                        SID_trap_error(
+                            "Illegal match_score result (%f) for group No. %d.", SID_ERROR_LOGIC, buffer_float[i_buffer], i_group + i_buffer);
                 }
                 // Write the buffer
                 fwrite(buffer, sizeof(float), (size_t)n_buffer, fp_out);
@@ -239,7 +240,8 @@ void write_match_results(char *      filename_out_dir,
                 // Sanity check
                 for(i_buffer = 0; i_buffer < n_buffer; i_buffer++) {
                     if(buffer_int[i_buffer] < 0.)
-                        SID_trap_error("Illegal match_count result (%f) for group No. %d.", SID_ERROR_LOGIC, buffer_int[i_buffer], i_group + i_buffer);
+                        SID_trap_error(
+                            "Illegal match_count result (%f) for group No. %d.", SID_ERROR_LOGIC, buffer_int[i_buffer], i_group + i_buffer);
                 }
                 // Write the buffer
                 fwrite(buffer, sizeof(int), (size_t)n_buffer, fp_out);

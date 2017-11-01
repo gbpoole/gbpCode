@@ -211,7 +211,8 @@ void inject_duplicates_local(plist_info *plist,
                 int index_j;
                 index_j = subgroup_duplicate_added_to[i_duplicate];
                 if(index_j < 0 || index_j >= n_subgroups_local)
-                    SID_trap_error("The subgroup that duplicate No. %d is supposed to be added to is on the wrong rank.", SID_ERROR_SYNTAX, i_duplicate);
+                    SID_trap_error(
+                        "The subgroup that duplicate No. %d is supposed to be added to is on the wrong rank.", SID_ERROR_SYNTAX, i_duplicate);
                 for(i_subgroup = (index_j + 1); i_subgroup < n_subgroups_local; i_subgroup++)
                     offset_subgroup[i_subgroup]++;
                 size_subgroup[index_j]++;
@@ -938,8 +939,11 @@ void read_gadget_binary_local(char *      filename_root_in,
 
         // Check that the right number of particles have been read
         if(n_particles_kept != n_particles_rank)
-            SID_log_warning(
-                "Rank %d did not receive the right number of particles (ie. %d!=%d)", SID_ERROR_LOGIC, SID.My_rank, n_particles_kept, n_particles_rank);
+            SID_log_warning("Rank %d did not receive the right number of particles (ie. %d!=%d)",
+                            SID_ERROR_LOGIC,
+                            SID.My_rank,
+                            n_particles_kept,
+                            n_particles_rank);
         SID_Allreduce(&n_particles_rank, &n_particles_all, 1, SID_SIZE_T, SID_SUM, SID.COMM_WORLD);
 
         // Store everything in the data structure...
@@ -1499,7 +1503,8 @@ int main(int argc, char *argv[]) {
                         SID_trap_error("A group's substructure particles have not been copied correctly while removing small substructures.",
                                        SID_ERROR_LOGIC);
                     if(i_particle_tail != size_groups[i_group])
-                        SID_trap_error("A group's tail particles have not been copied correctly while removing small substructures.", SID_ERROR_LOGIC);
+                        SID_trap_error("A group's tail particles have not been copied correctly while removing small substructures.",
+                                       SID_ERROR_LOGIC);
                     // Set group information
                     size_groups[j_group]       = size_groups[i_group];
                     offset_groups[j_group]     = j_particle;

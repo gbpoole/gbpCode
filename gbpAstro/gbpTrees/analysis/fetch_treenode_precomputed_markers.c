@@ -22,6 +22,7 @@ tree_markers_info *fetch_treenode_precomputed_markers(tree_info *trees, tree_nod
         markers = &(markers_precomputed[halo->snap_tree][halo->neighbour_index]);
     }
     if(markers == NULL)
-        SID_trap_error("Could not set the markers for a halo in fetch_treenode_precomputed_markers(). (is_halo_NULL=%d)", SID_ERROR_LOGIC, halo == NULL);
+        SID_trap_error(
+            "Could not set the markers for a halo in fetch_treenode_precomputed_markers(). (is_halo_NULL=%d)", SID_ERROR_LOGIC, halo == NULL);
     return (markers);
 }

@@ -63,8 +63,12 @@ int main(int argc, char *argv[]) {
             n_groups_i = n_groups_1;
             n_groups_j = n_groups_2;
         } else if(n_groups_i != n_groups_2 || n_groups_j != n_groups_1)
-            SID_trap_error(
-                "Input match file halo counts are not symetric (ie %d!=%d or %d!=%d).", SID_ERROR_LOGIC, n_groups_i, n_groups_1, n_groups_j, n_groups_2);
+            SID_trap_error("Input match file halo counts are not symetric (ie %d!=%d or %d!=%d).",
+                           SID_ERROR_LOGIC,
+                           n_groups_i,
+                           n_groups_1,
+                           n_groups_j,
+                           n_groups_2);
 
         // Allocate RAM
         match[i_read]   = (int *)SID_malloc(sizeof(int) * n_groups_1);

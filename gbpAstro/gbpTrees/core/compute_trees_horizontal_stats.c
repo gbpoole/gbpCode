@@ -34,7 +34,8 @@ void compute_trees_horizontal_stats(void *halos_in, int n_halos, int n_halos_max
     }
 
     if(n_halos != (n_halos_max - stats->n_invalid))
-        SID_trap_error("There is an incorrect number of out-of-bounds halos (i.e. %d!=%d)", SID_ERROR_LOGIC, n_halos, (n_halos_max - stats->n_invalid));
+        SID_trap_error(
+            "There is an incorrect number of out-of-bounds halos (i.e. %d!=%d)", SID_ERROR_LOGIC, n_halos, (n_halos_max - stats->n_invalid));
     if(stats->n_unprocessed != 0)
         SID_trap_error("A number of halos (%d) are still marked as unprocessed", SID_ERROR_LOGIC, stats->n_unprocessed);
 }

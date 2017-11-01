@@ -65,8 +65,10 @@ int main(int argc, char *argv[]) {
 
             // Sanity check
             if(n_groups_halos != fp_catalog_groups.n_halos_total)
-                SID_trap_error(
-                    "Group counts in halo and catalog files don't match (ie. %d!=%d).", SID_ERROR_LOGIC, n_groups_halos, fp_catalog_groups.n_halos_total);
+                SID_trap_error("Group counts in halo and catalog files don't match (ie. %d!=%d).",
+                               SID_ERROR_LOGIC,
+                               n_groups_halos,
+                               fp_catalog_groups.n_halos_total);
 
             // Process halos
             SID_log("Processing snapshot #%03d...", SID_LOG_OPEN, snap_number);

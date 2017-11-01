@@ -174,8 +174,11 @@ int fopen_catalog(char *filename_catalog_root, int snapshot_number, int mode, fp
             fp_out->fp_properties = fopen(filename_properties, "r");
             if(fp_out->fp_properties == NULL) {
                 r_val = GBP_TRUE;
-                SID_trap_error(
-                    "Could not open catalog {%s} snapshot #%03d {%s}.", SID_ERROR_IO_OPEN, filename_catalog_root, snapshot_number, filename_properties);
+                SID_trap_error("Could not open catalog {%s} snapshot #%03d {%s}.",
+                               SID_ERROR_IO_OPEN,
+                               filename_catalog_root,
+                               snapshot_number,
+                               filename_properties);
             }
             // ... we found a single file.  Set flags.
             else

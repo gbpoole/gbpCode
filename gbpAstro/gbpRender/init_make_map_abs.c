@@ -518,8 +518,11 @@ void init_make_map_abs(render_info *render,
 
     // Sanity checks
     if(j_particle_rank != n_particles_local)
-        SID_trap_error(
-            "The wrong number of particles were received (ie. %zd!=%zd) on rank %d.", SID_ERROR_LOGIC, j_particle_rank, n_particles_local, SID.My_rank);
+        SID_trap_error("The wrong number of particles were received (ie. %zd!=%zd) on rank %d.",
+                       SID_ERROR_LOGIC,
+                       j_particle_rank,
+                       n_particles_local,
+                       SID.My_rank);
 
     SID_log("Done.", SID_LOG_CLOSE);
 

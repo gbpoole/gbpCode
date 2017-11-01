@@ -28,8 +28,9 @@ void compute_progenitor_score_vertical_recursive(tree_vertical_node_info *tree, 
             current = current->progenitor_next;
         }
         if(i_progenitor != tree->n_progenitors)
-            SID_trap_error(
-                "There is a progenitor problem in compute_progenitor_score_recursive! (%d!=%d)", SID_ERROR_LOGIC, i_progenitor != tree->n_progenitors);
+            SID_trap_error("There is a progenitor problem in compute_progenitor_score_recursive! (%d!=%d)",
+                           SID_ERROR_LOGIC,
+                           i_progenitor != tree->n_progenitors);
     }
 
     // Add this progenitor's score to the descendant's sum (see De Lucia and Blaizot (2006))

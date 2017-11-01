@@ -125,7 +125,8 @@ int compute_cross_catalog_matches(char *filename_root_in_1,
     n_bits_PHK_2 = ((int *)ADaPS_fetch(plist2.data, "n_bits_PHK_%s", filename_cat2))[0];
     // SID_set_verbosity(SID_SET_VERBOSITY_DEFAULT);
     if(n_bits_PHK_1 != n_bits_PHK_2)
-        SID_trap_error("The PHK bit-sizeo of the two catalog's precomputed PHKs don't match (ie %d!=%d).", SID_ERROR_LOGIC, n_bits_PHK_1, n_bits_PHK_2);
+        SID_trap_error(
+            "The PHK bit-sizeo of the two catalog's precomputed PHKs don't match (ie %d!=%d).", SID_ERROR_LOGIC, n_bits_PHK_1, n_bits_PHK_2);
 
     // First match one way, then the other
     int         k_order;

@@ -509,9 +509,9 @@ void match_halos(plist_info *plist_1_in,
             }
 
             // Perform matching
-            int    max_id_gap      = 100;  // If two consecuative IDs are more than this appart, use bisection to find next index
-            int    flag_use_bisect = GBP_TRUE; // This will skip all the zeros at the beginning of the list due to unused particles and jump big id gaps
-            size_t id_1_last       = 0;
+            int max_id_gap      = 100;      // If two consecuative IDs are more than this appart, use bisection to find next index
+            int flag_use_bisect = GBP_TRUE; // This will skip all the zeros at the beginning of the list due to unused particles and jump big id gaps
+            size_t    id_1_last = 0;
             short int hist_size;
             size_t    idx_1;
             size_t    idx_2;

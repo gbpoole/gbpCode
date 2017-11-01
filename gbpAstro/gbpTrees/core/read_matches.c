@@ -264,17 +264,25 @@ void read_matches(char *  filename_in_dir,
 
             // Check that we have the right files
             if(n_groups_i_check != (*n_groups_i))
-                SID_trap_error(
-                    "Source halo counts don't match (ie. %d!=%d) in two-way check in read_matches().", SID_ERROR_LOGIC, n_groups_i_check, (*n_groups_i));
+                SID_trap_error("Source halo counts don't match (ie. %d!=%d) in two-way check in read_matches().",
+                               SID_ERROR_LOGIC,
+                               n_groups_i_check,
+                               (*n_groups_i));
             if(n_groups_j_check != (*n_groups_j))
-                SID_trap_error(
-                    "Target halo counts don't match (ie. %d!=%d) in two-way check in read_matches().", SID_ERROR_LOGIC, n_groups_j_check, (*n_groups_j));
+                SID_trap_error("Target halo counts don't match (ie. %d!=%d) in two-way check in read_matches().",
+                               SID_ERROR_LOGIC,
+                               n_groups_j_check,
+                               (*n_groups_j));
             if(i_read_file_check != i_read_file)
-                SID_trap_error(
-                    "Source file numbers don't match (ie. %d!=%d) in two-way check in read_matches().", SID_ERROR_LOGIC, i_read_file_check, i_read_file);
+                SID_trap_error("Source file numbers don't match (ie. %d!=%d) in two-way check in read_matches().",
+                               SID_ERROR_LOGIC,
+                               i_read_file_check,
+                               i_read_file);
             if(j_read_file_check != j_read_file)
-                SID_trap_error(
-                    "Target file numbers don't match (ie. %d!=%d) in two-way check in read_matches().", SID_ERROR_LOGIC, j_read_file_check, j_read_file);
+                SID_trap_error("Target file numbers don't match (ie. %d!=%d) in two-way check in read_matches().",
+                               SID_ERROR_LOGIC,
+                               j_read_file_check,
+                               j_read_file);
 
             // Skip to the beginning of the relevant block for the score-reading file pointer
             SID_fskip(sizeof(int), 4, &fp_check_score);             // header

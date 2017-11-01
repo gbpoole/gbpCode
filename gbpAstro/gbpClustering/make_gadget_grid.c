@@ -362,7 +362,8 @@ void read_gadget_binary_local(char *      filename_root_in,
         for(i_type = 0; i_type < N_GADGET_TYPE; i_type++) {
             SID_Allreduce(&(n_of_type_local[i_type]), &(n_of_type[i_type]), 1, SID_SIZE_T, SID_SUM, SID.COMM_WORLD);
             if(n_of_type[i_type] != n_all[i_type] && n_load == 1)
-                SID_trap_error("Particle counts don't make sense after read_gadget (ie. %zd!=%zd).", SID_ERROR_LOGIC, n_of_type[i_type], n_all[i_type]);
+                SID_trap_error(
+                    "Particle counts don't make sense after read_gadget (ie. %zd!=%zd).", SID_ERROR_LOGIC, n_of_type[i_type], n_all[i_type]);
         }
 
         // Store results

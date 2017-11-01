@@ -58,7 +58,8 @@ void read_treenode_markers(tree_info *trees, const char *filename_input_root, in
             i_halo++;
         }
         // Sort file indices
-        merge_sort(file_index_local[i_snap], (size_t)(n_halos_local[i_snap]), &(file_index_local_index[i_snap]), SID_INT, SORT_COMPUTE_INDEX, GBP_FALSE);
+        merge_sort(
+            file_index_local[i_snap], (size_t)(n_halos_local[i_snap]), &(file_index_local_index[i_snap]), SID_INT, SORT_COMPUTE_INDEX, GBP_FALSE);
     }
     SID_log("Done.", SID_LOG_CLOSE);
 

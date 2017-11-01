@@ -38,8 +38,11 @@ void process_trees_by_snap(tree_info *trees,
     // Perform sanity check on the passed snapshot range
     int i_snap_hi = i_snap_lo + n_snap_process - 1;
     if(i_snap_hi < i_snap_lo || i_snap_hi > trees->n_snaps || i_snap_lo < 0)
-        SID_trap_error(
-            "Invalid snapshot range (%d to %d; %d in trees) passed to process_trees_by_snap().", SID_ERROR_LOGIC, i_snap_lo, i_snap_hi, trees->n_snaps);
+        SID_trap_error("Invalid snapshot range (%d to %d; %d in trees) passed to process_trees_by_snap().",
+                       SID_ERROR_LOGIC,
+                       i_snap_lo,
+                       i_snap_hi,
+                       trees->n_snaps);
 
     // Loop over each halo type in turn
     for(int i_type = 0; i_type < 2; i_type++) {

@@ -1,7 +1,7 @@
 #ifndef SID_CONSTANTS_H
 #define SID_CONSTANTS_H
 
-// This provides a way to turn-off 
+// This provides a way to turn-off
 // optional SID constants (eg. in case
 // they conflict with other projects).
 #ifndef SID_CONSTANTS_OFF

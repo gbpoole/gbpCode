@@ -661,10 +661,13 @@ void perform_marking(render_info *render) {
 
         // Sanity checks
         if(i_mark_properties != render->n_mark_properties)
-            SID_trap_error(
-                "Marked properties array has not been properly populated (i.e. %d!=%d)", SID_ERROR_LOGIC, i_mark_properties, render->n_mark_properties);
+            SID_trap_error("Marked properties array has not been properly populated (i.e. %d!=%d)",
+                           SID_ERROR_LOGIC,
+                           i_mark_properties,
+                           render->n_mark_properties);
         if(i_arg != render->n_mark_args)
-            SID_trap_error("Marked properties array has not been properly populated (i.e. %d!=%d)", SID_ERROR_LOGIC, i_arg, render->n_mark_properties);
+            SID_trap_error(
+                "Marked properties array has not been properly populated (i.e. %d!=%d)", SID_ERROR_LOGIC, i_arg, render->n_mark_properties);
 
         SID_log("Done.", SID_LOG_CLOSE);
     }

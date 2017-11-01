@@ -355,7 +355,8 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
         long long n_particles_check = 0;
         SID_Allreduce(&n_particles_rank, &n_particles_check, 1, SID_LONG_LONG, SID_SUM, SID.COMM_WORLD);
         if(n_particles_check != n_particles_all)
-            SID_trap_error("Rank-allocated particle counts don't sum to the total (ie. %zd!=%zd).", SID_ERROR_LOGIC, n_particles_check, n_particles_all);
+            SID_trap_error(
+                "Rank-allocated particle counts don't sum to the total (ie. %zd!=%zd).", SID_ERROR_LOGIC, n_particles_check, n_particles_all);
 
         // Allocate data arrays
         int flag_read_positions  = GBP_TRUE;
@@ -468,13 +469,15 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                         fseeko(fp, (off_t)record_length_open, SEEK_CUR);
                         fread_verify(&record_length_close, 4, 1, fp);
                         if(record_length_open != record_length_close)
-                            SID_trap_error("Position record lengths don't match (ie. %d!=%d)", SID_ERROR_LOGIC, record_length_open, record_length_close);
+                            SID_trap_error(
+                                "Position record lengths don't match (ie. %d!=%d)", SID_ERROR_LOGIC, record_length_open, record_length_close);
                         // Skip velocities
                         fread_verify(&record_length_open, 4, 1, fp);
                         fseeko(fp, (off_t)record_length_open, SEEK_CUR);
                         fread_verify(&record_length_close, 4, 1, fp);
                         if(record_length_open != record_length_close)
-                            SID_trap_error("Velocity record lengths don't match (ie. %d!=%d)", SID_ERROR_LOGIC, record_length_open, record_length_close);
+                            SID_trap_error(
+                                "Velocity record lengths don't match (ie. %d!=%d)", SID_ERROR_LOGIC, record_length_open, record_length_close);
                         // Read IDs
                         fread_verify(&record_length_open, 4, 1, fp);
                         fread_verify(buffer, record_length_open, 1, fp);
@@ -500,7 +503,8 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                         fseeko(fp, (off_t)record_length_open, SEEK_CUR);
                         fread_verify(&record_length_close, 4, 1, fp);
                         if(record_length_open != record_length_close)
-                            SID_trap_error("Header record lengths don't match (ie. %d!=%d)", SID_ERROR_LOGIC, record_length_open, record_length_close);
+                            SID_trap_error(
+                                "Header record lengths don't match (ie. %d!=%d)", SID_ERROR_LOGIC, record_length_open, record_length_close);
                     }
 
                     // Determine which particles from this file will be kept on this rank
@@ -803,7 +807,8 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
 
         // Check that the right number of particles have been read
         if(n_particles_kept != n_particles_rank)
-            SID_log_warning("Rank %d did not receive the right number of particles (ie. %d!=%d)", SID_ERROR_LOGIC, n_particles_kept, n_particles_rank);
+            SID_log_warning(
+                "Rank %d did not receive the right number of particles (ie. %d!=%d)", SID_ERROR_LOGIC, n_particles_kept, n_particles_rank);
         if(n_particles_kept_all != n_particles_all)
             SID_log_warning("The right number of particles were not read (ie. %d!=%d)", SID_ERROR_LOGIC, n_particles_kept_all, n_particles_all);
 

@@ -406,8 +406,10 @@ int main(int argc, char *argv[]) {
                         i_tree++;
                     }
                     if(i_tree != n_trees_in)
-                        SID_trap_error(
-                            "The number of trees read (%d) does not equal the number listed in the header (%d)!", SID_ERROR_LOGIC, i_tree, n_trees_in);
+                        SID_trap_error("The number of trees read (%d) does not equal the number listed in the header (%d)!",
+                                       SID_ERROR_LOGIC,
+                                       i_tree,
+                                       n_trees_in);
                     merge_sort(tree_ids, (size_t)n_tree_ids, NULL, SID_INT, SORT_INPLACE_ONLY, GBP_TRUE);
                     SID_log("(%d trees and %d halos found; %d output-trees will result)...Done.", SID_LOG_CLOSE, n_trees_in, n_halos, n_tree_ids);
 

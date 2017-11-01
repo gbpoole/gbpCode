@@ -30,15 +30,14 @@
 #define READ_CATALOG_PROFILES SID_TTTP03
 #define READ_CATALOG_DEFAULT READ_CATALOG_GROUPS | READ_CATALOG_PROPERTIES
 
-#define MATCH_SUBGROUPS SID_TTTP01    // Match subgroups (default)
-#define MATCH_GROUPS SID_TTTP02       // Match groups
-#define MATCH_BACK SID_TTTP03         // Switch the sence of matching between plists
-#define MATCH_STORE_2 SID_TTTP04      // Switch which plist results are stored in
-#define MATCH_STORE_SCORE SID_TTTP05  // Store the matching score
-#define MATCH_SUBSTRUCTURE SID_TTTP06 // Search for substructure; ie. ignore self matches
-#define MATCH_APPLY_OFFSETS \
-    SID_TTTP07 // When matching across multiple cores, apply
-           //   rank offsets so that match_ids are global indices
+#define MATCH_SUBGROUPS SID_TTTP01     // Match subgroups (default)
+#define MATCH_GROUPS SID_TTTP02        // Match groups
+#define MATCH_BACK SID_TTTP03          // Switch the sence of matching between plists
+#define MATCH_STORE_2 SID_TTTP04       // Switch which plist results are stored in
+#define MATCH_STORE_SCORE SID_TTTP05   // Store the matching score
+#define MATCH_SUBSTRUCTURE SID_TTTP06  // Search for substructure; ie. ignore self matches
+#define MATCH_APPLY_OFFSETS SID_TTTP07 // When matching across multiple cores, apply
+                                       //   rank offsets so that match_ids are global indices
 
 #define N_P_MATCH_PRESELECT_MIN 32 // minimum number of particles for applying moment preselection
 

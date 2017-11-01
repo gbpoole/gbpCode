@@ -37,8 +37,10 @@ void assign_group_subgroup_order_vertical(tree_vertical_info *tree, int i_snap, 
         current = first_neighbour;
         while(current != NULL) {
             if(i_halo >= n_neighbours)
-                SID_trap_error(
-                    "There's a problem with the number of neighbours in assign_group_subgroup_order (%d>=%d)!", SID_ERROR_LOGIC, i_halo, n_neighbours);
+                SID_trap_error("There's a problem with the number of neighbours in assign_group_subgroup_order (%d>=%d)!",
+                               SID_ERROR_LOGIC,
+                               i_halo,
+                               n_neighbours);
             neighbours[i_halo] = current;
             group_ids[i_halo]  = current->group_id;
             current            = current->neighbour_halo_next;

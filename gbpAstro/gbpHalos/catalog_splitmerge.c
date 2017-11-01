@@ -179,7 +179,8 @@ int main(int argc, char *argv[]) {
                     if(n_props != n_props_all)
                         SID_trap_error("Halo counts don't agree (ie. %d!=%d) in properties file.", SID_ERROR_LOGIC, n_props, n_props_all);
                     if(n_files_props != 1)
-                        SID_trap_error("Invalid file count (%d) in non-multifile properties file {%s}.", SID_ERROR_LOGIC, n_files_props, filename_test);
+                        SID_trap_error(
+                            "Invalid file count (%d) in non-multifile properties file {%s}.", SID_ERROR_LOGIC, n_files_props, filename_test);
                 } else
                     SID_trap_error("Could not open properties dataset.", SID_ERROR_IO_OPEN);
             }

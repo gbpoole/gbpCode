@@ -569,8 +569,11 @@ void read_gadget_binary_local(char *filename_root_in, int snapshot_number, plist
 
         // Check that the right number of particles have been read
         if(n_particles_kept != n_particles_rank)
-            SID_log_warning(
-                "Rank %d did not receive the right number of particles (ie. %d!=%d)", SID_ERROR_LOGIC, SID.My_rank, n_particles_kept, n_particles_rank);
+            SID_log_warning("Rank %d did not receive the right number of particles (ie. %d!=%d)",
+                            SID_ERROR_LOGIC,
+                            SID.My_rank,
+                            n_particles_kept,
+                            n_particles_rank);
 
         // Store everything in the data structure...
 

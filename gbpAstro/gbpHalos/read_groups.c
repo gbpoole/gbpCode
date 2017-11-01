@@ -493,7 +493,8 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
 
             // Sanity check
             if(j_group != n_groups_local)
-                SID_trap_error("Group counts don't make sense (ie. %d!=%d) after determining storage indices.", SID_ERROR_LOGIC, j_group, n_groups_local);
+                SID_trap_error(
+                    "Group counts don't make sense (ie. %d!=%d) after determining storage indices.", SID_ERROR_LOGIC, j_group, n_groups_local);
 
             // Clean-up
             SID_free(SID_FARG PHK_boundary);
@@ -691,7 +692,8 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
                     }
                 }
                 if(j_group != n_groups_local)
-                    SID_trap_error("Group counts don't make sense (ie. %d!=%d) after reading group lengths.", SID_ERROR_LOGIC, j_group, n_groups_local);
+                    SID_trap_error(
+                        "Group counts don't make sense (ie. %d!=%d) after reading group lengths.", SID_ERROR_LOGIC, j_group, n_groups_local);
 
                 // Check for indexing inconsistancies
                 for(int i_group = 0; i_group < n_groups_local; i_group++) {
@@ -739,7 +741,8 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
                     }
                 }
                 if(j_group != n_groups_local)
-                    SID_trap_error("Group counts don't make sense (ie. %d!=%d) after reading group offsets.", SID_ERROR_LOGIC, j_group, n_groups_local);
+                    SID_trap_error(
+                        "Group counts don't make sense (ie. %d!=%d) after reading group offsets.", SID_ERROR_LOGIC, j_group, n_groups_local);
 
                 // Check for indexing inconsistancies
                 for(int i_group = 0; i_group < n_groups_local; i_group++) {
@@ -782,8 +785,10 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
                 }
                 SID_free(SID_FARG buffer);
                 if(j_group != n_groups_local)
-                    SID_trap_error(
-                        "Group counts don't make sense (ie. %d!=%d) after reading no. of subgroups per group.", SID_ERROR_LOGIC, j_group, n_groups_local);
+                    SID_trap_error("Group counts don't make sense (ie. %d!=%d) after reading no. of subgroups per group.",
+                                   SID_ERROR_LOGIC,
+                                   j_group,
+                                   n_groups_local);
                 if(i_subgroup != n_subgroups)
                     SID_trap_error("Subgroup counts don't make sense (ie. %d!=%d) after reading no. of subgroups per group.",
                                    SID_ERROR_LOGIC,
@@ -966,7 +971,8 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
                 // ... (make sure all ranks are synced to the end of the subgroup lengths) ...
                 fseeko(fp_subgroups, (off_t)(read_seek_subgroup[j_group] * sizeof(int)), SEEK_CUR);
                 if(j_group != n_groups_local)
-                    SID_trap_error("Group counts don't make sense (ie. %d!=%d) after reading group lengths.", SID_ERROR_LOGIC, j_group, n_groups_local);
+                    SID_trap_error(
+                        "Group counts don't make sense (ie. %d!=%d) after reading group lengths.", SID_ERROR_LOGIC, j_group, n_groups_local);
 
                 // ... read local subgroup offsets ...
                 for(int i_test = 0; i_test < n_subgroups_local; i_test++)
@@ -1029,7 +1035,8 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
                 // ... (make sure all ranks are synced to the end of the subgroup lengths) ...
                 fseeko(fp_subgroups, (off_t)(read_seek_subgroup[j_group] * sizeof(int)), SEEK_CUR);
                 if(j_group != n_groups_local)
-                    SID_trap_error("Group counts don't make sense (ie. %d!=%d) after reading group lengths.", SID_ERROR_LOGIC, j_group, n_groups_local);
+                    SID_trap_error(
+                        "Group counts don't make sense (ie. %d!=%d) after reading group lengths.", SID_ERROR_LOGIC, j_group, n_groups_local);
 
                 // Check for indexing inconsistancies
                 for(int i_group = 0, i_subgroup = 0; i_group < n_groups_local; i_group++) {

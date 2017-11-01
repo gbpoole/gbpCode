@@ -136,7 +136,8 @@ void init_trees_read(const char *filename_SSimPL_dir,
     fp_alist_in = fopen(filename_alist_in, "r");
     n_alist_in  = count_lines_data(fp_alist_in);
     if(n_alist_in != (*tree)->n_snaps)
-        SID_trap_error("The number of entries in the a_list.txt file does not make sense (ie. %d!=%d)", SID_ERROR_LOGIC, n_alist_in, (*tree)->n_snaps);
+        SID_trap_error(
+            "The number of entries in the a_list.txt file does not make sense (ie. %d!=%d)", SID_ERROR_LOGIC, n_alist_in, (*tree)->n_snaps);
     for(i_alist = 0; i_alist < (*tree)->n_snaps; i_alist++) {
         grab_next_line_data(fp_alist_in, &line, &line_length);
         grab_double(line, 1, &a_in);
