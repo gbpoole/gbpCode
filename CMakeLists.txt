@@ -1,49 +1,49 @@
-# This is the CMakeList.txt file used by all gbpCode projects
+#This is the CMakeList.txt file used by all gbpCode projects
 
 cmake_minimum_required(VERSION 3.5)
 
-# Include all the macros we will use
+#Include all the macros we will use
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_SOURCE_DIR}/.cmake;${CMAKE_SOURCE_DIR}")
 include("macros")
 
-# Set default compilers (must come before project line)
+#Set default compilers(must come before project line)
 set(CMAKE_C_COMPILER   "gcc")
 set(CMAKE_CXX_COMPILER "g++")
 
-# Declare the project name
+#Declare the project name
 project (gbpCode)
 
-# Compiler flags
+#Compiler flags
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu99")
 set(CMAKE_CXX_FLAGS "-std=c++11")
 
-# The following line is needed to deal with this annoying problem:
-#    https://developers.redhat.com/blog/2015/02/05/gcc5-and-the-c11-abi/
+#The following line is needed to deal with this annoying problem:
+#https: // developers.redhat.com/blog/2015/02/05/gcc5-and-the-c11-abi/
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_GLIBCXX_USE_CXX11_ABI=0")
 
-# Uncomment for a verbose run
+#Uncomment for a verbose run
 #set(CMAKE_VERBOSE_MAKEFILE ON)
 
-# Generate compile commands .json file
-# (nneded by things like clang-tidy)
+#Generate compile commands.json file
+#(nneded by things like clang - tidy)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# Use double precision liberally?
+#Use double precision liberally ?
 option(USE_DOUBLE "Use double liberally" OFF)
 if(USE_DOUBE)
     add_definitions(-DUSE_DOUBLE)
 endif()
 
-# =========== Add 3rd-party libraries ===========
+#== == == == == = Add 3rd - party libraries == == == == == =
 message(STATUS "")
 message(STATUS "Initializing 3rd-party libraries...")
 
-# GSL
+#GSL
 find_package(GSL REQUIRED)
 include_directories(${GSL_INCLUDE_DIRS})
 link_libraries(${GSL_LIBRARIES})
 
-# MPI
+#MPI
 option(USE_MPI "Use MPI" OFF)
 if(USE_MPI)
     add_definitions(-DUSE_MPI)
@@ -52,7 +52,7 @@ if(USE_MPI)
     link_libraries(${MPI_C_LIBRARIES})
 endif()
 
-# LIBGD
+#LIBGD
 option(USE_GDLIB "Use libgd" ON)
 if(USE_GDLIB)
     find_package(GD REQUIRED)
@@ -60,21 +60,21 @@ if(USE_GDLIB)
     link_libraries(${GD_LIBRARIES})
 endif()
 
-# FITS
+#FITS
 option(USE_CFITSIO "Use CFITSIO" ON)
 if(USE_CFITSIO)
     find_package(CFITSIO REQUIRED)
     include_directories(${fits_INCLUDE_DIRS})
 endif()
 
-# HDF5
+#HDF5
 option(USE_HDF5 "Use HDF5" ON)
 if(USE_HDF5)
     find_package(HDF5 REQUIRED COMPONENTS C HL)
     include_directories(${HDF5_INCLUDE_DIRS})
     link_libraries(${HDF5_C_LIBRARIES} ${HDF5_C_HL_LIBRARIES})
     add_definitions(${HDF5_DEFINITIONS})
-    # THIS IS A TEMPORARY HACK TO OVERCOME A BUG IN SOME VERSIONS OF CMAKE
+#THIS IS A TEMPORARY HACK TO OVERCOME A BUG IN SOME VERSIONS OF CMAKE
     if(NOT (${HDF5_C_HL_LIBRARIES} MATCHES "libhdf5_hl"))
         list(GET HDF5_C_LIBRARIES 0 HDF5_LIB)
         get_filename_component(HDF5_LIBDIR ${HDF5_LIB} DIRECTORY)
@@ -82,7 +82,7 @@ if(USE_HDF5)
     endif()
 endif()
 
-# FFTW
+#FFTW
 option(USE_FFTW "Use FFTW" ON)
 if(USE_FFTW)
     add_definitions(-DUSE_FFTW)
@@ -91,7 +91,7 @@ if(USE_FFTW)
     link_libraries(${FFTW_LIBRARIES})
 endif()
 
-# OpenMP
+#OpenMP
 option(USE_OPENMP "Use OpenMP" OFF)
 if(USE_OPENMP)
     add_definitions(-DUSE_OPENMP)
@@ -100,9 +100,9 @@ if(USE_OPENMP)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
 endif()
 
-# CUDA & CUFFT 
-#  Note that the CUDA version should be >= 7.5
-#  because c++11 support is needed!
+#CUDA &    CUFFT
+#Note that the CUDA version should be >= 7.5
+#because c++ 11 support is needed !
 option(USE_CUDA "Use CUDA" OFF)
 if(USE_CUDA)
     find_package(CUDA REQUIRED)
@@ -112,7 +112,7 @@ if(USE_CUDA)
         add_definitions(-DUSE_CUFFT)
     endif()
 
-    # Collect CUDA source code
+#Collect CUDA source code
     file(GLOB SOURCES_CU core/*.cu *.hh)
     set(SOURCES ${SOURCES_C} ${SOURCES_CU})
 
