@@ -26,42 +26,49 @@
 #define TREE_MODE_DEFAULT (TREE_SUBSTRUCTURE_ORDER_DEFAULT | TREE_PROGENITOR_ORDER_DEFAULT | TREE_MODE_SUBSTRUCTURE_HIERARCHY_ON)
 
 // If any of these are changed, don't forget to modify parse_match_type.c (TTTPXX means "two-to-the-power-XX")
-#define TREE_CASE_NO_PROGENITORS SID_TTTP00     // Set for halos that have no progenitors.
-#define TREE_CASE_MAIN_PROGENITOR SID_TTTP01    // Set for the progenitor with the highest match score.
-#define TREE_CASE_MOST_MASSIVE SID_TTTP02       // Marks the most massive substructure.
-#define TREE_CASE_DOMINANT SID_TTTP03           // Marks the dominant     substructure.
-#define TREE_CASE_REMNANT SID_TTTP04            // Set for halos with more than one progenitor.
-#define TREE_CASE_MERGER_PRIMARY SID_TTTP05     // Set when a halo is deemed to be the primary   progenitor of a merger
-#define TREE_CASE_MERGER SID_TTTP06             // Set when a halo is deemed to be the secondary progenitor of a merger
-#define TREE_CASE_STRAYED SID_TTTP07            // Set for halos for which a descendant was not found
-#define TREE_CASE_DROPPED SID_TTTP08            // Set if file_offset>1 and TREE_CASE_MATCHED_TO_BRIDGE is not set
-#define TREE_CASE_BRIDGED SID_TTTP09            // Set for halos with multiple unique back-matches from halos with unique IDs
-#define TREE_CASE_EMERGED SID_TTTP10            // Set when a match is made identifying this halo as emerged
-#define TREE_CASE_FRAGMENTED_NEW SID_TTTP11     // Set for halos that have been marked TREE_CASE_EMERGED_CANDIDATE but not TREE_CASE_EMERGED
-                                                //    (unless it's the backmatch with the most massive descendant; that halo is considered
-                                                //     to be the source of any fragmented halos)
-#define TREE_CASE_FRAGMENTED_STRAYED SID_TTTP12 // Set for halos that are marked TREE_CASE_FRAGMENTED (see below), and whose
-                                                //    decendant_id!=a valid id (ie they are not a progenitor of anything).
-#define TREE_CASE_FRAGMENTED_NORMAL SID_TTTP13  // Set for halos that are marked TREE_CASE_FRAGMENTED (see below), but
-                                                //    are otherwise part of a connected progenitor line
-#define TREE_CASE_FRAGMENTED_OTHER SID_TTTP14   // Currently unused.  Saved for future use when we may mark other types of fragmented
-                                                //    halos (relic fragmented halos, for example).
-#define TREE_CASE_EMERGED_CANDIDATE SID_TTTP15  // Set when a halo is identified as a unique back-match to a halo marked TREE_CASE_BRIDGED and
+#define TREE_CASE_NO_PROGENITORS SID_TTTP00  // Set for halos that have no progenitors.
+#define TREE_CASE_MAIN_PROGENITOR SID_TTTP01 // Set for the progenitor with the highest match score.
+#define TREE_CASE_MOST_MASSIVE SID_TTTP02    // Marks the most massive substructure.
+#define TREE_CASE_DOMINANT SID_TTTP03        // Marks the dominant     substructure.
+#define TREE_CASE_REMNANT SID_TTTP04         // Set for halos with more than one progenitor.
+#define TREE_CASE_MERGER_PRIMARY SID_TTTP05  // Set when a halo is deemed to be the primary   progenitor of a merger
+#define TREE_CASE_MERGER SID_TTTP06          // Set when a halo is deemed to be the secondary progenitor of a merger
+#define TREE_CASE_STRAYED SID_TTTP07         // Set for halos for which a descendant was not found
+#define TREE_CASE_DROPPED SID_TTTP08         // Set if file_offset>1 and TREE_CASE_MATCHED_TO_BRIDGE is not set
+#define TREE_CASE_BRIDGED SID_TTTP09         // Set for halos with multiple unique back-matches from halos with unique IDs
+#define TREE_CASE_EMERGED SID_TTTP10         // Set when a match is made identifying this halo as emerged
+#define TREE_CASE_FRAGMENTED_NEW \
+    SID_TTTP11 // Set for halos that have been marked TREE_CASE_EMERGED_CANDIDATE but not TREE_CASE_EMERGED
+               //    (unless it's the backmatch with the most massive descendant; that halo is considered
+               //     to be the source of any fragmented halos)
+#define TREE_CASE_FRAGMENTED_STRAYED \
+    SID_TTTP12 // Set for halos that are marked TREE_CASE_FRAGMENTED (see below), and whose
+               //    decendant_id!=a valid id (ie they are not a progenitor of anything).
+#define TREE_CASE_FRAGMENTED_NORMAL \
+    SID_TTTP13 // Set for halos that are marked TREE_CASE_FRAGMENTED (see below), but
+               //    are otherwise part of a connected progenitor line
+#define TREE_CASE_FRAGMENTED_OTHER \
+    SID_TTTP14 // Currently unused.  Saved for future use when we may mark other types of fragmented
+               //    halos (relic fragmented halos, for example).
+#define TREE_CASE_EMERGED_CANDIDATE \
+    SID_TTTP15                                  // Set when a halo is identified as a unique back-match to a halo marked TREE_CASE_BRIDGED and
                                                 //    is not selected as the bridged halo's descendant.  This switch is turned off if the halo
                                                 //    is marked TREE_CASE_EMERGED or TREE_CASE_FRAGMENTED_NEW.
 #define TREE_CASE_MATCHED_TO_EMERGED SID_TTTP16 // Set when a halo is matched to an emerged halo
 #define TREE_CASE_2WAY_MATCH SID_TTTP17         // Set when the match between a halo and it's descendant is mutual
-#define TREE_CASE_SET_BY_BACKMATCH SID_TTTP18   // Set in cases where a descendant was set using backmatch information, rather
-                                                //    than forematch information.  In these cases, the halo's given matching score and
-                                                //    2way flag are from the back match info, not the forematch info.
-#define TREE_CASE_DOMINANT_DROPPED SID_TTTP19   // Marks a group whose dominant substructure is presently dropped
-#define TREE_CASE_GHOST SID_TTTP20              // Marks ghost halos in ghost-populated trees
-#define TREE_CASE_GHOST_NULL SID_TTTP21         // Marks a ghost halo where a subgroup is it's own group.
-                                                //    This is a default behaviour that occurs when a group is strayed but one of
-                                                //    it's subgroups isn't.
-#define TREE_CASE_REINIT_DOMINANT SID_TTTP22    // For internal use.  This should never be seen in the output.
-#define TREE_CASE_UNPROCESSED SID_TTTP23        // For internal use.  This should never be seen in the output.
-#define TREE_CASE_INVALID SID_TTTP24            // For internal use.  This should never be seen in the output.
+#define TREE_CASE_SET_BY_BACKMATCH \
+    SID_TTTP18                                // Set in cases where a descendant was set using backmatch information, rather
+                                              //    than forematch information.  In these cases, the halo's given matching score and
+                                              //    2way flag are from the back match info, not the forematch info.
+#define TREE_CASE_DOMINANT_DROPPED SID_TTTP19 // Marks a group whose dominant substructure is presently dropped
+#define TREE_CASE_GHOST SID_TTTP20            // Marks ghost halos in ghost-populated trees
+#define TREE_CASE_GHOST_NULL \
+    SID_TTTP21                               // Marks a ghost halo where a subgroup is it's own group.
+                                             //    This is a default behaviour that occurs when a group is strayed but one of
+                                             //    it's subgroups isn't.
+#define TREE_CASE_REINIT_DOMINANT SID_TTTP22 // For internal use.  This should never be seen in the output.
+#define TREE_CASE_UNPROCESSED SID_TTTP23     // For internal use.  This should never be seen in the output.
+#define TREE_CASE_INVALID SID_TTTP24         // For internal use.  This should never be seen in the output.
 
 #ifdef _MAIN
 int n_tree_case_flag_list = 23;
