@@ -100,7 +100,7 @@ void set_sph_kernel(double **kernel_radius, double **kernel_table_3d, double **k
                 for(i_table = 0; i_table <= N_KERNEL_TABLE; i_table++)
                     (*kernel_table_3d)[i_table] = norm * exp(-0.5 * (*kernel_radius)[i_table] * (*kernel_radius)[i_table]);
             } else
-                SID_trap_error("Unknown kernel type in set_sph_kernel!", SID_ERROR_LOGIC);
+                SID_exit_error("Unknown kernel type in set_sph_kernel!", SID_ERROR_LOGIC);
 
             // Integrate to form a projected line-of-sight kernel (if requested)
             if(check_mode_for_flag(mode, SPH_KERNEL_2D)) {

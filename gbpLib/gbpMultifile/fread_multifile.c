@@ -8,7 +8,8 @@ int fread_multifile(fp_multifile_info *fp_in, void *data_out, int item_index) {
     int r_val = 0;
 
     if(item_index < 0 || item_index >= fp_in->n_items_total)
-        SID_trap_error("item_index (%d) is out of range (0->%d) in fread_multifile_file().", SID_ERROR_LOGIC, item_index, fp_in->n_items_total - 1);
+        SID_exit_error("item_index (%d) is out of range (0->%d) in fread_multifile_file().", SID_ERROR_LOGIC,
+                       item_index, fp_in->n_items_total - 1);
 
     // Skip to the right place (if need-be)
     if(item_index != fp_in->i_item || item_index > fp_in->i_item_stop || item_index < fp_in->i_item_start) {
@@ -21,7 +22,7 @@ int fread_multifile(fp_multifile_info *fp_in, void *data_out, int item_index) {
         if(n_skip > 0)
             fseeko(fp_in->fp_multifile, (off_t)(fp_in->data_size * n_skip), SEEK_CUR);
         else if(n_skip < 0)
-            SID_trap_error("Negative skips (%d) not supported in fread_multifile_file().", SID_ERROR_LOGIC, n_skip);
+            SID_exit_error("Negative skips (%d) not supported in fread_multifile_file().", SID_ERROR_LOGIC, n_skip);
         fp_in->i_item += n_skip;
     }
 
@@ -39,7 +40,8 @@ int fread_multifile_raw(fp_multifile_info *fp_in, void *data_out, int item_index
     int r_val = 0;
 
     if(item_index < 0 || item_index >= fp_in->n_items_total)
-        SID_trap_error("item_index (%d) is out of range (0->%d) in fread_multifile_file().", SID_ERROR_LOGIC, item_index, fp_in->n_items_total - 1);
+        SID_exit_error("item_index (%d) is out of range (0->%d) in fread_multifile_file().", SID_ERROR_LOGIC,
+                       item_index, fp_in->n_items_total - 1);
 
     // Skip to the right place (if need-be)
     if(item_index != fp_in->i_item || item_index > fp_in->i_item_stop || item_index < fp_in->i_item_start) {

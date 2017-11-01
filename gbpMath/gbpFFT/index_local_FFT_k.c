@@ -18,12 +18,8 @@ size_t index_local_FFT_k(field_info *FFT, int *i_k) {
         else
             index *= FFT->n_k_local[i_d];
         if(i_k[i_d] < 0 || i_k[i_d] > FFT->i_k_stop_local[i_d])
-            SID_trap_error("Index (%d;i_d=%d) out of local slab's range (%d->%d).",
-                           SID_ERROR_LOGIC,
-                           i_k[i_d],
-                           i_d,
-                           FFT->i_k_start_local[i_d],
-                           FFT->i_k_stop_local[i_d]);
+            SID_exit_error("Index (%d;i_d=%d) out of local slab's range (%d->%d).", SID_ERROR_LOGIC, i_k[i_d], i_d,
+                           FFT->i_k_start_local[i_d], FFT->i_k_stop_local[i_d]);
         index += (i_k[i_d] - FFT->i_k_start_local[i_d]);
     }
     return (index);

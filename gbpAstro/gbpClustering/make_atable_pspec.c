@@ -60,7 +60,7 @@ int main(int argc, char *argv[]) {
     // Initialization -- MPI etc.
     SID_init(&argc, &argv, NULL, NULL);
     if(argc != 12)
-        SID_trap_error("Incorrect syntax.", SID_ERROR_SYNTAX);
+        SID_exit_error("Incorrect syntax.", SID_ERROR_SYNTAX);
 
     // Parse arguments
     strcpy(filename_in, argv[1]);

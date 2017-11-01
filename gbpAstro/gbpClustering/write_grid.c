@@ -43,7 +43,8 @@ void write_grid(field_info *field,
                     fwrite(&mass_assignment_scheme, sizeof(int), 1, fp_out);
                     break;
                 default:
-                    SID_trap_error("Unknown mass assignment scheme (%d) in write_grid().", SID_ERROR_LOGIC, mass_assignment_scheme);
+                    SID_exit_error("Unknown mass assignment scheme (%d) in write_grid().", SID_ERROR_LOGIC,
+                                   mass_assignment_scheme);
             }
         } else
             fp_out = fopen(filename_out, "a");

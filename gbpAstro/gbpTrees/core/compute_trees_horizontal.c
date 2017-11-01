@@ -164,7 +164,7 @@ void compute_trees_horizontal(char *       filename_halo_root_in,
             i_read_step);
 
     if(n_search < 1)
-        SID_trap_error("n_search=%d but must be at least 1", SID_ERROR_LOGIC, n_search);
+        SID_exit_error("n_search=%d but must be at least 1", SID_ERROR_LOGIC, n_search);
 
     int flag_compute_fragmented = GBP_TRUE;
     int flag_compute_ghosts     = GBP_FALSE;
@@ -203,7 +203,7 @@ void compute_trees_horizontal(char *       filename_halo_root_in,
     //                          i_read_step,
     //                          n_search,
     //                          WRITE_MATCHES_MODE_TREES|WRITE_MATCHES_PERFORM_CHECK))
-    //   SID_trap_error("Matching could not be completed.  Terminating.",SID_ERROR_LOGIC);
+    //   SID_exit_error("Matching could not be completed.  Terminating.",SID_ERROR_LOGIC);
     read_matches_header(filename_root_matches,
                         i_read_start,
                         i_read_stop,

@@ -22,14 +22,16 @@ int read_image_FITS(void **image, SID_Datatype *dtype, int *n_D, int **D, const 
     fits_open_file(&fp, filename, READONLY, &status);
     if(status) {
         ffgmsg(error_msg);
-        SID_trap_error("FITS open file: filename={%s} status=%d message={%s}", SID_ERROR_IO_OPEN, filename, status, error_msg);
+        SID_exit_error("FITS open file: filename={%s} status=%d message={%s}", SID_ERROR_IO_OPEN, filename, status,
+                       error_msg);
     }
 
     sprintf(keyname, "NAXIS");
     fits_read_key(fp, TINT, keyname, n_D, NULL, &status);
     if(status) {
         ffgmsg(error_msg);
-        SID_trap_error("FITS read {%s}: filename={%s} status=%d message={%s}", SID_ERROR_IO_OPEN, keyname, filename, status, error_msg);
+        SID_exit_error("FITS read {%s}: filename={%s} status=%d message={%s}", SID_ERROR_IO_OPEN, keyname, filename,
+                       status, error_msg);
     }
     SID_log("NAXIS =%d", SID_LOG_COMMENT, (*n_D));
 
@@ -41,7 +43,8 @@ int read_image_FITS(void **image, SID_Datatype *dtype, int *n_D, int **D, const 
         (*D)[i_D] = D_in;
         if(status) {
             ffgmsg(error_msg);
-            SID_trap_error("FITS read {%s}: filename={%s} status=%d message={%s}", SID_ERROR_IO_OPEN, keyname, filename, status, error_msg);
+            SID_exit_error("FITS read {%s}: filename={%s} status=%d message={%s}", SID_ERROR_IO_OPEN, keyname, filename,
+                           status, error_msg);
         }
         if(i_D == 0)
             n_pixels = (*D)[i_D];
@@ -55,7 +58,8 @@ int read_image_FITS(void **image, SID_Datatype *dtype, int *n_D, int **D, const 
     fits_read_key(fp, TINT, keyname, &dtype_fits, NULL, &status);
     if(status) {
         ffgmsg(error_msg);
-        SID_trap_error("FITS read {%s}: filename={%s} status=%d message={%s}", SID_ERROR_IO_OPEN, keyname, filename, status, error_msg);
+        SID_exit_error("FITS read {%s}: filename={%s} status=%d message={%s}", SID_ERROR_IO_OPEN, keyname, filename,
+                       status, error_msg);
     }
     switch(dtype_fits) {
         case 16:
@@ -64,8 +68,8 @@ int read_image_FITS(void **image, SID_Datatype *dtype, int *n_D, int **D, const 
             fits_read_img(fp, TINT, fpixel, n_pixels, 0, (*image), &anynull, &status);
             if(status) {
                 ffgmsg(error_msg);
-                SID_trap_error(
-                    "FITS image: filename={%s} dtype_fits=%d status=%d message={%s}", SID_ERROR_IO_OPEN, filename, dtype_fits, status, error_msg);
+                SID_exit_error("FITS image: filename={%s} dtype_fits=%d status=%d message={%s}", SID_ERROR_IO_OPEN,
+                               filename, dtype_fits, status, error_msg);
             }
             SID_log("dtype =INTEGER", SID_LOG_COMMENT);
             break;
@@ -75,8 +79,8 @@ int read_image_FITS(void **image, SID_Datatype *dtype, int *n_D, int **D, const 
             fits_read_img(fp, TLONG, fpixel, n_pixels, 0, (*image), &anynull, &status);
             if(status) {
                 ffgmsg(error_msg);
-                SID_trap_error(
-                    "FITS image: filename={%s} dtype_fits=%d status=%d message={%s}", SID_ERROR_IO_OPEN, filename, dtype_fits, status, error_msg);
+                SID_exit_error("FITS image: filename={%s} dtype_fits=%d status=%d message={%s}", SID_ERROR_IO_OPEN,
+                               filename, dtype_fits, status, error_msg);
             }
             SID_log("dtype =LONG LONG", SID_LOG_COMMENT);
             break;
@@ -86,8 +90,8 @@ int read_image_FITS(void **image, SID_Datatype *dtype, int *n_D, int **D, const 
             fits_read_img(fp, TFLOAT, fpixel, n_pixels, 0, (*image), &anynull, &status);
             if(status) {
                 ffgmsg(error_msg);
-                SID_trap_error(
-                    "FITS image: filename={%s} dtype_fits=%d status=%d message={%s}", SID_ERROR_IO_OPEN, filename, dtype_fits, status, error_msg);
+                SID_exit_error("FITS image: filename={%s} dtype_fits=%d status=%d message={%s}", SID_ERROR_IO_OPEN,
+                               filename, dtype_fits, status, error_msg);
             }
             SID_log("dtype =FLOAT", SID_LOG_COMMENT);
             break;
@@ -97,13 +101,13 @@ int read_image_FITS(void **image, SID_Datatype *dtype, int *n_D, int **D, const 
             fits_read_img(fp, TDOUBLE, fpixel, n_pixels, 0, (*image), &anynull, &status);
             if(status) {
                 ffgmsg(error_msg);
-                SID_trap_error(
-                    "FITS image: filename={%s} dtype_fits=%d status=%d message={%s}", SID_ERROR_IO_OPEN, filename, dtype_fits, status, error_msg);
+                SID_exit_error("FITS image: filename={%s} dtype_fits=%d status=%d message={%s}", SID_ERROR_IO_OPEN,
+                               filename, dtype_fits, status, error_msg);
             }
             SID_log("dtype =DOUBLE", SID_LOG_COMMENT);
             break;
         default:
-            SID_trap_error("Unsupported datatype {%d} in write_image_FITS", SID_ERROR_LOGIC, dtype_fits);
+            SID_exit_error("Unsupported datatype {%d} in write_image_FITS", SID_ERROR_LOGIC, dtype_fits);
             break;
     }
 

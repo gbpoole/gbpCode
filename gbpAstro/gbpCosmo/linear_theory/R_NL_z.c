@@ -41,7 +41,7 @@ double R_NL_z(double z, cosmo_info **cosmo) {
         n_iter++;
     }
     if(n_iter == max_iter)
-        SID_trap_error("Maximum number of iterations (%d) reached in R_gbpCosmo2gbpCosmo.", SID_ERROR_LOGIC, n_iter);
+        SID_exit_error("Maximum number of iterations (%d) reached in R_gbpCosmo2gbpCosmo.", SID_ERROR_LOGIC, n_iter);
 
     return (R_mid);
 }

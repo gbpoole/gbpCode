@@ -314,7 +314,7 @@ void write_gadget_binary(char *filename_in, plist_info *plist) {
                         box_size = 0.;
                     box_size_offset = box_size;
                     if((GBPREAL)box_size <= 0.)
-                        SID_trap_error("Box size is <=0 in write_gadget_binary.\n", SID_ERROR_LOGIC);
+                        SID_exit_error("Box size is <=0 in write_gadget_binary.\n", SID_ERROR_LOGIC);
                     if(n_x_replicate != n_y_replicate || n_x_replicate != n_z_replicate)
                         SID_log("WARNING: replication is not cubical ... using n_x_replicate to scale box size!", SID_LOG_OPEN);
                     if(n_x_replicate != 1)

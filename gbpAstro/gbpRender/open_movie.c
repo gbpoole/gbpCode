@@ -188,6 +188,6 @@ void open_movie(char *filename, int width, int height, int n_frames, int frame_r
         SID_log("Done.", SID_LOG_CLOSE);
     }
 #else
-    SID_trap_error("Function not supported.  FFMPEG is not installed.", SID_ERROR_LOGIC);
+    SID_exit_error("Function not supported.  FFMPEG is not installed.", SID_ERROR_LOGIC);
 #endif
 }

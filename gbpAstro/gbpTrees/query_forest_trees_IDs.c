@@ -34,7 +34,7 @@ int main(int argc, char *argv[]) {
 
     // Fetch user inputs
     if(argc != 6)
-        SID_trap_error("Invalid Syntax.", SID_ERROR_SYNTAX);
+        SID_exit_error("Invalid Syntax.", SID_ERROR_SYNTAX);
     char filename_SSimPL_root[SID_MAX_FILENAME_LENGTH];
     char filename_halos_root[SID_MAX_FILENAME_LENGTH];
     char filename_trees_root[SID_MAX_FILENAME_LENGTH];
@@ -75,7 +75,7 @@ int main(int argc, char *argv[]) {
             }
         }
     } else
-        SID_trap_error("Invalid mode (%d).", SID_ERROR_LOGIC, mode);
+        SID_exit_error("Invalid mode (%d).", SID_ERROR_LOGIC, mode);
 
     // Clean-up
     free_trees(&trees);

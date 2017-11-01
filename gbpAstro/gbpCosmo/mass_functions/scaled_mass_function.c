@@ -65,6 +65,7 @@ double scaled_mass_function(double sigma, int mode, double *P) {
         }
         rval = sqrt(2. / PI) * (delta_k / sigma) * exp(-delta_k * delta_k / (2. * sigma * sigma));
     } else
-        SID_trap_error("A valid mass function was not specified with mode (%d) in scaled_mass_function().\n", SID_ERROR_LOGIC, mode);
+        SID_exit_error("A valid mass function was not specified with mode (%d) in scaled_mass_function().\n",
+                       SID_ERROR_LOGIC, mode);
     return (rval);
 }

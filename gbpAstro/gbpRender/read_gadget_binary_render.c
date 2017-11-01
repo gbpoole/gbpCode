@@ -126,7 +126,8 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
     gadget_read_info read_info;
     flag_filefound = init_gadget_read(filename_root_in, snapshot_number, &read_info);
     if(!flag_filefound)
-        SID_trap_error("Could not find snapshot w/ root={%s;snap=%d}.", SID_ERROR_IO_OPEN, filename_root_in, snapshot_number);
+        SID_exit_error("Could not find snapshot w/ root={%s;snap=%d}.", SID_ERROR_IO_OPEN, filename_root_in,
+                       snapshot_number);
 
     // A file was found ...
     if(flag_filefound) {
@@ -301,7 +302,8 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
         else if(check_mode_for_flag(mode, READ_GADGET_RENDER_ID_ORDERED)) {
             // WARNING: This mode (as it is now) only works if n_non_zero==1
             if(n_non_zero != 1)
-                SID_trap_error("mode READ_GADGET_RENDER_ID_ORDERED does not work for multiple particle species (n=%d).", SID_ERROR_LOGIC, n_non_zero);
+                SID_exit_error("mode READ_GADGET_RENDER_ID_ORDERED does not work for multiple particle species (n=%d).",
+                               SID_ERROR_LOGIC, n_non_zero);
 
             // Decide on the ID range for each rank
             int    i_rank;
@@ -332,12 +334,13 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                 n_particles_left -= n_particles_step;
             }
             if(n_particles_left != 0)
-                SID_trap_error("The full IDs range has not been properly rank-allocated (ie. %zd!=%zd).", SID_ERROR_LOGIC, n_particles_left, 0);
+                SID_exit_error("The full IDs range has not been properly rank-allocated (ie. %zd!=%zd).",
+                               SID_ERROR_LOGIC, n_particles_left, 0);
             n_particles_local = id_local_max - id_local_min + 1;
             SID_Allreduce(&n_particles_local, &n_particles_test, 1, SID_SIZE_T, SID_SUM, SID.COMM_WORLD);
             if(n_particles_test != n_particles_all)
-                SID_trap_error(
-                    "Not all particles were allocated during domain decompositioni (%zd!=%zd).", SID_ERROR_LOGIC, n_particles_test, n_particles_all);
+                SID_exit_error("Not all particles were allocated during domain decompositioni (%zd!=%zd).",
+                               SID_ERROR_LOGIC, n_particles_test, n_particles_all);
 
             // Set n_of_type_rank[i]
             for(i = 0, jj = 0; i < N_GADGET_TYPE; i++) {
@@ -345,7 +348,7 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                     n_of_type_rank[i] = id_local_max - id_local_min + 1;
             }
         } else
-            SID_trap_error("Valid read_gadget mode not specified.", SID_ERROR_LOGIC);
+            SID_exit_error("Valid read_gadget mode not specified.", SID_ERROR_LOGIC);
 
         long long n_particles_rank = 0;
         for(i = 0; i < N_GADGET_TYPE; i++)
@@ -355,8 +358,8 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
         long long n_particles_check = 0;
         SID_Allreduce(&n_particles_rank, &n_particles_check, 1, SID_LONG_LONG, SID_SUM, SID.COMM_WORLD);
         if(n_particles_check != n_particles_all)
-            SID_trap_error(
-                "Rank-allocated particle counts don't sum to the total (ie. %zd!=%zd).", SID_ERROR_LOGIC, n_particles_check, n_particles_all);
+            SID_exit_error("Rank-allocated particle counts don't sum to the total (ie. %zd!=%zd).", SID_ERROR_LOGIC,
+                           n_particles_check, n_particles_all);
 
         // Allocate data arrays
         int flag_read_positions  = GBP_TRUE;
@@ -469,21 +472,22 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                         fseeko(fp, (off_t)record_length_open, SEEK_CUR);
                         fread_verify(&record_length_close, 4, 1, fp);
                         if(record_length_open != record_length_close)
-                            SID_trap_error(
-                                "Position record lengths don't match (ie. %d!=%d)", SID_ERROR_LOGIC, record_length_open, record_length_close);
+                            SID_exit_error("Position record lengths don't match (ie. %d!=%d)", SID_ERROR_LOGIC,
+                                           record_length_open, record_length_close);
                         // Skip velocities
                         fread_verify(&record_length_open, 4, 1, fp);
                         fseeko(fp, (off_t)record_length_open, SEEK_CUR);
                         fread_verify(&record_length_close, 4, 1, fp);
                         if(record_length_open != record_length_close)
-                            SID_trap_error(
-                                "Velocity record lengths don't match (ie. %d!=%d)", SID_ERROR_LOGIC, record_length_open, record_length_close);
+                            SID_exit_error("Velocity record lengths don't match (ie. %d!=%d)", SID_ERROR_LOGIC,
+                                           record_length_open, record_length_close);
                         // Read IDs
                         fread_verify(&record_length_open, 4, 1, fp);
                         fread_verify(buffer, record_length_open, 1, fp);
                         fread_verify(&record_length_close, 4, 1, fp);
                         if(record_length_open != record_length_close)
-                            SID_trap_error("IDs record lengths don't match (ie. %d!=%d)", SID_ERROR_LOGIC, record_length_open, record_length_close);
+                            SID_exit_error("IDs record lengths don't match (ie. %d!=%d)", SID_ERROR_LOGIC,
+                                           record_length_open, record_length_close);
                     }
                     SID_Barrier(SID.COMM_WORLD);
                     SID_Bcast(&record_length_open, 4, SID_CHAR, SID.COMM_WORLD, read_rank);
@@ -503,8 +507,8 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                         fseeko(fp, (off_t)record_length_open, SEEK_CUR);
                         fread_verify(&record_length_close, 4, 1, fp);
                         if(record_length_open != record_length_close)
-                            SID_trap_error(
-                                "Header record lengths don't match (ie. %d!=%d)", SID_ERROR_LOGIC, record_length_open, record_length_close);
+                            SID_exit_error("Header record lengths don't match (ie. %d!=%d)", SID_ERROR_LOGIC,
+                                           record_length_open, record_length_close);
                     }
 
                     // Determine which particles from this file will be kept on this rank
@@ -529,7 +533,7 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                         }
                     }
                 } else
-                    SID_trap_error("Valid read_gadget mode not specified.", SID_ERROR_LOGIC);
+                    SID_exit_error("Valid read_gadget mode not specified.", SID_ERROR_LOGIC);
 
                 // Some modes need to hold-on to the IDs so we need to use a second buffer
                 int   flag_alloc_buffer2;
@@ -567,7 +571,8 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                                 }
                             }
                             if(k != n_keep[i])
-                                SID_trap_error("Particle count mismatch (ie. %d!=%d) during positions read", SID_ERROR_LOGIC, k, n_keep[i]);
+                                SID_exit_error("Particle count mismatch (ie. %d!=%d) during positions read",
+                                               SID_ERROR_LOGIC, k, n_keep[i]);
                         }
                     } else if(check_mode_for_flag(mode, READ_GADGET_RENDER_ID_ORDERED)) {
                         if(flag_LONGIDs) {
@@ -602,7 +607,7 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                             }
                         }
                     } else
-                        SID_trap_error("Valid read_gadget mode not specified.", SID_ERROR_LOGIC);
+                        SID_exit_error("Valid read_gadget mode not specified.", SID_ERROR_LOGIC);
                 } else {
                     if(i_file == 0)
                         SID_log("Skipping positions.", SID_LOG_COMMENT);
@@ -641,7 +646,7 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                                 }
                             }
                             if(k != n_keep[i])
-                                SID_trap_error("Particle count mismatch during velocity read", SID_ERROR_LOGIC);
+                                SID_exit_error("Particle count mismatch during velocity read", SID_ERROR_LOGIC);
                         }
                     } else if(check_mode_for_flag(mode, READ_GADGET_RENDER_ID_ORDERED)) {
                         if(flag_LONGIDs) {
@@ -676,7 +681,7 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                             }
                         }
                     } else
-                        SID_trap_error("Valid read_gadget mode not specified.", SID_ERROR_LOGIC);
+                        SID_exit_error("Valid read_gadget mode not specified.", SID_ERROR_LOGIC);
                 } else {
                     if(i_file == 0)
                         SID_log("Skipping velocities.", SID_LOG_COMMENT);
@@ -731,7 +736,8 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                             }
                         }
                         if(k != n_keep[i])
-                            SID_trap_error("Particle count mismatch (ie. %d!=%d) during IDs read", SID_ERROR_LOGIC, k, n_keep[i]);
+                            SID_exit_error("Particle count mismatch (ie. %d!=%d) during IDs read", SID_ERROR_LOGIC, k,
+                                           n_keep[i]);
                     }
                 } else if(check_mode_for_flag(mode, READ_GADGET_RENDER_ID_ORDERED)) {
                     if(flag_LONGIDs) {
@@ -756,7 +762,7 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                         }
                     }
                 } else
-                    SID_trap_error("Valid read_gadget mode not specified.", SID_ERROR_LOGIC);
+                    SID_exit_error("Valid read_gadget mode not specified.", SID_ERROR_LOGIC);
 
                 // Update offsets
                 for(i = 0; i < N_GADGET_TYPE; i++)
@@ -785,7 +791,7 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
             for(i = 0, jj = 0; i < N_GADGET_TYPE; i++) {
                 for(j = 0, k = 0; j < n_of_type_rank[i]; j++, jj++) {
                     if(id_array[i][j] > n_particles_all)
-                        SID_trap_error("An uninitialized particle has been identified.", SID_ERROR_LOGIC);
+                        SID_exit_error("An uninitialized particle has been identified.", SID_ERROR_LOGIC);
                 }
             }
         }
@@ -844,5 +850,5 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
 
         SID_log("Done.", SID_LOG_CLOSE);
     } else
-        SID_trap_error("Could not find file with root {%s}", SID_ERROR_IO_OPEN, filename_root_in);
+        SID_exit_error("Could not find file with root {%s}", SID_ERROR_IO_OPEN, filename_root_in);
 }

@@ -127,7 +127,7 @@ int main(int argc, char *argv[]) {
 
         // Sanity checks
         if(n_bytes_groups != 4 && n_bytes_groups != 8)
-            SID_trap_error("Invalid group offset byte length (%d).", SID_ERROR_LOGIC, n_bytes_groups);
+            SID_exit_error("Invalid group offset byte length (%d).", SID_ERROR_LOGIC, n_bytes_groups);
 
         // Skip to the number of subgroups
         fseeko(fp_groups, sizeof(int) * n_groups_all, SEEK_CUR);

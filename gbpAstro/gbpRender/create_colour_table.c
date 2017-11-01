@@ -17,7 +17,7 @@ void create_colour_table(const char *colourmapselect_in, int *n_colours_in, int 
     }
     sprintf(filename_in, "%s/gbpCode_cmap_%s.txt", GBP_DATA_DIR, colourmapselect);
     if((fp_in = fopen(filename_in, "r")) == NULL) {
-        SID_trap_error("Could not open colour table {%s}.", SID_ERROR_LOGIC, colourmapselect);
+        SID_exit_error("Could not open colour table {%s}.", SID_ERROR_LOGIC, colourmapselect);
     }
     int n_colours      = count_lines_data(fp_in);
     (*n_colours_in)    = n_colours;

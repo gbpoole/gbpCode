@@ -81,7 +81,7 @@ void write_treenode_hist(tree_info *trees, const char *filename_out_root, treeno
                     break;
                 }
                 default:
-                    SID_trap_error("Invalid property passed to write_treenode_hist().", SID_ERROR_LOGIC);
+                    SID_exit_error("Invalid property passed to write_treenode_hist().", SID_ERROR_LOGIC);
                     break;
             }
             fprintf(fp_out, "%le\n", bin_i);

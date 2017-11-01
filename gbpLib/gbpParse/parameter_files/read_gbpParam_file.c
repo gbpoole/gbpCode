@@ -10,7 +10,7 @@ void read_gbpParam_file(const char *filename_in, parameter_list_info *param_list
     char * line        = NULL;
     size_t line_length = 0;
     if((fp_in = fopen(filename_in, "r")) == NULL)
-        SID_trap_error("Could not open parameter file {%s}.", SID_ERROR_LOGIC, filename_in);
+        SID_exit_error("Could not open parameter file {%s}.", SID_ERROR_LOGIC, filename_in);
     while(grab_next_line_parameter(fp_in, &line, &line_length)) {
         char                 parameter_name[256];
         double               parameter_value;
@@ -18,9 +18,10 @@ void read_gbpParam_file(const char *filename_in, parameter_list_info *param_list
         remove_parameter_character(line);
         grab_word(line, 1, parameter_name);
         if(!fetch_parameter_list_item(param_list, parameter_name, &parameter_item))
-            SID_trap_error("Paramter {%s} is not in the file specification for {%s}.", SID_ERROR_LOGIC, parameter_name, filename_in);
+            SID_exit_error("Paramter {%s} is not in the file specification for {%s}.", SID_ERROR_LOGIC, parameter_name,
+                           filename_in);
         if(parameter_item->data_type != SID_CHAR && count_words(line) != 2)
-            SID_trap_error("Invalid number of words in parameter given by {%s}.", SID_ERROR_LOGIC, line);
+            SID_exit_error("Invalid number of words in parameter given by {%s}.", SID_ERROR_LOGIC, line);
         if(parameter_item->data_type == SID_DOUBLE)
             grab_double(line, 2, (double *)(parameter_item->data));
         else if(parameter_item->data_type == SID_INT)
@@ -30,7 +31,8 @@ void read_gbpParam_file(const char *filename_in, parameter_list_info *param_list
         else if(parameter_item->data_type == SID_CHAR)
             grab_tail(line, 2, (char *)(parameter_item->data));
         else
-            SID_trap_error("Unsupported parameter datatype specified for parameter {%s}.", SID_ERROR_LOGIC, parameter_name);
+            SID_exit_error("Unsupported parameter datatype specified for parameter {%s}.", SID_ERROR_LOGIC,
+                           parameter_name);
         parameter_item->flag_set = GBP_TRUE;
         parameter_item->n_read++;
     }
@@ -41,9 +43,11 @@ void read_gbpParam_file(const char *filename_in, parameter_list_info *param_list
     parameter_item_info *current = param_list->first;
     while(current != NULL) {
         if(check_mode_for_flag(current->mode, PARAMETER_MODE_MANDITORY) && current->n_read <= 0)
-            SID_trap_error("Manditory parameter {%s} was not specified in {%s}.", SID_ERROR_LOGIC, current->name, filename_in);
+            SID_exit_error("Manditory parameter {%s} was not specified in {%s}.", SID_ERROR_LOGIC, current->name,
+                           filename_in);
         if(check_mode_for_flag(current->mode, PARAMETER_MODE_UNIQUE) && current->n_read > 1)
-            SID_trap_error("Parameter {%s} was specified %d times in {%s}.", SID_ERROR_LOGIC, current->name, current->n_read, filename_in);
+            SID_exit_error("Parameter {%s} was specified %d times in {%s}.", SID_ERROR_LOGIC, current->name,
+                           current->n_read, filename_in);
         current = current->next;
     }
 }

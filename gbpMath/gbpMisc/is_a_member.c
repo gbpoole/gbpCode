@@ -32,6 +32,6 @@ int is_a_member(void *candidate, void *list, int n_list, SID_Datatype type) {
                 result = GBP_TRUE;
         }
     } else
-        SID_trap_error("Unknown variable type in is_a_member.", SID_ERROR_LOGIC);
+        SID_exit_error("Unknown variable type in is_a_member.", SID_ERROR_LOGIC);
     return (result);
 }

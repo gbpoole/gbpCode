@@ -20,7 +20,7 @@ int fetch_treenode_progenitor_rank(tree_info *trees, tree_node_info *halo) {
                 current_halo = current_halo->progenitor_next;
             }
             if(current_halo != halo)
-                SID_trap_error("Invalid situation in fetch_treenode_progenitor_rank().", SID_ERROR_LOGIC);
+                SID_exit_error("Invalid situation in fetch_treenode_progenitor_rank().", SID_ERROR_LOGIC);
             return (i_rank);
         }
     }

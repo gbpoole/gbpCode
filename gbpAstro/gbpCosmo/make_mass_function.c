@@ -54,7 +54,8 @@ int main(int argc, char *argv[]) {
         sprintf(mfn_text, "Poole et al (2015)");
         select_flag = MF_TIAMAT;
     } else
-        SID_trap_error("Invalid parameterization selected {%s}.  Should be {JENKINS,PS or ST}.", SID_ERROR_SYNTAX, paramterization);
+        SID_exit_error("Invalid parameterization selected {%s}.  Should be {JENKINS,PS or ST}.", SID_ERROR_SYNTAX,
+                       paramterization);
 
     // Create output filename
     char  filename_out[SID_MAX_FILENAME_LENGTH];

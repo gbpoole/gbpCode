@@ -249,7 +249,7 @@ int write_treenode_list_properties_set_ith(tree_info *     trees,
     //    to the output format of this file.
     else {
         if(data_d != NULL || data_i != NULL || data_name != NULL)
-            SID_trap_error("Invalid counter given in write_treenode_list_properties_set_ith()", SID_ERROR_LOGIC);
+            SID_exit_error("Invalid counter given in write_treenode_list_properties_set_ith()", SID_ERROR_LOGIC);
         else
             return (GBP_FALSE);
     }

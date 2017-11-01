@@ -94,36 +94,32 @@ void map_to_grid(size_t      n_particles_local,
     // If we've been given a normalization field, make sure it's got the same geometry as the results field
     if(field_norm != NULL) {
         if(field->n_d != field_norm->n_d)
-            SID_trap_error("grid dimension counts don't match (ie. %d!=%d)", SID_ERROR_LOGIC, field->n_d, field_norm->n_d);
+            SID_exit_error("grid dimension counts don't match (ie. %d!=%d)", SID_ERROR_LOGIC, field->n_d,
+                           field_norm->n_d);
         int i_d;
         for(i_d = 0; i_d < field->n_d; i_d++) {
             if(field->n[i_d] != field_norm->n[i_d])
-                SID_trap_error("grid dimension No. %d's sizes don't match (ie. %d!=%d)", SID_ERROR_LOGIC, i_d, field->n[i_d], field_norm->n[i_d]);
+                SID_exit_error("grid dimension No. %d's sizes don't match (ie. %d!=%d)", SID_ERROR_LOGIC, i_d,
+                               field->n[i_d], field_norm->n[i_d]);
             if(field->n_R_local[i_d] != field_norm->n_R_local[i_d])
-                SID_trap_error("grid dimension No. %d's slab sizes don't match (ie. %d!=%d)",
-                               SID_ERROR_LOGIC,
-                               i_d,
-                               field->n_R_local[i_d],
-                               field_norm->n_R_local[i_d]);
+                SID_exit_error("grid dimension No. %d's slab sizes don't match (ie. %d!=%d)", SID_ERROR_LOGIC, i_d,
+                               field->n_R_local[i_d], field_norm->n_R_local[i_d]);
             if(field->i_R_start_local[i_d] != field_norm->i_R_start_local[i_d])
-                SID_trap_error("grid dimension No. %d's start positions don't match (ie. %le!=%le)",
-                               SID_ERROR_LOGIC,
-                               i_d,
-                               field->i_R_start_local[i_d],
-                               field_norm->i_R_start_local[i_d]);
+                SID_exit_error("grid dimension No. %d's start positions don't match (ie. %le!=%le)", SID_ERROR_LOGIC,
+                               i_d, field->i_R_start_local[i_d], field_norm->i_R_start_local[i_d]);
             if(field->i_R_stop_local[i_d] != field_norm->i_R_stop_local[i_d])
-                SID_trap_error("grid dimension No. %d's stop positions don't match (ie. %le!=%le)",
-                               SID_ERROR_LOGIC,
-                               i_d,
-                               field->i_R_stop_local[i_d],
-                               field_norm->i_R_stop_local[i_d]);
+                SID_exit_error("grid dimension No. %d's stop positions don't match (ie. %le!=%le)", SID_ERROR_LOGIC,
+                               i_d, field->i_R_stop_local[i_d], field_norm->i_R_stop_local[i_d]);
         }
         if(field->n_field != field_norm->n_field)
-            SID_trap_error("grid field sizes don't match (ie. %d!=%d)", SID_ERROR_LOGIC, field->n_field, field_norm->n_field);
+            SID_exit_error("grid field sizes don't match (ie. %d!=%d)", SID_ERROR_LOGIC, field->n_field,
+                           field_norm->n_field);
         if(field->n_field_R_local != field_norm->n_field_R_local)
-            SID_trap_error("grid local field sizes don't match (ie. %d!=%d)", SID_ERROR_LOGIC, field->n_field_R_local, field_norm->n_field_R_local);
+            SID_exit_error("grid local field sizes don't match (ie. %d!=%d)", SID_ERROR_LOGIC, field->n_field_R_local,
+                           field_norm->n_field_R_local);
         if(field->total_local_size != field_norm->total_local_size)
-            SID_trap_error("grid total local sizes don't match (ie. %d!=%d)", SID_ERROR_LOGIC, field->total_local_size, field_norm->total_local_size);
+            SID_exit_error("grid total local sizes don't match (ie. %d!=%d)", SID_ERROR_LOGIC, field->total_local_size,
+                           field_norm->total_local_size);
     }
 
     // Set some variables
@@ -314,14 +310,16 @@ void map_to_grid(size_t      n_particles_local,
                         if(k_i[0] < field->i_R_start_local[0]) {
                             k_i[0] -= (field->i_R_start_local[0] - W_search_lo);
                             if(k_i[0] < 0)
-                                SID_trap_error("Left slab buffer limit exceeded by %d element(s).", SID_ERROR_LOGIC, -k_i[0]);
+                                SID_exit_error("Left slab buffer limit exceeded by %d element(s).", SID_ERROR_LOGIC,
+                                               -k_i[0]);
                             send_left[index_FFT_R(field, k_i)] += W_i * value_i;
                             if(field_norm != NULL)
                                 send_left_norm[index_FFT_R(field_norm, k_i)] += W_i * norm_i;
                         } else if(k_i[0] > field->i_R_stop_local[0]) {
                             k_i[0] -= (field->i_R_stop_local[0] + 1);
                             if(k_i[0] >= W_search_hi)
-                                SID_trap_error("Right slab buffer limit exceeded by %d element(s).", SID_ERROR_LOGIC, k_i[0] - W_search_hi + 1);
+                                SID_exit_error("Right slab buffer limit exceeded by %d element(s).", SID_ERROR_LOGIC,
+                                               k_i[0] - W_search_hi + 1);
                             else {
                                 send_right[index_FFT_R(field, k_i)] += W_i * value_i;
                                 if(field_norm != NULL)

@@ -4,7 +4,8 @@
 int fopen_multifile_nth_file(fp_multifile_info *fp_in, int n) {
     // Check that the file number makes sense
     if(fp_in->n_files < n)
-        SID_trap_error("Invalid file number (%d) requested for multifile {%s;n_files=%d}.", n, fp_in->filename_base, fp_in->n_files);
+        SID_exit_error("Invalid file number (%d) requested for multifile {%s;n_files=%d}.", n, fp_in->filename_base,
+                       fp_in->n_files);
 
     // We can't just jump to the file we want.  We need to keep scaning through them so we know what absolute item range the n'th file represents
     int i_file;
@@ -39,10 +40,9 @@ int fopen_multifile_nth_file(fp_multifile_info *fp_in, int n) {
             if(i_file == 0)
                 sprintf(filename_multifile, "%s", fp_in->filename_root);
             else
-                SID_trap_error("Catalog file identified as non-multi-file {%s} has been accessed as multi-file {requested file=%d}.",
-                               SID_ERROR_LOGIC,
-                               fp_in->filename_base,
-                               i_file);
+                SID_exit_error(
+                        "Catalog file identified as non-multi-file {%s} has been accessed as multi-file {requested file=%d}.",
+                        SID_ERROR_LOGIC, fp_in->filename_base, i_file);
         }
 
         // Try to open multifile file
@@ -56,7 +56,8 @@ int fopen_multifile_nth_file(fp_multifile_info *fp_in, int n) {
             fread_verify(&(fp_in->n_items_total), sizeof(int), 1, fp_in->fp_multifile);
             // Check that the file number in the file is correct
             if(i_file != fp_in->i_file)
-                SID_trap_error("Invalid file number (ie. %d!=%d) in multifile {%s}.", SID_ERROR_LOGIC, i_file, fp_in->i_file, fp_in->filename_root);
+                SID_exit_error("Invalid file number (ie. %d!=%d) in multifile {%s}.", SID_ERROR_LOGIC, i_file,
+                               fp_in->i_file, fp_in->filename_root);
         }
 
         // Set the absolute start and stop ranges of the item numbers
@@ -71,7 +72,7 @@ int fopen_multifile_nth_file(fp_multifile_info *fp_in, int n) {
     }
 
     if(!r_val)
-        SID_trap_error("Problem encountered opening file {%s/%s;file=%d}", SID_ERROR_LOGIC, fp_in->filename_base, n);
+        SID_exit_error("Problem encountered opening file {%s/%s;file=%d}", SID_ERROR_LOGIC, fp_in->filename_base, n);
 
     return (r_val);
 }

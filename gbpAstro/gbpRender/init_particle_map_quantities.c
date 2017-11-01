@@ -61,7 +61,7 @@ void init_particle_map_quantities(map_quantities_info *mq, render_info *render, 
                 mq->transfer_rho          = NULL;
             }
         } else
-            SID_trap_error("No densities available in make_map.", SID_ERROR_LOGIC);
+            SID_exit_error("No densities available in make_map.", SID_ERROR_LOGIC);
 
         // Use sigma_v for values
         if(ADaPS_exist(render->plist_list[0]->data, "sigma_v_dark")) {
@@ -76,7 +76,7 @@ void init_particle_map_quantities(map_quantities_info *mq, render_info *render, 
                 mq->transfer_sigma          = NULL;
             }
         } else
-            SID_trap_error("No sigma_v's available in make_map.", SID_ERROR_LOGIC);
+            SID_exit_error("No sigma_v's available in make_map.", SID_ERROR_LOGIC);
     } else if(!strcmp(render->camera->Y_param, "sigma_v_dark") && !strcmp(render->camera->RGB_param, "tau_dark")) {
         mq->ptype_used[GADGET_TYPE_DARK] = GBP_TRUE;
         mq->flag_weigh                   = GBP_TRUE;
@@ -96,7 +96,7 @@ void init_particle_map_quantities(map_quantities_info *mq, render_info *render, 
                 mq->transfer_rho          = NULL;
             }
         } else
-            SID_trap_error("No densities available in make_map.", SID_ERROR_LOGIC);
+            SID_exit_error("No densities available in make_map.", SID_ERROR_LOGIC);
 
         // Use rho for values
         if(ADaPS_exist(render->plist_list[0]->data, "rho_dark")) {
@@ -111,7 +111,7 @@ void init_particle_map_quantities(map_quantities_info *mq, render_info *render, 
                 mq->transfer_sigma          = NULL;
             }
         } else
-            SID_trap_error("No sigma_v's available in make_map.", SID_ERROR_LOGIC);
+            SID_exit_error("No sigma_v's available in make_map.", SID_ERROR_LOGIC);
     } else if(!strcmp(render->camera->RGB_param, "sigma_v_dark") && render->camera->flag_velocity_space) {
         mq->ptype_used[GADGET_TYPE_DARK] = GBP_TRUE;
         mq->flag_weigh                   = GBP_FALSE;
@@ -133,13 +133,10 @@ void init_particle_map_quantities(map_quantities_info *mq, render_info *render, 
                 mq->transfer_sigma          = NULL;
             }
         } else
-            SID_trap_error("No sigma_v's available in make_map.", SID_ERROR_LOGIC);
+            SID_exit_error("No sigma_v's available in make_map.", SID_ERROR_LOGIC);
     } else
-        SID_trap_error("Unknown rendering configuration RGB={%s} Y={%s} w/ flag_velocity_space=%d.",
-                       SID_ERROR_LOGIC,
-                       render->camera->RGB_param,
-                       render->camera->Y_param,
-                       render->camera->flag_velocity_space);
+        SID_exit_error("Unknown rendering configuration RGB={%s} Y={%s} w/ flag_velocity_space=%d.", SID_ERROR_LOGIC,
+                       render->camera->RGB_param, render->camera->Y_param, render->camera->flag_velocity_space);
 
     // Initialize arrays
     int n_type_used = 0;
@@ -148,7 +145,8 @@ void init_particle_map_quantities(map_quantities_info *mq, render_info *render, 
             // This code can use one-and-only-one particle type at a time at the moment
             n_type_used++;
             if(n_type_used > 1)
-                SID_trap_error("An invalid number of particle types (%d) are being used in make_map.", SID_ERROR_LOGIC, n_type_used);
+                SID_exit_error("An invalid number of particle types (%d) are being used in make_map.", SID_ERROR_LOGIC,
+                               n_type_used);
             if(render->camera->flag_velocity_space) {
                 for(i_snap = 0; i_snap < render->n_interpolate; i_snap++) {
                     mq->x[i_snap] = (GBPREAL *)ADaPS_fetch(render->plist_list[i_snap]->data, "vx_%s", render->plist_list[i_snap]->species[i_type]);

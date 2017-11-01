@@ -125,7 +125,7 @@ if(n_data>0){
       else if(type==SID_SIZE_T)
         median=((size_t *)data_local)[0];
       else
-        SID_trap_error("type not supported by calc_median_global.",SID_ERROR_LOGIC);
+        SID_exit_error("type not supported by calc_median_global.",SID_ERROR_LOGIC);
 }
 else
   median=0.;

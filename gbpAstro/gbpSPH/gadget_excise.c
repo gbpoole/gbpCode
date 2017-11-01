@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
         select_function                   = select_gadget_sphere;
         select_gadget_volume_params.size2 = pow(select_gadget_volume_params.size, 2.);
     } else
-        SID_trap_error("Invalid selection mode (%d) given.", SID_ERROR_SYNTAX, select_mode);
+        SID_exit_error("Invalid selection mode (%d) given.", SID_ERROR_SYNTAX, select_mode);
 
     SID_log("Excising volume from Gadget binary file {%s;snapshot=%d}...", SID_LOG_OPEN | SID_LOG_TIMER, filename_in_root, snapshot);
 
@@ -54,7 +54,7 @@ int main(int argc, char *argv[]) {
     int                flag_file_type = fp_gadget.flag_file_type;
     gadget_header_info header         = fp_gadget.header;
     if(!flag_filefound)
-        SID_trap_error("File not found.", SID_ERROR_LOGIC);
+        SID_exit_error("File not found.", SID_ERROR_LOGIC);
     select_gadget_volume_params.box_size = fp_gadget.header.box_size;
 
     // Count the particles

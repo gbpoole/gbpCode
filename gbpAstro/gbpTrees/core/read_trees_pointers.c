@@ -24,33 +24,39 @@ void read_trees_pointers(tree_info *trees, const char *filename_input_dir_horizo
         flag_bridge_forematch = GBP_TRUE;
         // Fetch the pointers from the trees structure
         if(trees->group_forematch_pointers == NULL)
-            SID_trap_error("Group forematch pointer arrays have not been initialized properly before a call to read_trees_pointers().",
-                           SID_ERROR_LOGIC);
+            SID_exit_error(
+                    "Group forematch pointer arrays have not been initialized properly before a call to read_trees_pointers().",
+                    SID_ERROR_LOGIC);
         else
             pointers_groups_local = trees->group_forematch_pointers;
         if(trees->subgroup_forematch_pointers == NULL)
-            SID_trap_error("Subgroup forematch pointer arrays have not been initialized properly before a call to read_trees_pointers().",
-                           SID_ERROR_LOGIC);
+            SID_exit_error(
+                    "Subgroup forematch pointer arrays have not been initialized properly before a call to read_trees_pointers().",
+                    SID_ERROR_LOGIC);
         else
             pointers_subgroups_local = trees->subgroup_forematch_pointers;
         if(trees->group_forematch_score == NULL)
-            SID_trap_error("Group forematch score arrays have not been initialized properly before a call to read_trees_pointers().",
-                           SID_ERROR_LOGIC);
+            SID_exit_error(
+                    "Group forematch score arrays have not been initialized properly before a call to read_trees_pointers().",
+                    SID_ERROR_LOGIC);
         else
             score_groups_local = trees->group_forematch_score;
         if(trees->subgroup_forematch_score == NULL)
-            SID_trap_error("Subgroup forematch score arrays have not been initialized properly before a call to read_trees_pointers().",
-                           SID_ERROR_LOGIC);
+            SID_exit_error(
+                    "Subgroup forematch score arrays have not been initialized properly before a call to read_trees_pointers().",
+                    SID_ERROR_LOGIC);
         else
             score_subgroups_local = trees->subgroup_forematch_score;
         if(trees->group_descendant_score == NULL)
-            SID_trap_error("Group descendant score arrays have not been initialized properly before a call to read_trees_pointers().",
-                           SID_ERROR_LOGIC);
+            SID_exit_error(
+                    "Group descendant score arrays have not been initialized properly before a call to read_trees_pointers().",
+                    SID_ERROR_LOGIC);
         else
             score_groups_prog_local = trees->group_descendant_score;
         if(trees->subgroup_descendant_score == NULL)
-            SID_trap_error("Subgroup descendant score arrays have not been initialized properly before a call to read_trees_pointers().",
-                           SID_ERROR_LOGIC);
+            SID_exit_error(
+                    "Subgroup descendant score arrays have not been initialized properly before a call to read_trees_pointers().",
+                    SID_ERROR_LOGIC);
         else
             score_subgroups_prog_local = trees->subgroup_descendant_score;
     } else if(check_mode_for_flag(mode, READ_TREES_POINTERS_BRIDGE_BACKMATCH) && !check_mode_for_flag(mode, READ_TREES_POINTERS_BRIDGE_FOREMATCH)) {
@@ -58,37 +64,43 @@ void read_trees_pointers(tree_info *trees, const char *filename_input_dir_horizo
         flag_bridge_backmatch = GBP_TRUE;
         // Fetch the pointers from the trees structure
         if(trees->group_backmatch_pointers == NULL)
-            SID_trap_error("Group backmatch pointer arrays have not been initialized properly before a call to read_trees_pointers().",
-                           SID_ERROR_LOGIC);
+            SID_exit_error(
+                    "Group backmatch pointer arrays have not been initialized properly before a call to read_trees_pointers().",
+                    SID_ERROR_LOGIC);
         else
             pointers_groups_local = trees->group_backmatch_pointers;
         if(trees->subgroup_backmatch_pointers == NULL)
-            SID_trap_error("Subgroup backmatch pointer arrays have not been initialized properly before a call to read_trees_pointers().",
-                           SID_ERROR_LOGIC);
+            SID_exit_error(
+                    "Subgroup backmatch pointer arrays have not been initialized properly before a call to read_trees_pointers().",
+                    SID_ERROR_LOGIC);
         else
             pointers_subgroups_local = trees->subgroup_backmatch_pointers;
         if(trees->group_backmatch_score == NULL)
-            SID_trap_error("Group backmatch score arrays have not been initialized properly before a call to read_trees_pointers().",
-                           SID_ERROR_LOGIC);
+            SID_exit_error(
+                    "Group backmatch score arrays have not been initialized properly before a call to read_trees_pointers().",
+                    SID_ERROR_LOGIC);
         else
             score_groups_local = trees->group_backmatch_score;
         if(trees->subgroup_backmatch_score == NULL)
-            SID_trap_error("Subgroup backmatch score arrays have not been initialized properly before a call to read_trees_pointers().",
-                           SID_ERROR_LOGIC);
+            SID_exit_error(
+                    "Subgroup backmatch score arrays have not been initialized properly before a call to read_trees_pointers().",
+                    SID_ERROR_LOGIC);
         else
             score_subgroups_local = trees->subgroup_backmatch_score;
         if(trees->group_progenitor_score == NULL)
-            SID_trap_error("Group progenitor score arrays have not been initialized properly before a call to read_trees_pointers().",
-                           SID_ERROR_LOGIC);
+            SID_exit_error(
+                    "Group progenitor score arrays have not been initialized properly before a call to read_trees_pointers().",
+                    SID_ERROR_LOGIC);
         else
             score_groups_prog_local = trees->group_progenitor_score;
         if(trees->subgroup_progenitor_score == NULL)
-            SID_trap_error("Subgroup progenitor score arrays have not been initialized properly before a call to read_trees_pointers().",
-                           SID_ERROR_LOGIC);
+            SID_exit_error(
+                    "Subgroup progenitor score arrays have not been initialized properly before a call to read_trees_pointers().",
+                    SID_ERROR_LOGIC);
         else
             score_subgroups_prog_local = trees->subgroup_progenitor_score;
     } else
-        SID_trap_error("Invalid mode (%d) passed to read_trees_pointers().", SID_ERROR_LOGIC, mode);
+        SID_exit_error("Invalid mode (%d) passed to read_trees_pointers().", SID_ERROR_LOGIC, mode);
 
     SID_log("Reading %s pointers for snapshot %03d...", SID_LOG_OPEN, pointer_type_text, trees->snap_list[i_file_ptrs]);
 
@@ -203,8 +215,8 @@ void read_trees_pointers(tree_info *trees, const char *filename_input_dir_horizo
                 if(!flag_group_added) {
                     // Sanity check
                     if(current_group_local->file_index != i_group)
-                        SID_trap_error(
-                            "Group pointer catalog is out of sync (ie. %d!=%d)", SID_ERROR_LOGIC, current_group_local->file_index, i_group);
+                        SID_exit_error("Group pointer catalog is out of sync (ie. %d!=%d)", SID_ERROR_LOGIC,
+                                       current_group_local->file_index, i_group);
 
                     // Find the halo pointed to and the halo pointed from (which-is-which depends on the mode)
                     result_i     = current_group_local;
@@ -223,8 +235,8 @@ void read_trees_pointers(tree_info *trees, const char *filename_input_dir_horizo
 
                 // Sanity check
                 if(current_subgroup_local->file_index != i_subgroup)
-                    SID_trap_error(
-                        "Subgroup pointer catalog is out of sync (ie. %d!=%d)", SID_ERROR_LOGIC, current_subgroup_local->file_index, i_subgroup);
+                    SID_exit_error("Subgroup pointer catalog is out of sync (ie. %d!=%d)", SID_ERROR_LOGIC,
+                                   current_subgroup_local->file_index, i_subgroup);
 
                 // Find the halo pointed to and the halo pointed from (which-is-which depends on the mode)
                 result_i     = current_subgroup_local;

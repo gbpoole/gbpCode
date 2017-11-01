@@ -43,7 +43,7 @@ void set_particle_map_quantities(render_info *        render,
         (*y_i) = mq->y[0][i_particle] + render->f_interpolate * dy;
         (*z_i) = mq->z[0][i_particle] + render->f_interpolate * dz;
     } else
-        SID_trap_error("n_interpolate>2 not supported (yet).", SID_ERROR_LOGIC);
+        SID_exit_error("n_interpolate>2 not supported (yet).", SID_ERROR_LOGIC);
     if(mode == GBP_TRUE) {
         if(render->n_interpolate == 1)
             (*h_i) = mq->h_smooth[0][i_particle];
@@ -97,7 +97,7 @@ void set_particle_map_quantities(render_info *        render,
                 (*w_i) = 1.;
                 break;
             default:
-                SID_trap_error("Unknown w_mode (%d) in make_map.", SID_ERROR_LOGIC, mq->v_mode);
+                SID_exit_error("Unknown w_mode (%d) in make_map.", SID_ERROR_LOGIC, mq->v_mode);
                 break;
         }
         // Set the particle value
@@ -122,7 +122,7 @@ void set_particle_map_quantities(render_info *        render,
                 }
                 break;
             default:
-                SID_trap_error("Unknown v_mode (%d) in make_map.", SID_ERROR_LOGIC, mq->v_mode);
+                SID_exit_error("Unknown v_mode (%d) in make_map.", SID_ERROR_LOGIC, mq->v_mode);
                 break;
         }
     }

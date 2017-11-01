@@ -93,15 +93,15 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
         SID_Bcast(&n_groups, 1, SID_INT, SID.COMM_WORLD, SID_MASTER_RANK);
         SID_Bcast(&group_offset_byte_size, 1, SID_INT, SID.COMM_WORLD, SID_MASTER_RANK);
     } else
-        SID_trap_error("Could not open {%s}!\n", SID_ERROR_LOGIC, filename_groups);
+        SID_exit_error("Could not open {%s}!\n", SID_ERROR_LOGIC, filename_groups);
     int flag_group_long_offsets;
     if(group_offset_byte_size == sizeof(int64_t))
         flag_group_long_offsets = GBP_TRUE;
     else if(group_offset_byte_size == sizeof(unsigned int))
         flag_group_long_offsets = GBP_FALSE;
     else
-        SID_trap_error(
-            "Group offset size (%d) is invalid.  Must be %d or %d.", SID_ERROR_LOGIC, group_offset_byte_size, sizeof(int64_t), sizeof(unsigned int));
+        SID_exit_error("Group offset size (%d) is invalid.  Must be %d or %d.", SID_ERROR_LOGIC, group_offset_byte_size,
+                       sizeof(int64_t), sizeof(unsigned int));
 
     // ... from subgroups file...
     if((fp_subgroups = fopen(filename_subgroups, "r")) != NULL) {
@@ -113,18 +113,15 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
         SID_Bcast(&n_subgroups, 1, SID_INT, SID.COMM_WORLD, SID_MASTER_RANK);
         SID_Bcast(&subgroup_offset_byte_size, 1, SID_INT, SID.COMM_WORLD, SID_MASTER_RANK);
     } else
-        SID_trap_error("Could not open {%s}!\n", SID_ERROR_LOGIC, filename_subgroups);
+        SID_exit_error("Could not open {%s}!\n", SID_ERROR_LOGIC, filename_subgroups);
     int flag_subgroup_long_offsets;
     if(subgroup_offset_byte_size == sizeof(int64_t))
         flag_subgroup_long_offsets = GBP_TRUE;
     else if(subgroup_offset_byte_size == sizeof(unsigned int))
         flag_subgroup_long_offsets = GBP_FALSE;
     else
-        SID_trap_error("Subgroup offset size (%d) is invalid.  Must be %d or %d.",
-                       SID_ERROR_LOGIC,
-                       subgroup_offset_byte_size,
-                       sizeof(int64_t),
-                       sizeof(unsigned int));
+        SID_exit_error("Subgroup offset size (%d) is invalid.  Must be %d or %d.", SID_ERROR_LOGIC,
+                       subgroup_offset_byte_size, sizeof(int64_t), sizeof(unsigned int));
 
     // ... from ids file...
     if((fp_ids = fopen(filename_ids, "r")) != NULL) {
@@ -141,9 +138,9 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
         SID_Bcast(&n_ids, 1, SID_SIZE_T, SID.COMM_WORLD, SID_MASTER_RANK);
         header_size_ids = sizeof(int) + id_byte_size;
         if(id_byte_size > sizeof(size_t))
-            SID_trap_error("Internal type size not sufficent for the ids in {%s}.", SID_ERROR_LOGIC, filename_ids);
+            SID_exit_error("Internal type size not sufficent for the ids in {%s}.", SID_ERROR_LOGIC, filename_ids);
     } else
-        SID_trap_error("Could not open {%s}!\n", SID_ERROR_LOGIC, filename_ids);
+        SID_exit_error("Could not open {%s}!\n", SID_ERROR_LOGIC, filename_ids);
     if(id_byte_size == sizeof(size_t))
         flag_long_ids = GBP_TRUE;
     else
@@ -318,12 +315,9 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
                     for(int i_rank = 0, PHK_last_rank = -1; i_rank < SID.n_proc; i_rank++) {
                         if(i_rank == SID.My_rank) {
                             if(PHK_min_local != (PHK_last_rank + 1))
-                                SID_trap_error("Keys not continuous at start of rank %d. (n_bits=%d,PHK_min=%d,PHK_max=%d)",
-                                               SID_ERROR_LOGIC,
-                                               SID.My_rank,
-                                               n_bits_PHK,
-                                               PHK_min_local,
-                                               PHK_max_local);
+                                SID_exit_error(
+                                        "Keys not continuous at start of rank %d. (n_bits=%d,PHK_min=%d,PHK_max=%d)",
+                                        SID_ERROR_LOGIC, SID.My_rank, n_bits_PHK, PHK_min_local, PHK_max_local);
                             PHK_last_rank = PHK_max_local;
                         }
                         SID_Bcast(&PHK_last_rank, 1, SID_INT, SID.COMM_WORLD, i_rank);
@@ -369,9 +363,11 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
 
             // Sanity checks
             if(n_particles_left != 0)
-                SID_trap_error("Particle number mismatch (%zd unassigned) after setting PHK ranges.", SID_ERROR_LOGIC, n_particles_left);
+                SID_exit_error("Particle number mismatch (%zd unassigned) after setting PHK ranges.", SID_ERROR_LOGIC,
+                               n_particles_left);
             if(n_groups_left != 0)
-                SID_trap_error("Group number mismatch (%d unassigned) after setting PHK ranges.", SID_ERROR_LOGIC, n_groups_left);
+                SID_exit_error("Group number mismatch (%d unassigned) after setting PHK ranges.", SID_ERROR_LOGIC,
+                               n_groups_left);
 
             // Report results
             if(SID.n_proc > 1) {
@@ -419,7 +415,8 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
 
             // Sanity check
             if(j_group != n_groups_local)
-                SID_trap_error("Group counts don't make sense (ie. %d!=%d) after re-reading the PHK keys.", SID_ERROR_LOGIC, j_group, n_groups_local);
+                SID_exit_error("Group counts don't make sense (ie. %d!=%d) after re-reading the PHK keys.",
+                               SID_ERROR_LOGIC, j_group, n_groups_local);
 
             // Sort read indices
             size_t *read_index_group_temp_index;
@@ -493,8 +490,8 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
 
             // Sanity check
             if(j_group != n_groups_local)
-                SID_trap_error(
-                    "Group counts don't make sense (ie. %d!=%d) after determining storage indices.", SID_ERROR_LOGIC, j_group, n_groups_local);
+                SID_exit_error("Group counts don't make sense (ie. %d!=%d) after determining storage indices.",
+                               SID_ERROR_LOGIC, j_group, n_groups_local);
 
             // Clean-up
             SID_free(SID_FARG PHK_boundary);
@@ -517,7 +514,7 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
         }
         // ... else if PHK file not opened ...
         else
-            SID_trap_error("File {%s} not found.", SID_ERROR_IO_OPEN, filename_in_PHKs);
+            SID_exit_error("File {%s} not found.", SID_ERROR_IO_OPEN, filename_in_PHKs);
     }
     // ... assign to ranks in rank-ordered blocks (default).
     else {
@@ -589,10 +586,9 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
             }
             calc_sum_global(&n_particles_local, &n_particles, 1, SID_SIZE_T, CALC_MODE_DEFAULT, SID.COMM_WORLD);
             if(n_particles != n_ids)
-                SID_trap_error("The number of loaded particles does not match the number of particles in the header (ie. %lld!=%lld)",
-                               SID_ERROR_LOGIC,
-                               n_particles,
-                               n_ids);
+                SID_exit_error(
+                        "The number of loaded particles does not match the number of particles in the header (ie. %lld!=%lld)",
+                        SID_ERROR_LOGIC, n_particles, n_ids);
         } else {
             n_groups    = 0;
             n_particles = 0;
@@ -622,10 +618,9 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
         read_index_group_store[storage_index_group[i_group]] = read_index_group[i_group];
     for(int i_group = 0; i_group < n_groups_local; i_group++) {
         if(read_index_group_store[i_group] == -2)
-            SID_trap_error("There is an uninitialized value for read_index_group_store (rank=%d, element=%d) in read_groups.",
-                           SID_ERROR_LOGIC,
-                           SID.My_rank,
-                           i_group);
+            SID_exit_error(
+                    "There is an uninitialized value for read_index_group_store (rank=%d, element=%d) in read_groups.",
+                    SID_ERROR_LOGIC, SID.My_rank, i_group);
     }
     ADaPS_store(&(plist->data), (void *)(read_index_group_store), "file_index_groups_%s", ADaPS_DEFAULT, catalog_name);
 
@@ -634,16 +629,16 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
     size_t n_particles_check;
     SID_Allreduce(&n_groups_local, &n_groups_check, 1, SID_INT, SID_SUM, SID.COMM_WORLD);
     if(n_groups_check != n_groups)
-        SID_trap_error("Inconsistant group count (%d!=%d) after initializing domain decomposition.", SID_ERROR_LOGIC, n_groups_check, n_groups);
+        SID_exit_error("Inconsistant group count (%d!=%d) after initializing domain decomposition.", SID_ERROR_LOGIC,
+                       n_groups_check, n_groups);
     SID_Allreduce(&n_particles_local, &n_particles_check, 1, SID_SIZE_T, SID_SUM, SID.COMM_WORLD);
     if(n_particles_check != n_particles)
-        SID_trap_error(
-            "Inconsistant particle count (%zd!=%zd) after initializing domain decomposition.", SID_ERROR_LOGIC, n_particles_check, n_particles);
+        SID_exit_error("Inconsistant particle count (%zd!=%zd) after initializing domain decomposition.",
+                       SID_ERROR_LOGIC, n_particles_check, n_particles);
     if(n_particles_check != n_ids)
-        SID_trap_error("Particle count after initializing the domain decomposition does not match the header value (ie. (%lld!=%lld).",
-                       SID_ERROR_LOGIC,
-                       n_particles_check,
-                       n_ids);
+        SID_exit_error(
+                "Particle count after initializing the domain decomposition does not match the header value (ie. (%lld!=%lld).",
+                SID_ERROR_LOGIC, n_particles_check, n_ids);
 
     // Read the files ...
     if(flag_read_groups || flag_read_subgroups) {
@@ -653,7 +648,7 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
             if((fp_groups = fopen(filename_groups, "r")) != NULL)
                 fseeko(fp_groups, (off_t)header_size_groups, SEEK_SET);
             else
-                SID_trap_error("Could not open {%s}!\n", SID_ERROR_LOGIC, filename_groups);
+                SID_exit_error("Could not open {%s}!\n", SID_ERROR_LOGIC, filename_groups);
             if(n_groups > 0) {
                 // ... allocate arrays ...
                 group_length      = (int *)SID_malloc(sizeof(int) * n_groups_local);
@@ -692,13 +687,13 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
                     }
                 }
                 if(j_group != n_groups_local)
-                    SID_trap_error(
-                        "Group counts don't make sense (ie. %d!=%d) after reading group lengths.", SID_ERROR_LOGIC, j_group, n_groups_local);
+                    SID_exit_error("Group counts don't make sense (ie. %d!=%d) after reading group lengths.",
+                                   SID_ERROR_LOGIC, j_group, n_groups_local);
 
                 // Check for indexing inconsistancies
                 for(int i_group = 0; i_group < n_groups_local; i_group++) {
                     if(test[i_group] != 1)
-                        SID_trap_error("Group length indexing error: %5d %5d\n", i_group, test[i_group]);
+                        SID_exit_error("Group length indexing error: %5d %5d\n", i_group, test[i_group]);
                 }
 
                 // Count the number of particles in the boundary keys
@@ -741,13 +736,13 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
                     }
                 }
                 if(j_group != n_groups_local)
-                    SID_trap_error(
-                        "Group counts don't make sense (ie. %d!=%d) after reading group offsets.", SID_ERROR_LOGIC, j_group, n_groups_local);
+                    SID_exit_error("Group counts don't make sense (ie. %d!=%d) after reading group offsets.",
+                                   SID_ERROR_LOGIC, j_group, n_groups_local);
 
                 // Check for indexing inconsistancies
                 for(int i_group = 0; i_group < n_groups_local; i_group++) {
                     if(test[i_group] != 1)
-                        SID_trap_error("Group offset indexing error: %5d %5d\n", i_group, test[i_group]);
+                        SID_exit_error("Group offset indexing error: %5d %5d\n", i_group, test[i_group]);
                 }
 
                 // ... read number of subgroups per group ...
@@ -785,20 +780,18 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
                 }
                 SID_free(SID_FARG buffer);
                 if(j_group != n_groups_local)
-                    SID_trap_error("Group counts don't make sense (ie. %d!=%d) after reading no. of subgroups per group.",
-                                   SID_ERROR_LOGIC,
-                                   j_group,
-                                   n_groups_local);
+                    SID_exit_error(
+                            "Group counts don't make sense (ie. %d!=%d) after reading no. of subgroups per group.",
+                            SID_ERROR_LOGIC, j_group, n_groups_local);
                 if(i_subgroup != n_subgroups)
-                    SID_trap_error("Subgroup counts don't make sense (ie. %d!=%d) after reading no. of subgroups per group.",
-                                   SID_ERROR_LOGIC,
-                                   i_subgroup,
-                                   n_subgroups);
+                    SID_exit_error(
+                            "Subgroup counts don't make sense (ie. %d!=%d) after reading no. of subgroups per group.",
+                            SID_ERROR_LOGIC, i_subgroup, n_subgroups);
 
                 // Check for indexing inconsistancies
                 for(int i_group = 0; i_group < n_groups_local; i_group++) {
                     if(test[i_group] != 1)
-                        SID_trap_error("Group offset indexing error: %5d %5d\n", i_group, test[i_group]);
+                        SID_exit_error("Group offset indexing error: %5d %5d\n", i_group, test[i_group]);
                 }
                 SID_free(SID_FARG test);
 
@@ -807,12 +800,12 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
                 calc_sum(n_subgroups_group, &n_subgroups_local, n_groups_local, SID_INT, CALC_MODE_DEFAULT);
                 calc_sum_global(&n_subgroups_local, &n_subgroups_check, 1, SID_INT, CALC_MODE_DEFAULT, SID.COMM_WORLD);
                 if(n_subgroups_check != n_subgroups)
-                    SID_trap_error("Inconsistant subgroup count (%d!=%d) after reading group file.", SID_ERROR_LOGIC, n_subgroups_check, n_subgroups);
+                    SID_exit_error("Inconsistant subgroup count (%d!=%d) after reading group file.", SID_ERROR_LOGIC,
+                                   n_subgroups_check, n_subgroups);
                 if(i_subgroup != n_subgroups)
-                    SID_trap_error("Local subgroup counts don't make sense (ie. %d!=%d) after reading no. of subgroups per group.",
-                                   SID_ERROR_LOGIC,
-                                   i_subgroup,
-                                   n_subgroups_local);
+                    SID_exit_error(
+                            "Local subgroup counts don't make sense (ie. %d!=%d) after reading no. of subgroups per group.",
+                            SID_ERROR_LOGIC, i_subgroup, n_subgroups_local);
 
                 // Finish computing subgroup read indices
                 int *read_index_subgroup = (int *)SID_malloc(sizeof(int) * n_subgroups_local);
@@ -928,7 +921,7 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
             if((fp_subgroups = fopen(filename_subgroups, "r")) != NULL)
                 fseeko(fp_subgroups, (off_t)header_size_subgroups, SEEK_SET);
             else
-                SID_trap_error("Could not open {%s}!\n", SID_ERROR_LOGIC, filename_subgroups);
+                SID_exit_error("Could not open {%s}!\n", SID_ERROR_LOGIC, filename_subgroups);
 
             if(n_subgroups > 0) {
                 // Allocate arrays
@@ -964,15 +957,16 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
                 for(i_group = 0, i_subgroup = 0; i_group < n_groups_local; i_group++) {
                     for(int j_subgroup = 0; j_subgroup < n_subgroups_group[i_group]; i_subgroup++, j_subgroup++) {
                         if(test[i_subgroup] != 1)
-                            SID_trap_error("Subgroup length indexing error: %5d %5d %5d\n", i_group, j_subgroup, test[i_subgroup]);
+                            SID_exit_error("Subgroup length indexing error: %5d %5d %5d\n", i_group, j_subgroup,
+                                           test[i_subgroup]);
                     }
                 }
 
                 // ... (make sure all ranks are synced to the end of the subgroup lengths) ...
                 fseeko(fp_subgroups, (off_t)(read_seek_subgroup[j_group] * sizeof(int)), SEEK_CUR);
                 if(j_group != n_groups_local)
-                    SID_trap_error(
-                        "Group counts don't make sense (ie. %d!=%d) after reading group lengths.", SID_ERROR_LOGIC, j_group, n_groups_local);
+                    SID_exit_error("Group counts don't make sense (ie. %d!=%d) after reading group lengths.",
+                                   SID_ERROR_LOGIC, j_group, n_groups_local);
 
                 // ... read local subgroup offsets ...
                 for(int i_test = 0; i_test < n_subgroups_local; i_test++)
@@ -1012,37 +1006,33 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
                             if(subgroup_index_max > group_index_max && !flag_read_MBP_ids_only) {
                                 size_t over_run;
                                 over_run = subgroup_index_max - group_index_max;
-                                SID_trap_error("Subgroup {%d;offset=%lld & size=%d} ID list over-runs group {%d;offset=%lld & size=%d} ID list by "
-                                               "%lld particles.",
-                                               SID_ERROR_LOGIC,
-                                               index_subgroup + i_subgroup,
-                                               subgroup_offset[index_subgroup + i_subgroup],
-                                               subgroup_length[index_subgroup + i_subgroup],
-                                               index_group,
-                                               group_offset[index_group],
-                                               group_length[index_group],
-                                               over_run);
+                                SID_exit_error(
+                                        "Subgroup {%d;offset=%lld & size=%d} ID list over-runs group {%d;offset=%lld & size=%d} ID list by "
+                                                "%lld particles.", SID_ERROR_LOGIC, index_subgroup + i_subgroup,
+                                        subgroup_offset[index_subgroup + i_subgroup],
+                                        subgroup_length[index_subgroup + i_subgroup], index_group,
+                                        group_offset[index_group], group_length[index_group], over_run);
                             }
                         }
                         if(group_index_max > n_ids)
-                            SID_trap_error("The group particle list over-runs the number of particles given in the header (ie. %lld>%lld)",
-                                           SID_ERROR_LOGIC,
-                                           group_index_max,
-                                           n_ids);
+                            SID_exit_error(
+                                    "The group particle list over-runs the number of particles given in the header (ie. %lld>%lld)",
+                                    SID_ERROR_LOGIC, group_index_max, n_ids);
                         j_group++;
                     }
                 }
                 // ... (make sure all ranks are synced to the end of the subgroup lengths) ...
                 fseeko(fp_subgroups, (off_t)(read_seek_subgroup[j_group] * sizeof(int)), SEEK_CUR);
                 if(j_group != n_groups_local)
-                    SID_trap_error(
-                        "Group counts don't make sense (ie. %d!=%d) after reading group lengths.", SID_ERROR_LOGIC, j_group, n_groups_local);
+                    SID_exit_error("Group counts don't make sense (ie. %d!=%d) after reading group lengths.",
+                                   SID_ERROR_LOGIC, j_group, n_groups_local);
 
                 // Check for indexing inconsistancies
                 for(int i_group = 0, i_subgroup = 0; i_group < n_groups_local; i_group++) {
                     for(int j_subgroup = 0; j_subgroup < n_subgroups_group[i_group]; i_subgroup++, j_subgroup++) {
                         if(test[i_subgroup] != 1)
-                            SID_trap_error("Subgroup length indexing error: %5d %5d %5d", i_group, j_subgroup, test[i_subgroup]);
+                            SID_exit_error("Subgroup length indexing error: %5d %5d %5d", i_group, j_subgroup,
+                                           test[i_subgroup]);
                     }
                 }
                 SID_free(SID_FARG test);
@@ -1052,12 +1042,10 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
                     i_subgroup += n_subgroups_group[i_group], i_group++) {
                     if(n_subgroups_group[i_group] > 0) {
                         if(group_offset[i_group] != subgroup_offset[i_subgroup])
-                            SID_trap_error("The first subgroup (%d) in a group (%d) does not share the group's particle offset (ie %u!=%u).",
-                                           SID_ERROR_LOGIC,
-                                           i_subgroup,
-                                           i_group,
-                                           group_offset[i_group],
-                                           subgroup_offset[i_subgroup]);
+                            SID_exit_error(
+                                    "The first subgroup (%d) in a group (%d) does not share the group's particle offset (ie %u!=%u).",
+                                    SID_ERROR_LOGIC, i_subgroup, i_group, group_offset[i_group],
+                                    subgroup_offset[i_subgroup]);
                     }
                 }
 
@@ -1076,7 +1064,7 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
             if((fp_ids = fopen(filename_ids, "r")) != NULL)
                 fseeko(fp_ids, (off_t)header_size_ids, SEEK_SET);
             else
-                SID_trap_error("Could not open {%s}!\n", SID_ERROR_LOGIC, filename_ids);
+                SID_exit_error("Could not open {%s}!\n", SID_ERROR_LOGIC, filename_ids);
             if(n_ids > 0) {
                 // Create the array that will hold the IDs
                 int  i_test, j_test;
@@ -1171,7 +1159,7 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
                         for(int i_buffer = 0; i_buffer < n_buffer; i_buffer++) {
                             if(buffer_ranks[i_buffer] < 0) {
                                 fprintf(stderr, "ERROR %d %d\n", i_buffer, i_group + i_buffer);
-                                SID_trap_error("!", SID_ERROR_LOGIC);
+                                SID_exit_error("!", SID_ERROR_LOGIC);
                             }
                         }
                     }
@@ -1248,35 +1236,26 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
                 if(flag_read_MBP_ids_only) {
                     for(int i_group = 0, i_particle = 0; i_group < n_groups_local; i_group++, i_particle++) {
                         if(test[i_particle] != 1)
-                            SID_trap_error("Particle ID indexing error (1): rank=%d %d %d", SID_ERROR_LOGIC, SID.My_rank, i_group, test[i_particle]);
+                            SID_exit_error("Particle ID indexing error (1): rank=%d %d %d", SID_ERROR_LOGIC,
+                                           SID.My_rank, i_group, test[i_particle]);
                     }
                 } else {
                     size_t i_particle = 0;
                     for(int i_group = 0; i_group < n_groups_local; i_group++) {
                         for(int j_particle = 0; j_particle < group_length[i_group]; i_particle++, j_particle++) {
                             if(i_particle >= n_particles_local)
-                                SID_trap_error("Particle ID indexing error (2): rank=%d %d %d %d",
-                                               SID_ERROR_LOGIC,
-                                               SID.My_rank,
-                                               i_group,
-                                               i_particle,
-                                               n_particles_local);
+                                SID_exit_error("Particle ID indexing error (2): rank=%d %d %d %d", SID_ERROR_LOGIC,
+                                               SID.My_rank, i_group, i_particle, n_particles_local);
                             if(test[i_particle] != 1)
-                                SID_trap_error("Particle ID indexing error (3): rank=%d %d %d %d %d %d",
-                                               SID_ERROR_LOGIC,
-                                               SID.My_rank,
-                                               i_group,
-                                               i_particle,
-                                               j_particle,
-                                               test[i_particle],
-                                               n_particles_local);
+                                SID_exit_error("Particle ID indexing error (3): rank=%d %d %d %d %d %d",
+                                               SID_ERROR_LOGIC, SID.My_rank, i_group, i_particle, j_particle,
+                                               test[i_particle], n_particles_local);
                         }
                     }
                     if(i_particle != n_particles_local)
-                        SID_trap_error("Particle counts don't make sense (ie. %d!=%d) after sanity check of IDs indexing.",
-                                       SID_ERROR_LOGIC,
-                                       i_particle,
-                                       n_particles_local);
+                        SID_exit_error(
+                                "Particle counts don't make sense (ie. %d!=%d) after sanity check of IDs indexing.",
+                                SID_ERROR_LOGIC, i_particle, n_particles_local);
                 }
                 SID_free(SID_FARG test);
 

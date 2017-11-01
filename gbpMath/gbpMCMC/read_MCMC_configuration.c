@@ -35,9 +35,10 @@ void read_MCMC_configuration(MCMC_info *MCMC, char *filename_output_dir, int cha
     fread_verify(&n_P, sizeof(int), 1, fp);
     fclose(fp);
     if(n_P != MCMC->n_P)
-        SID_trap_error("The number of parameters for the two runs does not match (ie. %d!=%d)", SID_ERROR_LOGIC, n_P, MCMC->n_P);
+        SID_exit_error("The number of parameters for the two runs does not match (ie. %d!=%d)", SID_ERROR_LOGIC, n_P,
+                       MCMC->n_P);
     if(chain >= n_chains)
-        SID_trap_error("Invalid chain number (ie. %d>%d)", SID_ERROR_LOGIC, chain, n_chains);
+        SID_exit_error("Invalid chain number (ie. %d>%d)", SID_ERROR_LOGIC, chain, n_chains);
 
     // Read the configuration file
     int     n_iterations_file_total;

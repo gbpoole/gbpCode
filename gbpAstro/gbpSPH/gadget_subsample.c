@@ -70,7 +70,7 @@ int main(int argc, char *argv[]) {
     int                flag_file_type = fp_gadget.flag_file_type;
     gadget_header_info header         = fp_gadget.header;
     if(!flag_filefound)
-        SID_trap_error("File not found.", SID_ERROR_LOGIC);
+        SID_exit_error("File not found.", SID_ERROR_LOGIC);
     if(flag_filefound)
         n_files = header.n_files;
     else

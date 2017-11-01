@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
         SID_log("n_iterations_file_burn  = %d", SID_LOG_COMMENT, n_iterations_file_burn);
         SID_log("temperature             = %.3f", SID_LOG_COMMENT, temperature);
     } else
-        SID_trap_error("Could not open file {%s}.", SID_ERROR_IO_READ, filename_in1);
+        SID_exit_error("Could not open file {%s}.", SID_ERROR_IO_READ, filename_in1);
 
     SID_log("Converting covariance matrix file to ascii format...", SID_LOG_OPEN);
     if((fp_in2 = fopen(filename_in2, "r")) != NULL) {
@@ -52,7 +52,7 @@ int main(int argc, char *argv[]) {
             }
         }
     } else
-        SID_trap_error("Could not open file {%s}.", SID_ERROR_IO_READ, filename_in2);
+        SID_exit_error("Could not open file {%s}.", SID_ERROR_IO_READ, filename_in2);
     SID_log("Done.", SID_LOG_CLOSE);
     fclose(fp_in1);
     fclose(fp_in2);

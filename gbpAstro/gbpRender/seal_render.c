@@ -17,7 +17,8 @@ void seal_render(render_info *render) {
             FILE *fp_list = NULL;
             if(SID.I_am_Master) {
                 if((fp_list = fopen(render->snap_a_list_filename, "r")) == NULL)
-                    SID_trap_error("Could not open snapshot a_list {%s}", SID_ERROR_IO_OPEN, render->snap_a_list_filename);
+                    SID_exit_error("Could not open snapshot a_list {%s}", SID_ERROR_IO_OPEN,
+                                   render->snap_a_list_filename);
                 render->n_snap_a_list = count_lines_data(fp_list);
             }
             SID_Bcast(&(render->n_snap_a_list), 1, SID_INT, SID.COMM_WORLD, SID_MASTER_RANK);

@@ -468,12 +468,12 @@ void execute_marking_argument_local(render_info *render, mark_arg_info *arg, hal
     else if(!strcmp(arg->type, "<n_p"))
         SID_log("Marking groups with less than %d particles...", SID_LOG_OPEN | SID_LOG_TIMER, arg->ival[0]);
     else
-        SID_trap_error("Invalid selection type {%s} in perform_marking().", SID_ERROR_LOGIC, arg->type);
+        SID_exit_error("Invalid selection type {%s} in perform_marking().", SID_ERROR_LOGIC, arg->type);
     for(int i_snap = 0; i_snap < render->n_interpolate; i_snap++) {
         // TODO: This error is necessary because the interpolation (as coded presently) gets scrambled
         //    if the same particles are not invovled in both snapshots.
         if(render->n_interpolate > 1)
-            SID_trap_error("n_interpolate>1 not supported in marking.", SID_ERROR_LOGIC);
+            SID_exit_error("n_interpolate>1 not supported in marking.", SID_ERROR_LOGIC);
         if(render->n_interpolate > 1)
             SID_log("Processing snapshot %d...", SID_LOG_OPEN | SID_LOG_TIMER);
         plist_info *plist       = render->plist_list[i_snap];
@@ -585,7 +585,8 @@ void execute_marking_argument_local(render_info *render, mark_arg_info *arg, hal
                             count_function  = count_group_ids_local;
                             action_function = add_group_to_ids_list_local;
                         } else
-                            SID_trap_error("Option {%s} not properly implemented in perform_marking().", SID_ERROR_LOGIC, arg->type);
+                            SID_exit_error("Option {%s} not properly implemented in perform_marking().",
+                                           SID_ERROR_LOGIC, arg->type);
 
                         // Create list of particles to mark
                         void * ids_list   = NULL;
@@ -610,7 +611,7 @@ void execute_marking_argument_local(render_info *render, mark_arg_info *arg, hal
                         SID_free(SID_FARG ids_list);
                         SID_free(SID_FARG val_list);
                     } else
-                        SID_trap_error("Invalid selection type {%s} in perform_marking().", SID_ERROR_LOGIC, arg->type);
+                        SID_exit_error("Invalid selection type {%s} in perform_marking().", SID_ERROR_LOGIC, arg->type);
                     n_particles += n_species_local;
                 }
             }
@@ -642,8 +643,8 @@ void perform_marking(render_info *render) {
             halo_properties_info *properties = NULL;
             if(current_arg->flag_keep_properties) {
                 if(i_mark_properties >= render->n_mark_properties)
-                    SID_trap_error(
-                        "Marked properties array has been over-run (i.e. %d>=%d)", SID_ERROR_LOGIC, i_mark_properties, render->n_mark_properties);
+                    SID_exit_error("Marked properties array has been over-run (i.e. %d>=%d)", SID_ERROR_LOGIC,
+                                   i_mark_properties, render->n_mark_properties);
                 properties = &(render->mark_properties[i_mark_properties++]);
             }
 
@@ -661,13 +662,11 @@ void perform_marking(render_info *render) {
 
         // Sanity checks
         if(i_mark_properties != render->n_mark_properties)
-            SID_trap_error("Marked properties array has not been properly populated (i.e. %d!=%d)",
-                           SID_ERROR_LOGIC,
-                           i_mark_properties,
-                           render->n_mark_properties);
+            SID_exit_error("Marked properties array has not been properly populated (i.e. %d!=%d)", SID_ERROR_LOGIC,
+                           i_mark_properties, render->n_mark_properties);
         if(i_arg != render->n_mark_args)
-            SID_trap_error(
-                "Marked properties array has not been properly populated (i.e. %d!=%d)", SID_ERROR_LOGIC, i_arg, render->n_mark_properties);
+            SID_exit_error("Marked properties array has not been properly populated (i.e. %d!=%d)", SID_ERROR_LOGIC,
+                           i_arg, render->n_mark_properties);
 
         SID_log("Done.", SID_LOG_CLOSE);
     }

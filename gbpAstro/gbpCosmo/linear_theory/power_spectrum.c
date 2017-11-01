@@ -37,7 +37,8 @@ void init_power_spectrum_TF(cosmo_info **cosmo) {
     // Fetch the transfer function filename (must be set before power_spectrum() is called).
     char filename_TF[SID_MAX_FILENAME_LENGTH];
     if(!ADaPS_exist(*cosmo, "filename_transfer_function"))
-        SID_trap_error("Transfer function filename has not been specified prior to calling init_power_spectrum_TF().", SID_ERROR_LOGIC);
+        SID_exit_error("Transfer function filename has not been specified prior to calling init_power_spectrum_TF().",
+                       SID_ERROR_LOGIC);
     memcpy(filename_TF, ADaPS_fetch((*cosmo), "filename_transfer_function"), SID_MAX_FILENAME_LENGTH * sizeof(char));
 
     n_spectral = ((double *)ADaPS_fetch((*cosmo), "n_spectral"))[0];
@@ -263,7 +264,7 @@ double power_spectrum(double k_interp, double redshift, cosmo_info **cosmo, int 
             break;
         }
         default:
-            SID_trap_error("Unsupported mode (%d) passed to power_spectrum().", SID_ERROR_LOGIC, mode);
+            SID_exit_error("Unsupported mode (%d) passed to power_spectrum().", SID_ERROR_LOGIC, mode);
             break;
     }
     return (rval);

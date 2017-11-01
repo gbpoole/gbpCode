@@ -25,7 +25,8 @@ void write_treenode_markers(tree_info *trees, const char *filename_output_root, 
         markers       = trees->subgroup_markers;
         n_halos_array = trees->n_subgroups_snap_local;
     } else
-        SID_trap_error("group/subgroup mode has not been properly specified in write_treenode_markers().", SID_ERROR_LOGIC);
+        SID_exit_error("group/subgroup mode has not been properly specified in write_treenode_markers().",
+                       SID_ERROR_LOGIC);
 
     // Perform the write
     SID_log("Writing markers...", SID_LOG_OPEN | SID_LOG_TIMER);
@@ -125,8 +126,8 @@ void write_treenode_markers(tree_info *trees, const char *filename_output_root, 
                                 marker = markers_i->merger_10pc_merger;
                                 break;
                             default:
-                                SID_trap_error(
-                                    "Marker count (%d) has exceeded the specified write count (%d).", SID_ERROR_LOGIC, i_marker, n_marker_write);
+                                SID_exit_error("Marker count (%d) has exceeded the specified write count (%d).",
+                                               SID_ERROR_LOGIC, i_marker, n_marker_write);
                         }
                         if(marker != NULL) {
                             buffer[index_test * n_buffer_per_halo + (i_block++)] = marker->snap_tree;
@@ -137,7 +138,8 @@ void write_treenode_markers(tree_info *trees, const char *filename_output_root, 
                         }
                     } // loop over markers
                     if(i_block != n_buffer_per_halo)
-                        SID_trap_error("block count (%d) does not agree with the allocation size (%d).", SID_ERROR_LOGIC, i_block, n_buffer_per_halo);
+                        SID_exit_error("block count (%d) does not agree with the allocation size (%d).",
+                                       SID_ERROR_LOGIC, i_block, n_buffer_per_halo);
                     buffered_count_local++;
                 } // if halo is in the current buffer
                 current_halo = current_halo->next_neighbour;
@@ -150,7 +152,7 @@ void write_treenode_markers(tree_info *trees, const char *filename_output_root, 
                 for(i_buffer = 0; i_buffer < n_buffer; i_buffer++) {
                     if(buffer[i_buffer] == invalid_entry) {
                         buffer[i_buffer] = -1; // because we skip some groups, this can actually happen
-                        // SID_trap_error("Illegal buffer value (%d).",SID_ERROR_LOGIC,buffer[i_buffer]);
+                        // SID_exit_error("Illegal buffer value (%d).",SID_ERROR_LOGIC,buffer[i_buffer]);
                     }
                 }
                 // Write the buffer

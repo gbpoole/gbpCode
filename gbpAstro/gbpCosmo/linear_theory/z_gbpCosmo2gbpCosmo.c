@@ -13,11 +13,9 @@ double z_gbpCosmo2gbpCosmo(double z, gbpCosmo2gbpCosmo_info *gbpCosmo2gbpCosmo) 
     if(gbpCosmo2gbpCosmo != NULL) {
         // Sanity check
         if(z < gbpCosmo2gbpCosmo->z_min)
-            SID_trap_error("A scaled redshift less than the given minimum has been requested (i.e. %le<%le).  Reinitialize gbpCosmo2gbpCosmo with a "
-                           "lower redshift.",
-                           SID_ERROR_LOGIC,
-                           z,
-                           gbpCosmo2gbpCosmo->z_min);
+            SID_exit_error(
+                    "A scaled redshift less than the given minimum has been requested (i.e. %le<%le).  Reinitialize gbpCosmo2gbpCosmo with a "
+                            "lower redshift.", SID_ERROR_LOGIC, z, gbpCosmo2gbpCosmo->z_min);
         // Calculate scaling
         int    n_iter    = 0;
         int    max_iter  = 100;
@@ -51,7 +49,7 @@ double z_gbpCosmo2gbpCosmo(double z, gbpCosmo2gbpCosmo_info *gbpCosmo2gbpCosmo) 
             n_iter++;
         }
         if(n_iter == max_iter)
-            SID_trap_error("Maximum number of iterations (%d) reached in z_gbpCosmo2gbpCosmo.", SID_ERROR_LOGIC, n_iter);
+            SID_exit_error("Maximum number of iterations (%d) reached in z_gbpCosmo2gbpCosmo.", SID_ERROR_LOGIC, n_iter);
         z_prime = z_mid;
     }
 

@@ -22,7 +22,7 @@ int check_validity_of_emerged_match(tree_horizontal_info *halo_i, match_info *ba
             //    exceeded the search interval.  If so, invalidate the match.
             int total_offset = back_match->halo->file - halo_i->file;
             if(total_offset <= 0)
-                SID_trap_error("Invalid emerged halo snapshot offset (ie. %d<=0).", SID_ERROR_LOGIC, total_offset);
+                SID_exit_error("Invalid emerged halo snapshot offset (ie. %d<=0).", SID_ERROR_LOGIC, total_offset);
             if(total_offset > n_search)
                 flag_valid = GBP_FALSE;
         }

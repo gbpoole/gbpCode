@@ -30,6 +30,6 @@ GBPREAL random_number(RNG_info *RNG) {
 #endif
 #endif
     } else
-        SID_trap_error("RNG_info not initialized in call to random_number.", SID_ERROR_LOGIC);
+        SID_exit_error("RNG_info not initialized in call to random_number.", SID_ERROR_LOGIC);
     return (0.);
 }

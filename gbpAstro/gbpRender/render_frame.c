@@ -60,12 +60,9 @@ void render_frame(render_info *render) {
     // Sanity check the taper distances
     double taper_width = d_taper_field - d_near_field;
     if(taper_width < 0.)
-        SID_trap_error("The near-field distance (%le [%s]) must be less than the taper distance (%le [%s]) if non-zero.",
-                       SID_ERROR_LOGIC,
-                       d_near_field * unit_factor,
-                       unit_text,
-                       d_taper_field * unit_factor,
-                       unit_text);
+        SID_exit_error(
+                "The near-field distance (%le [%s]) must be less than the taper distance (%le [%s]) if non-zero.",
+                SID_ERROR_LOGIC, d_near_field * unit_factor, unit_text, d_taper_field * unit_factor, unit_text);
 
     // Make sure absorption is >=0
     double f_absorption = render->f_absorption;
@@ -126,7 +123,7 @@ void render_frame(render_info *render) {
                 break;
             // Shouldn't make it here
             default:
-                SID_trap_error("Invalid value for i_image (%d).", SID_ERROR_LOGIC, i_image);
+                SID_exit_error("Invalid value for i_image (%d).", SID_ERROR_LOGIC, i_image);
                 break;
         }
 

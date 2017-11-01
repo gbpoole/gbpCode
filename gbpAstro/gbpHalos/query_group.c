@@ -34,7 +34,7 @@ int main(int argc, char *argv[]) {
         flag_process_group = GBP_TRUE;
         sprintf(prefix_text, "");
     } else
-        SID_trap_error("Incorrect syntax.", SID_ERROR_SYNTAX);
+        SID_exit_error("Incorrect syntax.", SID_ERROR_SYNTAX);
 
     char   filename_subgroups[SID_MAX_FILENAME_LENGTH];
     char   filename_groups[SID_MAX_FILENAME_LENGTH];
@@ -69,11 +69,11 @@ int main(int argc, char *argv[]) {
         fread_verify(&n_groups_all, sizeof(int), 1, fp_groups);
         fread_verify(&n_bytes_groups, sizeof(int), 1, fp_groups);
         if(n_bytes_groups != 4 && n_bytes_groups != 8)
-            SID_trap_error("Invalid group offset byte length (%d).", SID_ERROR_LOGIC, n_bytes_groups);
+            SID_exit_error("Invalid group offset byte length (%d).", SID_ERROR_LOGIC, n_bytes_groups);
 
         // Sanity check
         if(i_group_selected < 0 || i_group_selected >= n_groups_all)
-            SID_trap_error("Invalid group selection {%d;n_groups=%d}.", SID_ERROR_LOGIC, i_group_selected, n_groups_all);
+            SID_exit_error("Invalid group selection {%d;n_groups=%d}.", SID_ERROR_LOGIC, i_group_selected, n_groups_all);
 
         // Find the group we want and get the needed info
         int particle_offset_i_int;
@@ -104,7 +104,8 @@ int main(int argc, char *argv[]) {
         } else
             fread_verify(&n_particles, sizeof(size_t), 1, fp_particles);
         if(((size_t)particle_offset_i) >= n_particles)
-            SID_trap_error("Invalid particle offset {%lld;n_particles=%lld}.", SID_ERROR_LOGIC, particle_offset_i, n_particles);
+            SID_exit_error("Invalid particle offset {%lld;n_particles=%lld}.", SID_ERROR_LOGIC, particle_offset_i,
+                           n_particles);
         fseeko(fp_particles, id_byte_size * particle_offset_i, SEEK_CUR);
         if(id_byte_size == sizeof(int)) {
             fread_verify(&MBP_ID_int, sizeof(int), 1, fp_particles);

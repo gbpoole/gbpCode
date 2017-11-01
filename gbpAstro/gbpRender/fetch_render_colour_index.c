@@ -26,7 +26,8 @@ char fetch_render_colour_index(render_info *render, const char *name) {
     if(!flag_found) {
         // Don't allow n_list to exceed 256
         if(render->n_colour_list == 256)
-            SID_trap_error("The number of loaded colours in the render colour list can not exceed 256.", SID_ERROR_LOGIC);
+            SID_exit_error("The number of loaded colours in the render colour list can not exceed 256.",
+                           SID_ERROR_LOGIC);
 
         // Open the file and look for the colour
         char filename_rgb[SID_MAX_FILENAME_LENGTH];
@@ -51,7 +52,7 @@ char fetch_render_colour_index(render_info *render, const char *name) {
         fclose(fp);
         SID_free(SID_FARG line);
         if(!flag_success)
-            SID_trap_error("Could not initialize colour {%s} in fetch_render_colour_index.", SID_ERROR_LOGIC, name);
+            SID_exit_error("Could not initialize colour {%s} in fetch_render_colour_index.", SID_ERROR_LOGIC, name);
         else {
             // This is the bit that's poor: realloc the arrays and add the new entry
             char ** colour_name_old  = render->colour_name;

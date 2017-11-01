@@ -18,7 +18,7 @@ void calc_stddev(void *data, void *result, size_t n_data, SID_Datatype type, int
         else if(type == SID_SIZE_T)
             ((size_t *)result)[0] = 0;
         else
-            SID_trap_error("Unknown variable type in calc_min", SID_ERROR_LOGIC);
+            SID_exit_error("Unknown variable type in calc_min", SID_ERROR_LOGIC);
     } else {
         if(check_mode_for_flag(mode, CALC_MODE_ABS)) {
             calc_mean(data, &mean, n_data, type, CALC_MODE_RETURN_DOUBLE | CALC_MODE_ABS);
@@ -34,7 +34,7 @@ void calc_stddev(void *data, void *result, size_t n_data, SID_Datatype type, int
                 else if(type == SID_SIZE_T)
                     stddev += pow(GBP_IABS((double)((size_t *)data)[i_data]) - mean, 2.);
                 else
-                    SID_trap_error("Unknown variable type in calc_stddev", SID_ERROR_LOGIC);
+                    SID_exit_error("Unknown variable type in calc_stddev", SID_ERROR_LOGIC);
             }
             stddev = sqrt(stddev / (double)n_data);
             if(type == SID_DOUBLE || check_mode_for_flag(mode, CALC_MODE_RETURN_DOUBLE))
@@ -48,7 +48,7 @@ void calc_stddev(void *data, void *result, size_t n_data, SID_Datatype type, int
             else if(type == SID_SIZE_T)
                 ((size_t *)result)[0] = (size_t)stddev;
             else
-                SID_trap_error("Unknown variable type in calc_min", SID_ERROR_LOGIC);
+                SID_exit_error("Unknown variable type in calc_min", SID_ERROR_LOGIC);
         } else {
             calc_mean(data, &mean, n_data, type, CALC_MODE_RETURN_DOUBLE);
             for(i_data = 0, stddev = 0.; i_data < n_data; i_data++) {
@@ -63,7 +63,7 @@ void calc_stddev(void *data, void *result, size_t n_data, SID_Datatype type, int
                 else if(type == SID_SIZE_T)
                     stddev += pow((double)((size_t *)data)[i_data] - mean, 2.);
                 else
-                    SID_trap_error("Unknown variable type in calc_stddev", SID_ERROR_LOGIC);
+                    SID_exit_error("Unknown variable type in calc_stddev", SID_ERROR_LOGIC);
             }
             stddev = sqrt(stddev / (double)n_data);
             if(type == SID_DOUBLE || check_mode_for_flag(mode, CALC_MODE_RETURN_DOUBLE))
@@ -77,7 +77,7 @@ void calc_stddev(void *data, void *result, size_t n_data, SID_Datatype type, int
             else if(type == SID_SIZE_T)
                 ((size_t *)result)[0] = (size_t)stddev;
             else
-                SID_trap_error("Unknown variable type in calc_min", SID_ERROR_LOGIC);
+                SID_exit_error("Unknown variable type in calc_min", SID_ERROR_LOGIC);
         }
     }
 }

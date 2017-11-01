@@ -21,12 +21,10 @@ int check_if_match_is_better(tree_horizontal_info *target_halo, match_info *old_
                 }
                 // Sanity check
                 if(file_offset_new <= 0 || file_offset_old <= 0)
-                    SID_trap_error("There is something odd about the file offsets (%d->%d and %d->%d) in check_if_match_is_better().",
-                                   SID_ERROR_LOGIC,
-                                   new_match->halo->file,
-                                   target_halo->file,
-                                   old_match->halo->file,
-                                   target_halo->file);
+                    SID_exit_error(
+                            "There is something odd about the file offsets (%d->%d and %d->%d) in check_if_match_is_better().",
+                            SID_ERROR_LOGIC, new_match->halo->file, target_halo->file, old_match->halo->file,
+                            target_halo->file);
                 // The best match is always the most immediate
                 if(file_offset_new > file_offset_old)
                     flag_valid = GBP_FALSE;

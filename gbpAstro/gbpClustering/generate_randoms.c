@@ -92,7 +92,8 @@ void generate_randoms(cfunc_info *cfunc, plist_info *plist, const char *species_
 
     // Sanity check
     if(n_random != n_random_target)
-        SID_trap_error("There's a count mismatch while generating random (ie. %zd!=%zd).", SID_ERROR_LOGIC, n_random, n_random_target);
+        SID_exit_error("There's a count mismatch while generating random (ie. %zd!=%zd).", SID_ERROR_LOGIC, n_random,
+                       n_random_target);
 
     // Create the arrays
     GBPREAL *x_random;

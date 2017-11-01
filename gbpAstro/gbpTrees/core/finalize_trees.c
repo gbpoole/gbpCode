@@ -15,7 +15,7 @@ void finalize_trees(tree_info *trees, int group_mode, int subgroup_mode) {
     if(check_mode_for_flag(mode_substructure_order, TREE_SUBSTRUCTURE_ORDER_DEFAULT))
         SID_log("Assigning substructure ordering (by particle count)...", SID_LOG_OPEN | SID_LOG_TIMER);
     else
-        SID_trap_error("Invalid substructure mode (%d).", SID_ERROR_LOGIC, mode_substructure_order);
+        SID_exit_error("Invalid substructure mode (%d).", SID_ERROR_LOGIC, mode_substructure_order);
     for(int i_snap = 0; i_snap < trees->n_snaps; i_snap++) {
         tree_node_info *current_group = trees->first_neighbour_groups[i_snap];
         while(current_group != NULL) {
@@ -74,7 +74,7 @@ void finalize_trees(tree_info *trees, int group_mode, int subgroup_mode) {
         else if(check_mode_for_flag(mode_progenitor_order, TREE_PROGENITOR_ORDER_N_PARTICLES_INCLUSIVE_PEAK))
             SID_log("Assigning %sgroup progenitor ordering (by peak inclusive particle count)...", SID_LOG_OPEN | SID_LOG_TIMER, group_prefix_text);
         else
-            SID_trap_error("Invalid progenitor mode (%d).", SID_ERROR_LOGIC, mode_progenitor_order);
+            SID_exit_error("Invalid progenitor mode (%d).", SID_ERROR_LOGIC, mode_progenitor_order);
         for(int i_snap = 0; i_snap < trees->n_snaps; i_snap++) {
             tree_node_info *current_halo = first_neighbours[i_snap];
             while(current_halo != NULL) {
@@ -113,11 +113,8 @@ void finalize_trees(tree_info *trees, int group_mode, int subgroup_mode) {
                 current = current->next_in_forest;
             }
             if(depth_first_index != n_halos_forest_local[i_forest])
-                SID_trap_error("DFI != n_halos (i.e. %d!=%d) while processing %sgroups",
-                               SID_ERROR_LOGIC,
-                               depth_first_index,
-                               n_halos_forest_local[i_forest],
-                               group_prefix_text);
+                SID_exit_error("DFI != n_halos (i.e. %d!=%d) while processing %sgroups", SID_ERROR_LOGIC,
+                               depth_first_index, n_halos_forest_local[i_forest], group_prefix_text);
         }
     }
     SID_log("Done.", SID_LOG_CLOSE);

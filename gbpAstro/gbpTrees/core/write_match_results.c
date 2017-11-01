@@ -86,7 +86,7 @@ void write_match_results(char *      filename_out_dir,
     } else if(check_mode_for_flag(mode, WRITE_MATCHES_MODE_SINGLE))
         sprintf(filename_out_dir_snap, "%s/", filename_out_dir);
     else
-        SID_trap_error("Invalid write mode flag (%d).", SID_ERROR_LOGIC, mode);
+        SID_exit_error("Invalid write mode flag (%d).", SID_ERROR_LOGIC, mode);
     if(filename_out_dir != NULL)
         sprintf(filename_out, "%s/%sgroup_matches_%s_%s.dat", filename_out_dir_snap, group_text_prefix, filename_cat1, filename_cat2);
     else
@@ -103,7 +103,7 @@ void write_match_results(char *      filename_out_dir,
         if(filename_out_dir != NULL)
             mkdir(filename_out_dir_snap, 02755);
         if((fp_out = fopen(filename_out, "w")) == NULL)
-            SID_trap_error("Could not open {%s} for writing.", SID_ERROR_IO_OPEN, filename_out);
+            SID_exit_error("Could not open {%s} for writing.", SID_ERROR_IO_OPEN, filename_out);
         fwrite(&i_read, sizeof(int), 1, fp_out);
         fwrite(&j_read, sizeof(int), 1, fp_out);
         fwrite(&n_groups_1, sizeof(int), 1, fp_out);
@@ -159,11 +159,9 @@ void write_match_results(char *      filename_out_dir,
                 // Sanity check
                 for(i_buffer = 0; i_buffer < n_buffer; i_buffer++) {
                     if(buffer_int[i_buffer] < -1 || buffer_int[i_buffer] >= n_groups_2)
-                        SID_trap_error("Illegal match_id result (%d) for group No. %d.  There are %d groups in the target catalog.",
-                                       SID_ERROR_LOGIC,
-                                       buffer_int[i_buffer],
-                                       i_group + i_buffer,
-                                       n_groups_2);
+                        SID_exit_error(
+                                "Illegal match_id result (%d) for group No. %d.  There are %d groups in the target catalog.",
+                                SID_ERROR_LOGIC, buffer_int[i_buffer], i_group + i_buffer, n_groups_2);
                 }
                 // Write the buffer
                 fwrite(buffer_int, sizeof(int), (size_t)n_buffer, fp_out);
@@ -173,7 +171,8 @@ void write_match_results(char *      filename_out_dir,
         // Sanity check
         calc_sum_global(&buffered_count_local, &buffered_count, 1, SID_INT, CALC_MODE_DEFAULT, SID.COMM_WORLD);
         if(buffered_count != n_groups_1)
-            SID_trap_error("Buffer counts don't make sense (ie %d!=%d) after writing match IDs.", SID_ERROR_LOGIC, buffered_count, n_groups_1);
+            SID_exit_error("Buffer counts don't make sense (ie %d!=%d) after writing match IDs.", SID_ERROR_LOGIC,
+                           buffered_count, n_groups_1);
         SID_log("Done.", SID_LOG_CLOSE);
 
         // Write match_score ...
@@ -201,8 +200,8 @@ void write_match_results(char *      filename_out_dir,
                 // Sanity check
                 for(i_buffer = 0; i_buffer < n_buffer; i_buffer++) {
                     if(buffer_float[i_buffer] < 0.)
-                        SID_trap_error(
-                            "Illegal match_score result (%f) for group No. %d.", SID_ERROR_LOGIC, buffer_float[i_buffer], i_group + i_buffer);
+                        SID_exit_error("Illegal match_score result (%f) for group No. %d.", SID_ERROR_LOGIC,
+                                       buffer_float[i_buffer], i_group + i_buffer);
                 }
                 // Write the buffer
                 fwrite(buffer, sizeof(float), (size_t)n_buffer, fp_out);
@@ -212,7 +211,8 @@ void write_match_results(char *      filename_out_dir,
         // Sanity check
         calc_sum_global(&buffered_count_local, &buffered_count, 1, SID_INT, CALC_MODE_DEFAULT, SID.COMM_WORLD);
         if(buffered_count != n_groups_1)
-            SID_trap_error("Buffer counts don't make sense (ie %d!=%d) after writing match scores.", SID_ERROR_LOGIC, buffered_count, n_groups_1);
+            SID_exit_error("Buffer counts don't make sense (ie %d!=%d) after writing match scores.", SID_ERROR_LOGIC,
+                           buffered_count, n_groups_1);
         SID_log("Done.", SID_LOG_CLOSE);
 
         // Write match_count ...
@@ -240,8 +240,8 @@ void write_match_results(char *      filename_out_dir,
                 // Sanity check
                 for(i_buffer = 0; i_buffer < n_buffer; i_buffer++) {
                     if(buffer_int[i_buffer] < 0.)
-                        SID_trap_error(
-                            "Illegal match_count result (%f) for group No. %d.", SID_ERROR_LOGIC, buffer_int[i_buffer], i_group + i_buffer);
+                        SID_exit_error("Illegal match_count result (%f) for group No. %d.", SID_ERROR_LOGIC,
+                                       buffer_int[i_buffer], i_group + i_buffer);
                 }
                 // Write the buffer
                 fwrite(buffer, sizeof(int), (size_t)n_buffer, fp_out);
@@ -251,7 +251,8 @@ void write_match_results(char *      filename_out_dir,
         // Sanity check
         calc_sum_global(&buffered_count_local, &buffered_count, 1, SID_INT, CALC_MODE_DEFAULT, SID.COMM_WORLD);
         if(buffered_count != n_groups_1)
-            SID_trap_error("Buffer counts don't make sense (ie %d!=%d) after writing match scores.", SID_ERROR_LOGIC, buffered_count, n_groups_1);
+            SID_exit_error("Buffer counts don't make sense (ie %d!=%d) after writing match scores.", SID_ERROR_LOGIC,
+                           buffered_count, n_groups_1);
         SID_log("Done.", SID_LOG_CLOSE);
 
         // Clean-up

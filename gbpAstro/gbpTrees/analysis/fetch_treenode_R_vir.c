@@ -20,7 +20,9 @@ double fetch_treenode_R_vir(tree_info *trees, tree_node_info *halo) {
                 halo_properties_SHORT_info *properties = &(trees->group_properties_SHORT[halo->snap_tree][halo->neighbour_index]);
                 R_vir                                  = (double)properties->R_vir;
             } else
-                SID_trap_error("Group properties are not defined in fetch_treenode_R_vir().  They probably have not been read.", SID_ERROR_LOGIC);
+                SID_exit_error(
+                        "Group properties are not defined in fetch_treenode_R_vir().  They probably have not been read.",
+                        SID_ERROR_LOGIC);
         } else {
             if(trees->subgroup_properties != NULL) {
                 halo_properties_info *properties = &(trees->subgroup_properties[halo->snap_tree][halo->neighbour_index]);
@@ -29,7 +31,9 @@ double fetch_treenode_R_vir(tree_info *trees, tree_node_info *halo) {
                 halo_properties_SHORT_info *properties = &(trees->subgroup_properties_SHORT[halo->snap_tree][halo->neighbour_index]);
                 R_vir                                  = (double)properties->R_vir;
             } else
-                SID_trap_error("Subgroup properties are not defined in fetch_treenode_R_vir().  They probably have not been read.", SID_ERROR_LOGIC);
+                SID_exit_error(
+                        "Subgroup properties are not defined in fetch_treenode_R_vir().  They probably have not been read.",
+                        SID_ERROR_LOGIC);
         }
     }
     return (R_vir);

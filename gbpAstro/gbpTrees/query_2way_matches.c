@@ -165,8 +165,8 @@ int main(int argc, char *argv[]) {
         int j_halo = match_forward_ids[i_halo];
         if(match_forward_2way[i_halo]) {
             if(j_halo < 0 || j_halo > n_groups_j)
-                SID_trap_error(
-                    "There's an invalid match id (ie. %d<0 || %d>%d)  attached to a 2-way match!", SID_ERROR_LOGIC, j_halo, j_halo, n_groups_j);
+                SID_exit_error("There's an invalid match id (ie. %d<0 || %d>%d)  attached to a 2-way match!",
+                               SID_ERROR_LOGIC, j_halo, j_halo, n_groups_j);
             fprintf(fp_out,
                     "%7d %7d %6d %6d %10.3le %7d %10.3le %10.3le %7d %10.3le\n",
                     i_halo,

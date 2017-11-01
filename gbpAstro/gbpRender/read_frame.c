@@ -57,7 +57,7 @@ void read_frame(render_info *render, int frame) {
             image_GY          = render->camera->image_GY;
             image_BY          = render->camera->image_BY;
         } else
-            SID_trap_error("Undefined image set index in read_frame().", SID_ERROR_LOGIC);
+            SID_exit_error("Undefined image set index in read_frame().", SID_ERROR_LOGIC);
         for(int i_depth = 0; i_depth < render->camera->n_depth; i_depth++) {
             if(i_depth == (render->camera->n_depth - 1)) {
                 sprintf(filename_RGB, "RGB_%s_%05d", set_label, frame);

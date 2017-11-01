@@ -48,7 +48,7 @@ void read_matches(char *  filename_in_dir,
     int    flag_alloc_n_sub_j = GBP_FALSE;
 
     if(i_read_in == j_read_in)
-        SID_trap_error("i_read=j_read in read_matches", SID_ERROR_LOGIC);
+        SID_exit_error("i_read=j_read in read_matches", SID_ERROR_LOGIC);
 
     switch(mode) {
         case MATCH_SUBGROUPS:
@@ -234,8 +234,9 @@ void read_matches(char *  filename_in_dir,
         if(match_flag_two_way != NULL && (*n_groups_i) > 0) {
             // We're going to need the particle counts in the target catalog for checking the goodness of return matches.  Make sure we have them.
             if(n_particles_j == NULL)
-                SID_trap_error("Target catalog halo sizes are not defined in read_matches() but are needed for checking two-way match flags.",
-                               SID_ERROR_LOGIC);
+                SID_exit_error(
+                        "Target catalog halo sizes are not defined in read_matches() but are needed for checking two-way match flags.",
+                        SID_ERROR_LOGIC);
 
             // Flip the file names for reading the return matches
             sprintf(filename_in_dir_snap, "%s/%s", filename_in_dir, filename_cat2);
@@ -264,25 +265,17 @@ void read_matches(char *  filename_in_dir,
 
             // Check that we have the right files
             if(n_groups_i_check != (*n_groups_i))
-                SID_trap_error("Source halo counts don't match (ie. %d!=%d) in two-way check in read_matches().",
-                               SID_ERROR_LOGIC,
-                               n_groups_i_check,
-                               (*n_groups_i));
+                SID_exit_error("Source halo counts don't match (ie. %d!=%d) in two-way check in read_matches().",
+                               SID_ERROR_LOGIC, n_groups_i_check, (*n_groups_i));
             if(n_groups_j_check != (*n_groups_j))
-                SID_trap_error("Target halo counts don't match (ie. %d!=%d) in two-way check in read_matches().",
-                               SID_ERROR_LOGIC,
-                               n_groups_j_check,
-                               (*n_groups_j));
+                SID_exit_error("Target halo counts don't match (ie. %d!=%d) in two-way check in read_matches().",
+                               SID_ERROR_LOGIC, n_groups_j_check, (*n_groups_j));
             if(i_read_file_check != i_read_file)
-                SID_trap_error("Source file numbers don't match (ie. %d!=%d) in two-way check in read_matches().",
-                               SID_ERROR_LOGIC,
-                               i_read_file_check,
-                               i_read_file);
+                SID_exit_error("Source file numbers don't match (ie. %d!=%d) in two-way check in read_matches().",
+                               SID_ERROR_LOGIC, i_read_file_check, i_read_file);
             if(j_read_file_check != j_read_file)
-                SID_trap_error("Target file numbers don't match (ie. %d!=%d) in two-way check in read_matches().",
-                               SID_ERROR_LOGIC,
-                               j_read_file_check,
-                               j_read_file);
+                SID_exit_error("Target file numbers don't match (ie. %d!=%d) in two-way check in read_matches().",
+                               SID_ERROR_LOGIC, j_read_file_check, j_read_file);
 
             // Skip to the beginning of the relevant block for the score-reading file pointer
             SID_fskip(sizeof(int), 4, &fp_check_score);             // header
@@ -317,10 +310,9 @@ void read_matches(char *  filename_in_dir,
                     int id_i = buffer_ids[k_halo];
                     if(id_i >= 0) {
                         if(id_i >= (*n_groups_i))
-                            SID_trap_error("Allowed matching index has been exceeded i(ie %d>=%d) while determining two-way match flags.",
-                                           SID_ERROR_LOGIC,
-                                           id_i,
-                                           (*n_groups_i));
+                            SID_exit_error(
+                                    "Allowed matching index has been exceeded i(ie %d>=%d) while determining two-way match flags.",
+                                    SID_ERROR_LOGIC, id_i, (*n_groups_i));
                         // Do this check first to avoid having to check if both needed n_particles_* references are defined
                         int id_j = match_ids[id_i];
                         if(id_j == j_halo) {

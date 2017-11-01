@@ -14,7 +14,8 @@ int fread_catalog_file(fp_catalog_info *           fp_in,
     int r_val = 0;
 
     if(halo_index < 0 || halo_index >= fp_in->n_halos_total)
-        SID_trap_error("halo_index (%d) is out of range (0->%d) in fread_catalog_file().", SID_ERROR_LOGIC, halo_index, fp_in->n_halos_total - 1);
+        SID_exit_error("halo_index (%d) is out of range (0->%d) in fread_catalog_file().", SID_ERROR_LOGIC, halo_index,
+                       fp_in->n_halos_total - 1);
 
     // Skip to the right place (if need-be)
     if(halo_index != fp_in->i_halo || halo_index > fp_in->i_halo_stop || halo_index < fp_in->i_halo_start) {
@@ -36,13 +37,13 @@ int fread_catalog_file(fp_catalog_info *           fp_in,
                 }
             }
         } else if(n_skip < 0)
-            SID_trap_error("Negative skips (%d) not supported in fread_catalog_file().", SID_ERROR_LOGIC, n_skip);
+            SID_exit_error("Negative skips (%d) not supported in fread_catalog_file().", SID_ERROR_LOGIC, n_skip);
         fp_in->i_halo += n_skip;
     }
 
     // We must insist that something be read else the i_halo pointer will not work
     if(!(fp_in->flag_read_properties) && !(fp_in->flag_read_profiles))
-        SID_trap_error("Nothing is being read in fread_catalog_file().", SID_ERROR_LOGIC);
+        SID_exit_error("Nothing is being read in fread_catalog_file().", SID_ERROR_LOGIC);
 
     // Read properties
     if(fp_in->flag_read_properties) {
@@ -95,14 +96,14 @@ int fread_catalog_file(fp_catalog_info *           fp_in,
             properties_out->half_mass        = 0.;
         }
     } else if(fp_in->flag_read_properties)
-        SID_trap_error("File pointer not initialized while reading halo properties.", SID_ERROR_LOGIC);
+        SID_exit_error("File pointer not initialized while reading halo properties.", SID_ERROR_LOGIC);
 
     // Read profiles
     if(fp_in->flag_read_profiles) {
         fread_verify(&(profiles_out->n_bins), sizeof(int), 1, fp_in->fp_profiles);
         fread_verify(&(profiles_out->bins), sizeof(halo_profile_bin_info), profiles_out->n_bins, fp_in->fp_profiles);
     } else if(fp_in->flag_read_profiles)
-        SID_trap_error("File pointer not initialized while reading halo profiles.", SID_ERROR_LOGIC);
+        SID_exit_error("File pointer not initialized while reading halo profiles.", SID_ERROR_LOGIC);
 
     // Set counter
     fp_in->i_halo++;
@@ -115,7 +116,8 @@ int fread_catalog_raw(fp_catalog_info *fp_in, halo_properties_info *properties_o
     int r_val = 0;
 
     if(halo_index < 0 || halo_index >= fp_in->n_halos_total)
-        SID_trap_error("halo_index (%d) is out of range (0->%d) in fread_catalog_file().", SID_ERROR_LOGIC, halo_index, fp_in->n_halos_total - 1);
+        SID_exit_error("halo_index (%d) is out of range (0->%d) in fread_catalog_file().", SID_ERROR_LOGIC, halo_index,
+                       fp_in->n_halos_total - 1);
 
     // Skip to the right place (if need-be)
     if(halo_index != fp_in->i_halo || halo_index > fp_in->i_halo_stop || halo_index < fp_in->i_halo_start) {
@@ -142,21 +144,21 @@ int fread_catalog_raw(fp_catalog_info *fp_in, halo_properties_info *properties_o
 
     // We must insist that something be read else the i_halo pointer will not work
     if(!(fp_in->flag_read_properties) && !(fp_in->flag_read_profiles))
-        SID_trap_error("Nothing is being read in fread_catalog_file().", SID_ERROR_LOGIC);
+        SID_exit_error("Nothing is being read in fread_catalog_file().", SID_ERROR_LOGIC);
 
     // Read properties
     if(fp_in->flag_read_properties) {
         // Perform Read
         fread_verify(properties_out, sizeof(halo_properties_info), 1, fp_in->fp_properties);
     } else if(fp_in->flag_read_properties)
-        SID_trap_error("File pointer not initialized while reading halo properties.", SID_ERROR_LOGIC);
+        SID_exit_error("File pointer not initialized while reading halo properties.", SID_ERROR_LOGIC);
 
     // Read profiles
     if(fp_in->flag_read_profiles) {
         fread_verify(&(profiles_out->n_bins), sizeof(int), 1, fp_in->fp_profiles);
         fread_verify(&(profiles_out->bins), sizeof(halo_profile_bin_info), profiles_out->n_bins, fp_in->fp_profiles);
     } else if(fp_in->flag_read_profiles)
-        SID_trap_error("File pointer not initialized while reading halo profiles.", SID_ERROR_LOGIC);
+        SID_exit_error("File pointer not initialized while reading halo profiles.", SID_ERROR_LOGIC);
 
     // Set counter
     fp_in->i_halo++;

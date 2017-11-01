@@ -60,7 +60,7 @@ void calc_sum_global(void *data, void *result, size_t n_data, SID_Datatype type,
             for(i_data = 0; i_data < n_data; i_data++)
                 l_temp += ((long long *)data)[i_data];
     } else
-        SID_trap_error("Unknown variable type in calc_sum", SID_ERROR_LOGIC);
+        SID_exit_error("Unknown variable type in calc_sum", SID_ERROR_LOGIC);
 
     if(check_mode_for_flag(mode, CALC_MODE_RETURN_DOUBLE)) {
         if(type == SID_DOUBLE)
@@ -76,7 +76,7 @@ void calc_sum_global(void *data, void *result, size_t n_data, SID_Datatype type,
         else if(type == SID_LONG_LONG)
             d_temp2 = (double)l_temp;
         else
-            SID_trap_error("Unknown variable type in calc_sum", SID_ERROR_LOGIC);
+            SID_exit_error("Unknown variable type in calc_sum", SID_ERROR_LOGIC);
         SID_Allreduce(&d_temp2, result, 1, SID_DOUBLE, SID_SUM, comm);
     } else {
         if(type == SID_DOUBLE)
@@ -92,6 +92,6 @@ void calc_sum_global(void *data, void *result, size_t n_data, SID_Datatype type,
         else if(type == SID_LONG_LONG)
             SID_Allreduce(&l_temp, result, 1, SID_LONG_LONG, SID_SUM, comm);
         else
-            SID_trap_error("Unknown variable type in calc_sum", SID_ERROR_LOGIC);
+            SID_exit_error("Unknown variable type in calc_sum", SID_ERROR_LOGIC);
     }
 }

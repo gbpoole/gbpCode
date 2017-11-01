@@ -17,7 +17,7 @@ void check_integrity_halos_groups_local(const char *filename_in_root, const char
     // Open input files
     FILE *fp_in = NULL;
     if((fp_in = fopen(filename_in, "r")) == NULL)
-        SID_trap_error("Could not open {%s} for reading.", SID_ERROR_IO_OPEN, filename_in);
+        SID_exit_error("Could not open {%s} for reading.", SID_ERROR_IO_OPEN, filename_in);
 
     // Read the needed header information and rewind
     int n_groups;
@@ -43,7 +43,7 @@ void check_integrity_halos_groups_local(const char *filename_in_root, const char
     char test;
     fread(&test, 1, 1, fp_in);
     if(!feof(fp_in))
-        SID_trap_error("There are stray bytes at the end of {%s}.", SID_ERROR_LOGIC, filename_in);
+        SID_exit_error("There are stray bytes at the end of {%s}.", SID_ERROR_LOGIC, filename_in);
 
     // Close files
     fclose(fp_in);
@@ -62,7 +62,7 @@ void check_integrity_halos_subgroups_local(const char *filename_in_root, const c
     // Open input files
     FILE *fp_in = NULL;
     if((fp_in = fopen(filename_in, "r")) == NULL)
-        SID_trap_error("Could not open {%s} for reading.", SID_ERROR_IO_OPEN, filename_in);
+        SID_exit_error("Could not open {%s} for reading.", SID_ERROR_IO_OPEN, filename_in);
 
     // Read the needed header information and rewind
     int n_subgroups;
@@ -88,7 +88,7 @@ void check_integrity_halos_subgroups_local(const char *filename_in_root, const c
     char test;
     fread(&test, 1, 1, fp_in);
     if(!feof(fp_in))
-        SID_trap_error("There are stray bytes at the end of {%s}.", SID_ERROR_LOGIC, filename_in);
+        SID_exit_error("There are stray bytes at the end of {%s}.", SID_ERROR_LOGIC, filename_in);
 
     // Close files
     fclose(fp_in);
@@ -107,7 +107,7 @@ void check_integrity_halos_particles_local(const char *filename_in_root, const c
     // Open input files
     FILE *fp_in = NULL;
     if((fp_in = fopen(filename_in, "r")) == NULL)
-        SID_trap_error("Could not open {%s} for reading.", SID_ERROR_IO_OPEN, filename_in);
+        SID_exit_error("Could not open {%s} for reading.", SID_ERROR_IO_OPEN, filename_in);
 
     // Read the needed header information and rewind
     int       particle_size_bytes;
@@ -122,7 +122,7 @@ void check_integrity_halos_particles_local(const char *filename_in_root, const c
         fread_verify(&n_particles_long_long, sizeof(long long), 1, fp_in);
         n_particles = (size_t)n_particles_long_long;
     } else
-        SID_trap_error("Invalid particle ID size (%d) in {%s}.", SID_ERROR_LOGIC, particle_size_bytes, filename_in);
+        SID_exit_error("Invalid particle ID size (%d) in {%s}.", SID_ERROR_LOGIC, particle_size_bytes, filename_in);
 
     // Create a read buffer
     char *buffer = (char *)SID_malloc(sizeof(char) * particle_size_bytes);
@@ -138,7 +138,7 @@ void check_integrity_halos_particles_local(const char *filename_in_root, const c
     char test;
     fread(&test, 1, 1, fp_in);
     if(!feof(fp_in))
-        SID_trap_error("There are stray bytes at the end of {%s}.", SID_ERROR_LOGIC, filename_in);
+        SID_exit_error("There are stray bytes at the end of {%s}.", SID_ERROR_LOGIC, filename_in);
 
     // Close files
     fclose(fp_in);

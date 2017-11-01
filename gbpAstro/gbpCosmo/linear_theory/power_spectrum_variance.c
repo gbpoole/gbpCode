@@ -14,7 +14,7 @@ void init_power_spectrum_variance(cosmo_info **cosmo, int mode, int component) {
         if(mode == PSPEC_LINEAR_TF)
             init_power_spectrum_TF(cosmo);
         else
-            SID_trap_error("Given mode (%d) not supported in init_power_spectrum_variance().", SID_ERROR_LOGIC, mode);
+            SID_exit_error("Given mode (%d) not supported in init_power_spectrum_variance().", SID_ERROR_LOGIC, mode);
     }
 
     // Fetch the k array and its size
@@ -94,7 +94,8 @@ void init_power_spectrum_variance(cosmo_info **cosmo, int mode, int component) {
                 //    and adjust limits accordingly
                 i_order++;
                 if(i_order >= n_order_max)
-                    SID_trap_error("Variance integral is not converging for scale R=%le [Mpc]", SID_ERROR_LOGIC, params.R / M_PER_MPC);
+                    SID_exit_error("Variance integral is not converging for scale R=%le [Mpc]", SID_ERROR_LOGIC,
+                                   params.R / M_PER_MPC);
                 limit_lo = limit_hi;
                 limit_hi = (double)i_order * k_period;
             }

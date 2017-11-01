@@ -54,17 +54,17 @@ int main(int argc, char *argv[]) {
         sprintf(filename_ids_in, "%s_%03d.catalog_particles", filename_in_root, i_snap);
         sprintf(filename_ids_out, "%s_%03d.catalog_particles", filename_out_root, i_snap);
         if((fp_groups_size_in = fopen(filename_groups_in, "r")) == NULL)
-            SID_trap_error("Could not open {%s}", SID_ERROR_IO_OPEN, filename_groups_in);
+            SID_exit_error("Could not open {%s}", SID_ERROR_IO_OPEN, filename_groups_in);
         if((fp_groups_offset_in = fopen(filename_groups_in, "r")) == NULL)
-            SID_trap_error("Could not open {%s}", SID_ERROR_IO_OPEN, filename_groups_in);
+            SID_exit_error("Could not open {%s}", SID_ERROR_IO_OPEN, filename_groups_in);
         if((fp_groups_nsubs_in = fopen(filename_groups_in, "r")) == NULL)
-            SID_trap_error("Could not open {%s}", SID_ERROR_IO_OPEN, filename_groups_in);
+            SID_exit_error("Could not open {%s}", SID_ERROR_IO_OPEN, filename_groups_in);
         if((fp_subgroups_size_in = fopen(filename_subgroups_in, "r")) == NULL)
-            SID_trap_error("Could not open {%s}", SID_ERROR_IO_OPEN, filename_subgroups_in);
+            SID_exit_error("Could not open {%s}", SID_ERROR_IO_OPEN, filename_subgroups_in);
         if((fp_subgroups_offset_in = fopen(filename_subgroups_in, "r")) == NULL)
-            SID_trap_error("Could not open {%s}", SID_ERROR_IO_OPEN, filename_subgroups_in);
+            SID_exit_error("Could not open {%s}", SID_ERROR_IO_OPEN, filename_subgroups_in);
         if((fp_ids_in = fopen(filename_ids_in, "r")) == NULL)
-            SID_trap_error("Could not open {%s}", SID_ERROR_IO_OPEN, filename_ids_in);
+            SID_exit_error("Could not open {%s}", SID_ERROR_IO_OPEN, filename_ids_in);
         fp_ids_out = fopen(filename_ids_out, "w");
 
         // Deal with the indices file(s) separately because they have a multi-file format
@@ -84,7 +84,7 @@ int main(int argc, char *argv[]) {
         if((fp_indices_in = fopen(filename_indices_in, "r")) == NULL) {
             sprintf(filename_indices_in, "%s_%03d.catalog_subgroups_indices", filename_in_root, i_snap);
             if((fp_indices_in = fopen(filename_indices_in, "r")) == NULL)
-                SID_trap_error("Could not open {%s}", SID_ERROR_IO_OPEN, filename_indices_in);
+                SID_exit_error("Could not open {%s}", SID_ERROR_IO_OPEN, filename_indices_in);
             else
                 flag_indices_multifile = GBP_FALSE;
         } else
@@ -120,19 +120,19 @@ int main(int argc, char *argv[]) {
             flag_long_ids = GBP_TRUE;
             fread_verify(&n_particles, sizeof(size_t), 1, fp_ids_in);
         } else
-            SID_trap_error("Invalid particle ID byte size (%d).", SID_ERROR_LOGIC, byte_size_ids);
+            SID_exit_error("Invalid particle ID byte size (%d).", SID_ERROR_LOGIC, byte_size_ids);
         if(byte_size_group_offsets == sizeof(unsigned int))
             flag_long_group_offsets = GBP_FALSE;
         else if(byte_size_group_offsets == sizeof(int64_t))
             flag_long_group_offsets = GBP_TRUE;
         else
-            SID_trap_error("Invalid group offset byte size (%d).", SID_ERROR_LOGIC, byte_size_group_offsets);
+            SID_exit_error("Invalid group offset byte size (%d).", SID_ERROR_LOGIC, byte_size_group_offsets);
         if(byte_size_subgroup_offsets == sizeof(unsigned int))
             flag_long_subgroup_offsets = GBP_FALSE;
         else if(byte_size_subgroup_offsets == sizeof(int64_t))
             flag_long_subgroup_offsets = GBP_TRUE;
         else
-            SID_trap_error("Invalid subgroup offset byte size (%d).", SID_ERROR_LOGIC, byte_size_subgroup_offsets);
+            SID_exit_error("Invalid subgroup offset byte size (%d).", SID_ERROR_LOGIC, byte_size_subgroup_offsets);
         fseeko(fp_groups_offset_in, (off_t)(2 * sizeof(int) + n_groups * sizeof(int)), SEEK_SET);
         fseeko(fp_groups_nsubs_in, (off_t)(2 * sizeof(int) + n_groups * (sizeof(int) + byte_size_group_offsets)), SEEK_SET);
         fseeko(fp_subgroups_offset_in, (off_t)(2 * sizeof(int) + n_subgroups * sizeof(int)), SEEK_SET);
@@ -230,7 +230,7 @@ int main(int argc, char *argv[]) {
                     if((fp_indices_in = fopen(filename_indices_in, "r")) == NULL) {
                         sprintf(filename_indices_in, "%s_%03d.catalog_subgroups_indices", filename_in_root, i_snap);
                         if((fp_indices_in = fopen(filename_indices_in, "r")) == NULL)
-                            SID_trap_error("Could not open {%s}", SID_ERROR_IO_OPEN, filename_indices_in);
+                            SID_exit_error("Could not open {%s}", SID_ERROR_IO_OPEN, filename_indices_in);
                         else
                             flag_indices_multifile = GBP_FALSE;
                     } else
@@ -243,12 +243,8 @@ int main(int argc, char *argv[]) {
                 }
                 fread_verify(&n_particles_indices, sizeof(int), 1, fp_indices_in);
                 if(n_particles_indices != n_particles_sub)
-                    SID_trap_error("Subgroup sizes don't match between files (ie %d!=%d) for i_group=%d/k_subgroup=%d",
-                                   SID_ERROR_LOGIC,
-                                   n_particles_indices,
-                                   n_particles_sub,
-                                   i_group,
-                                   k_subgroup);
+                    SID_exit_error("Subgroup sizes don't match between files (ie %d!=%d) for i_group=%d/k_subgroup=%d",
+                                   SID_ERROR_LOGIC, n_particles_indices, n_particles_sub, i_group, k_subgroup);
                 fread_verify(indices_in, sizeof(size_t), n_particles_sub, fp_indices_in);
 
                 // Re-arrange subgroup indices

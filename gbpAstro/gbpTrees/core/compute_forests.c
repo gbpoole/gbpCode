@@ -187,7 +187,7 @@ void compute_forests(char *filename_root_out, int n_search_forests) {
         SID_fread_all(&n_trees_group, sizeof(int), 1, &fp_in);
         SID_fclose(&fp_in);
         if(n_step_in != i_read_step)
-            SID_trap_error("Snapshot step sizes don't match (ie. %d!=%d)", SID_ERROR_LOGIC, n_step_in, i_read_step);
+            SID_exit_error("Snapshot step sizes don't match (ie. %d!=%d)", SID_ERROR_LOGIC, n_step_in, i_read_step);
 
         // Determine the mapping between the horizontal tree IDs and the
         //   forest IDs that indicate how the isotrees are packaged into
@@ -237,7 +237,7 @@ void compute_forests(char *filename_root_out, int n_search_forests) {
             SID_fread_all(&n_trees_subgroup_i, sizeof(int), 1, &fp_in);
             SID_fread_all(&n_trees_group_i, sizeof(int), 1, &fp_in);
             if(n_step_in != i_read_step)
-                SID_trap_error("Snapshot step sizes don't match (ie. %d!=%d)", SID_ERROR_LOGIC, n_step_in, i_read_step);
+                SID_exit_error("Snapshot step sizes don't match (ie. %d!=%d)", SID_ERROR_LOGIC, n_step_in, i_read_step);
             // Loop over groups
             for(i_group = 0, i_subgroup = 0; i_group < n_groups; i_group++) {
                 // Read group
@@ -356,7 +356,7 @@ void compute_forests(char *filename_root_out, int n_search_forests) {
                     break;
             } while(group_forest_array[group_forest_array_index[i_tree]] == j_forest);
             if(n_trees_forest_groups[i_forest] <= 0)
-                SID_trap_error("A group forest (%d) has been assigned no trees.", SID_ERROR_LOGIC, i_forest);
+                SID_exit_error("A group forest (%d) has been assigned no trees.", SID_ERROR_LOGIC, i_forest);
         }
         n_forests_group = i_forest; // The '+1' has already been added by the for()
         calc_max(n_trees_forest_groups, &n_trees_forest_groups_max, n_forests_group, SID_INT, CALC_MODE_DEFAULT);
@@ -401,7 +401,7 @@ void compute_forests(char *filename_root_out, int n_search_forests) {
                     break;
             } while(subgroup_forest_array[subgroup_forest_array_index[i_tree]] == j_forest);
             if(n_trees_forest_subgroups[i_forest] <= 0)
-                SID_trap_error("A subgroup forest (%d) has been assigned no trees.", SID_ERROR_LOGIC, i_forest);
+                SID_exit_error("A subgroup forest (%d) has been assigned no trees.", SID_ERROR_LOGIC, i_forest);
         }
         n_forests_subgroup = i_forest; // The '+1' has already been added by the for()
         calc_max(n_trees_forest_subgroups, &n_trees_forest_subgroups_max, n_forests_subgroup, SID_INT, CALC_MODE_DEFAULT);
@@ -432,7 +432,7 @@ void compute_forests(char *filename_root_out, int n_search_forests) {
             SID_fread_all(&n_trees_subgroup_i, sizeof(int), 1, &fp_in);
             SID_fread_all(&n_trees_group_i, sizeof(int), 1, &fp_in);
             if(n_step_in != i_read_step)
-                SID_trap_error("Snapshot step sizes don't match (ie. %d!=%d)", SID_ERROR_LOGIC, n_step_in, i_read_step);
+                SID_exit_error("Snapshot step sizes don't match (ie. %d!=%d)", SID_ERROR_LOGIC, n_step_in, i_read_step);
 
             // Clear counters
             for(i_tree = 0; i_tree < n_trees_group; i_tree++)

@@ -16,7 +16,7 @@ int set_transfer_function(char *line, int i_word, interp_info **return_interp) {
             grab_word(line, i_word++, temp_word);
             search_and_replace(temp_word, ",", " ");
             if(count_words(temp_word) != 2)
-                SID_trap_error("Error in formatting of transfer array {%s}{%s}", SID_ERROR_LOGIC, line, temp_word);
+                SID_exit_error("Error in formatting of transfer array {%s}{%s}", SID_ERROR_LOGIC, line, temp_word);
             grab_double(temp_word, 1, &(transfer_array_x[j_word]));
             grab_double(temp_word, 2, &(transfer_array_y[j_word]));
         }
@@ -37,6 +37,6 @@ int set_transfer_function(char *line, int i_word, interp_info **return_interp) {
         SID_free(SID_FARG transfer_array_x);
         SID_free(SID_FARG transfer_array_y);
     } else
-        SID_trap_error("Transfer arrays must be >2 elements long.", SID_ERROR_LOGIC);
+        SID_exit_error("Transfer arrays must be >2 elements long.", SID_ERROR_LOGIC);
     return (i_word);
 }

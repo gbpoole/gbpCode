@@ -53,7 +53,8 @@ void read_mark_file(plist_info *plist, const char *mark_name, const char *filena
     // Open mark list and read header
     SID_fopen_chunked(filename_in, "r", &fp_mark_file, &header);
     if(header.n_type != N_GADGET_TYPE)
-        SID_trap_error("Inconsistant number of species in mark file (ie. %d!=%d)!", SID_ERROR_LOGIC, header.n_type, N_GADGET_TYPE);
+        SID_exit_error("Inconsistant number of species in mark file (ie. %d!=%d)!", SID_ERROR_LOGIC, header.n_type,
+                       N_GADGET_TYPE);
 
     // List numbers of particles in the log output
     size_t n_particles_all;
@@ -118,7 +119,7 @@ void read_mark_file(plist_info *plist, const char *mark_name, const char *filena
     // Sanity check
     SID_Allreduce(&n_mark_local, &n_mark_total, 1, SID_SIZE_T, SID_SUM, SID.COMM_WORLD);
     if(n_mark_total != n_mark_total_check)
-        SID_trap_error("Particle numbers don't add-up right in read_mark_file!", SID_ERROR_LOGIC);
+        SID_exit_error("Particle numbers don't add-up right in read_mark_file!", SID_ERROR_LOGIC);
 
     // Read file and create/store mark arrays
     switch(flag_mark_mode) {

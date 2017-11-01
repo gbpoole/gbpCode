@@ -12,7 +12,7 @@ int main(int argc, char *argv[]) {
 
     // Fetch user inputs
     if(argc != 5)
-        SID_trap_error("Invalid syntax.", SID_ERROR_SYNTAX);
+        SID_exit_error("Invalid syntax.", SID_ERROR_SYNTAX);
     char filename_SSimPL_in[SID_MAX_FILENAME_LENGTH];
     char filename_halo_type[SID_MAX_FILENAME_LENGTH];
     strcpy(filename_SSimPL_in, argv[1]);

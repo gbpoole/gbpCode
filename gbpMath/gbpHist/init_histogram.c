@@ -67,10 +67,10 @@ void init_histogram(hist_info *hist, int mode, ...) {
         if(flag_error) {
             for(int i_bin = 0; i_bin < hist->n_bins; i_bin++)
                 SID_log("%d %le", SID_LOG_COMMENT, i_bin, x_lo_in[i_bin]);
-            SID_trap_error("The x_lo array passed to init_histogram() is not sorted.", SID_ERROR_LOGIC);
+            SID_exit_error("The x_lo array passed to init_histogram() is not sorted.", SID_ERROR_LOGIC);
         }
     } else
-        SID_trap_error("Invalid mode (%d) specified in init_histogram().", SID_ERROR_LOGIC, mode);
+        SID_exit_error("Invalid mode (%d) specified in init_histogram().", SID_ERROR_LOGIC, mode);
 
     // Set things common to all modes
     hist->mode           = mode;

@@ -224,11 +224,13 @@ void read_trees(const char *filename_SSimPL_root,
         SID_fread_all(&n_trees_group, sizeof(int), 1, &fp_trees_in);
         n_progenitors_max = GBP_MAX(n_groups_max_in, n_subgroups_max_in);
         if(n_step_in != i_read_step)
-            SID_trap_error("Snapshot step sizes don't match (ie. %d!=%d)", SID_ERROR_LOGIC, n_step_in, i_read_step);
+            SID_exit_error("Snapshot step sizes don't match (ie. %d!=%d)", SID_ERROR_LOGIC, n_step_in, i_read_step);
         if(n_groups_cat != n_groups)
-            SID_trap_error("Group counts don't match between datasets (ie. %d!=%d)", SID_ERROR_LOGIC, n_groups_cat, n_groups);
+            SID_exit_error("Group counts don't match between datasets (ie. %d!=%d)", SID_ERROR_LOGIC, n_groups_cat,
+                           n_groups);
         if(n_subgroups_cat != n_subgroups)
-            SID_trap_error("Subgroup counts don't match between datasets (ie. %d!=%d)", SID_ERROR_LOGIC, n_subgroups_cat, n_subgroups);
+            SID_exit_error("Subgroup counts don't match between datasets (ie. %d!=%d)", SID_ERROR_LOGIC,
+                           n_subgroups_cat, n_subgroups);
 
         // Initialize read buffers
         SID_fp_buffer *fp_hierarchy_in_buffer = NULL;
@@ -390,11 +392,8 @@ void read_trees(const char *filename_SSimPL_root,
                     } else {
                         parent_node = group_substructure_pointers[parent_pointer];
                         if(parent_node == NULL)
-                            SID_trap_error("Failed to set a substructure pointer (rank=%d,i_subgroup=%d,parent=%d)",
-                                           SID_ERROR_LOGIC,
-                                           SID.My_rank,
-                                           i_subgroup + j_subgroup,
-                                           parent_pointer);
+                            SID_exit_error("Failed to set a substructure pointer (rank=%d,i_subgroup=%d,parent=%d)",
+                                           SID_ERROR_LOGIC, SID.My_rank, i_subgroup + j_subgroup, parent_pointer);
                     }
                     // Add halo to the hierarchy
                     tree_node_info *current_subgroup = group_substructure_pointers[j_subgroup];
@@ -406,13 +405,9 @@ void read_trees(const char *filename_SSimPL_root,
                 }
                 // Sanity Check
                 if(!flag_central_set && n_subgroups_group > 0)
-                    SID_trap_error("Failed to identify a central substructure for a group with substructure "
-                                   "(rank=%d,i_group=%d,i_subgroup=%d,n_subgroups_group=%d)",
-                                   SID_ERROR_LOGIC,
-                                   SID.My_rank,
-                                   i_group,
-                                   i_subgroup,
-                                   n_subgroups_group);
+                    SID_exit_error("Failed to identify a central substructure for a group with substructure "
+                                           "(rank=%d,i_group=%d,i_subgroup=%d,n_subgroups_group=%d)", SID_ERROR_LOGIC,
+                                   SID.My_rank, i_group, i_subgroup, n_subgroups_group);
                 // Build inclusive particle counts
                 if(group_node != NULL)
                     compute_inclusive_particle_count_recursive((*trees), group_node, NULL);

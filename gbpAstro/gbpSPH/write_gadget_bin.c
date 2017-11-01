@@ -54,7 +54,7 @@ void write_gadget_bin(char *filename_out, plist_info *plist) {
                             int n_write = 0;
                             SID_Allreduce(&flag, &n_write, 1, SID_INT, SID_SUM, SID.COMM_WORLD);
                             if(n_write != 1)
-                                SID_trap_error("Particle %d was not written correctly.", SID_ERROR_LOGIC, i_p);
+                                SID_exit_error("Particle %d was not written correctly.", SID_ERROR_LOGIC, i_p);
                         }
                     }
                 }

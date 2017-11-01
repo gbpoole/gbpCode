@@ -34,7 +34,7 @@ int main(int argc, char *argv[]) {
 
     // Fetch user inputs
     if(argc != 7 && argc != 6)
-        SID_trap_error("Invalid Syntax.", SID_ERROR_SYNTAX);
+        SID_exit_error("Invalid Syntax.", SID_ERROR_SYNTAX);
     char filename_SSimPL_root[SID_MAX_FILENAME_LENGTH];
     char filename_halos_root[SID_MAX_FILENAME_LENGTH];
     char filename_trees_root[SID_MAX_FILENAME_LENGTH];
@@ -86,7 +86,7 @@ int main(int argc, char *argv[]) {
             j_read = trees->snap_list[i_file];
         }
         if(i_read != trees->snap_list[i_file])
-            SID_trap_error("Invalid snapshot specified {%d}.", SID_ERROR_LOGIC, i_read);
+            SID_exit_error("Invalid snapshot specified {%d}.", SID_ERROR_LOGIC, i_read);
         // Find the halo ID of the halo we've been asked to query
         char   filename_in[SID_MAX_FILENAME_LENGTH];
         SID_fp fp_in_trees;
@@ -109,9 +109,9 @@ int main(int argc, char *argv[]) {
         SID_fread_all(&n_trees_subgroup_in, sizeof(int), 1, &fp_in_trees);
         SID_fread_all(&n_trees_group_in, sizeof(int), 1, &fp_in_trees);
         if(mode == MATCH_GROUPS && i_halo >= n_groups)
-            SID_trap_error("Invalid group halo index (ie. %d>=%d).", SID_ERROR_LOGIC, i_halo, n_groups);
+            SID_exit_error("Invalid group halo index (ie. %d>=%d).", SID_ERROR_LOGIC, i_halo, n_groups);
         else if(mode == MATCH_SUBGROUPS && i_halo >= n_subgroups)
-            SID_trap_error("Invalid subgroup halo index (ie. %d>=%d).", SID_ERROR_LOGIC, i_halo, n_subgroups);
+            SID_exit_error("Invalid subgroup halo index (ie. %d>=%d).", SID_ERROR_LOGIC, i_halo, n_subgroups);
         int flag_done = GBP_FALSE;
         int i_group;
         int i_subgroup;
@@ -180,7 +180,7 @@ int main(int argc, char *argv[]) {
             j_read = trees->snap_list[i_file];
         }
         if(i_read != trees->snap_list[i_file])
-            SID_trap_error("Invalid snapshot specified {%d}.", SID_ERROR_LOGIC, i_read);
+            SID_exit_error("Invalid snapshot specified {%d}.", SID_ERROR_LOGIC, i_read);
     }
 
     // Open output file
@@ -252,9 +252,9 @@ int main(int argc, char *argv[]) {
         SID_fread_all(&n_trees_group_in, sizeof(int), 1, &fp_in_trees);
         if(find_mode == 1) {
             if(mode == MATCH_GROUPS && i_halo >= n_groups)
-                SID_trap_error("Invalid group halo index (ie. %d>=%d).", SID_ERROR_LOGIC, i_halo, n_groups);
+                SID_exit_error("Invalid group halo index (ie. %d>=%d).", SID_ERROR_LOGIC, i_halo, n_groups);
             else if(mode == MATCH_SUBGROUPS && i_halo >= n_subgroups)
-                SID_trap_error("Invalid subgroup halo index (ie. %d>=%d).", SID_ERROR_LOGIC, i_halo, n_subgroups);
+                SID_exit_error("Invalid subgroup halo index (ie. %d>=%d).", SID_ERROR_LOGIC, i_halo, n_subgroups);
         }
         SID_fskip(sizeof(int), 8, &fp_in_bridge_forematch);
         SID_fskip(sizeof(int), 8, &fp_in_bridge_backmatch);
@@ -346,7 +346,7 @@ int main(int argc, char *argv[]) {
         SID_fclose(&fp_in_bridge_forematch);
         SID_fclose(&fp_in_bridge_backmatch);
         if(find_mode == 1 && !flag_done)
-            SID_trap_error("Halo {%d} could not be processed.", SID_ERROR_LOGIC, i_halo);
+            SID_exit_error("Halo {%d} could not be processed.", SID_ERROR_LOGIC, i_halo);
 
         if(flag_done) {
             // Read properties

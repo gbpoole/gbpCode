@@ -12,7 +12,7 @@ int main(int argc, char *argv[]) {
 
     // Fetch user inputs
     if(argc != 7 && argc != 6)
-        SID_trap_error("Invalid Syntax.", SID_ERROR_SYNTAX);
+        SID_exit_error("Invalid Syntax.", SID_ERROR_SYNTAX);
     char filename_SSimPL_root[SID_MAX_FILENAME_LENGTH];
     char filename_halos_root[SID_MAX_FILENAME_LENGTH];
     char filename_trees_root[SID_MAX_FILENAME_LENGTH];
@@ -45,7 +45,8 @@ int main(int argc, char *argv[]) {
 
         // Check that the file has been opened
         if(fp_in_trees == NULL)
-            SID_trap_error("File {%s} could not be opened while still scanning for forest %d.", SID_ERROR_IO_OPEN, filename_in, i_forest_query);
+            SID_exit_error("File {%s} could not be opened while still scanning for forest %d.", SID_ERROR_IO_OPEN,
+                           filename_in, i_forest_query);
 
         // Read header
         int n_forest_file = 0;

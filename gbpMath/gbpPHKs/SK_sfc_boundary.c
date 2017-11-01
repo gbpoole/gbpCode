@@ -65,7 +65,7 @@ extern sfc_boundary_t
     /* Generate memory for the boundarie */
     dummy = (sfc_boundary_t)malloc(sizeof(sfc_boundary_struct_t) * num);
     if(dummy == NULL) {
-        SID_trap_error("boundary array", SID_ERROR_LOGIC);
+        SID_exit_error("boundary array", SID_ERROR_LOGIC);
         /*
 io_logging_memfatal(log, "boundary array");
 return NULL;
@@ -97,7 +97,7 @@ extern sfc_boundary_2_t sfc_boundary_2_get(uint32_t rank, uint32_t ncpu, sfc_key
     /* Aquire the memory for the structure */
     dummy = (sfc_boundary_2_t)malloc(sizeof(sfc_boundary_2_struct_t));
     if(dummy == NULL) {
-        SID_trap_error("boundary structure", SID_ERROR_LOGIC);
+        SID_exit_error("boundary structure", SID_ERROR_LOGIC);
         /*
 io_logging_memfatal(log, "boundary structure");
 return NULL;
@@ -132,7 +132,7 @@ extern sfc_boundary_t sfc_boundary_get(sfc_boundary_type_t btype, sfc_key_t mink
 
     /* Sanity checks */
     if((btype != SFC_BOUNDARY_TYPE_INNER) && (btype != SFC_BOUNDARY_TYPE_OUTER)) {
-        SID_trap_error("unsupported boundary type", SID_ERROR_LOGIC);
+        SID_exit_error("unsupported boundary type", SID_ERROR_LOGIC);
         /*
 io_logging_fatal(log, "Unsupported boundary type: %s",
                  sfc_boundary_typestr(btype));
@@ -143,7 +143,7 @@ return NULL;
     /* Get the structure */
     dummy = (sfc_boundary_t)malloc(sizeof(sfc_boundary_struct_t));
     if(dummy == NULL) {
-        SID_trap_error("boundary structure", SID_ERROR_LOGIC);
+        SID_exit_error("boundary structure", SID_ERROR_LOGIC);
         /*
 io_logging_memfatal(log, "boundary structure");
 return NULL;
@@ -168,7 +168,7 @@ return NULL;
     dummy->bound = (sfc_key_t *)malloc(sizeof(sfc_key_t) * dummy->len);
     if(dummy->bound == NULL) {
         free(dummy);
-        SID_trap_error("boundary key array", SID_ERROR_LOGIC);
+        SID_exit_error("boundary key array", SID_ERROR_LOGIC);
         /*
 io_logging_memfatal(log, "boundary key array");
 return NULL;
@@ -261,7 +261,7 @@ extern sfc_boundary_t sfc_boundary_addKey(sfc_boundary_t bound, sfc_key_t key) {
         */
         tmp = (sfc_key_t *)realloc((void *)(bound->bound), bound->len * (sizeof(sfc_key_t)));
         if(tmp == NULL) {
-            SID_trap_error("resized boundary array", SID_ERROR_LOGIC);
+            SID_exit_error("resized boundary array", SID_ERROR_LOGIC);
             /*
     io_logging_memfatal(log, "resized boundary array");
     return NULL;

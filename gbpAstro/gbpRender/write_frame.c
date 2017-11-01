@@ -63,7 +63,7 @@ void write_frame(render_info *render, int frame, int mode) {
             image_RGBY_MARKED = render->camera->image_RGBY_MARKED;
             stereo_offset_dir = 0;
         } else
-            SID_trap_error("Undefined image set index in read_frame().", SID_ERROR_LOGIC);
+            SID_exit_error("Undefined image set index in read_frame().", SID_ERROR_LOGIC);
 
         // Compute the depth for this stereo iteration
         set_camera_depths(render, stereo_offset_dir);

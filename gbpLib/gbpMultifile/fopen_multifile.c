@@ -29,7 +29,7 @@ int fopen_multifile(const char *filename_root, size_t data_size, fp_multifile_in
             if(fp_out->fp_multifile == NULL) {
                 r_val = GBP_FALSE;
                 // Don't report error here so that we can use this routine to check if datasets exist without termination
-                // SID_trap_error("Could not open multifile {%s}",SID_ERROR_LOGIC,filename_root);
+                // SID_exit_error("Could not open multifile {%s}",SID_ERROR_LOGIC,filename_root);
             }
             // ... we found a single file.  Set flags.
             else
@@ -62,7 +62,7 @@ int fopen_multifile(const char *filename_root, size_t data_size, fp_multifile_in
         fp_out->i_file       = 0;
         fp_out->i_item       = 0;
         if(!(r_val = fopen_multifile_nth_file(fp_out, 0)))
-            SID_trap_error("Error opening multifile file.", SID_ERROR_IO_OPEN);
+            SID_exit_error("Error opening multifile file.", SID_ERROR_IO_OPEN);
     }
 
     va_end(vargs);

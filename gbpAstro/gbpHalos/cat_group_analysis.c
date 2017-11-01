@@ -138,7 +138,7 @@ int main(int argc, char *argv[]) {
                     group_text_prefix,
                     j_file);
             if((fp_properties_temp = fopen(filename_input_properties_temp, "r")) == NULL)
-                SID_trap_error("Can not open {%s}", SID_ERROR_IO_OPEN, filename_output_properties_temp);
+                SID_exit_error("Can not open {%s}", SID_ERROR_IO_OPEN, filename_output_properties_temp);
             fread_verify(&j_file, sizeof(int), 1, fp_properties_temp);
             fread_verify(&n_files, sizeof(int), 1, fp_properties_temp);
             fclose(fp_properties_temp);
@@ -164,7 +164,7 @@ int main(int argc, char *argv[]) {
                         j_file);
                 // Cat properties
                 if((fp_properties_temp = fopen(filename_input_properties_temp, "r")) == NULL)
-                    SID_trap_error("Can't open file {%s}", SID_ERROR_IO_OPEN, filename_output_properties_temp);
+                    SID_exit_error("Can't open file {%s}", SID_ERROR_IO_OPEN, filename_output_properties_temp);
                 fread_verify(&j_file_in, sizeof(int), 1, fp_properties_temp);
                 fread_verify(&n_files_i, sizeof(int), 1, fp_properties_temp);
                 fread_verify(&n_groups, sizeof(int), 1, fp_properties_temp);

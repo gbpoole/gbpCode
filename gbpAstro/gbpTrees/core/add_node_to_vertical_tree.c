@@ -77,20 +77,12 @@ int add_node_to_vertical_tree(tree_vertical_info *       tree,
                     next_node = next_node->neighbour_halo_next;
             }
             if(new_node->descendant == NULL)
-                SID_trap_error("Could not find the descendant (%d;snap=%d) of a halo (%d;snap=%d)!",
-                               SID_ERROR_LOGIC,
-                               halo_id,
-                               halo_snap,
-                               descendant_id,
-                               descendant_snap);
+                SID_exit_error("Could not find the descendant (%d;snap=%d) of a halo (%d;snap=%d)!", SID_ERROR_LOGIC,
+                               halo_id, halo_snap, descendant_id, descendant_snap);
         }
     } else if(descendant_snap == halo_snap)
-        SID_trap_error("This halo (%d;snap=%d) has the same snap as its descenant (%d;snap=%d)!",
-                       SID_ERROR_LOGIC,
-                       halo_id,
-                       halo_snap,
-                       descendant_id,
-                       descendant_snap);
+        SID_exit_error("This halo (%d;snap=%d) has the same snap as its descenant (%d;snap=%d)!", SID_ERROR_LOGIC,
+                       halo_id, halo_snap, descendant_id, descendant_snap);
 
     // Find the new halo's group and then set the group pointers
     //   If group_id<0, then this halo is it's own group and we

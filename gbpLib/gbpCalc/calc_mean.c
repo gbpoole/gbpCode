@@ -20,7 +20,7 @@ void calc_mean(void *data, void *result, size_t n_data, SID_Datatype type, int m
         else if(type == SID_SIZE_T)
             ((size_t *)result)[0] = 0;
         else
-            SID_trap_error("Unknown variable type in calc_min", SID_ERROR_LOGIC);
+            SID_exit_error("Unknown variable type in calc_min", SID_ERROR_LOGIC);
     } else {
         calc_sum(data, &temp, n_data, type, CALC_MODE_RETURN_DOUBLE | flag_abs);
         temp /= (double)n_data;

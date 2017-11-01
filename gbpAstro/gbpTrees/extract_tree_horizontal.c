@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
     int  tree_type;
 
     if(argc != 6)
-        SID_trap_error("Invalid syntax.", SID_ERROR_SYNTAX);
+        SID_exit_error("Invalid syntax.", SID_ERROR_SYNTAX);
     int i_tree_extract_group    = -1;
     int i_tree_extract_subgroup = -1;
     strcpy(filename_root, argv[1]);
@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
         sprintf(filename_out_list, "%s_subgroup_forest.ascii", filename_out_root);
         fp_out_subgroups = fopen(filename_out_subgroups, "w");
     } else
-        SID_trap_error("Invalid tree type specified {%s}.", SID_ERROR_SYNTAX, argv[2]);
+        SID_exit_error("Invalid tree type specified {%s}.", SID_ERROR_SYNTAX, argv[2]);
 
     SID_log("Extracting horizontal tree...", SID_LOG_OPEN | SID_LOG_TIMER);
     char   filename_file_root[SID_MAX_FILENAME_LENGTH];

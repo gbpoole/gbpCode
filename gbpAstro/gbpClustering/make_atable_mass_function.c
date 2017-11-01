@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
     // Initialization -- MPI etc.
     SID_init(&argc, &argv, NULL, NULL);
     if(argc != 11)
-        SID_trap_error("Incorrect syntax.", SID_ERROR_SYNTAX);
+        SID_exit_error("Incorrect syntax.", SID_ERROR_SYNTAX);
 
     // Parse arguments
     strcpy(filename_in, argv[1]);
@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
     // Open file
     FILE *fp_in;
     if((fp_in = fopen(filename_in, "r")) == NULL)
-        SID_trap_error("Could not open {%s} for reading.", SID_ERROR_IO_OPEN, filename_in);
+        SID_exit_error("Could not open {%s} for reading.", SID_ERROR_IO_OPEN, filename_in);
 
     // Allocate memory for the data. Read it and sort it in ascending order
     SID_log("Reading data...", SID_LOG_OPEN | SID_LOG_TIMER);

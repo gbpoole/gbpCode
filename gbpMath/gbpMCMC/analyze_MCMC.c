@@ -370,7 +370,7 @@ void analyze_MCMC(MCMC_info *MCMC) {
         current_DS = next_DS;
     }
     if(next_DS != NULL)
-        SID_trap_error("Invalid dataset count in analyze_MCMC().", SID_ERROR_LOGIC);
+        SID_exit_error("Invalid dataset count in analyze_MCMC().", SID_ERROR_LOGIC);
     residual       = (double *)SID_malloc(sizeof(double) * n_residual);
     coverage_true  = (size_t **)SID_malloc(sizeof(size_t *) * n_coverage);
     coverage_false = (size_t **)SID_malloc(sizeof(size_t *) * n_coverage);
@@ -442,14 +442,15 @@ void analyze_MCMC(MCMC_info *MCMC) {
 
                 // Read number of iterations
                 if((fp_chain = fopen(filename_chain_config, "rb")) == NULL)
-                    SID_trap_error("Could not open chain configuration file {%s}.", SID_ERROR_IO_OPEN, filename_chain_config);
+                    SID_exit_error("Could not open chain configuration file {%s}.", SID_ERROR_IO_OPEN,
+                                   filename_chain_config);
                 fread_verify(&n_iterations, sizeof(int), 1, fp_chain);
                 fread_verify(&n_iterations_burn, sizeof(int), 1, fp_chain);
                 fclose(fp_chain);
 
                 // Open chain file
                 if((fp_chain = fopen(filename_chain, "rb")) == NULL)
-                    SID_trap_error("Could not open chain file {%s}.", SID_ERROR_IO_OPEN, filename_chain);
+                    SID_exit_error("Could not open chain file {%s}.", SID_ERROR_IO_OPEN, filename_chain);
             }
             i_iteration_buffer = 0;
             i_P_buffer         = 0;
@@ -563,14 +564,14 @@ void analyze_MCMC(MCMC_info *MCMC) {
 
                 // Read number of iterations
                 if((fp_chain = fopen(filename_chain_config, "rb")) == NULL)
-                    SID_trap_error("Could not open chain configuration file {%s}.", SID_ERROR_IO_OPEN, filename_chain);
+                    SID_exit_error("Could not open chain configuration file {%s}.", SID_ERROR_IO_OPEN, filename_chain);
                 fread_verify(&n_iterations, sizeof(int), 1, fp_chain);
                 fread_verify(&n_iterations_burn, sizeof(int), 1, fp_chain);
                 fclose(fp_chain);
 
                 // Open chain file
                 if((fp_chain = fopen(filename_chain, "rb")) == NULL)
-                    SID_trap_error("Could not open chain file {%s}.", SID_ERROR_IO_OPEN, filename_chain);
+                    SID_exit_error("Could not open chain file {%s}.", SID_ERROR_IO_OPEN, filename_chain);
             }
             i_iteration_buffer = 0;
             i_P_buffer         = 0;
@@ -711,7 +712,7 @@ void analyze_MCMC(MCMC_info *MCMC) {
         // Write covariance matrix
         if(SID.I_am_Master) {
             if((fp_covariance = fopen(filename_covariance, "wb")) == NULL)
-                SID_trap_error("Could not open {%s} for writing.", SID_ERROR_IO_OPEN, filename_covariance);
+                SID_exit_error("Could not open {%s} for writing.", SID_ERROR_IO_OPEN, filename_covariance);
             fwrite(&n_P, sizeof(int), 1, fp_covariance);
             fwrite(V_compute, sizeof(double), n_P * n_P, fp_covariance);
             fclose(fp_covariance);
@@ -1040,7 +1041,7 @@ void analyze_MCMC(MCMC_info *MCMC) {
                     append_image_FITS(residual, SID_DOUBLE, current_DS->n_D, current_DS->D, filename_results, "RESIDUAL_BEST");
                 }
 #else
-                SID_trap_error("2D analysis can only be written if you compile with USE_CFITSIO=1", SID_ERROR_LOGIC);
+                SID_exit_error("2D analysis can only be written if you compile with USE_CFITSIO=1", SID_ERROR_LOGIC);
 #endif
             }
             current_DS = next_DS;

@@ -65,7 +65,7 @@ void write_treenode_list_properties(tree_info *trees, const char *filename_out_r
                         else if(data_type == SID_DOUBLE)
                             SID_Sendrecv(&data_d, 1, data_type, SID_MASTER_RANK, 2178272, &data_d, 1, data_type, i_rank, 2178272, SID.COMM_WORLD);
                         else
-                            SID_trap_error("Unsupported data type in write_treenode_list_data() (2).", SID_ERROR_LOGIC);
+                            SID_exit_error("Unsupported data type in write_treenode_list_data() (2).", SID_ERROR_LOGIC);
                     }
 
                     // Write the data with the master rank
@@ -75,7 +75,7 @@ void write_treenode_list_properties(tree_info *trees, const char *filename_out_r
                         else if(data_type == SID_DOUBLE)
                             fprintf(fp_props_out, " %11.4le", data_d);
                         else
-                            SID_trap_error("Unsupported data type in write_treenode_list_data() (2).", SID_ERROR_LOGIC);
+                            SID_exit_error("Unsupported data type in write_treenode_list_data() (2).", SID_ERROR_LOGIC);
                     }
                 } // i_write
                 if(SID.I_am_Master)

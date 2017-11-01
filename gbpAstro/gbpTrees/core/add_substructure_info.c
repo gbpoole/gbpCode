@@ -19,5 +19,6 @@ void add_substructure_info(tree_horizontal_info *halos,
         }
     }
     if(flag_match_subgroups && i_subgroup != n_subgroups)
-        SID_trap_error("Subgroup counts don't match (ie %d!=%d;%d)in add_substructure_info().", SID_ERROR_LOGIC, i_subgroup, n_subgroups, n_groups);
+        SID_exit_error("Subgroup counts don't match (ie %d!=%d;%d)in add_substructure_info().", SID_ERROR_LOGIC,
+                       i_subgroup, n_subgroups, n_groups);
 }

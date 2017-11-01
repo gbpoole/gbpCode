@@ -43,19 +43,19 @@ int main(int argc, char *argv[]) {
     fread_verify(&as2, sizeof(int), 1, fp2);
 
     if(nx1 != nx2)
-        SID_trap_error("nx's don't match (ie. %d!=%d)", SID_ERROR_LOGIC, nx1, nx2);
+        SID_exit_error("nx's don't match (ie. %d!=%d)", SID_ERROR_LOGIC, nx1, nx2);
     if(ny1 != ny2)
-        SID_trap_error("ny's don't match (ie. %d!=%d)", SID_ERROR_LOGIC, ny1, ny2);
+        SID_exit_error("ny's don't match (ie. %d!=%d)", SID_ERROR_LOGIC, ny1, ny2);
     if(nz1 != nz2)
-        SID_trap_error("nz's don't match (ie. %d!=%d)", SID_ERROR_LOGIC, nz1, nz2);
+        SID_exit_error("nz's don't match (ie. %d!=%d)", SID_ERROR_LOGIC, nz1, nz2);
     if(Lx1 != Lx2)
-        SID_trap_error("Lx's don't match (ie. %le!=%le)", SID_ERROR_LOGIC, Lx1, Lx2);
+        SID_exit_error("Lx's don't match (ie. %le!=%le)", SID_ERROR_LOGIC, Lx1, Lx2);
     if(Ly1 != Ly2)
-        SID_trap_error("Ly's don't match (ie. %le!=%le)", SID_ERROR_LOGIC, Ly1, Ly2);
+        SID_exit_error("Ly's don't match (ie. %le!=%le)", SID_ERROR_LOGIC, Ly1, Ly2);
     if(Lz1 != Lz2)
-        SID_trap_error("Lz's don't match (ie. %le!=%le)", SID_ERROR_LOGIC, Lz1, Lz2);
+        SID_exit_error("Lz's don't match (ie. %le!=%le)", SID_ERROR_LOGIC, Lz1, Lz2);
     if(ng1 != ng2)
-        SID_trap_error("The number of grids don't match (ie. %d!=%d)", SID_ERROR_LOGIC, ng1, ng2);
+        SID_exit_error("The number of grids don't match (ie. %d!=%d)", SID_ERROR_LOGIC, ng1, ng2);
 
     int     i_x, i_y, i_z;
     GBPREAL d1, d2;

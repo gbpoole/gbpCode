@@ -93,7 +93,7 @@ int main(int argc, char *argv[]) {
             sprintf(filename_halos, "%s/halos/%s_%03d.catalog_groups", filename_SSimPL, filename_halo_type, snap_number);
             FILE *fp_halos = NULL;
             if((fp_halos = fopen(filename_halos, "r")) == NULL)
-                SID_trap_error("Could not open halo file {%s} for reading.", SID_ERROR_IO_OPEN, filename_halos);
+                SID_exit_error("Could not open halo file {%s} for reading.", SID_ERROR_IO_OPEN, filename_halos);
             int n_groups_halos, group_offset_byte_size;
             fread_verify(&n_groups_halos, sizeof(int), 1, fp_halos);
             fread_verify(&group_offset_byte_size, sizeof(int), 1, fp_halos);
@@ -106,7 +106,8 @@ int main(int argc, char *argv[]) {
                 i_rank_max = 10;
                 sprintf(filename_halos, "%s/halos/%s_%03d.catalog_subgroups", filename_SSimPL, filename_halo_type, snap_number);
                 if((fp_hier = fopen(filename_halos, "r")) == NULL)
-                    SID_trap_error("Could not open halo file {%s} for substructure hierarchy reading.", SID_ERROR_IO_OPEN, filename_halos);
+                    SID_exit_error("Could not open halo file {%s} for substructure hierarchy reading.",
+                                   SID_ERROR_IO_OPEN, filename_halos);
                 int n_subgroups_halos, subgroup_offset_byte_size;
                 fread_verify(&n_subgroups_halos, sizeof(int), 1, fp_hier);
                 fread_verify(&subgroup_offset_byte_size, sizeof(int), 1, fp_hier);
@@ -136,10 +137,8 @@ int main(int argc, char *argv[]) {
 
             // Sanity check
             if(n_groups_halos != fp_catalog_groups.n_halos_total)
-                SID_trap_error("Group counts in halo and catalog files don't match (ie. %d!=%d).",
-                               SID_ERROR_LOGIC,
-                               n_groups_halos,
-                               fp_catalog_groups.n_halos_total);
+                SID_exit_error("Group counts in halo and catalog files don't match (ie. %d!=%d).", SID_ERROR_LOGIC,
+                               n_groups_halos, fp_catalog_groups.n_halos_total);
 
             // Process halos
             SID_log("(%d groups, %d subgroups)...", SID_LOG_CONTINUE, fp_catalog_groups.n_halos_total, fp_catalog_subgroups.n_halos_total);

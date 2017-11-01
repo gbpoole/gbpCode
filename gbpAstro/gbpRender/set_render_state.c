@@ -37,7 +37,8 @@ int set_render_state(render_info *render, int frame, int mode) {
 
     // Make sure we're requesting a valid frame
     if(!r_val)
-        SID_trap_error("Invalid frame (%d) requested in set_render_state() (min/max=%d/%d).", SID_ERROR_LOGIC, frame, frame_start, frame_stop);
+        SID_exit_error("Invalid frame (%d) requested in set_render_state() (min/max=%d/%d).", SID_ERROR_LOGIC, frame,
+                       frame_start, frame_stop);
 
     // Perform snapshot and smooth-file reading
     int    i_snap, j_snap, snap_best;
@@ -72,11 +73,12 @@ int set_render_state(render_info *render, int frame, int mode) {
                     (perspective->time - render->snap_a_list[snap_list[0]]) / (render->snap_a_list[snap_list[1]] - render->snap_a_list[snap_list[0]]);
                 SID_log("f_interpolate=%le", SID_LOG_COMMENT, render->f_interpolate);
                 if(render->n_interpolate != 2)
-                    SID_trap_error("n_interpolate>2 not supported (yet).", SID_ERROR_NONE);
+                    SID_exit_error("n_interpolate>2 not supported (yet).", SID_ERROR_NONE);
 
                 SID_log("Done.", SID_LOG_CLOSE);
             } else if(render->n_interpolate <= 0)
-                SID_trap_error("An invalid value for n_interpolate (%d) has been set.", SID_ERROR_LOGIC, render->n_interpolate);
+                SID_exit_error("An invalid value for n_interpolate (%d) has been set.", SID_ERROR_LOGIC,
+                               render->n_interpolate);
             else {
                 snap_list[0] = snap_best;
                 SID_log("snap=%d is best with t=%lf...Done.", SID_LOG_CLOSE, snap_list[0], render->snap_a_list[snap_best]);

@@ -94,11 +94,11 @@ void write_trees_horizontal(void **      groups_in,
     int flag_write_extended   = check_mode_for_flag(mode, TREE_HORIZONTAL_WRITE_EXTENDED);
     int flag_write_ghosts     = check_mode_for_flag(mode, TREE_HORIZONTAL_WRITE_GHOSTS);
     if(flag_write_extended && flag_write_ghosts)
-        SID_trap_error("Incompatible mode flags set in write_trees_horizontal.", SID_ERROR_LOGIC);
+        SID_exit_error("Incompatible mode flags set in write_trees_horizontal.", SID_ERROR_LOGIC);
     if(flag_write_ghosts) {
         flag_write_nocases  = GBP_TRUE;
         flag_write_allcases = GBP_FALSE;
-        SID_trap_error("Ghost processing not supported in write_trees_horizontal().", SID_ERROR_LOGIC);
+        SID_exit_error("Ghost processing not supported in write_trees_horizontal().", SID_ERROR_LOGIC);
     }
 
     // Check for fragemented halos

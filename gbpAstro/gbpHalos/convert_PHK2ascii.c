@@ -122,9 +122,9 @@ int main(int argc, char *argv[]) {
         sprintf(filename_in, "%s_%03d.catalog_PHKs", filename_PHKs_root, i_file);
         sprintf(filename_out, "%s_%03d.catalog_PHKs.ascii", filename_PHKs_root, i_file);
         if((fp_in = fopen(filename_in, "r")) == NULL)
-            SID_trap_error("Could not open input file {%s}", SID_ERROR_IO_OPEN, filename_in);
+            SID_exit_error("Could not open input file {%s}", SID_ERROR_IO_OPEN, filename_in);
         if((fp_out = fopen(filename_out, "w")) == NULL)
-            SID_trap_error("Could not open output file {%s}", SID_ERROR_IO_OPEN, filename_out);
+            SID_exit_error("Could not open output file {%s}", SID_ERROR_IO_OPEN, filename_out);
 
         // Read/write the header
         fread_verify(&n_groups, sizeof(int), 1, fp_in);

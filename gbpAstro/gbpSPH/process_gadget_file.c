@@ -60,7 +60,7 @@ void process_gadget_file(const char *status_message,
     int                flag_file_type = fp_gadget.flag_file_type;
     gadget_header_info header         = fp_gadget.header;
     if(!flag_filefound)
-        SID_trap_error("File not found.", SID_ERROR_LOGIC);
+        SID_exit_error("File not found.", SID_ERROR_LOGIC);
 
     // Create a count of all the particles in the snapshot
     size_t n_particles_snap = fp_gadget.n_particles;

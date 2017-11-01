@@ -31,7 +31,7 @@ void check_integrity_catalogs_properties_local(const char *filename_in_root, con
     if((fp_in = fopen(filename_in, "r")) == NULL) {
         sprintf(filename_in, "%s/%s_%03d.catalog_%sgroups_properties", filename_in_root, filename_halo_type, snap_number, prefix);
         if((fp_in = fopen(filename_in, "r")) == NULL)
-            SID_trap_error("Could not open {%s} for reading.", SID_ERROR_IO_OPEN, filename_in_root);
+            SID_exit_error("Could not open {%s} for reading.", SID_ERROR_IO_OPEN, filename_in_root);
         flag_type = GBP_TRUE;
     }
 
@@ -44,7 +44,8 @@ void check_integrity_catalogs_properties_local(const char *filename_in_root, con
 
     // Sanity check
     if(flag_type && n_files != 1)
-        SID_trap_error("Single file format dataset {%s} has n_files=%d (ie !=1) in its header.", SID_ERROR_LOGIC, filename_in, n_files);
+        SID_exit_error("Single file format dataset {%s} has n_files=%d (ie !=1) in its header.", SID_ERROR_LOGIC,
+                       filename_in, n_files);
 
     int i_file;
     for(i_file = 0; i_file < n_files; i_file++) {
@@ -63,7 +64,7 @@ void check_integrity_catalogs_properties_local(const char *filename_in_root, con
                     prefix,
                     i_file);
         if((fp_in = fopen(filename_in, "r")) == NULL)
-            SID_trap_error("Could not open {%s} for reading.", SID_ERROR_IO_OPEN, filename_in);
+            SID_exit_error("Could not open {%s} for reading.", SID_ERROR_IO_OPEN, filename_in);
 
         // Read the header and rewind
         int n_halos_file;
@@ -83,7 +84,7 @@ void check_integrity_catalogs_properties_local(const char *filename_in_root, con
         char test;
         fread(&test, 1, 1, fp_in);
         if(!feof(fp_in))
-            SID_trap_error("There are stray bytes at the end of {%s}.", SID_ERROR_LOGIC, filename_in);
+            SID_exit_error("There are stray bytes at the end of {%s}.", SID_ERROR_LOGIC, filename_in);
 
         // Close files
         fclose(fp_in);
@@ -115,7 +116,7 @@ void check_integrity_catalogs_profiles_local(const char *filename_in_root, const
     if((fp_in = fopen(filename_in, "r")) == NULL) {
         sprintf(filename_in, "%s/%s_%03d.catalog_%sgroups_profiles", filename_in_root, filename_halo_type, snap_number, prefix);
         if((fp_in = fopen(filename_in, "r")) == NULL)
-            SID_trap_error("Could not open {%s} for reading.", SID_ERROR_IO_OPEN, filename_in_root);
+            SID_exit_error("Could not open {%s} for reading.", SID_ERROR_IO_OPEN, filename_in_root);
         flag_type = GBP_TRUE;
     }
 
@@ -128,7 +129,8 @@ void check_integrity_catalogs_profiles_local(const char *filename_in_root, const
 
     // Sanity check
     if(flag_type && n_files != 1)
-        SID_trap_error("Single file format dataset {%s} has n_files=%d (ie !=1) in its header.", SID_ERROR_LOGIC, filename_in, n_files);
+        SID_exit_error("Single file format dataset {%s} has n_files=%d (ie !=1) in its header.", SID_ERROR_LOGIC,
+                       filename_in, n_files);
 
     for(int i_file = 0; i_file < n_files; i_file++) {
         // Open the files
@@ -146,7 +148,7 @@ void check_integrity_catalogs_profiles_local(const char *filename_in_root, const
                     prefix,
                     i_file);
         if((fp_in = fopen(filename_in, "r")) == NULL)
-            SID_trap_error("Could not open {%s} for reading.", SID_ERROR_IO_OPEN, filename_in);
+            SID_exit_error("Could not open {%s} for reading.", SID_ERROR_IO_OPEN, filename_in);
 
         // Read the header and rewind
         int n_halos_file;
@@ -170,7 +172,7 @@ void check_integrity_catalogs_profiles_local(const char *filename_in_root, const
         char test;
         fread(&test, 1, 1, fp_in);
         if(!feof(fp_in))
-            SID_trap_error("There are stray bytes at the end of {%s}.", SID_ERROR_LOGIC, filename_in);
+            SID_exit_error("There are stray bytes at the end of {%s}.", SID_ERROR_LOGIC, filename_in);
 
         // Close files
         fclose(fp_in);
@@ -217,7 +219,8 @@ void check_integrity_catalogs_SO_local(const char *filename_in_root, const char 
 
     // Sanity check
     if(flag_type && n_files != 1)
-        SID_trap_error("Single file format dataset {%s} has n_files=%d (ie !=1) in its header.", SID_ERROR_LOGIC, filename_in, n_files);
+        SID_exit_error("Single file format dataset {%s} has n_files=%d (ie !=1) in its header.", SID_ERROR_LOGIC,
+                       filename_in, n_files);
 
     // Process each file in turn
     for(int i_file = 0; i_file < n_files; i_file++) {
@@ -236,7 +239,7 @@ void check_integrity_catalogs_SO_local(const char *filename_in_root, const char 
                     prefix,
                     i_file);
         if((fp_in = fopen(filename_in, "r")) == NULL)
-            SID_trap_error("Could not open {%s} for reading.", SID_ERROR_IO_OPEN, filename_in);
+            SID_exit_error("Could not open {%s} for reading.", SID_ERROR_IO_OPEN, filename_in);
 
         // Read the header and rewind
         int n_halos_file;
@@ -256,7 +259,7 @@ void check_integrity_catalogs_SO_local(const char *filename_in_root, const char 
         char test;
         fread(&test, 1, 1, fp_in);
         if(!feof(fp_in))
-            SID_trap_error("There are stray bytes at the end of {%s}.", SID_ERROR_LOGIC, filename_in);
+            SID_exit_error("There are stray bytes at the end of {%s}.", SID_ERROR_LOGIC, filename_in);
 
         // Close files
         fclose(fp_in);

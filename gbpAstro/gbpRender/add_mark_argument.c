@@ -41,7 +41,7 @@ void add_mark_argument(render_info *render, const char *species, int value, cons
 
     // These things don't take argument values
     else if(strcmp(new_arg->type, "group_fragmented") && strcmp(new_arg->type, "subgroup_fragmented"))
-        SID_trap_error("Invalid mark type {%s} in add_mark_argument().", SID_ERROR_LOGIC, new_arg->type);
+        SID_exit_error("Invalid mark type {%s} in add_mark_argument().", SID_ERROR_LOGIC, new_arg->type);
 
     // Set first/last/last->next pointers and increment counter
     if(render->mark_arg_first == NULL)

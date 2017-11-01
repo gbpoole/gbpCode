@@ -6,14 +6,14 @@ void force_periodic_double(double *coord, double min, double box_size) {
     int n = 0;
     while((*coord) < min) {
         if(n > N_MAX_LOCAL)
-            SID_trap_error("N_MAX reached in force_periodic_double. (1)", SID_ERROR_LOGIC);
+            SID_exit_error("N_MAX reached in force_periodic_double. (1)", SID_ERROR_LOGIC);
         (*coord) += box_size;
         n++;
     }
     if(n == 0) {
         while((*coord) >= (min + box_size)) {
             if(n > N_MAX_LOCAL)
-                SID_trap_error("N_MAX reached in force_periodic_double. (2)", SID_ERROR_LOGIC);
+                SID_exit_error("N_MAX reached in force_periodic_double. (2)", SID_ERROR_LOGIC);
             (*coord) -= box_size;
             n++;
         }

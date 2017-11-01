@@ -37,8 +37,8 @@ void assign_progenitor_order_vertical_recursive(tree_vertical_node_info *tree, i
             current = current->progenitor_next;
         }
         if(i_progenitor != tree->n_progenitors)
-            SID_trap_error(
-                "There is a progenitor problem in assign_progenitor_order_recursive! (%d!=%d)", SID_ERROR_LOGIC, i_progenitor != tree->n_progenitors);
+            SID_exit_error("There is a progenitor problem in assign_progenitor_order_recursive! (%d!=%d)",
+                           SID_ERROR_LOGIC, i_progenitor != tree->n_progenitors);
 
         // Assign progenitors by (descending) order of their score
         //   (note: sorting the sort indicies gives each progenitor's ranking in the sort)

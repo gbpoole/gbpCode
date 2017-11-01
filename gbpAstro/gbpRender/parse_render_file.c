@@ -35,7 +35,7 @@ void parse_render_file(render_info **render, char *filename) {
     SID_log("Parsing render file {%s}...", SID_LOG_OPEN, filename);
     SID_set_verbosity(SID_SET_VERBOSITY_RELATIVE, -1);
     if((fp = fopen(filename, "r")) == NULL)
-        SID_trap_error("Could not open render file {%s}", SID_ERROR_IO_OPEN, filename);
+        SID_exit_error("Could not open render file {%s}", SID_ERROR_IO_OPEN, filename);
     init_render(render);
     sprintf((*render)->filename_out_dir, "%s.images/", filename);
     n_lines = count_lines_data(fp);
@@ -82,7 +82,7 @@ void parse_render_file(render_info **render, char *filename) {
                             grab_int(line, i_word++, &halo_index);
                             add_mark_argument((*render), mark_species, mark_value, mark_type, halo_index);
                         } else
-                            SID_trap_error("Invalid mark type {%s} in line {%s}.", SID_ERROR_LOGIC, mark_type, line);
+                            SID_exit_error("Invalid mark type {%s} in line {%s}.", SID_ERROR_LOGIC, mark_type, line);
                     }
                     // Turn on the flag to create and generate the 3-channel images needed for marking
                     (*render)->camera->RGB_mode |= CAMERA_RGB_MODE_MARKED;
@@ -119,10 +119,11 @@ void parse_render_file(render_info **render, char *filename) {
                     grab_double(line, i_word++, &((*render)->box_size));
                 else if(!strcmp(parameter, "f_absorption")) {
                     if((*render)->flag_add_absorption)
-                        SID_trap_error("There are conflicting absorption criteria.", SID_ERROR_LOGIC);
+                        SID_exit_error("There are conflicting absorption criteria.", SID_ERROR_LOGIC);
                     grab_double(line, i_word++, &((*render)->f_absorption));
                     if((*render)->f_absorption < 0.)
-                        SID_trap_error("f_absorption has been set to %le but must be >=0.", SID_ERROR_LOGIC, (*render)->f_absorption);
+                        SID_exit_error("f_absorption has been set to %le but must be >=0.", SID_ERROR_LOGIC,
+                                       (*render)->f_absorption);
                     if((*render)->f_absorption > 0.)
                         (*render)->flag_add_absorption = GBP_TRUE;
                 } else if(!strcmp(parameter, "snap_number"))
@@ -160,7 +161,7 @@ void parse_render_file(render_info **render, char *filename) {
                         // FILE *fp_test=NULL;
                         // sprintf(filename_test,"%s/gbpCode_cmap_%s.txt",GBP_DATA_DIR,c_value);
                         // if((fp_test=fopen(filename_test,"r"))==NULL)
-                        //   SID_trap_error("Colour table {%s} not found.",SID_ERROR_LOGIC,c_value);
+                        //   SID_exit_error("Colour table {%s} not found.",SID_ERROR_LOGIC,c_value);
                         // fclose(fp_test);
                         strcpy((*render)->camera->colour_table, c_value);
                     } else if(!strcmp(variable, "plane_parallel")) {
@@ -194,7 +195,8 @@ void parse_render_file(render_info **render, char *filename) {
                         else if(!strcmp(temp_word, "linear") || !strcmp(temp_word, "LINEAR"))
                             flag = GBP_FALSE;
                         else
-                            SID_trap_error("log/linear flag not set to 'log' or 'linear' {%s}", SID_ERROR_LOGIC, temp_word);
+                            SID_exit_error("log/linear flag not set to 'log' or 'linear' {%s}", SID_ERROR_LOGIC,
+                                           temp_word);
                         i_word = set_transfer_function(line, i_word, &temp_interp);
                         // Add to the transfer function list
                         ADaPS_store(&((*render)->camera->transfer_list), (void *)temp_interp, parameter, ADaPS_DEFAULT);
@@ -266,18 +268,15 @@ void parse_render_file(render_info **render, char *filename) {
                     else if(!strcmp(variable, "f_image_plane")) {
                         grab_double(line, i_word++, &((*render)->camera->f_image_plane));
                         if((*render)->camera->f_image_plane <= 0.)
-                            SID_trap_error("f_image_plane (%le) must be >0.  Consider using a plane-parallel projection.",
-                                           SID_ERROR_LOGIC,
-                                           (*render)->camera->f_image_plane);
+                            SID_exit_error(
+                                    "f_image_plane (%le) must be >0.  Consider using a plane-parallel projection.",
+                                    SID_ERROR_LOGIC, (*render)->camera->f_image_plane);
                     } else
-                        SID_trap_error("Unknown variable {%s} for parameter {%s} for command {%s} on line %d",
-                                       SID_ERROR_LOGIC,
-                                       variable,
-                                       parameter,
-                                       command,
-                                       i_line);
+                        SID_exit_error("Unknown variable {%s} for parameter {%s} for command {%s} on line %d",
+                                       SID_ERROR_LOGIC, variable, parameter, command, i_line);
                 } else
-                    SID_trap_error("Unknown parameter {%s} for command {%s} on line %d", SID_ERROR_LOGIC, parameter, command, i_line);
+                    SID_exit_error("Unknown parameter {%s} for command {%s} on line %d", SID_ERROR_LOGIC, parameter,
+                                   command, i_line);
             } else if(!strcmp(command, "add")) {
                 grab_word(line, i_word++, parameter);
                 if(!strcmp(parameter, "scene")) {
@@ -287,11 +286,13 @@ void parse_render_file(render_info **render, char *filename) {
                         grab_int(line, i_word++, &n_frames);
                         add_render_scene((*render), n_frames);
                     } else
-                        SID_trap_error("Number of frames in new scene not specified correctly on line {%s}.", SID_ERROR_LOGIC, line);
+                        SID_exit_error("Number of frames in new scene not specified correctly on line {%s}.",
+                                       SID_ERROR_LOGIC, line);
                 } else
-                    SID_trap_error("Unknown parameter {%s} for command {%s} on line %d", SID_ERROR_LOGIC, parameter, command, i_line);
+                    SID_exit_error("Unknown parameter {%s} for command {%s} on line %d", SID_ERROR_LOGIC, parameter,
+                                   command, i_line);
             } else
-                SID_trap_error("Unknown render command {%s} on line %d", SID_ERROR_LOGIC, command, i_line);
+                SID_exit_error("Unknown render command {%s} on line %d", SID_ERROR_LOGIC, command, i_line);
         }
         SID_log("Done.", SID_LOG_CLOSE);
     }

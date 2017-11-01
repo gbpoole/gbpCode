@@ -284,7 +284,7 @@ void read_smooth(plist_info *plist, char *filename_root_in, int snapshot_number,
             sum_check += (size_t)read_array[i_particle];
         SID_Allreduce(SID_IN_PLACE, &sum_check, 1, SID_SIZE_T, SID_SUM, SID.COMM_WORLD);
         if(sum_check != n_particles_all_mem)
-            SID_trap_error("Only %lld of %lld particles were set.", SID_ERROR_LOGIC, sum_check, n_particles_all_mem);
+            SID_exit_error("Only %lld of %lld particles were set.", SID_ERROR_LOGIC, sum_check, n_particles_all_mem);
         SID_free(SID_FARG read_array);
 
         SID_log("Summary...", SID_LOG_OPEN);
@@ -376,5 +376,5 @@ void read_smooth(plist_info *plist, char *filename_root_in, int snapshot_number,
         SID_Barrier(SID.COMM_WORLD);
         SID_log("Done.", SID_LOG_CLOSE);
     } else
-        SID_trap_error("Could not find file with root {%s}", SID_ERROR_IO_OPEN, filename_root_in);
+        SID_exit_error("Could not find file with root {%s}", SID_ERROR_IO_OPEN, filename_root_in);
 }

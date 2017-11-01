@@ -110,9 +110,9 @@ void write_trees_vertical(tree_info *trees, int grid_size, const char *filename_
         calc_sum(forest_count, &forest_count_total, n_files_write, SID_INT, CALC_MODE_DEFAULT);
         calc_sum(halo_count, &halo_count_total, n_files_write, SID_INT, CALC_MODE_DEFAULT);
         if(forest_count_total != n_forests)
-            SID_trap_error("Invalid forest count (ie. %d!=%d)", SID_ERROR_LOGIC, forest_count_total, n_forests);
+            SID_exit_error("Invalid forest count (ie. %d!=%d)", SID_ERROR_LOGIC, forest_count_total, n_forests);
         if(halo_count_total != n_halos)
-            SID_trap_error("Invalid halo count (ie. %d!=%d)", SID_ERROR_LOGIC, halo_count_total, n_halos);
+            SID_exit_error("Invalid halo count (ie. %d!=%d)", SID_ERROR_LOGIC, halo_count_total, n_halos);
         SID_log("Done.", SID_LOG_CLOSE);
 
         // Write the file headers
@@ -170,11 +170,8 @@ void write_trees_vertical(tree_info *trees, int grid_size, const char *filename_
                         current = current->next_in_forest;
                     }
                     if(n_halos_forest_written != n_halos_forest_local[i_forest])
-                        SID_trap_error("Number of halos written is not right (i.e. %d!=%d) for forest #%d",
-                                       SID_ERROR_LOGIC,
-                                       n_halos_written,
-                                       n_halos_forest_local[i_forest],
-                                       i_forest);
+                        SID_exit_error("Number of halos written is not right (i.e. %d!=%d) for forest #%d",
+                                       SID_ERROR_LOGIC, n_halos_written, n_halos_forest_local[i_forest], i_forest);
                     n_halos_written += n_halos_forest_written;
                     n_forests_written++;
                 }

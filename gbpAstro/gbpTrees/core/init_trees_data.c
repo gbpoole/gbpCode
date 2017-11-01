@@ -33,7 +33,7 @@ void init_trees_data(tree_info *trees, void ***rval, size_t data_size, int mode,
         else if(mode == INIT_TREE_DATA_SUBGROUPS)
             n_items = trees->n_subgroups_snap_local[i_snap];
         else
-            SID_trap_error("Invalid init_tree_data() mode (%d).", SID_ERROR_LOGIC, mode);
+            SID_exit_error("Invalid init_tree_data() mode (%d).", SID_ERROR_LOGIC, mode);
         alloc_size   = data_size * n_items;
         data[i_snap] = SID_malloc(alloc_size); // Returns NULL if alloc_size==0
         new_item->data_size += alloc_size;

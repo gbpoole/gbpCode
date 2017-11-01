@@ -10,7 +10,7 @@ void init_trend_coordinate(trend_info *trend,
                            void (*free_function)(trend_property_info *property, void *params_init, int i_hist, int *mode, gbp_va_list *vargs_gbp),
                            int (*calc_function)(trend_property_info *property, hist_info *hist, void *params_calc)) {
     if(trend->ordinate == NULL)
-        SID_trap_error("A trend coordinate is being set before its ordinate has been defined.", SID_ERROR_LOGIC);
+        SID_exit_error("A trend coordinate is being set before its ordinate has been defined.", SID_ERROR_LOGIC);
 
     // Create new coordinate
     trend_property_info *coordinate_new;

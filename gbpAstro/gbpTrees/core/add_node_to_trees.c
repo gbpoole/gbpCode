@@ -59,43 +59,29 @@ int add_node_to_trees(tree_info *      trees,            // The tree datastructu
     int flag_primary   = check_mode_for_flag(tree_case, TREE_CASE_MERGER_PRIMARY);
     int flag_secondary = check_mode_for_flag(tree_case, TREE_CASE_MERGER);
     if(flag_primary && flag_secondary)
-        SID_trap_error("Both primary and secondary flags have been switched on for halo (snap=%d;idx=%d;case=%d).",
-                       SID_ERROR_LOGIC,
-                       halo_snap,
-                       halo_index,
-                       tree_case);
+        SID_exit_error("Both primary and secondary flags have been switched on for halo (snap=%d;idx=%d;case=%d).",
+                       SID_ERROR_LOGIC, halo_snap, halo_index, tree_case);
 
     // Process descendants.  Progenitor will be in the order they're read.  Usually changed later in finalize_trees() (ordering given by mode).
     if(descendant_snap >= 0) {
         // Sanity check
         if(descendant_snap == halo_snap && descendant_snap >= 0)
-            SID_trap_error("A halo (snap=%d;idx=%d;flag_processing_group=%d) has the same snap as its descenant (snap=%d;idx=%d)!",
-                           SID_ERROR_LOGIC,
-                           halo_snap,
-                           halo_index,
-                           flag_processing_group,
-                           descendant_snap,
-                           descendant_index);
+            SID_exit_error(
+                    "A halo (snap=%d;idx=%d;flag_processing_group=%d) has the same snap as its descenant (snap=%d;idx=%d)!",
+                    SID_ERROR_LOGIC, halo_snap, halo_index, flag_processing_group, descendant_snap, descendant_index);
         if(descendant_index >= 0) {
             int             index_index;
             tree_node_info *descendant;
             // Find the descendant...
             if(!find_tree_node(trees, descendant_snap, descendant_index, flag_processing_group, &descendant))
-                SID_trap_error("Could not find descendant group (snap=%d->%d;idx=%d->%d;flag_processing_group=%d)",
-                               SID_ERROR_LOGIC,
-                               halo_snap,
-                               descendant_snap,
-                               halo_index,
-                               descendant_index,
+                SID_exit_error("Could not find descendant group (snap=%d->%d;idx=%d->%d;flag_processing_group=%d)",
+                               SID_ERROR_LOGIC, halo_snap, descendant_snap, halo_index, descendant_index,
                                flag_processing_group);
             if(descendant == NULL)
-                SID_trap_error("A group (snap=%d;idx=%d;flag_processing_group=%d) has been found to have an undefined descendant (snap=%d;idx=%d)!",
-                               SID_ERROR_LOGIC,
-                               halo_snap,
-                               halo_index,
-                               flag_processing_group,
-                               descendant_snap,
-                               descendant_index);
+                SID_exit_error(
+                        "A group (snap=%d;idx=%d;flag_processing_group=%d) has been found to have an undefined descendant (snap=%d;idx=%d)!",
+                        SID_ERROR_LOGIC, halo_snap, halo_index, flag_processing_group, descendant_snap,
+                        descendant_index);
             // ... set it ...
             (*new_node)->descendant = descendant;
             // ... and update it.
@@ -107,12 +93,10 @@ int add_node_to_trees(tree_info *      trees,            // The tree datastructu
             descendant->progenitor_last = (*new_node);
             if(flag_primary) {
                 if(descendant->progenitor_primary != NULL)
-                    SID_trap_error("Multiple primary halos have been set for a descendant (snap=%d;idx=%d other is snap=%d;idx=%d).",
-                                   SID_ERROR_LOGIC,
-                                   (*new_node)->snap_tree,
-                                   (*new_node)->file_index,
-                                   descendant->progenitor_primary->snap_tree,
-                                   descendant->progenitor_primary->file_index);
+                    SID_exit_error(
+                            "Multiple primary halos have been set for a descendant (snap=%d;idx=%d other is snap=%d;idx=%d).",
+                            SID_ERROR_LOGIC, (*new_node)->snap_tree, (*new_node)->file_index,
+                            descendant->progenitor_primary->snap_tree, descendant->progenitor_primary->file_index);
                 descendant->progenitor_primary = (*new_node);
             }
         }

@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
         i_frame_stop      = atoi(argv[3]);
         flag_force_render = (atoi(argv[4]) == GBP_TRUE);
     } else if(argc != 2)
-        SID_trap_error("Invalid number of arguments.", SID_ERROR_SYNTAX);
+        SID_exit_error("Invalid number of arguments.", SID_ERROR_SYNTAX);
 
     SID_log("Rendering script file {%s}...", SID_LOG_OPEN | SID_LOG_TIMER, filename_script);
 

@@ -16,7 +16,7 @@ int swap_endian_smooth(const char *filename_in_root, const char *filename_out_ro
 
     // Sanity check
     if(check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE) && check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE))
-        SID_trap_error("Invalid mode flag (%d) in swap_endian_catalogs_properties_local().", SID_ERROR_LOGIC, mode);
+        SID_exit_error("Invalid mode flag (%d) in swap_endian_catalogs_properties_local().", SID_ERROR_LOGIC, mode);
 
     // Set filenames
     char filename_in[SID_MAX_FILENAME_LENGTH];
@@ -85,7 +85,8 @@ int swap_endian_smooth(const char *filename_in_root, const char *filename_out_ro
 
     // Sanity check
     if(flag_type && n_files != 1)
-        SID_trap_error("Single file format dataset {%s} has n_files=%d (ie !=1) in its header.", SID_ERROR_LOGIC, filename_in, n_files);
+        SID_exit_error("Single file format dataset {%s} has n_files=%d (ie !=1) in its header.", SID_ERROR_LOGIC,
+                       filename_in, n_files);
 
     int i_file;
     for(i_file = 0; i_file < n_files; i_file++) {
@@ -122,9 +123,9 @@ int swap_endian_smooth(const char *filename_in_root, const char *filename_out_ro
             }
         }
         if((fp_in = fopen(filename_in, "r")) == NULL)
-            SID_trap_error("Could not open {%s} for reading.", SID_ERROR_IO_OPEN, filename_in);
+            SID_exit_error("Could not open {%s} for reading.", SID_ERROR_IO_OPEN, filename_in);
         if((fp_out = fopen(filename_out, "w")) == NULL)
-            SID_trap_error("Could not open {%s} for writing.", SID_ERROR_IO_OPEN, filename_out);
+            SID_exit_error("Could not open {%s} for writing.", SID_ERROR_IO_OPEN, filename_out);
 
         // Process the header
         fread_verify(&n_particles_file, sizeof(int), 1, fp_in);

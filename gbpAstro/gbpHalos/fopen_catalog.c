@@ -6,7 +6,8 @@ int fopen_nth_catalog_file(fp_catalog_info *fp_in, int n) {
     // Check that the file number makes sense
     // if(fp_in->n_files<(n+1))
     if(fp_in->n_files < n)
-        SID_trap_error("Invalid file number (%d) requested for catalog {%s;n_files=%d}.", n, fp_in->filename_properties_base, fp_in->n_files);
+        SID_exit_error("Invalid file number (%d) requested for catalog {%s;n_files=%d}.", n,
+                       fp_in->filename_properties_base, fp_in->n_files);
 
     // We can't just jump to the file we want.  We need to keep scaning through them so we know what absolute halo range the n'th file represents
     int i_file;
@@ -48,10 +49,9 @@ int fopen_nth_catalog_file(fp_catalog_info *fp_in, int n) {
                 sprintf(filename_properties, "%s", fp_in->filename_properties_root);
                 sprintf(filename_profiles, "%s", fp_in->filename_profiles_root);
             } else
-                SID_trap_error("Catalog file identified as non-multi-file {%s} has been accessed as multi-file {requested file=%d}.",
-                               SID_ERROR_LOGIC,
-                               fp_in->filename_properties_base,
-                               i_file);
+                SID_exit_error(
+                        "Catalog file identified as non-multi-file {%s} has been accessed as multi-file {requested file=%d}.",
+                        SID_ERROR_LOGIC, fp_in->filename_properties_base, i_file);
         }
 
         // Try to open properties file
@@ -66,8 +66,8 @@ int fopen_nth_catalog_file(fp_catalog_info *fp_in, int n) {
                 fread_verify(&(fp_in->n_halos_total), sizeof(int), 1, fp_in->fp_properties);
                 // Check that the file number in the file is correct
                 if(i_file != fp_in->i_file)
-                    SID_trap_error(
-                        "Invalid file number (ie. %d!=%d) in catalog {%s}.", SID_ERROR_LOGIC, i_file, fp_in->i_file, fp_in->filename_properties_root);
+                    SID_exit_error("Invalid file number (ie. %d!=%d) in catalog {%s}.", SID_ERROR_LOGIC, i_file,
+                                   fp_in->i_file, fp_in->filename_properties_root);
             }
         }
 
@@ -83,8 +83,8 @@ int fopen_nth_catalog_file(fp_catalog_info *fp_in, int n) {
                 fread_verify(&(fp_in->n_halos_total), sizeof(int), 1, fp_in->fp_profiles);
                 // Check that the file number in the file is correct
                 if(i_file != fp_in->i_file)
-                    SID_trap_error(
-                        "Invalid file number (ie. %d!=%d) in catalog {%s}.", SID_ERROR_LOGIC, i_file, fp_in->i_file, fp_in->filename_profiles_root);
+                    SID_exit_error("Invalid file number (ie. %d!=%d) in catalog {%s}.", SID_ERROR_LOGIC, i_file,
+                                   fp_in->i_file, fp_in->filename_profiles_root);
             }
         }
 
@@ -100,8 +100,8 @@ int fopen_nth_catalog_file(fp_catalog_info *fp_in, int n) {
     }
 
     if(r_val == GBP_TRUE)
-        SID_trap_error(
-            "Problem encountered opening file {%s/%s;file=%d}", SID_ERROR_LOGIC, fp_in->filename_properties_base, fp_in->filename_profiles_base, n);
+        SID_exit_error("Problem encountered opening file {%s/%s;file=%d}", SID_ERROR_LOGIC,
+                       fp_in->filename_properties_base, fp_in->filename_profiles_base, n);
 
     return (r_val);
 }
@@ -122,13 +122,16 @@ int fopen_catalog(char *filename_catalog_root, int snapshot_number, int mode, fp
     }
     if(check_mode_for_flag(mode, READ_CATALOG_SUBGROUPS)) {
         if(flag_read_groups)
-            SID_trap_error("You can't open both groups and subgroups at the same time in fopen_catalog().", SID_ERROR_LOGIC);
+            SID_exit_error("You can't open both groups and subgroups at the same time in fopen_catalog().",
+                           SID_ERROR_LOGIC);
         flag_read_groups    = GBP_FALSE;
         flag_read_subgroups = GBP_TRUE;
         sprintf(group_text_prefix, "sub");
     }
     if(!flag_read_groups && !flag_read_subgroups)
-        SID_trap_error("You must specify either READ_CATALOG_GROUPS or READ_CATALOG_SUBGROUPS in mode for fopen_catalog().", SID_ERROR_LOGIC);
+        SID_exit_error(
+                "You must specify either READ_CATALOG_GROUPS or READ_CATALOG_SUBGROUPS in mode for fopen_catalog().",
+                SID_ERROR_LOGIC);
 
     // Decide if we are reading properties
     if(check_mode_for_flag(mode, READ_CATALOG_PROPERTIES))
@@ -144,7 +147,7 @@ int fopen_catalog(char *filename_catalog_root, int snapshot_number, int mode, fp
 
     // Make sure we're reading something
     if(fp_out->flag_read_properties == GBP_FALSE && fp_out->flag_read_profiles == GBP_FALSE)
-        SID_trap_error("Neither properties nor profiles are selected for reading in fopen_catalog().", SID_ERROR_LOGIC);
+        SID_exit_error("Neither properties nor profiles are selected for reading in fopen_catalog().", SID_ERROR_LOGIC);
 
     // Set snapshot number
     fp_out->snap_num = snapshot_number;
@@ -174,11 +177,8 @@ int fopen_catalog(char *filename_catalog_root, int snapshot_number, int mode, fp
             fp_out->fp_properties = fopen(filename_properties, "r");
             if(fp_out->fp_properties == NULL) {
                 r_val = GBP_TRUE;
-                SID_trap_error("Could not open catalog {%s} snapshot #%03d {%s}.",
-                               SID_ERROR_IO_OPEN,
-                               filename_catalog_root,
-                               snapshot_number,
-                               filename_properties);
+                SID_exit_error("Could not open catalog {%s} snapshot #%03d {%s}.", SID_ERROR_IO_OPEN,
+                               filename_catalog_root, snapshot_number, filename_properties);
             }
             // ... we found a single file.  Set flags.
             else
@@ -209,7 +209,7 @@ int fopen_catalog(char *filename_catalog_root, int snapshot_number, int mode, fp
     fp_out->i_file        = 0;
     fp_out->i_halo        = 0;
     if((r_val2 = fopen_nth_catalog_file(fp_out, 0)))
-        SID_trap_error("Error opening catalog file.", SID_ERROR_IO_OPEN);
+        SID_exit_error("Error opening catalog file.", SID_ERROR_IO_OPEN);
     if(r_val2 > r_val)
         r_val = r_val2;
 

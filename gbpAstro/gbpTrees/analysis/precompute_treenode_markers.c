@@ -12,7 +12,9 @@
 void precompute_treenode_markers(tree_info *trees, int mode) {
     // Sanity check
     if(check_mode_for_flag(mode, PRECOMPUTE_TREENODE_MARKER_GROUPS) && check_mode_for_flag(mode, PRECOMPUTE_TREENODE_MARKER_SUBGROUPS))
-        SID_trap_error("Both group and subgroup mode flags are set when only one is allowed in precompute_treenode_markers().", SID_ERROR_LOGIC);
+        SID_exit_error(
+                "Both group and subgroup mode flags are set when only one is allowed in precompute_treenode_markers().",
+                SID_ERROR_LOGIC);
 
     // Initialize the marker array
     init_precompute_treenode_markers(trees, mode);
@@ -39,7 +41,9 @@ void precompute_treenode_markers(tree_info *trees, int mode) {
         markers             = trees->subgroup_markers;
         flag_process_groups = GBP_FALSE;
     } else
-        SID_trap_error("Neither group nor subgroup mode flags are set when only one is allowed in precompute_treenode_markers().", SID_ERROR_LOGIC);
+        SID_exit_error(
+                "Neither group nor subgroup mode flags are set when only one is allowed in precompute_treenode_markers().",
+                SID_ERROR_LOGIC);
 
     // Generate the markers starting recursively from each tree root
     SID_log("Generating %s markers...(%zd byte structue size)...", SID_LOG_OPEN | SID_LOG_TIMER, group_text, sizeof(tree_markers_info));

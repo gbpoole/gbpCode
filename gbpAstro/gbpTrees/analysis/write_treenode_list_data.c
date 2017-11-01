@@ -40,7 +40,7 @@ void write_treenode_list_data(tree_info *trees, const char *filename_out_root, t
     current                = list->data;
     while(current != NULL) {
         if(current->data_type != SID_INT && current->data_type != SID_DOUBLE)
-            SID_trap_error("Unsupported data type in write_treenode_list_data() (1).", SID_ERROR_LOGIC);
+            SID_exit_error("Unsupported data type in write_treenode_list_data() (1).", SID_ERROR_LOGIC);
         typ_data[i_data] = current->data_type;
         ptr_data[i_data] = current->data;
         i_data++;
@@ -104,7 +104,8 @@ void write_treenode_list_data(tree_info *trees, const char *filename_out_root, t
                             else if(typ_data[i_data] == SID_DOUBLE)
                                 fprintf(fp_props_out, " %11.4le", ((double *)(buffer[i_data]))[i_buffer]);
                             else
-                                SID_trap_error("Unsupported data type in write_treenode_list_data() (2).", SID_ERROR_LOGIC);
+                                SID_exit_error("Unsupported data type in write_treenode_list_data() (2).",
+                                               SID_ERROR_LOGIC);
                         }
                         fprintf(fp_props_out, "\n");
                     }

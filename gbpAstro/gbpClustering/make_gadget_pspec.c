@@ -316,7 +316,7 @@ void read_gadget_binary_local(char *filename_root_in, int snapshot_number, int i
                                 d_bar += fabs(d);
                                 break;
                             default:
-                                SID_trap_error("Invalid i_coord=%d in read_gadget()", SID_ERROR_LOGIC, i_coord);
+                                SID_exit_error("Invalid i_coord=%d in read_gadget()", SID_ERROR_LOGIC, i_coord);
                                 break;
                         }
                         if(x_test < 0)
@@ -367,13 +367,13 @@ void read_gadget_binary_local(char *filename_root_in, int snapshot_number, int i
         }
         SID_Allreduce(&n_particles_local, &n_particles_read, 1, SID_SIZE_T, SID_SUM, SID.COMM_WORLD);
         if(n_particles_read != n_particles_test)
-            SID_trap_error(
-                "Total particle counts don't make sense after read_gadget (ie. %zd!=%zd).", SID_ERROR_LOGIC, n_particles_read, n_particles_test);
+            SID_exit_error("Total particle counts don't make sense after read_gadget (ie. %zd!=%zd).", SID_ERROR_LOGIC,
+                           n_particles_read, n_particles_test);
         for(i_type = 0; i_type < N_GADGET_TYPE; i_type++) {
             SID_Allreduce(&(n_of_type_local[i_type]), &(n_of_type[i_type]), 1, SID_SIZE_T, SID_SUM, SID.COMM_WORLD);
             if(n_of_type[i_type] != n_all[i_type])
-                SID_trap_error(
-                    "Particle counts don't make sense after read_gadget (ie. %zd!=%zd).", SID_ERROR_LOGIC, n_of_type[i_type], n_all[i_type]);
+                SID_exit_error("Particle counts don't make sense after read_gadget (ie. %zd!=%zd).", SID_ERROR_LOGIC,
+                               n_of_type[i_type], n_all[i_type]);
         }
 
         // Store results
@@ -465,7 +465,7 @@ int main(int argc, char *argv[]) {
         else if(!strcmp(argv[6], "d20") || !strcmp(argv[6], "D20"))
             distribution_scheme = MAP2GRID_DIST_DWT20;
         else
-            SID_trap_error("Invalid distribution scheme {%s} specified.", SID_ERROR_SYNTAX, argv[6]);
+            SID_exit_error("Invalid distribution scheme {%s} specified.", SID_ERROR_SYNTAX, argv[6]);
     }
     SID_log("Processing the power spectra of {%s}, snapshot #%d...", SID_LOG_OPEN | SID_LOG_TIMER, filename_in_root, snapshot_number);
 

@@ -24,7 +24,7 @@ void calc_mean_global(void *data_local, void *result, size_t n_data_local, SID_D
         else if(type == SID_SIZE_T)
             ((size_t *)result)[0] = 0;
         else
-            SID_trap_error("Unknown variable type in calc_min", SID_ERROR_LOGIC);
+            SID_exit_error("Unknown variable type in calc_min", SID_ERROR_LOGIC);
     } else {
         calc_sum_global(data_local, &temp, n_data_local, type, CALC_MODE_RETURN_DOUBLE | flag_abs, comm);
         temp /= (double)n_data;

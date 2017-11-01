@@ -41,7 +41,7 @@ int calc_histogram_index(hist_info *hist, double x) {
                 break;
         }
     } else
-        SID_trap_error("Invalid mode (%d) specified in clear_histogram().", SID_ERROR_LOGIC, hist->mode);
+        SID_exit_error("Invalid mode (%d) specified in clear_histogram().", SID_ERROR_LOGIC, hist->mode);
 
     return (r_val);
 }

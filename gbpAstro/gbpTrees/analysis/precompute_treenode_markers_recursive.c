@@ -127,7 +127,8 @@ void precompute_treenode_markers_recursive(tree_info *         trees,
 
             // Sanity check
             if(flag_is_a_merger && !flag_has_a_primary)
-                SID_trap_error("A halo has been found to have a merger but a primary has not been marked.", SID_ERROR_LOGIC);
+                SID_exit_error("A halo has been found to have a merger but a primary has not been marked.",
+                               SID_ERROR_LOGIC);
 
             // Set formation pointers
             find_treenode_formation(trees, halo, 0.5, &(markers_halo->half_peak_mass));

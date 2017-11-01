@@ -441,7 +441,7 @@ int main(int argc, char *argv[]) {
                 if(i_particle == subgroup_size[j_subgroup])
                     fwrite(particle_buffer, id_byte_size, i_particle, fp_out_particles);
                 else
-                    SID_trap_error("Subgroup size mismatch!", SID_ERROR_LOGIC);
+                    SID_exit_error("Subgroup size mismatch!", SID_ERROR_LOGIC);
             }
 
             SID_free((void **)&subgroup_size_list_index);

@@ -157,7 +157,7 @@ void process_local(tree_info *           trees,
     }
     // Sanity check
     else
-        SID_trap_error("Invalid mode passed to process_local.", SID_ERROR_LOGIC);
+        SID_exit_error("Invalid mode passed to process_local.", SID_ERROR_LOGIC);
 }
 
 int main(int argc, char *argv[]) {
@@ -184,7 +184,7 @@ int main(int argc, char *argv[]) {
 
     // Fetch user inputs
     if(argc != 12)
-        SID_trap_error("Invalid Syntax.", SID_ERROR_SYNTAX);
+        SID_exit_error("Invalid Syntax.", SID_ERROR_SYNTAX);
     char filename_SSimPL_root[SID_MAX_FILENAME_LENGTH];
     char filename_halos_root[SID_MAX_FILENAME_LENGTH];
     char filename_trees_root[SID_MAX_FILENAME_LENGTH];

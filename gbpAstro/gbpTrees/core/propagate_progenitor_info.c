@@ -27,7 +27,8 @@ void propagate_progenitor_info(int *        n_groups,
 
     // Sanity check
     if(n_wrap <= (2 * n_search + 1))
-        SID_trap_error("n_skip is not large enough in propagate_progenitor_info() (ie. %d<=%d)", SID_ERROR_LOGIC, n_wrap, (2 * n_search + 1));
+        SID_exit_error("n_skip is not large enough in propagate_progenitor_info() (ie. %d<=%d)", SID_ERROR_LOGIC,
+                       n_wrap, (2 * n_search + 1));
 
     // Allocate new data structures for propagating information
     tree_horizontal_extended_info **subgroups_read;
@@ -82,15 +83,13 @@ void propagate_progenitor_info(int *        n_groups,
 
             // Sanity checks
             if(n_groups_in != n_groups[l_read])
-                SID_trap_error("n_groups!=what it should be (ie.%d!=%d).  This might be a problem with the snapshot indexing.",
-                               SID_ERROR_LOGIC,
-                               n_groups_in,
-                               n_groups[l_read]);
+                SID_exit_error(
+                        "n_groups!=what it should be (ie.%d!=%d).  This might be a problem with the snapshot indexing.",
+                        SID_ERROR_LOGIC, n_groups_in, n_groups[l_read]);
             if(n_subgroups_in != n_subgroups[l_read])
-                SID_trap_error("n_subgroups!=what it should be (ie.%d!=%d).  This might be a problem with the snapshot indexing.",
-                               SID_ERROR_LOGIC,
-                               n_subgroups_in,
-                               n_subgroups[l_read]);
+                SID_exit_error(
+                        "n_subgroups!=what it should be (ie.%d!=%d).  This might be a problem with the snapshot indexing.",
+                        SID_ERROR_LOGIC, n_subgroups_in, n_subgroups[l_read]);
         }
 
         // Wait until we've loaded n_search+1 snapshots

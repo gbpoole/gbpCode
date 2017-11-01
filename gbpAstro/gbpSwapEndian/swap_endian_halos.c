@@ -20,7 +20,7 @@ void swap_endian_halos_groups_local(const char *filename_in_root,
 
     // Sanity check
     if(check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE) && check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE))
-        SID_trap_error("Invalid mode flag (%d) in swap_endian_halos_groups_local().", SID_ERROR_LOGIC, mode);
+        SID_exit_error("Invalid mode flag (%d) in swap_endian_halos_groups_local().", SID_ERROR_LOGIC, mode);
 
     // Set filenames
     char filename_in[SID_MAX_FILENAME_LENGTH];
@@ -32,9 +32,9 @@ void swap_endian_halos_groups_local(const char *filename_in_root,
     FILE *fp_in  = NULL;
     FILE *fp_out = NULL;
     if((fp_in = fopen(filename_in, "r")) == NULL)
-        SID_trap_error("Could not open {%s} for reading.", SID_ERROR_IO_OPEN, filename_in);
+        SID_exit_error("Could not open {%s} for reading.", SID_ERROR_IO_OPEN, filename_in);
     if((fp_out = fopen(filename_out, "w")) == NULL)
-        SID_trap_error("Could not open {%s} for writing.", SID_ERROR_IO_OPEN, filename_out);
+        SID_exit_error("Could not open {%s} for writing.", SID_ERROR_IO_OPEN, filename_out);
 
     // Read the needed header information and rewind
     int n_groups;
@@ -83,7 +83,7 @@ void swap_endian_halos_subgroups_local(const char *filename_in_root,
 
     // Sanity check
     if(check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE) && check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE))
-        SID_trap_error("Invalid mode flag (%d) in swap_endian_halos_subgroups_local().", SID_ERROR_LOGIC, mode);
+        SID_exit_error("Invalid mode flag (%d) in swap_endian_halos_subgroups_local().", SID_ERROR_LOGIC, mode);
 
     // Set filenames
     char filename_in[SID_MAX_FILENAME_LENGTH];
@@ -95,9 +95,9 @@ void swap_endian_halos_subgroups_local(const char *filename_in_root,
     FILE *fp_in  = NULL;
     FILE *fp_out = NULL;
     if((fp_in = fopen(filename_in, "r")) == NULL)
-        SID_trap_error("Could not open {%s} for reading.", SID_ERROR_IO_OPEN, filename_in);
+        SID_exit_error("Could not open {%s} for reading.", SID_ERROR_IO_OPEN, filename_in);
     if((fp_out = fopen(filename_out, "w")) == NULL)
-        SID_trap_error("Could not open {%s} for writing.", SID_ERROR_IO_OPEN, filename_out);
+        SID_exit_error("Could not open {%s} for writing.", SID_ERROR_IO_OPEN, filename_out);
 
     // Read the needed header information and rewind
     int n_subgroups;
@@ -146,7 +146,7 @@ void swap_endian_halos_particles_local(const char *filename_in_root,
 
     // Sanity check
     if(check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE) && check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE))
-        SID_trap_error("Invalid mode flag (%d) in swap_endian_halos_particles_local().", SID_ERROR_LOGIC, mode);
+        SID_exit_error("Invalid mode flag (%d) in swap_endian_halos_particles_local().", SID_ERROR_LOGIC, mode);
 
     // Set filenames
     char filename_in[SID_MAX_FILENAME_LENGTH];
@@ -158,9 +158,9 @@ void swap_endian_halos_particles_local(const char *filename_in_root,
     FILE *fp_in  = NULL;
     FILE *fp_out = NULL;
     if((fp_in = fopen(filename_in, "r")) == NULL)
-        SID_trap_error("Could not open {%s} for reading.", SID_ERROR_IO_OPEN, filename_in);
+        SID_exit_error("Could not open {%s} for reading.", SID_ERROR_IO_OPEN, filename_in);
     if((fp_out = fopen(filename_out, "w")) == NULL)
-        SID_trap_error("Could not open {%s} for writing.", SID_ERROR_IO_OPEN, filename_out);
+        SID_exit_error("Could not open {%s} for writing.", SID_ERROR_IO_OPEN, filename_out);
 
     // Read the needed header information and rewind
     int       particle_size_bytes;
@@ -181,7 +181,7 @@ void swap_endian_halos_particles_local(const char *filename_in_root,
             swap_endian((char *)(&n_particles_long_long), 1, sizeof(long long));
         n_particles = (size_t)n_particles_long_long;
     } else
-        SID_trap_error("Invalid particle ID size (%d) in {%s}.", SID_ERROR_LOGIC, particle_size_bytes, filename_in);
+        SID_exit_error("Invalid particle ID size (%d) in {%s}.", SID_ERROR_LOGIC, particle_size_bytes, filename_in);
     rewind(fp_in);
 
     // Create a read buffer

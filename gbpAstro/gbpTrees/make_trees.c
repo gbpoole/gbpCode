@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
     // Fetch user inputs
     double box_size;
     if(argc != 11)
-        SID_trap_error("Incorrect syntax", SID_ERROR_SYNTAX);
+        SID_exit_error("Incorrect syntax", SID_ERROR_SYNTAX);
     strcpy(filename_SSimPL_dir, argv[1]);
     strcpy(filename_halo_version_root, argv[2]);
     strcpy(filename_trees_name, argv[3]);

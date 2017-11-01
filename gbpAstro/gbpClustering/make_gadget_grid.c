@@ -357,13 +357,13 @@ void read_gadget_binary_local(char *      filename_root_in,
         }
         SID_Allreduce(&n_particles_local, &n_particles_read, 1, SID_SIZE_T, SID_SUM, SID.COMM_WORLD);
         if(n_particles_read != n_particles_test && n_load == 1)
-            SID_trap_error(
-                "Total particle counts don't make sense after read_gadget (ie. %zd!=%zd).", SID_ERROR_LOGIC, n_particles_read, n_particles_test);
+            SID_exit_error("Total particle counts don't make sense after read_gadget (ie. %zd!=%zd).", SID_ERROR_LOGIC,
+                           n_particles_read, n_particles_test);
         for(i_type = 0; i_type < N_GADGET_TYPE; i_type++) {
             SID_Allreduce(&(n_of_type_local[i_type]), &(n_of_type[i_type]), 1, SID_SIZE_T, SID_SUM, SID.COMM_WORLD);
             if(n_of_type[i_type] != n_all[i_type] && n_load == 1)
-                SID_trap_error(
-                    "Particle counts don't make sense after read_gadget (ie. %zd!=%zd).", SID_ERROR_LOGIC, n_of_type[i_type], n_all[i_type]);
+                SID_exit_error("Particle counts don't make sense after read_gadget (ie. %zd!=%zd).", SID_ERROR_LOGIC,
+                               n_of_type[i_type], n_all[i_type]);
         }
 
         // Store results
@@ -462,7 +462,7 @@ int main(int argc, char *argv[]) {
     else if(!strcmp(argv[5], "d20") || !strcmp(argv[5], "D20"))
         distribution_scheme = MAP2GRID_DIST_DWT20;
     else
-        SID_trap_error("Invalid distribution scheme {%s} specified.", SID_ERROR_SYNTAX, argv[5]);
+        SID_exit_error("Invalid distribution scheme {%s} specified.", SID_ERROR_SYNTAX, argv[5]);
 
     SID_log("Smoothing Gadget file {%s;snapshot=#%d} to a %dx%dx%d grid with %s kernel...",
             SID_LOG_OPEN | SID_LOG_TIMER,
@@ -496,7 +496,8 @@ int main(int argc, char *argv[]) {
             fread_verify(&block_length_close, sizeof(int), 1, fp_in);
             fclose(fp_in);
             if(block_length_open != block_length_close)
-                SID_trap_error("Block lengths don't match (ie. %d!=%d).", SID_ERROR_LOGIC, block_length_open, block_length_close);
+                SID_exit_error("Block lengths don't match (ie. %d!=%d).", SID_ERROR_LOGIC, block_length_open,
+                               block_length_close);
         }
         SID_Bcast(&header, sizeof(gadget_header_info), SID_CHAR, SID.COMM_WORLD, SID_MASTER_RANK);
         redshift = header.redshift;

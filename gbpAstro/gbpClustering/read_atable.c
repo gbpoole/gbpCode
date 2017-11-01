@@ -38,14 +38,14 @@ void read_atable(const char *filename_in,
     int        PHK_width;
     slab_info *slab;
     if(check_mode_for_flag(mode, READ_GROUPING_SLAB) && check_mode_for_flag(mode, READ_GROUPING_PHK))
-        SID_trap_error("Multiple domain decompositions have been set in read_atable().", SID_ERROR_LOGIC);
+        SID_exit_error("Multiple domain decompositions have been set in read_atable().", SID_ERROR_LOGIC);
     if(check_mode_for_flag(mode, READ_GROUPING_SLAB))
         slab = (slab_info *)va_arg(vargs, slab_info *);
     else if(check_mode_for_flag(mode, READ_GROUPING_PHK)) {
         n_bits_PHK = (int)va_arg(vargs, int);
         PHK_width  = (int)va_arg(vargs, int);
     } else
-        SID_trap_error("No domain decomposition has been set in read_atable().", SID_ERROR_LOGIC);
+        SID_exit_error("No domain decomposition has been set in read_atable().", SID_ERROR_LOGIC);
     box_size = (double)va_arg(vargs, double);
 
     // ... redshift space? ...
@@ -59,7 +59,7 @@ void read_atable(const char *filename_in,
     flag_add_zspace_z = check_mode_for_flag(mode, READ_GROUPING_ADD_VZ);
     n_z_dims          = flag_add_zspace_x + flag_add_zspace_y + flag_add_zspace_z;
     if(n_z_dims > 1)
-        SID_trap_error("More then one redshift-space dimension (%d) has been specified.", SID_ERROR_LOGIC, n_z_dims);
+        SID_exit_error("More then one redshift-space dimension (%d) has been specified.", SID_ERROR_LOGIC, n_z_dims);
     else if(n_z_dims == 1) {
         flag_add_zspace = GBP_TRUE;
         redshift        = va_arg(vargs, double);
@@ -203,7 +203,7 @@ void read_atable(const char *filename_in,
             SID_Allreduce(SID_IN_PLACE, &flag_test, 1, SID_INT, SID_SUM, SID.COMM_WORLD);
             if(flag_test != 1) {
                 fprintf(stderr, "[%03d] %le %le %le\n", SID.My_rank, x_in, slab->x_min_local, slab->x_max_local);
-                SID_trap_error("Read error.", SID_ERROR_LOGIC);
+                SID_exit_error("Read error.", SID_ERROR_LOGIC);
             }
         }
     } else if(check_mode_for_flag(mode, READ_GROUPING_PHK)) {
@@ -263,7 +263,8 @@ void read_atable(const char *filename_in,
 
             // Sanity check
             if(j_halo != n_halos_allocate)
-                SID_trap_error("The full allocation of halos was not read (ie. %zd!=%zd).", SID_ERROR_LOGIC, j_halo, n_halos_allocate);
+                SID_exit_error("The full allocation of halos was not read (ie. %zd!=%zd).", SID_ERROR_LOGIC, j_halo,
+                               n_halos_allocate);
 
             // Perform a global sort of the keys.  PHK_halo_rank will be the
             //   index *globally* of a given key.  We will use this index to
@@ -359,10 +360,9 @@ void read_atable(const char *filename_in,
                         // Sanity check
                         SID_Allreduce(&flag_found_target, &flag_check, 1, SID_INT, SID_SUM, SID.COMM_WORLD);
                         if(flag_check != 1)
-                            SID_trap_error("The desired halo (%zd) was found by %d processes during the PHK domain decomposition.",
-                                           SID_ERROR_LOGIC,
-                                           i_halo_target,
-                                           flag_check);
+                            SID_exit_error(
+                                    "The desired halo (%zd) was found by %d processes during the PHK domain decomposition.",
+                                    SID_ERROR_LOGIC, i_halo_target, flag_check);
 
                         // Determine the global index of the last halo that has the same key as the target.
                         size_t i_halo_highest = 0;
@@ -422,10 +422,9 @@ void read_atable(const char *filename_in,
         size_t n_halos_allocate_check;
         SID_Allreduce(&n_halos_allocate, &n_halos_allocate_check, 1, SID_SIZE_T, SID_SUM, SID.COMM_WORLD);
         if(n_halos_allocate_check != n_halos)
-            SID_trap_error("The correct number of halos was not allocated (ie. %lld!=%lld).  There must be a coordinate/box size problem.",
-                           SID_ERROR_LOGIC,
-                           n_halos_allocate_check,
-                           n_halos);
+            SID_exit_error(
+                    "The correct number of halos was not allocated (ie. %lld!=%lld).  There must be a coordinate/box size problem.",
+                    SID_ERROR_LOGIC, n_halos_allocate_check, n_halos);
 
         // Ok, each core now knows it's key range and the number of halos it's going to read. Allocate RAM ...
         x_halos    = (GBPREAL *)SID_malloc(sizeof(GBPREAL) * n_halos_allocate);
@@ -475,7 +474,8 @@ void read_atable(const char *filename_in,
             flag_test = 0;
             if(PHK_i >= (PHK_t)PHK_min_local && PHK_i <= (PHK_t)PHK_max_local) {
                 if(n_halos_local >= n_halos_allocate)
-                    SID_trap_error("Trying to read past storage allocation in PHK domain decomposition.", SID_ERROR_LOGIC);
+                    SID_exit_error("Trying to read past storage allocation in PHK domain decomposition.",
+                                   SID_ERROR_LOGIC);
                 if(is_a_member(&PHK_i, keys_boundary, n_keys_boundary, SID_PHK_T))
                     n_boundary++;
                 else
@@ -486,17 +486,15 @@ void read_atable(const char *filename_in,
             SID_Allreduce(SID_IN_PLACE, &flag_test, 1, SID_INT, SID_SUM, SID.COMM_WORLD);
             if(flag_test != 1) {
                 fprintf(stderr, "[%03d] %d %d %d\n", SID.My_rank, (int)PHK_i, PHK_min_local, PHK_max_local);
-                SID_trap_error("Read error.", SID_ERROR_LOGIC);
+                SID_exit_error("Read error.", SID_ERROR_LOGIC);
             }
         }
         rewind(fp_in);
 
         // Sanity check
         if(n_halos_local != n_halos_allocate)
-            SID_trap_error("The number of halos counted does not correspond to what was allocated (ie. %zd!=%zd).",
-                           SID_ERROR_LOGIC,
-                           n_halos_local,
-                           n_halos_allocate);
+            SID_exit_error("The number of halos counted does not correspond to what was allocated (ie. %zd!=%zd).",
+                           SID_ERROR_LOGIC, n_halos_local, n_halos_allocate);
 
         // Report decomposition results
         if(SID.n_proc > 1) {
@@ -559,7 +557,8 @@ void read_atable(const char *filename_in,
             if(PHK_i >= (PHK_t)PHK_min_local && PHK_i <= (PHK_t)PHK_max_local) {
                 size_t i_store;
                 if(n_halos_local >= n_halos_allocate)
-                    SID_trap_error("Trying to read past storage allocation in PHK doain decomposition.", SID_ERROR_LOGIC);
+                    SID_exit_error("Trying to read past storage allocation in PHK doain decomposition.",
+                                   SID_ERROR_LOGIC);
                 if(is_a_member(&PHK_i, keys_boundary, n_keys_boundary, SID_PHK_T))
                     i_store = i_boundary++;
                 else
@@ -598,10 +597,8 @@ void read_atable(const char *filename_in,
 
         // Sanity check
         if(n_halos_local != n_halos_allocate)
-            SID_trap_error("The number of halos read does not correspond to what was allocated (ie. %zd!=%zd).",
-                           SID_ERROR_LOGIC,
-                           n_halos_local,
-                           n_halos_allocate);
+            SID_exit_error("The number of halos read does not correspond to what was allocated (ie. %zd!=%zd).",
+                           SID_ERROR_LOGIC, n_halos_local, n_halos_allocate);
 
         // Sort the local PHKs
         size_t *PHK_index;
@@ -631,10 +628,9 @@ void read_atable(const char *filename_in,
     size_t n_halos_read;
     SID_Allreduce(&n_halos_local, &n_halos_read, 1, SID_SIZE_T, SID_SUM, SID.COMM_WORLD);
     if(n_halos_read != n_halos)
-        SID_trap_error("The correct number of halos was not read (ie. %lld!=%lld).  There must be a coordinate/box size problem.",
-                       SID_ERROR_LOGIC,
-                       n_halos_read,
-                       n_halos);
+        SID_exit_error(
+                "The correct number of halos was not read (ie. %lld!=%lld).  There must be a coordinate/box size problem.",
+                SID_ERROR_LOGIC, n_halos_read, n_halos);
     SID_Allreduce(SID_IN_PLACE, &x_min, 1, SID_REAL, SID_MIN, SID.COMM_WORLD);
     SID_Allreduce(SID_IN_PLACE, &x_max, 1, SID_REAL, SID_MAX, SID.COMM_WORLD);
     SID_Allreduce(SID_IN_PLACE, &y_min, 1, SID_REAL, SID_MIN, SID.COMM_WORLD);

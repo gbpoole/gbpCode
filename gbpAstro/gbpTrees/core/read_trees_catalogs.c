@@ -151,11 +151,8 @@ void read_trees_catalogs(tree_info *trees, int mode) {
                     current = current->next_neighbour;
                 }
                 if(n_list_local != n_halos)
-                    SID_trap_error("Count mismatch for %sgroups in read_trees_properties() (ie. %d!=%d)",
-                                   SID_ERROR_LOGIC,
-                                   group_text_prefix,
-                                   n_list_local,
-                                   n_halos);
+                    SID_exit_error("Count mismatch for %sgroups in read_trees_properties() (ie. %d!=%d)",
+                                   SID_ERROR_LOGIC, group_text_prefix, n_list_local, n_halos);
                 merge_sort(file_idx_list_local, (size_t)n_list_local, &file_idx_list_local_index, SID_INT, SORT_COMPUTE_INDEX, GBP_FALSE);
 
                 // Set filenames and open files
@@ -213,16 +210,12 @@ void read_trees_catalogs(tree_info *trees, int mode) {
 
                 // Check that everything was read properly
                 if(l_read != n_list_local)
-                    SID_trap_error(
-                        "An incorrect number of matches were read (ie. %d!=%d) for snaphot %d", SID_ERROR_LOGIC, l_read, n_list_local, i_read);
+                    SID_exit_error("An incorrect number of matches were read (ie. %d!=%d) for snaphot %d",
+                                   SID_ERROR_LOGIC, l_read, n_list_local, i_read);
                 for(i_neighbour = 0; i_neighbour < n_halos; i_neighbour++)
                     if(list_init_local[i_neighbour] != 1 && list_init_local[i_neighbour] >= 0)
-                        SID_trap_error("Neighbour %d of %d was not processed correctly (init=%d) for snapshot %d.",
-                                       SID_ERROR_LOGIC,
-                                       i_neighbour,
-                                       n_halos,
-                                       list_init_local[i_neighbour],
-                                       i_read);
+                        SID_exit_error("Neighbour %d of %d was not processed correctly (init=%d) for snapshot %d.",
+                                       SID_ERROR_LOGIC, i_neighbour, n_halos, list_init_local[i_neighbour], i_read);
 
                 // Clean-up
                 fclose_catalog(&fp_properties);

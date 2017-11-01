@@ -21,7 +21,8 @@ int main(int argc, char *argv[]) {
     snap_step  = atoi(argv[4]);
     tree_type  = atoi(argv[5]);
     if(tree_type < 0 || tree_type > 1)
-        SID_trap_error("Invalid tree_type (%d) selected.  It must be 0 (for normal trees) or 1 (for ghost trees).", SID_ERROR_LOGIC, tree_type);
+        SID_exit_error("Invalid tree_type (%d) selected.  It must be 0 (for normal trees) or 1 (for ghost trees).",
+                       SID_ERROR_LOGIC, tree_type);
 
     // Build ghost-halo version of horizontal tree files
     SID_log("Validating ghost trees...", SID_LOG_OPEN | SID_LOG_TIMER);
@@ -53,7 +54,7 @@ int main(int argc, char *argv[]) {
             int n_file_group_ghosts;
             sprintf(filename, "%s/horizontal/ghost_catalogs/ghosts_%03d.catalog_subgroups_properties", filename_root, snap_i);
             if((fp_in = fopen(filename, "r")) == NULL)
-                SID_trap_error("Could not open file {%s}", SID_ERROR_IO_OPEN, filename);
+                SID_exit_error("Could not open file {%s}", SID_ERROR_IO_OPEN, filename);
             fread_verify(&i_file_group_ghosts, sizeof(int), 1, fp_in);
             fread_verify(&n_file_group_ghosts, sizeof(int), 1, fp_in);
             fread_verify(&n_group_ghosts, sizeof(int), 1, fp_in);
@@ -64,7 +65,7 @@ int main(int argc, char *argv[]) {
             int n_file_subgroup_ghosts;
             sprintf(filename, "%s/horizontal/ghost_catalogs/ghosts_%03d.catalog_groups_properties", filename_root, snap_i);
             if((fp_in = fopen(filename, "r")) == NULL)
-                SID_trap_error("Could not open file {%s}", SID_ERROR_IO_OPEN, filename);
+                SID_exit_error("Could not open file {%s}", SID_ERROR_IO_OPEN, filename);
             fread_verify(&i_file_subgroup_ghosts, sizeof(int), 1, fp_in);
             fread_verify(&n_file_subgroup_ghosts, sizeof(int), 1, fp_in);
             fread_verify(&n_subgroup_ghosts, sizeof(int), 1, fp_in);
@@ -77,7 +78,7 @@ int main(int argc, char *argv[]) {
         else
             sprintf(filename, "%s/horizontal/trees/horizontal_trees_%03d.dat", filename_root, snap_i);
         if((fp_in = fopen(filename, "r")) == NULL)
-            SID_trap_error("Could not open file {%s}", SID_ERROR_IO_OPEN, filename);
+            SID_exit_error("Could not open file {%s}", SID_ERROR_IO_OPEN, filename);
 
         // Read tree header
         int n_step;
@@ -169,7 +170,7 @@ int main(int argc, char *argv[]) {
             int j_subgroup;
             for(j_subgroup = 0; j_subgroup < n_subgroups_group; i_subgroup++, j_subgroup++) {
                 if(i_subgroup >= n_subgroups)
-                    SID_trap_error("subgroup count exceeded at i_group=%d of %d", SID_ERROR_LOGIC, i_group, n_groups);
+                    SID_exit_error("subgroup count exceeded at i_group=%d of %d", SID_ERROR_LOGIC, i_group, n_groups);
 
                 // Read subgroups
                 int subgroup_id;

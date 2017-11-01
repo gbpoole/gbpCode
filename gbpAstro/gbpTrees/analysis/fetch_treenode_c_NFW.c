@@ -28,7 +28,8 @@ double fetch_treenode_c_NFW(tree_info *trees, tree_node_info *halo) {
         if(c_NFW_snap != NULL)
             c_NFW_halo = c_NFW_snap[fetch_treenode_file_index(trees, halo)];
         else
-            SID_trap_error("NFW concentrations have not been read for snapshot %d.", trees->snap_list[fetch_treenode_snap_tree(trees, halo)]);
+            SID_exit_error("NFW concentrations have not been read for snapshot %d.",
+                           trees->snap_list[fetch_treenode_snap_tree(trees, halo)]);
     }
     return ((double)c_NFW_halo);
 }

@@ -19,7 +19,7 @@ void read_trees_run_parameters(const char *filename_root_in,
     char  filename_in[SID_MAX_FILENAME_LENGTH];
     sprintf(filename_in, "%s/run_parameters.txt", filename_root_in);
     if((fp_in = fopen(filename_in, "r")) == NULL)
-        SID_trap_error("Could not open file {%s}", SID_ERROR_IO_OPEN, filename_in);
+        SID_exit_error("Could not open file {%s}", SID_ERROR_IO_OPEN, filename_in);
 
     // Read file
     char * line        = NULL;
@@ -36,43 +36,43 @@ void read_trees_run_parameters(const char *filename_root_in,
                 if(!strcmp(variable, "#snapshot_start"))
                     (*i_read_start) = value;
                 else
-                    SID_trap_error("Invalid run_parameters.txt file.", SID_ERROR_LOGIC);
+                    SID_exit_error("Invalid run_parameters.txt file.", SID_ERROR_LOGIC);
                 break;
             case 1:
                 if(!strcmp(variable, "#snapshot_stop"))
                     (*i_read_stop) = value;
                 else
-                    SID_trap_error("Invalid run_parameters.txt file.", SID_ERROR_LOGIC);
+                    SID_exit_error("Invalid run_parameters.txt file.", SID_ERROR_LOGIC);
                 break;
             case 2:
                 if(!strcmp(variable, "#snapshot_step"))
                     (*i_read_step) = value;
                 else
-                    SID_trap_error("Invalid run_parameters.txt file.", SID_ERROR_LOGIC);
+                    SID_exit_error("Invalid run_parameters.txt file.", SID_ERROR_LOGIC);
                 break;
             case 3:
                 if(!strcmp(variable, "#tree_scan_range"))
                     (*n_search) = value;
                 else
-                    SID_trap_error("Invalid run_parameters.txt file.", SID_ERROR_LOGIC);
+                    SID_exit_error("Invalid run_parameters.txt file.", SID_ERROR_LOGIC);
                 break;
             case 4:
                 if(!strcmp(variable, "#flag_fix_bridges"))
                     (*flag_fix_bridges) = value;
                 else
-                    SID_trap_error("Invalid run_parameters.txt file.", SID_ERROR_LOGIC);
+                    SID_exit_error("Invalid run_parameters.txt file.", SID_ERROR_LOGIC);
                 break;
             case 5:
                 if(!strcmp(variable, "#flag_compute_fragmented"))
                     (*flag_compute_fragmented) = value;
                 else
-                    SID_trap_error("Invalid run_parameters.txt file.", SID_ERROR_LOGIC);
+                    SID_exit_error("Invalid run_parameters.txt file.", SID_ERROR_LOGIC);
                 break;
             case 6:
                 if(!strcmp(variable, "#flag_compute_ghosts"))
                     (*flag_compute_ghosts) = value;
                 else
-                    SID_trap_error("Invalid run_parameters.txt file.", SID_ERROR_LOGIC);
+                    SID_exit_error("Invalid run_parameters.txt file.", SID_ERROR_LOGIC);
                 break;
         }
     }

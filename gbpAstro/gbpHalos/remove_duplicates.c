@@ -100,7 +100,8 @@ void read_duplicates_file_local(const char *filename_in,
             if(index_test >= 0 && index_test < n_groups_local) {
                 (*n_duplicates_added_local)++;
                 if(index_duplicate_added_from < 0 || index_duplicate_added_from >= size_group[index_test])
-                    SID_trap_error("Duplicate No. %d's origin index is out of the specified group's index range.", SID_ERROR_LOGIC, i_duplicate);
+                    SID_exit_error("Duplicate No. %d's origin index is out of the specified group's index range.",
+                                   SID_ERROR_LOGIC, i_duplicate);
                 index_duplicate_added_from += offset_group[index_test];
                 (*id_duplicate_added)[i_duplicate] = id_list_local[index_duplicate_added_from];
             }
@@ -110,7 +111,8 @@ void read_duplicates_file_local(const char *filename_in,
                 int i_group;
                 int i_subgroup;
                 if((*index_duplicate_added_to)[i_duplicate] < 0 || (*index_duplicate_added_to)[i_duplicate] > size_group[index_test])
-                    SID_trap_error("Duplicate No. %d's destination index is out of the specified group's index range.", SID_ERROR_LOGIC, i_duplicate);
+                    SID_exit_error("Duplicate No. %d's destination index is out of the specified group's index range.",
+                                   SID_ERROR_LOGIC, i_duplicate);
                 (*index_duplicate_added_to)[i_duplicate] += offset_group[index_test]; // Temporarily place things in the local ID list frame
                 for(i_group = 0, i_subgroup = 0; i_group < index_test; i_group++)
                     i_subgroup += n_subgroups_group[i_group];
@@ -211,8 +213,9 @@ void inject_duplicates_local(plist_info *plist,
                 int index_j;
                 index_j = subgroup_duplicate_added_to[i_duplicate];
                 if(index_j < 0 || index_j >= n_subgroups_local)
-                    SID_trap_error(
-                        "The subgroup that duplicate No. %d is supposed to be added to is on the wrong rank.", SID_ERROR_SYNTAX, i_duplicate);
+                    SID_exit_error(
+                            "The subgroup that duplicate No. %d is supposed to be added to is on the wrong rank.",
+                            SID_ERROR_SYNTAX, i_duplicate);
                 for(i_subgroup = (index_j + 1); i_subgroup < n_subgroups_local; i_subgroup++)
                     offset_subgroup[i_subgroup]++;
                 size_subgroup[index_j]++;
@@ -230,7 +233,7 @@ void inject_duplicates_local(plist_info *plist,
             for(i_particle = n_particles_local; i_particle > index_k && i_particle > 0; i_particle--)
                 id_list_local[i_particle] = id_list_local[i_particle - 1];
             if(i_particle != index_k)
-                SID_trap_error("Could not find the index needed to inject a duplicate.", SID_ERROR_LOGIC);
+                SID_exit_error("Could not find the index needed to inject a duplicate.", SID_ERROR_LOGIC);
             id_list_local[i_particle] = id_duplicate_added[i_duplicate];
             n_particles_local++;
         }
@@ -441,10 +444,9 @@ void construct_duplicate_list_local(plist_info *plist,
                         id_duplicates_local[n_duplicates_local]    = id_last;
                         index_duplicates_local[n_duplicates_local] = index_last;
                         if(index_duplicates_local[n_duplicates_local] >= n_particles_local)
-                            SID_trap_error("Invalid local duplicate index (1) (%lld; n_particles_local=%lld) in construct_duplicate_list().",
-                                           SID_ERROR_LOGIC,
-                                           index_duplicates_local[n_duplicates_local],
-                                           n_particles_local);
+                            SID_exit_error(
+                                    "Invalid local duplicate index (1) (%lld; n_particles_local=%lld) in construct_duplicate_list().",
+                                    SID_ERROR_LOGIC, index_duplicates_local[n_duplicates_local], n_particles_local);
                         n_duplicates_local++;
                         if(n_duplicates_local >= size_to_alloc_local) {
                             size_to_alloc_local    = (int)(1.5 * (float)size_to_alloc_local);
@@ -459,10 +461,9 @@ void construct_duplicate_list_local(plist_info *plist,
                     id_duplicates_local[n_duplicates_local]    = buffer_id[i_buffer];
                     index_duplicates_local[n_duplicates_local] = buffer_index_local[i_buffer];
                     if(index_duplicates_local[n_duplicates_local] >= n_particles_local)
-                        SID_trap_error("Invalid local duplicate index (2) (%lld; n_particles_local=%lld) in construct_duplicate_list().",
-                                       SID_ERROR_LOGIC,
-                                       index_duplicates_local[n_duplicates_local],
-                                       n_particles_local);
+                        SID_exit_error(
+                                "Invalid local duplicate index (2) (%lld; n_particles_local=%lld) in construct_duplicate_list().",
+                                SID_ERROR_LOGIC, index_duplicates_local[n_duplicates_local], n_particles_local);
                     n_duplicates_local++;
                     if(n_duplicates_local >= size_to_alloc_local) {
                         size_to_alloc_local    = (int)(1.5 * (float)size_to_alloc_local);
@@ -551,7 +552,8 @@ void construct_duplicate_list_local(plist_info *plist,
         }
         SID_Allreduce(SID_IN_PLACE, &n_bad, 1, SID_INT, SID_SUM, SID.COMM_WORLD);
         if(n_bad > 0)
-            SID_trap_error("%d duplicate(s) have not been sucessfully assigned to a group or subgroup.", SID_ERROR_LOGIC, n_bad);
+            SID_exit_error("%d duplicate(s) have not been sucessfully assigned to a group or subgroup.",
+                           SID_ERROR_LOGIC, n_bad);
     }
 
     // Clean-up
@@ -685,7 +687,7 @@ void read_gadget_binary_local(char *      filename_root_in,
     int                flag_file_type = fp_gadget.flag_file_type;
     gadget_header_info header         = fp_gadget.header;
     if(!flag_filefound)
-        SID_trap_error("File not found.", SID_ERROR_LOGIC);
+        SID_exit_error("File not found.", SID_ERROR_LOGIC);
 
     // A file was found ...
     SID_log("Reading GADGET binary file {%s}...", SID_LOG_OPEN | SID_LOG_TIMER, filename_root_in);
@@ -846,10 +848,9 @@ void read_gadget_binary_local(char *      filename_root_in,
                     SID_log("(int IDs)...", SID_LOG_CONTINUE);
                     flag_LONGIDS = GBP_FALSE;
                 } else
-                    SID_trap_error("IDs record length (%d) does not set a sensible id byte size for the number of particles given in the header (%s)",
-                                   SID_ERROR_LOGIC,
-                                   record_length_open,
-                                   n_particles_file);
+                    SID_exit_error(
+                            "IDs record length (%d) does not set a sensible id byte size for the number of particles given in the header (%s)",
+                            SID_ERROR_LOGIC, record_length_open, n_particles_file);
             }
             SID_Bcast(&flag_LONGIDS, 1, SID_INT, SID.COMM_WORLD, SID_MASTER_RANK);
 
@@ -961,7 +962,7 @@ void read_gadget_binary_local(char *      filename_root_in,
 
         SID_log("Done.", SID_LOG_CLOSE);
     } else
-        SID_trap_error("Could not find file with root {%s}", SID_ERROR_IO_OPEN, filename_root_in);
+        SID_exit_error("Could not find file with root {%s}", SID_ERROR_IO_OPEN, filename_root_in);
 }
 
 int main(int argc, char *argv[]) {
@@ -1203,7 +1204,9 @@ int main(int argc, char *argv[]) {
                 else if(index_duplicates_group_local[i_duplicate] >= 0 && index_duplicates_group_local[i_duplicate] < n_groups_local)
                     id_list_master[n_duplicates_local + i_duplicate] = id_list_local[offset_groups[index_duplicates_group_local[i_duplicate]]];
                 else
-                    SID_trap_error("Neither a valid group nor valid subgroup has been specified for a duplicate particle.", SID_ERROR_LOGIC);
+                    SID_exit_error(
+                            "Neither a valid group nor valid subgroup has been specified for a duplicate particle.",
+                            SID_ERROR_LOGIC);
             }
             SID_log("Done.", SID_LOG_CLOSE);
 
@@ -1500,11 +1503,13 @@ int main(int argc, char *argv[]) {
                     i_particle_tail += n_left;
                     // Sanity checks
                     if(i_particle_head != n_particles_subs)
-                        SID_trap_error("A group's substructure particles have not been copied correctly while removing small substructures.",
-                                       SID_ERROR_LOGIC);
+                        SID_exit_error(
+                                "A group's substructure particles have not been copied correctly while removing small substructures.",
+                                SID_ERROR_LOGIC);
                     if(i_particle_tail != size_groups[i_group])
-                        SID_trap_error("A group's tail particles have not been copied correctly while removing small substructures.",
-                                       SID_ERROR_LOGIC);
+                        SID_exit_error(
+                                "A group's tail particles have not been copied correctly while removing small substructures.",
+                                SID_ERROR_LOGIC);
                     // Set group information
                     size_groups[j_group]       = size_groups[i_group];
                     offset_groups[j_group]     = j_particle;
@@ -1534,7 +1539,8 @@ int main(int argc, char *argv[]) {
             } // if keep group
         }     // i_group<n_groups_local
         if(i_particle != n_particles_local)
-            SID_trap_error("Somehow, only %lld of %lld particles have been processed.", SID_ERROR_LOGIC, i_particle, n_particles_local);
+            SID_exit_error("Somehow, only %lld of %lld particles have been processed.", SID_ERROR_LOGIC, i_particle,
+                           n_particles_local);
         SID_free(SID_FARG buffer_group_ids);
 
         // Recompute the global group/subgroup/particle counts
@@ -1666,7 +1672,7 @@ int main(int argc, char *argv[]) {
                 size_t n_write;
                 n_write = fwrite(buffer, 1, buffer_size, fp_out_groups);
                 if(n_write != buffer_size)
-                    SID_trap_error("buffer not written properly", SID_ERROR_IO_WRITE);
+                    SID_exit_error("buffer not written properly", SID_ERROR_IO_WRITE);
             }
         }
         SID_log("Done.", SID_LOG_CLOSE);
@@ -1682,7 +1688,7 @@ int main(int argc, char *argv[]) {
                     for(i_buffer = 0; i_buffer < n_groups_local; i_buffer++)
                         buffer_int[i_buffer] = (int)buffer_size_t[i_buffer];
                 } else if(n_byte_offsets_groups != sizeof(int64_t))
-                    SID_trap_error("Invalid group offset byte-size (%d)", SID_ERROR_LOGIC, n_byte_offsets_groups);
+                    SID_exit_error("Invalid group offset byte-size (%d)", SID_ERROR_LOGIC, n_byte_offsets_groups);
                 buffer_size = (size_t)n_byte_offsets_groups * (size_t)n_groups_local;
             }
             SID_Bcast(&buffer_size, 1, SID_SIZE_T, SID.COMM_WORLD, i_rank);
@@ -1691,7 +1697,7 @@ int main(int argc, char *argv[]) {
                 size_t n_write;
                 n_write = fwrite(buffer, 1, buffer_size, fp_out_groups);
                 if(n_write != buffer_size)
-                    SID_trap_error("buffer not written properly", SID_ERROR_IO_WRITE);
+                    SID_exit_error("buffer not written properly", SID_ERROR_IO_WRITE);
                 n_groups_written += n_write / n_byte_offsets_groups;
             }
         }
@@ -1710,7 +1716,7 @@ int main(int argc, char *argv[]) {
                 size_t n_write;
                 n_write = fwrite(buffer, 1, buffer_size, fp_out_groups);
                 if(n_write != buffer_size)
-                    SID_trap_error("buffer not written properly", SID_ERROR_IO_WRITE);
+                    SID_exit_error("buffer not written properly", SID_ERROR_IO_WRITE);
             }
         }
         SID_log("Done.", SID_LOG_CLOSE);
@@ -1728,7 +1734,7 @@ int main(int argc, char *argv[]) {
                 size_t n_write;
                 n_write = fwrite(buffer, 1, buffer_size, fp_out_subgroups);
                 if(n_write != buffer_size)
-                    SID_trap_error("buffer not written properly", SID_ERROR_IO_WRITE);
+                    SID_exit_error("buffer not written properly", SID_ERROR_IO_WRITE);
             }
         }
         SID_log("Done.", SID_LOG_CLOSE);
@@ -1744,7 +1750,7 @@ int main(int argc, char *argv[]) {
                     for(i_buffer = 0; i_buffer < n_subgroups_local; i_buffer++)
                         buffer_int[i_buffer] = (int)buffer_size_t[i_buffer];
                 } else if(n_byte_offsets_subgroups != sizeof(int64_t))
-                    SID_trap_error("Invalid subgroup offset byte-size (%d)", SID_ERROR_LOGIC, n_byte_offsets_subgroups);
+                    SID_exit_error("Invalid subgroup offset byte-size (%d)", SID_ERROR_LOGIC, n_byte_offsets_subgroups);
                 buffer_size = (size_t)n_byte_offsets_subgroups * (size_t)n_subgroups_local;
             }
             SID_Bcast(&buffer_size, 1, SID_SIZE_T, SID.COMM_WORLD, i_rank);
@@ -1753,7 +1759,7 @@ int main(int argc, char *argv[]) {
                 size_t n_write;
                 n_write = fwrite(buffer, 1, buffer_size, fp_out_subgroups);
                 if(n_write != buffer_size)
-                    SID_trap_error("buffer not written properly", SID_ERROR_IO_WRITE);
+                    SID_exit_error("buffer not written properly", SID_ERROR_IO_WRITE);
                 n_subgroups_written += n_write / n_byte_offsets_subgroups;
             }
         }
@@ -1770,7 +1776,7 @@ int main(int argc, char *argv[]) {
                     for(i_buffer = 0; i_buffer < n_particles_local; i_buffer++)
                         buffer_int[i_buffer] = (int)buffer_size_t[i_buffer];
                 } else if(n_byte_ids != sizeof(int64_t))
-                    SID_trap_error("Invalid ID byte-size (%d)", SID_ERROR_LOGIC, n_byte_ids);
+                    SID_exit_error("Invalid ID byte-size (%d)", SID_ERROR_LOGIC, n_byte_ids);
                 buffer_size = (size_t)n_byte_ids * (size_t)n_particles_local;
             }
             SID_Bcast(&buffer_size, 1, SID_SIZE_T, SID.COMM_WORLD, i_rank);
@@ -1779,7 +1785,7 @@ int main(int argc, char *argv[]) {
                 size_t n_write;
                 n_write = fwrite(buffer, 1, buffer_size, fp_out_particles);
                 if(n_write != buffer_size)
-                    SID_trap_error("buffer not written properly", SID_ERROR_IO_WRITE);
+                    SID_exit_error("buffer not written properly", SID_ERROR_IO_WRITE);
                 n_particles_written += n_write / n_byte_ids;
             }
         }

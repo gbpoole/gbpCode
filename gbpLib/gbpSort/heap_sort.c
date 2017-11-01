@@ -25,7 +25,7 @@ void heap_sort(void *data_in, size_t n_data, size_t **index, SID_Datatype data_t
     else if(data_type == SID_DOUBLE)
         data_size = sizeof(double);
     else
-        SID_trap_error("Unsupported data type {%d}", SID_ERROR_LOGIC, data_type);
+        SID_exit_error("Unsupported data type {%d}", SID_ERROR_LOGIC, data_type);
 
     // Allocate scratch space and sort indices (if needed)
     rra = SID_malloc(data_size);

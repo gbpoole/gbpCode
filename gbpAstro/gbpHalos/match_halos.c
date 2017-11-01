@@ -126,7 +126,7 @@ void match_halos(plist_info *plist_1_in,
 
     // Determine if we are matching groups or subgroups (default is subgroups)
     if(check_mode_for_flag(mode, MATCH_GROUPS) && check_mode_for_flag(mode, MATCH_SUBGROUPS))
-        SID_trap_error("match_groups can't match both groups and subgroups (yet).", SID_ERROR_LOGIC);
+        SID_exit_error("match_groups can't match both groups and subgroups (yet).", SID_ERROR_LOGIC);
     else if(check_mode_for_flag(mode, MATCH_GROUPS))
         flag_match_subgroups = GBP_FALSE;
     else if(check_mode_for_flag(mode, MATCH_SUBGROUPS))
@@ -144,7 +144,7 @@ void match_halos(plist_info *plist_1_in,
 
     // matching of substructure is broken right now.
     if(flag_match_substructure)
-        SID_trap_error("Matching of substructure is broken in match_halos() right now.", SID_ERROR_LOGIC);
+        SID_exit_error("Matching of substructure is broken in match_halos() right now.", SID_ERROR_LOGIC);
 
     // Check if we are using Peano-Hilbert Key (PHK) decomposition
     int n_groups_boundary_1;
@@ -156,7 +156,7 @@ void match_halos(plist_info *plist_1_in,
     if(ADaPS_exist(plist_1->data, "n_bits_PHK_%s", catalog_1)) {
         flag_PHK_decomp = GBP_TRUE;
         if(!ADaPS_exist(plist_2->data, "n_bits_PHK_%s", catalog_2))
-            SID_trap_error("Both catalogs must be loaded with PHK decompositions.", SID_ERROR_LOGIC);
+            SID_exit_error("Both catalogs must be loaded with PHK decompositions.", SID_ERROR_LOGIC);
         n_bits_PHK_1                 = ((int *)ADaPS_fetch(plist_1->data, "n_bits_PHK_%s", catalog_1))[0];
         n_bits_PHK_2                 = ((int *)ADaPS_fetch(plist_2->data, "n_bits_PHK_%s", catalog_2))[0];
         n_particles_boundary_1       = ((int *)ADaPS_fetch(plist_1->data, "n_particles_boundary_%s", catalog_1))[0];
@@ -169,7 +169,8 @@ void match_halos(plist_info *plist_1_in,
             n_groups_boundary_2_local = ((int *)ADaPS_fetch(plist_2->data, "n_groups_boundary_%s", catalog_2))[0];
         }
         if(n_bits_PHK_1 != n_bits_PHK_2 && (n_bits_PHK_1 != 0 && n_bits_PHK_2 != 0)) // n_bits=0 if there are no groups
-            SID_trap_error("PHK decomposition of the two catalogs is incompatible (ie. %d!=%d).", SID_ERROR_LOGIC, n_bits_PHK_1, n_bits_PHK_2);
+            SID_exit_error("PHK decomposition of the two catalogs is incompatible (ie. %d!=%d).", SID_ERROR_LOGIC,
+                           n_bits_PHK_1, n_bits_PHK_2);
     } else
         flag_PHK_decomp = GBP_FALSE;
 
@@ -692,12 +693,9 @@ void match_halos(plist_info *plist_1_in,
                             n_groups_2_all,
                             n_hist_array[i_group],
                             j_hist);
-                        SID_trap_error("Invalid match_id (%d) for i_mark/i_group=%d/%d.  There are %d objects in the target catalog.",
-                                       SID_ERROR_LOGIC,
-                                       match[i_mark],
-                                       i_mark,
-                                       i_group,
-                                       n_groups_2_all);
+                        SID_exit_error(
+                                "Invalid match_id (%d) for i_mark/i_group=%d/%d.  There are %d objects in the target catalog.",
+                                SID_ERROR_LOGIC, match[i_mark], i_mark, i_group, n_groups_2_all);
                     }
                 }
                 i_mark++;
@@ -710,7 +708,8 @@ void match_halos(plist_info *plist_1_in,
         calc_max_global(&hist_size_max, &hist_size_max_global, 1, SID_INT, CALC_MODE_DEFAULT, SID.COMM_WORLD);
         SID_log("Largest hist size=%d", SID_LOG_COMMENT, hist_size_max_global);
         if(hist_size_max_global > hist_size_limit)
-            SID_trap_error("The histogram size array has overflowed (ie. %d>%d)", SID_LOG_COMMENT, hist_size_max_global, hist_size_limit);
+            SID_exit_error("The histogram size array has overflowed (ie. %d>%d)", SID_LOG_COMMENT, hist_size_max_global,
+                           hist_size_limit);
 
         // How many matches across all ranks?
         calc_sum_global(&n_match, &n_match_all, 1, SID_INT, CALC_MODE_DEFAULT, SID.COMM_WORLD);

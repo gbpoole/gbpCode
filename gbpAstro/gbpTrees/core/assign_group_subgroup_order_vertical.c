@@ -37,18 +37,17 @@ void assign_group_subgroup_order_vertical(tree_vertical_info *tree, int i_snap, 
         current = first_neighbour;
         while(current != NULL) {
             if(i_halo >= n_neighbours)
-                SID_trap_error("There's a problem with the number of neighbours in assign_group_subgroup_order (%d>=%d)!",
-                               SID_ERROR_LOGIC,
-                               i_halo,
-                               n_neighbours);
+                SID_exit_error(
+                        "There's a problem with the number of neighbours in assign_group_subgroup_order (%d>=%d)!",
+                        SID_ERROR_LOGIC, i_halo, n_neighbours);
             neighbours[i_halo] = current;
             group_ids[i_halo]  = current->group_id;
             current            = current->neighbour_halo_next;
             i_halo++;
         }
         if(i_halo != n_neighbours)
-            SID_trap_error(
-                "There's a problem with the number of neighbours in assign_group_subgroup_order (%d!=%d)!", SID_ERROR_LOGIC, i_halo, n_neighbours);
+            SID_exit_error("There's a problem with the number of neighbours in assign_group_subgroup_order (%d!=%d)!",
+                           SID_ERROR_LOGIC, i_halo, n_neighbours);
         merge_sort(group_ids, (size_t)n_neighbours, &group_ids_index, SID_INT, SORT_COMPUTE_INDEX, SORT_COMPUTE_NOT_INPLACE);
 
         // Find highest group score and initialize a temporary array

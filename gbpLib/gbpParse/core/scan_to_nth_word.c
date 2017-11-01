@@ -6,7 +6,7 @@
 
 int scan_to_nth_word(char *line, int n, char **word) {
     if(n <= 0)
-        SID_trap_error("Invalid word index (%d) requested in scan_to_nth_word().", SID_ERROR_LOGIC, n);
+        SID_exit_error("Invalid word index (%d) requested in scan_to_nth_word().", SID_ERROR_LOGIC, n);
     int    n_words   = 0;
     int    flag_last = GBP_FALSE;
     int    flag_new  = GBP_FALSE;
@@ -20,7 +20,7 @@ int scan_to_nth_word(char *line, int n, char **word) {
         flag_last = flag_new;
     }
     if(i_line >= strlen(line))
-        SID_trap_error("End of line {%s} reached before finding n_word=%d", ERROR_LINE_TOO_SHORT, line, n);
+        SID_exit_error("End of line {%s} reached before finding n_word=%d", ERROR_LINE_TOO_SHORT, line, n);
     (*word) = line + i_line;
     return (n_words == n);
 }

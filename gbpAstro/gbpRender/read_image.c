@@ -12,7 +12,7 @@ void read_image(image_info *image, const char *filename_dir, const char *filenam
     // Read raw image
     sprintf(filename, "%s/raw/%s.raw", filename_dir, filename_root);
     if((fp = fopen(filename, "r")) == NULL)
-        SID_trap_error("Could not open image {%s}.", SID_ERROR_IO_OPEN, filename);
+        SID_exit_error("Could not open image {%s}.", SID_ERROR_IO_OPEN, filename);
     fread_verify(&(image->width), sizeof(int), 1, fp);
     fread_verify(&(image->height), sizeof(int), 1, fp);
     image->n_pixels = image->width * image->height;

@@ -27,7 +27,7 @@ void sort(void *sval, size_t nval, size_t **index, SID_Datatype data_type, int f
     // Process passed arguments:
     //   ... check for nonsensical flag combinations
     if(flag_local == SORT_GLOBAL && flag_in_place != SORT_COMPUTE_NOT_INPLACE)
-        SID_trap_error("Global in-place sorts are not possible.", SID_ERROR_LOGIC);
+        SID_exit_error("Global in-place sorts are not possible.", SID_ERROR_LOGIC);
     //   ... use a heap_sort for most situations (it uses less RAM!)
     else if(flag_local == SORT_LOCAL || SID.n_proc == 1) {
         /*
@@ -309,7 +309,7 @@ void sort(void *sval, size_t nval, size_t **index, SID_Datatype data_type, int f
             SID_log("Done.", SID_LOG_CLOSE);
         }
 #else
-        SID_trap_error("Undefined behavior in sort().", SID_ERROR_LOGIC);
+        SID_exit_error("Undefined behavior in sort().", SID_ERROR_LOGIC);
 #endif
     }
     SID_log("Done.", SID_LOG_CLOSE);

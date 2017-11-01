@@ -579,7 +579,7 @@ void read_gadget_binary(char *filename_root_in, int snapshot_number, plist_info 
         flag_read_catalog = GBP_FALSE;
         if(ADaPS_exist(plist->data, "read_catalog")) {
             if(flag_read_marked)
-                SID_trap_error("Can't read a catalog and mark list at the same time (yet).", SID_ERROR_LOGIC);
+                SID_exit_error("Can't read a catalog and mark list at the same time (yet).", SID_ERROR_LOGIC);
             read_catalog      = (char *)ADaPS_fetch(plist->data, "read_catalog");
             flag_read_catalog = GBP_TRUE;
         }
@@ -628,8 +628,8 @@ void read_gadget_binary(char *filename_root_in, int snapshot_number, plist_info 
                     SID_log("using (long long) IDs...", SID_LOG_CONTINUE);
                 }
                 if(i_file > 0 && flag_LONGIDS_old != flag_LONGIDS)
-                    SID_trap_error(
-                        "ID block sizes/ID types are not consistant accross files (ie. %d!=%d)", SID_ERROR_LOGIC, flag_LONGIDS_old, flag_LONGIDS);
+                    SID_exit_error("ID block sizes/ID types are not consistant accross files (ie. %d!=%d)",
+                                   SID_ERROR_LOGIC, flag_LONGIDS_old, flag_LONGIDS);
             }
 
             // Read positions and count the number needed by this rank from this file
@@ -655,11 +655,13 @@ void read_gadget_binary(char *filename_root_in, int snapshot_number, plist_info 
                     if(ADaPS_exist(plist->data, "particle_ids_%s", read_catalog))
                         id_list = (size_t *)ADaPS_fetch(plist->data, "particle_ids_%s", read_catalog);
                     else
-                        SID_trap_error("variable particle_ids_%s no present in data structure!", SID_ERROR_LOGIC, read_catalog);
+                        SID_exit_error("variable particle_ids_%s no present in data structure!", SID_ERROR_LOGIC,
+                                       read_catalog);
                     if(ADaPS_exist(plist->data, "n_particles_%s", read_catalog))
                         n_id_list = ((size_t *)ADaPS_fetch(plist->data, "n_particles_%s", read_catalog))[0];
                     else
-                        SID_trap_error("variable n_particles_%s no present in data structure!", SID_ERROR_LOGIC, read_catalog);
+                        SID_exit_error("variable n_particles_%s no present in data structure!", SID_ERROR_LOGIC,
+                                       read_catalog);
                     merge_sort((void *)id_list, (size_t)n_id_list, &id_list_index, SID_SIZE_T, SORT_COMPUTE_INDEX, GBP_FALSE);
                     if(n_id_list == 0)
                         mark_mode = READ_GADGET_NONE;

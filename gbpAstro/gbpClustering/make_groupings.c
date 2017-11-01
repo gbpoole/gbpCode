@@ -216,9 +216,11 @@ int main(int argc, char *argv[]) {
     n_subgroups_all = fp_properties_subgroups.n_halos_total;
 
     if(n_groups_all != n_groups)
-        SID_trap_error("There's a mismatch in the number of groups (ie. %d!=%d)", SID_ERROR_LOGIC, n_groups_all, n_groups);
+        SID_exit_error("There's a mismatch in the number of groups (ie. %d!=%d)", SID_ERROR_LOGIC, n_groups_all,
+                       n_groups);
     if(n_subgroups_all != n_subgroups)
-        SID_trap_error("There's a mismatch in the number of subgroups (ie. %d!=%d)", SID_ERROR_LOGIC, n_subgroups_all, n_subgroups);
+        SID_exit_error("There's a mismatch in the number of subgroups (ie. %d!=%d)", SID_ERROR_LOGIC, n_subgroups_all,
+                       n_subgroups);
 
     SID_log("%d groups and %d subgroups...", SID_LOG_CONTINUE, n_groups_all, n_subgroups_all);
 

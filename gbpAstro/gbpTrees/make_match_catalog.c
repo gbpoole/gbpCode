@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
         catalog_read_mode = READ_CATALOG_GROUPS | READ_CATALOG_PROPERTIES;
         matches_read_mode = MATCH_GROUPS;
     } else
-        SID_trap_error("Invalid catalog type (%s).", SID_ERROR_SYNTAX, prefix_text);
+        SID_exit_error("Invalid catalog type (%s).", SID_ERROR_SYNTAX, prefix_text);
 
     // Set filenames
     char filename_cat1[SID_MAX_FILENAME_LENGTH];

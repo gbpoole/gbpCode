@@ -70,6 +70,7 @@ double merger_rate_B_n(cosmo_info **cosmo, int mode_model, double z, double M_0,
         B_n            = A * pow(M_0 / (1e12 * M_SOL), alpha) * pow(xi, beta) * exp(pow(xi / xi_tild, gamma)) * pow(1 + z, eta);
     }
     if(!flag_done)
-        SID_trap_error("Mode flag (%d) is invalid in merger_rate_B_n().  No model definition.", SID_ERROR_LOGIC, mode_model);
+        SID_exit_error("Mode flag (%d) is invalid in merger_rate_B_n().  No model definition.", SID_ERROR_LOGIC,
+                       mode_model);
     return (B_n);
 }

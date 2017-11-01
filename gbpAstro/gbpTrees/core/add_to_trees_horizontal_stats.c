@@ -52,7 +52,7 @@ void add_to_trees_horizontal_stats(tree_horizontal_stats_info *stats, int id, in
     if(check_mode_for_flag(type, TREE_CASE_INVALID)) {
         stats->n_invalid++;
         if((type - TREE_CASE_INVALID) != 0)
-            SID_trap_error("An out-of-bounds halo has been manipulated (type=%d)", SID_ERROR_LOGIC, type);
+            SID_exit_error("An out-of-bounds halo has been manipulated (type=%d)", SID_ERROR_LOGIC, type);
     }
     if(check_mode_for_flag(type, TREE_CASE_UNPROCESSED))
         stats->n_unprocessed++;

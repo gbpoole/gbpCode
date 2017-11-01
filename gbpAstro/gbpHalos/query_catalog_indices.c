@@ -52,7 +52,7 @@ int main(int argc, char *argv[]) {
 
         FILE *fp_in;
         if((fp_in = fopen(filename_indices, "r")) == NULL)
-            SID_trap_error("Could not open file {%s}.", SID_ERROR_IO_OPEN, filename_indices);
+            SID_exit_error("Could not open file {%s}.", SID_ERROR_IO_OPEN, filename_indices);
         int i_file, n_files, n_groups, n_groups_all;
         fread_verify(&i_file, sizeof(int), 1, fp_in);
         fread_verify(&n_files, sizeof(int), 1, fp_in);

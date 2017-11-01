@@ -56,16 +56,11 @@ void propagate_fragmented_info(tree_horizontal_extended_info **groups,
                     i_count++;
                 // Check that the affected halo does not have more than one fragmented halo flag turned on
                 if(i_count > 1)
-                    SID_trap_error("Multiple (%d) TREE_CASE_FRAGMENT switches present (type=%d) for i_snap/i_group=%d/%d when a max of one is "
-                                   "alowed. Progenitor info: i_snap/i_halo/type=%d/%d/%d",
-                                   SID_ERROR_LOGIC,
-                                   i_count,
-                                   groups[(i_read + group_file_offset) % n_wrap][group_index].type,
-                                   j_read + group_file_offset * i_read_step,
-                                   group_index,
-                                   j_read,
-                                   i_group,
-                                   group_type);
+                    SID_exit_error(
+                            "Multiple (%d) TREE_CASE_FRAGMENT switches present (type=%d) for i_snap/i_group=%d/%d when a max of one is "
+                                    "alowed. Progenitor info: i_snap/i_halo/type=%d/%d/%d", SID_ERROR_LOGIC, i_count,
+                            groups[(i_read + group_file_offset) % n_wrap][group_index].type,
+                            j_read + group_file_offset * i_read_step, group_index, j_read, i_group, group_type);
             }
         }
 
@@ -108,16 +103,12 @@ void propagate_fragmented_info(tree_horizontal_extended_info **groups,
                         i_count++;
                     // Check that the affected halo does not have more than one fragmented halo flag turned on
                     if(i_count > 1)
-                        SID_trap_error("Multiple (%d) TREE_CASE_FRAGMENT switches present (type=%d) for i_snap/i_subgroup=%d/%d when a max of one is "
-                                       "alowed. Progenitor info: i_snap/i_halo/type=%d/%d/%d",
-                                       SID_ERROR_LOGIC,
-                                       i_count,
-                                       subgroups[(i_read + subgroup_file_offset) % n_wrap][subgroup_index].type,
-                                       j_read + subgroup_file_offset * i_read_step,
-                                       subgroup_index,
-                                       j_read,
-                                       i_subgroup,
-                                       subgroup_type);
+                        SID_exit_error(
+                                "Multiple (%d) TREE_CASE_FRAGMENT switches present (type=%d) for i_snap/i_subgroup=%d/%d when a max of one is "
+                                        "alowed. Progenitor info: i_snap/i_halo/type=%d/%d/%d", SID_ERROR_LOGIC,
+                                i_count, subgroups[(i_read + subgroup_file_offset) % n_wrap][subgroup_index].type,
+                                j_read + subgroup_file_offset * i_read_step, subgroup_index, j_read, i_subgroup,
+                                subgroup_type);
                 }
             }
         }

@@ -115,7 +115,7 @@ int main(int argc, char *argv[]) {
     SID_fread(&n_cat_i, sizeof(int), 1, &fp_in);
     SID_fread(&offset_size_i, sizeof(int), 1, &fp_in);
     if(n_cat_i != n_groups_i)
-        SID_trap_error("Catalog 'i' halo counts don't match (ie %d!=%d)", SID_ERROR_LOGIC, n_cat_i, n_groups_i);
+        SID_exit_error("Catalog 'i' halo counts don't match (ie %d!=%d)", SID_ERROR_LOGIC, n_cat_i, n_groups_i);
     SID_fread(n_p_i, sizeof(int), n_cat_i, &fp_in);
     SID_fclose(&fp_in);
 
@@ -127,7 +127,7 @@ int main(int argc, char *argv[]) {
     SID_fread(&n_cat_j, sizeof(int), 1, &fp_in);
     SID_fread(&offset_size_j, sizeof(int), 1, &fp_in);
     if(n_cat_j != n_groups_j)
-        SID_trap_error("Catalog 'i' halo counts don't match (ie %d!=%d)", SID_ERROR_LOGIC, n_cat_j, n_groups_j);
+        SID_exit_error("Catalog 'i' halo counts don't match (ie %d!=%d)", SID_ERROR_LOGIC, n_cat_j, n_groups_j);
     SID_fread(n_p_j, sizeof(int), n_cat_j, &fp_in);
     SID_fclose(&fp_in);
     SID_log("Done.", SID_LOG_CLOSE);

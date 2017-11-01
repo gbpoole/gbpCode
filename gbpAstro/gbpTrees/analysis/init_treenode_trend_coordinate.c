@@ -28,5 +28,5 @@ void init_treenode_trend_coordinate(tree_info *trees, trend_info *trend, const c
     else if(!strcmp(name, "tau_10to1"))
         init_trend_coordinate(trend, name, trees, init_tree_property_tau, free_tree_property_tau, calc_tree_property_index_tau_10to1);
     else
-        SID_trap_error("Invalid property {%s} specified in init_treenode_trend().", SID_ERROR_LOGIC, name);
+        SID_exit_error("Invalid property {%s} specified in init_treenode_trend().", SID_ERROR_LOGIC, name);
 }

@@ -18,5 +18,5 @@ void init_halo_trend_coordinate(halo_trend_info *halo_trend_data, trend_info *tr
         init_trend_coordinate(
             trend, name, halo_trend_data, init_halo_trend_property_SSFctn, free_halo_trend_property_SSFctn, calc_halo_trend_property_index_SSFctn);
     else
-        SID_trap_error("Invalid property {%s} specified in init_halo_trend().", SID_ERROR_LOGIC, name);
+        SID_exit_error("Invalid property {%s} specified in init_halo_trend().", SID_ERROR_LOGIC, name);
 }

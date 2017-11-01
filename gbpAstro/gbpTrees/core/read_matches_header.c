@@ -100,7 +100,8 @@ int read_matches_header(char *filename_root_in,
             int i_read_in;
             sprintf(filename_out, "%s/%sgroup_matches_header.dat", filename_root_in, group_text_prefix);
             if((fp_read_header = fopen(filename_out, "r")) == NULL)
-                SID_trap_error("Could not open file {%s} when reading header information.", SID_ERROR_IO_OPEN, filename_out);
+                SID_exit_error("Could not open file {%s} when reading header information.", SID_ERROR_IO_OPEN,
+                               filename_out);
             fread_verify(&i_read_start_in, sizeof(int), 1, fp_read_header);
             fread_verify(&i_read_stop_in, sizeof(int), 1, fp_read_header);
             fread_verify(&n_search_total_in, sizeof(int), 1, fp_read_header);
@@ -133,8 +134,8 @@ int read_matches_header(char *filename_root_in,
             }
             fclose(fp_read_header);
             if(j_read != (*n_files_return))
-                SID_trap_error(
-                    "Was not able to read the appriate number of group/subgroup sizes (i.e. %d!=%d)", SID_ERROR_LOGIC, j_read, (*n_files_return));
+                SID_exit_error("Was not able to read the appriate number of group/subgroup sizes (i.e. %d!=%d)",
+                               SID_ERROR_LOGIC, j_read, (*n_files_return));
         }
     }
     SID_Bcast((*n_subgroups_return), (*n_files_return), SID_INT, SID.COMM_WORLD, SID_MASTER_RANK);

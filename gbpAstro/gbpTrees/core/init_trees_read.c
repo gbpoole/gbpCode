@@ -99,7 +99,7 @@ void init_trees_read(const char *filename_SSimPL_dir,
     }
     fclose(fp_run_in);
     if(flag_continue)
-        SID_trap_error("Could not find 'box_size' in the SSimPL run.txt file.", SID_ERROR_LOGIC);
+        SID_exit_error("Could not find 'box_size' in the SSimPL run.txt file.", SID_ERROR_LOGIC);
     SID_log("Box size = %.1lf [Mpc/h]", SID_LOG_COMMENT, (*tree)->box_size);
 
     // Create an array which maps the file numbers in the trees
@@ -136,8 +136,8 @@ void init_trees_read(const char *filename_SSimPL_dir,
     fp_alist_in = fopen(filename_alist_in, "r");
     n_alist_in  = count_lines_data(fp_alist_in);
     if(n_alist_in != (*tree)->n_snaps)
-        SID_trap_error(
-            "The number of entries in the a_list.txt file does not make sense (ie. %d!=%d)", SID_ERROR_LOGIC, n_alist_in, (*tree)->n_snaps);
+        SID_exit_error("The number of entries in the a_list.txt file does not make sense (ie. %d!=%d)", SID_ERROR_LOGIC,
+                       n_alist_in, (*tree)->n_snaps);
     for(i_alist = 0; i_alist < (*tree)->n_snaps; i_alist++) {
         grab_next_line_data(fp_alist_in, &line, &line_length);
         grab_double(line, 1, &a_in);

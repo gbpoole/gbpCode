@@ -12,5 +12,5 @@ void free_histogram(hist_info *hist) {
         SID_free(SID_FARG hist->x_lo);
         SID_free(SID_FARG hist->x_hi);
     } else
-        SID_trap_error("Invalid mode (%d) specified in free_histogram().", SID_ERROR_LOGIC, hist->mode);
+        SID_exit_error("Invalid mode (%d) specified in free_histogram().", SID_ERROR_LOGIC, hist->mode);
 }

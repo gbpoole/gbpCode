@@ -60,7 +60,8 @@ void seal_camera(render_info *render) {
                 flag_images_defined = GBP_TRUE;
             }
             if(!flag_images_defined)
-                SID_trap_error("Invalid camera RGB mode (%d) specified in seal_camera().", SID_ERROR_LOGIC, render->camera->RGB_mode);
+                SID_exit_error("Invalid camera RGB mode (%d) specified in seal_camera().", SID_ERROR_LOGIC,
+                               render->camera->RGB_mode);
             // RIGHT
             flag_images_defined = GBP_FALSE;
             if(check_mode_for_flag(render->camera->RGB_mode, CAMERA_RGB_MODE_1CHANNEL)) {
@@ -93,7 +94,8 @@ void seal_camera(render_info *render) {
                 flag_images_defined = GBP_TRUE;
             }
             if(!flag_images_defined)
-                SID_trap_error("Invalid camera RGB mode (%d) specified in seal_camera().", SID_ERROR_LOGIC, render->camera->RGB_mode);
+                SID_exit_error("Invalid camera RGB mode (%d) specified in seal_camera().", SID_ERROR_LOGIC,
+                               render->camera->RGB_mode);
         } else {
             int flag_images_defined = GBP_FALSE;
             if(check_mode_for_flag(render->camera->RGB_mode, CAMERA_RGB_MODE_1CHANNEL)) {
@@ -124,7 +126,8 @@ void seal_camera(render_info *render) {
                 flag_images_defined = GBP_TRUE;
             }
             if(!flag_images_defined)
-                SID_trap_error("Invalid camera RGB mode (%d) specified in seal_camera().", SID_ERROR_LOGIC, render->camera->RGB_mode);
+                SID_exit_error("Invalid camera RGB mode (%d) specified in seal_camera().", SID_ERROR_LOGIC,
+                               render->camera->RGB_mode);
         }
 
         // Set the flag saying that camera has been sealed

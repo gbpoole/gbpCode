@@ -109,7 +109,7 @@ int main(int argc, char *argv[]) {
             SID_fread(&(group_n_particles_peak), sizeof(int), 1, &fp_in);
             SID_fread(&(n_subgroups_group), sizeof(int), 1, &fp_in);
             if(group_tree_id < 0 || group_tree_id >= n_trees_group_total)
-                SID_trap_error("group_tree_id (%d) exceeds range (0->%d)", group_tree_id, n_trees_group_total);
+                SID_exit_error("group_tree_id (%d) exceeds range (0->%d)", group_tree_id, n_trees_group_total);
             n_halos_tree_groups[group_tree_id]++;
             for(j_subgroup = 0; j_subgroup < n_subgroups_group; i_subgroup++, j_subgroup++) {
                 int subgroup_id;
@@ -127,7 +127,8 @@ int main(int argc, char *argv[]) {
                 SID_fread(&(subgroup_file_index), sizeof(int), 1, &fp_in);
                 SID_fread(&(subgroup_n_particles_peak), sizeof(int), 1, &fp_in);
                 if(subgroup_tree_id < 0 || subgroup_tree_id >= n_trees_subgroup_total)
-                    SID_trap_error("subgroup_tree_id (%d) exceeds range (0->%d)", subgroup_tree_id, n_trees_subgroup_total);
+                    SID_exit_error("subgroup_tree_id (%d) exceeds range (0->%d)", subgroup_tree_id,
+                                   n_trees_subgroup_total);
                 n_halos_tree_subgroups[subgroup_tree_id]++;
             }
         }

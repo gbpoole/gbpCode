@@ -25,10 +25,11 @@ void compute_PHK_boundary_keys(int     PHK_bit_size,
 
     // Sanity checks
     if(domain_key_max > (num1dim * num1dim * num1dim))
-        SID_trap_error(
-            "domain_key_max>num1dim^3 (ie %zd>%zd) in compute_PHK_boundry_keys", SID_ERROR_LOGIC, domain_key_max, num1dim * num1dim * num1dim);
+        SID_exit_error("domain_key_max>num1dim^3 (ie %zd>%zd) in compute_PHK_boundry_keys", SID_ERROR_LOGIC,
+                       domain_key_max, num1dim * num1dim * num1dim);
     if(domain_key_max < domain_key_min)
-        SID_trap_error("domain_key_max<domain_key_min (ie %zd<%zd) in compute_PHK_volume_keys", SID_ERROR_LOGIC, domain_key_min, domain_key_max);
+        SID_exit_error("domain_key_max<domain_key_min (ie %zd<%zd) in compute_PHK_volume_keys", SID_ERROR_LOGIC,
+                       domain_key_min, domain_key_max);
 
     // Iterate, building-up layers over the thickness of the boundary
     PHK_t *keys_last;

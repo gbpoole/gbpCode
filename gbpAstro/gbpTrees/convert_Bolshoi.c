@@ -53,7 +53,7 @@ int scale_to_snap(float scale, float *scales, int n_scales) {
         for(i_scale = 0; i_scale < n_scales; i_scale++)
             SID_log("%f", SID_LOG_COMMENT, scales[i_scale]);
         SID_log("", SID_LOG_CLOSE | SID_LOG_NOPRINT);
-        SID_trap_error("Could not find scale=%f in list of scales!", SID_ERROR_LOGIC, scale);
+        SID_exit_error("Could not find scale=%f in list of scales!", SID_ERROR_LOGIC, scale);
     }
     return (i_scale);
 }
@@ -274,10 +274,11 @@ int main(int argc, char *argv[]) {
                             scales_check[i_scale] = scales[i_scale];
                     } else {
                         if(n_scales != n_scales_check)
-                            SID_trap_error("n_scales mismatch (ie. %d!=%d)", SID_ERROR_LOGIC, n_scales, n_scales_check);
+                            SID_exit_error("n_scales mismatch (ie. %d!=%d)", SID_ERROR_LOGIC, n_scales, n_scales_check);
                         for(i_scale = 0; i_scale < n_scales; i_scale++) {
                             if(scales[i_scale] != scales_check[i_scale])
-                                SID_trap_error("scale mismatch (ie. %lf!=%lf)", SID_ERROR_LOGIC, scales[i_scale], scales_check[i_scale]);
+                                SID_exit_error("scale mismatch (ie. %lf!=%lf)", SID_ERROR_LOGIC, scales[i_scale],
+                                               scales_check[i_scale]);
                         }
                     }
 
@@ -390,7 +391,7 @@ int main(int argc, char *argv[]) {
                                         group_id = 0;
                                     add_group_to_list(group_id, tree_ids, &n_tree_ids);
                                     if(n_tree_ids > N_UPIDS_MAX)
-                                        SID_trap_error("Increase N_UPIDS_MAX!", SID_ERROR_LOGIC);
+                                        SID_exit_error("Increase N_UPIDS_MAX!", SID_ERROR_LOGIC);
                                 }
                                 i_halo++;
                                 j_halo++;
@@ -406,10 +407,9 @@ int main(int argc, char *argv[]) {
                         i_tree++;
                     }
                     if(i_tree != n_trees_in)
-                        SID_trap_error("The number of trees read (%d) does not equal the number listed in the header (%d)!",
-                                       SID_ERROR_LOGIC,
-                                       i_tree,
-                                       n_trees_in);
+                        SID_exit_error(
+                                "The number of trees read (%d) does not equal the number listed in the header (%d)!",
+                                SID_ERROR_LOGIC, i_tree, n_trees_in);
                     merge_sort(tree_ids, (size_t)n_tree_ids, NULL, SID_INT, SORT_INPLACE_ONLY, GBP_TRUE);
                     SID_log("(%d trees and %d halos found; %d output-trees will result)...Done.", SID_LOG_CLOSE, n_trees_in, n_halos, n_tree_ids);
 
@@ -507,7 +507,8 @@ int main(int argc, char *argv[]) {
                                 else {
                                     j_tree = find_index_int(tree_ids, search_id, n_tree_ids, NULL);
                                     if(tree_ids[j_tree] != search_id)
-                                        SID_trap_error("Arg! Couldn't find tree_id=%d in the list", SID_ERROR_LOGIC, search_id);
+                                        SID_exit_error("Arg! Couldn't find tree_id=%d in the list", SID_ERROR_LOGIC,
+                                                       search_id);
                                 }
                                 n_trees_tree[j_tree]++;
                             }

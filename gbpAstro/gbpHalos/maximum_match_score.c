@@ -25,8 +25,7 @@ float maximum_match_score(double n_particles) {
     else if(MATCH_SCORE_RANK_INDEX == (-TWO_THIRDS))
         return ((float)pow(READ_MATCHES_GOODNESS_A + READ_MATCHES_GOODNESS_B * n_particles, READ_MATCHES_GOODNESS_C) + READ_MATCHES_GOODNESS_D);
     else
-        SID_trap_error(
-            "Invalid MATCH_SCORE_RANK_INDEX passed to maximum_match_score().  Please update the code to accomodate MATCH_SCORE_RANK_INDEX=%lf.",
-            SID_ERROR_LOGIC,
-            MATCH_SCORE_RANK_INDEX);
+        SID_exit_error(
+                "Invalid MATCH_SCORE_RANK_INDEX passed to maximum_match_score().  Please update the code to accomodate MATCH_SCORE_RANK_INDEX=%lf.",
+                SID_ERROR_LOGIC, MATCH_SCORE_RANK_INDEX);
 }

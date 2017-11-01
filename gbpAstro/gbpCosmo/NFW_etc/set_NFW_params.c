@@ -9,7 +9,7 @@
 
 void set_NFW_params(double M, double z, int mode, cosmo_info **cosmo, double *c_vir, double *R_vir) {
     if(mode != NFW_MODE_DEFAULT)
-        SID_trap_error("Unknown mode (%d) in set_NFW_params()", SID_ERROR_LOGIC, mode);
+        SID_exit_error("Unknown mode (%d) in set_NFW_params()", SID_ERROR_LOGIC, mode);
 
     switch(ADaPS_exist(*cosmo, "M_WDM")) {
         case GBP_FALSE: {
@@ -31,7 +31,7 @@ void set_NFW_params(double M, double z, int mode, cosmo_info **cosmo, double *c_
             (*R_vir) = R_Delta_z(M, Delta, z, *cosmo); // Bullock et al '01
         } break;
         case GBP_TRUE:
-            SID_trap_error("ENS not working.", SID_ERROR_LOGIC);
+            SID_exit_error("ENS not working.", SID_ERROR_LOGIC);
             //(*c_vir)=c_ENS(M,z,*cosmo);          // Eke, Navarro and Steinmetz
             //(*R_vir)=R_Delta_z(M,200.,z,*cosmo); // R_200
             break;

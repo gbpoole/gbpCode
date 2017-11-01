@@ -64,7 +64,8 @@ double bias_model(double x_in, double delta_c, double z, cosmo_info **cosmo, int
     // Tinker et al 2010
     if(check_mode_for_flag(mode, BIAS_MODEL_TRK)) {
         if(flag_done)
-            SID_trap_error("Mode flag (%d) is invalid in bias_model().  Multiple model definitions.", SID_ERROR_LOGIC, mode);
+            SID_exit_error("Mode flag (%d) is invalid in bias_model().  Multiple model definitions.", SID_ERROR_LOGIC,
+                           mode);
         flag_done = GBP_TRUE;
         if(flag_Vmax_ordinate)
             M_R = Vmax_to_Mvir_NFW(V_max, z, NFW_MODE_DEFAULT, cosmo);
@@ -82,7 +83,8 @@ double bias_model(double x_in, double delta_c, double z, cosmo_info **cosmo, int
     // Basilakos and Plionis (2001;2003) w/ Papageorgiou et al 2013 coeeficients
     if(check_mode_for_flag(mode, BIAS_MODEL_BPR)) {
         if(flag_done)
-            SID_trap_error("Mode flag (%d) is invalid in bias_model().  Multiple model definitions.", SID_ERROR_LOGIC, mode);
+            SID_exit_error("Mode flag (%d) is invalid in bias_model().  Multiple model definitions.", SID_ERROR_LOGIC,
+                           mode);
         flag_done = GBP_TRUE;
         if(flag_Vmax_ordinate)
             M_R = Vmax_to_Mvir_NFW(V_max, z, NFW_MODE_DEFAULT, cosmo);
@@ -108,7 +110,8 @@ double bias_model(double x_in, double delta_c, double z, cosmo_info **cosmo, int
     // Poole et al 2014
     if(check_mode_for_flag(mode, BIAS_MODEL_POOLE_HALO)) {
         if(flag_done)
-            SID_trap_error("Mode flag (%d) is invalid in bias_model().  Multiple model definitions.", SID_ERROR_LOGIC, mode);
+            SID_exit_error("Mode flag (%d) is invalid in bias_model().  Multiple model definitions.", SID_ERROR_LOGIC,
+                           mode);
         flag_done = GBP_TRUE;
         if(!flag_Vmax_ordinate)
             V_max = V_max_NFW(M_R, z, NFW_MODE_DEFAULT, cosmo) * 1e-3;
@@ -150,7 +153,8 @@ double bias_model(double x_in, double delta_c, double z, cosmo_info **cosmo, int
     }
     if(check_mode_for_flag(mode, BIAS_MODEL_POOLE_ZSPACE)) {
         if(flag_done)
-            SID_trap_error("Mode flag (%d) is invalid in bias_model().  Multiple model definitions.", SID_ERROR_LOGIC, mode);
+            SID_exit_error("Mode flag (%d) is invalid in bias_model().  Multiple model definitions.", SID_ERROR_LOGIC,
+                           mode);
         flag_done = GBP_TRUE;
         if(!flag_Vmax_ordinate)
             V_max = V_max_NFW(M_R, z, NFW_MODE_DEFAULT, cosmo) * 1e-3;
@@ -195,7 +199,8 @@ double bias_model(double x_in, double delta_c, double z, cosmo_info **cosmo, int
     }
     if(check_mode_for_flag(mode, BIAS_MODEL_POOLE_TOTAL)) {
         if(flag_done)
-            SID_trap_error("Mode flag (%d) is invalid in bias_model().  Multiple model definitions.", SID_ERROR_LOGIC, mode);
+            SID_exit_error("Mode flag (%d) is invalid in bias_model().  Multiple model definitions.", SID_ERROR_LOGIC,
+                           mode);
         flag_done = GBP_TRUE;
         if(!flag_Vmax_ordinate)
             V_max = V_max_NFW(M_R, z, NFW_MODE_DEFAULT, cosmo) * 1e-3;
@@ -236,7 +241,7 @@ double bias_model(double x_in, double delta_c, double z, cosmo_info **cosmo, int
         bias        = take_alog10(0.5 * (b_o + b_V * V_max));
     }
     if(!flag_done)
-        SID_trap_error("Mode flag (%d) is invalid in bias_model().  No model definition.", SID_ERROR_LOGIC, mode);
+        SID_exit_error("Mode flag (%d) is invalid in bias_model().  No model definition.", SID_ERROR_LOGIC, mode);
     // Apply the Kaiser '87 model to whatever model has been processed above.  Be careful, there
     //   are some mode flags (such as BIAS_MODE_POOLE_ZSPACE) for which this does not make sence
     //   and we presently don't check for this.

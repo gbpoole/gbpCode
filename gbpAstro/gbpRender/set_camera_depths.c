@@ -124,7 +124,7 @@ int set_camera_depths(render_info *render, int stereo_offset_dir) {
                     else if(!strcmp(current_arg->type, "subgroup_id"))
                         sprintf(mark_id, "subgroup_%d", current_arg->ival[0]);
                     else
-                        SID_trap_error("Invalid option.", SID_ERROR_LOGIC);
+                        SID_exit_error("Invalid option.", SID_ERROR_LOGIC);
                     float x_m = 0.;
                     float y_m = 0.;
                     float z_m = 0.;
@@ -178,11 +178,9 @@ int set_camera_depths(render_info *render, int stereo_offset_dir) {
     // Check that the count never changes
     if(!render->camera->flag_depth_init)
         if(render->camera->n_depth > render->camera->n_depth_alloc)
-            SID_trap_error(
-                "The camera depth counter has increased (ie. %d!=%d).  Functionallity needs to be added for realloc'ing the image arrays, etc.",
-                SID_ERROR_LOGIC,
-                render->camera->n_depth,
-                render->camera->n_depth_alloc);
+            SID_exit_error(
+                    "The camera depth counter has increased (ie. %d!=%d).  Functionallity needs to be added for realloc'ing the image arrays, etc.",
+                    SID_ERROR_LOGIC, render->camera->n_depth, render->camera->n_depth_alloc);
     render->camera->flag_depth_init = GBP_FALSE;
 
     return (r_val);

@@ -357,7 +357,7 @@ void read_gadget_binary_local(char *filename_root_in, int snapshot_number, plist
             }
         }
         if(n_warning > 0)
-            SID_trap_error("Error in group particle ids!", SID_ERROR_LOGIC);
+            SID_exit_error("Error in group particle ids!", SID_ERROR_LOGIC);
         SID_log("Done.", SID_LOG_CLOSE);
 
         // Allocate data arrays
@@ -452,10 +452,9 @@ void read_gadget_binary_local(char *filename_root_in, int snapshot_number, plist
                     SID_log("(int IDs)...", SID_LOG_CONTINUE);
                     flag_LONGIDS = GBP_FALSE;
                 } else
-                    SID_trap_error("IDs record length (%d) does not set a sensible id byte size for the number of particles given in the header (%s)",
-                                   SID_ERROR_LOGIC,
-                                   record_length_open,
-                                   n_particles_file);
+                    SID_exit_error(
+                            "IDs record length (%d) does not set a sensible id byte size for the number of particles given in the header (%s)",
+                            SID_ERROR_LOGIC, record_length_open, n_particles_file);
             }
             SID_Bcast(&flag_LONGIDS, 1, SID_INT, SID.COMM_WORLD, SID_MASTER_RANK);
 
@@ -615,7 +614,7 @@ void read_gadget_binary_local(char *filename_root_in, int snapshot_number, plist
 
         SID_log("Done.", SID_LOG_CLOSE);
     } else
-        SID_trap_error("Could not find file with root {%s}", SID_ERROR_IO_OPEN, filename_root_in);
+        SID_exit_error("Could not find file with root {%s}", SID_ERROR_IO_OPEN, filename_root_in);
 }
 
 int main(int argc, char *argv[]) {
@@ -779,7 +778,8 @@ int main(int argc, char *argv[]) {
                     while(ids_snapshot[ids_snapshot_sort_index[j_particle]] < ids_groups[ids_groups_sort_index[i_particle]]) {
                         j_particle++;
                         if(j_particle >= n_particles_snapshot)
-                            SID_trap_error("There's a particle id in the group catalog that's not in the snapshot!", SID_ERROR_LOGIC);
+                            SID_exit_error("There's a particle id in the group catalog that's not in the snapshot!",
+                                           SID_ERROR_LOGIC);
                     }
                     ids_sort_index[ids_groups_sort_index[i_particle]] = ids_snapshot_sort_index[j_particle];
                 }

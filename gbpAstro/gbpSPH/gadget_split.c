@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
     int                flag_file_type = fp_gadget.flag_file_type;
     gadget_header_info header         = fp_gadget.header;
     if(!flag_filefound)
-        SID_trap_error("File not found.", SID_ERROR_LOGIC);
+        SID_exit_error("File not found.", SID_ERROR_LOGIC);
 
     // Loop over the number of files in the snapshot
     int n_files;
@@ -89,7 +89,7 @@ int main(int argc, char *argv[]) {
         int   i_type;
         set_gadget_filename(&fp_gadget, i_file, filename_in);
         if((fp_in = fopen(filename_in, "r")) == NULL)
-            SID_trap_error("Could not open {%s}.", SID_ERROR_IO_OPEN, filename_in);
+            SID_exit_error("Could not open {%s}.", SID_ERROR_IO_OPEN, filename_in);
         fread_verify(&record_length_in, sizeof(int), 1, fp_in);
         fread_verify(&header, sizeof(gadget_header_info), 1, fp_in);
         fread_verify(&record_length_out, sizeof(int), 1, fp_in);
@@ -176,7 +176,7 @@ int main(int argc, char *argv[]) {
             else if(record_length_in / sizeof(long long) == n_in_total)
                 id_byte_size = sizeof(long long);
             else
-                SID_trap_error("Invalid input IDs block size (%d).", SID_ERROR_LOGIC, record_length_in);
+                SID_exit_error("Invalid input IDs block size (%d).", SID_ERROR_LOGIC, record_length_in);
 
             // Read/Write IDs
             record_length_write = n_particles_i * id_byte_size;

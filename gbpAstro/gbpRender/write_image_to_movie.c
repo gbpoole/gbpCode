@@ -109,6 +109,6 @@ void write_image_to_movie(image_info *image, movie_info *movie) {
             SID_log("Done.", SID_LOG_CLOSE);
     }
 #else
-    SID_trap_error("Routine not supported.  FFMPEG not installed.", SID_ERROR_LOGIC);
+    SID_exit_error("Routine not supported.  FFMPEG not installed.", SID_ERROR_LOGIC);
 #endif
 }

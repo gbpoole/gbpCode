@@ -58,7 +58,7 @@ int main(int argc, char *argv[]) {
     // Initialization -- MPI etc.
     SID_init(&argc, &argv, NULL, NULL);
     if(argc != 8)
-        SID_trap_error("Incorrect syntax.", SID_ERROR_SYNTAX);
+        SID_exit_error("Incorrect syntax.", SID_ERROR_SYNTAX);
 
     // Parse arguments
     strcpy(filename_in_root, argv[1]);
@@ -74,7 +74,8 @@ int main(int argc, char *argv[]) {
     int n_groupings;
     n_groupings = i_grouping_stop - i_grouping_start + 1;
     if(n_groupings < 1)
-        SID_trap_error("No groupings have been selected (you chose start=%d, stop=%d).", SID_ERROR_LOGIC, i_grouping_start, i_grouping_stop);
+        SID_exit_error("No groupings have been selected (you chose start=%d, stop=%d).", SID_ERROR_LOGIC,
+                       i_grouping_start, i_grouping_stop);
 
     SID_log("Producing power spectra for halo grouping(s)...", SID_LOG_OPEN | SID_LOG_TIMER);
 

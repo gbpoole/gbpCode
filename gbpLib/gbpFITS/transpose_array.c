@@ -78,7 +78,7 @@ void transpose_array(void *data, SID_Datatype dtype, int n_d, int *d_i) {
         } else if(dtype == SID_INT)
             ((int *)data)[index_transpose] = ((int *)buffer)[index];
         else
-            SID_trap_error("Unrecognized dtype in transpose_array", SID_ERROR_LOGIC);
+            SID_exit_error("Unrecognized dtype in transpose_array", SID_ERROR_LOGIC);
     }
 
     // Transpose the given array with the dimension sizes

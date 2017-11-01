@@ -15,12 +15,14 @@ tree_node_info *fetch_treenode_backmatch(tree_info *trees, tree_node_info *halo)
             if(trees->group_backmatch_pointers != NULL)
                 return (trees->group_backmatch_pointers[halo->snap_tree][halo->neighbour_index]);
             else
-                SID_trap_error("Group backmatch pointers are not defined.  They probably have not been read.", SID_ERROR_LOGIC);
+                SID_exit_error("Group backmatch pointers are not defined.  They probably have not been read.",
+                               SID_ERROR_LOGIC);
         } else {
             if(trees->subgroup_backmatch_pointers != NULL)
                 return (trees->subgroup_backmatch_pointers[halo->snap_tree][halo->neighbour_index]);
             else
-                SID_trap_error("Subgroup backmatch pointers are not defined.  They probably have not been read.", SID_ERROR_LOGIC);
+                SID_exit_error("Subgroup backmatch pointers are not defined.  They probably have not been read.",
+                               SID_ERROR_LOGIC);
         }
     }
     return (NULL);

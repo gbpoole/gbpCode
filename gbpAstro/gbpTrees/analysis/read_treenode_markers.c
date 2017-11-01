@@ -12,7 +12,7 @@
 void read_treenode_markers(tree_info *trees, const char *filename_input_root, int mode) {
     SID_log("Reading markers...", SID_LOG_OPEN | SID_LOG_TIMER);
 
-    SID_trap_error("This function is not working yet.  It needs to be debugged.", SID_ERROR_LOGIC);
+    SID_exit_error("This function is not working yet.  It needs to be debugged.", SID_ERROR_LOGIC);
 
     // Generate the markers starting recursively from each tree root
     char                 filename_input_group_text[16];
@@ -35,7 +35,8 @@ void read_treenode_markers(tree_info *trees, const char *filename_input_root, in
         n_halos_local   = trees->n_subgroups_snap_local;
         first_neighbour = trees->first_neighbour_subgroups;
     } else
-        SID_trap_error("group/subgroup mode has not been properly specified in read_treenode_markers().", SID_ERROR_LOGIC);
+        SID_exit_error("group/subgroup mode has not been properly specified in read_treenode_markers().",
+                       SID_ERROR_LOGIC);
 
     // Allocate memory for the markers
     SID_log("Creating look-up arrays...", SID_LOG_OPEN | SID_LOG_TIMER);
@@ -80,9 +81,11 @@ void read_treenode_markers(tree_info *trees, const char *filename_input_root, in
         SID_fread_all(&i_snap_file, sizeof(int), 1, &fp_in);
         SID_fread_all(&n_halos_total_file, sizeof(int), 1, &fp_in);
         if(i_snap_file != i_snap)
-            SID_trap_error("Snapshot numbers don't match what's in the file (ie. %d!=%d).", SID_ERROR_LOGIC, i_snap_file, i_snap);
+            SID_exit_error("Snapshot numbers don't match what's in the file (ie. %d!=%d).", SID_ERROR_LOGIC,
+                           i_snap_file, i_snap);
         if(n_halos_total_file != n_halos_total[i_snap])
-            SID_trap_error("Halo counts don't match what's in the file (ie. %d!=%d).", SID_ERROR_LOGIC, n_halos_total_file, n_halos_total);
+            SID_exit_error("Halo counts don't match what's in the file (ie. %d!=%d).", SID_ERROR_LOGIC,
+                           n_halos_total_file, n_halos_total);
 
         // Perform the (buffered) read of this file
         int            i_found          = 0;
@@ -155,15 +158,13 @@ void read_treenode_markers(tree_info *trees, const char *filename_input_root, in
                         (*marker) = nodes_local[halo_snap][marker_index];
                         // Sanity check
                         if((*marker)->file_index != halo_index)
-                            SID_trap_error("The halo identified as a marker does not have the correct file index (ie %d!=%d)",
-                                           SID_ERROR_LOGIC,
-                                           (*marker)->file_index,
-                                           halo_index);
+                            SID_exit_error(
+                                    "The halo identified as a marker does not have the correct file index (ie %d!=%d)",
+                                    SID_ERROR_LOGIC, (*marker)->file_index, halo_index);
                         if((*marker)->snap_tree != halo_snap)
-                            SID_trap_error("The halo identified as a marker does not have the correct snapshot (ie %d!=%d)",
-                                           SID_ERROR_LOGIC,
-                                           (*marker)->snap_tree,
-                                           halo_snap);
+                            SID_exit_error(
+                                    "The halo identified as a marker does not have the correct snapshot (ie %d!=%d)",
+                                    SID_ERROR_LOGIC, (*marker)->snap_tree, halo_snap);
                     }
                 }
             }
@@ -177,7 +178,8 @@ void read_treenode_markers(tree_info *trees, const char *filename_input_root, in
 
         // Sanity check
         if(i_found != n_halos_local[i_snap])
-            SID_trap_error("Failed to load all local halos (ie. %d!=%d).", SID_ERROR_LOGIC, i_found, n_halos_local[i_snap]);
+            SID_exit_error("Failed to load all local halos (ie. %d!=%d).", SID_ERROR_LOGIC, i_found,
+                           n_halos_local[i_snap]);
 
         SID_log("Done.", SID_LOG_CLOSE);
     }

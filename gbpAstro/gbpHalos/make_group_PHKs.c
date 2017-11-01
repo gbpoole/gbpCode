@@ -76,8 +76,8 @@ int main(int argc, char *argv[]) {
             double *             z_array = (double *)SID_malloc(sizeof(double) * n_groups);
             fopen_catalog(filename_catalog_root, i_file, READ_CATALOG_GROUPS | READ_CATALOG_PROPERTIES, &fp_group_properties);
             if(fp_group_properties.n_halos_total != n_groups)
-                SID_trap_error(
-                    "Halo counts in group files and catalogs don't match (ie. %d!=%d)", SID_ERROR_LOGIC, fp_group_properties.n_halos_total, n_groups);
+                SID_exit_error("Halo counts in group files and catalogs don't match (ie. %d!=%d)", SID_ERROR_LOGIC,
+                               fp_group_properties.n_halos_total, n_groups);
             for(int i_group = 0; i_group < n_groups; i_group++) {
                 fread_catalog_file(&fp_group_properties, NULL, NULL, &group_properties, NULL, i_group);
                 x_array[i_group] = group_properties.position_MBP[0];

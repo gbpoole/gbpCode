@@ -306,8 +306,8 @@ void init_make_map_noabs(render_info *render,
             }
         } // loop over particles
         if(particle_index != n_rank_local[rank_to])
-            SID_trap_error(
-                "Buffer particle count does not equal desired exchange count (ie. %zd!=%zd)", SID_ERROR_LOGIC, particle_index, n_rank_local[rank_to]);
+            SID_exit_error("Buffer particle count does not equal desired exchange count (ie. %zd!=%zd)",
+                           SID_ERROR_LOGIC, particle_index, n_rank_local[rank_to]);
 
         // Perform exchanges
         size_t n_exchange;
@@ -325,11 +325,8 @@ void init_make_map_noabs(render_info *render,
 
     // Sanity checks
     if(j_particle_rank != n_particles_local)
-        SID_trap_error("The wrong number of particles were received (ie. %zd!=%zd) on rank %d.",
-                       SID_ERROR_LOGIC,
-                       j_particle_rank,
-                       n_particles_local,
-                       SID.My_rank);
+        SID_exit_error("The wrong number of particles were received (ie. %zd!=%zd) on rank %d.", SID_ERROR_LOGIC,
+                       j_particle_rank, n_particles_local, SID.My_rank);
 
     SID_log("Done.", SID_LOG_CLOSE);
 

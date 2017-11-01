@@ -167,14 +167,14 @@ void calc_pairs_local(const char *species_name1, const char *species_name2, int 
         flag_pair_type = CFUNC_ADD_PAIR_DD;
     } else if(check_mode_for_flag(mode, CFUNC_ADD_PAIR_DR)) {
         if(flag_pair_type >= 0)
-            SID_trap_error("Multiple pair types specified.", SID_ERROR_LOGIC);
+            SID_exit_error("Multiple pair types specified.", SID_ERROR_LOGIC);
         flag_pair_type = CFUNC_ADD_PAIR_DR;
     } else if(check_mode_for_flag(mode, CFUNC_ADD_PAIR_RR)) {
         if(flag_pair_type >= 0)
-            SID_trap_error("Multiple pair types specified.", SID_ERROR_LOGIC);
+            SID_exit_error("Multiple pair types specified.", SID_ERROR_LOGIC);
         flag_pair_type = CFUNC_ADD_PAIR_RR;
     } else
-        SID_trap_error("Unsupported pair type specified.", SID_ERROR_LOGIC);
+        SID_exit_error("Unsupported pair type specified.", SID_ERROR_LOGIC);
 
     // Fetch some stuff we need
     GBPREAL *x_data1_local;

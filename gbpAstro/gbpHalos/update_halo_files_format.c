@@ -124,7 +124,7 @@ int main(int argc, char *argv[]) {
             FILE *fp_in;
             FILE *fp_out;
             if((fp_in = fopen(filename_in, "r")) == NULL)
-                SID_trap_error("Could not open {%s}", SID_ERROR_IO_OPEN, filename_in);
+                SID_exit_error("Could not open {%s}", SID_ERROR_IO_OPEN, filename_in);
             fp_out = fopen(filename_out, "w");
 
             // Process n_groups
@@ -153,7 +153,7 @@ int main(int argc, char *argv[]) {
                     offset_ll = (int64_t)offset_in;
                     fwrite(&offset_ll, offset_size, 1, fp_out);
                 } else
-                    SID_trap_error("Invalid offset size (%d)", SID_ERROR_LOGIC);
+                    SID_exit_error("Invalid offset size (%d)", SID_ERROR_LOGIC);
             }
 
             // Process n_subgroups

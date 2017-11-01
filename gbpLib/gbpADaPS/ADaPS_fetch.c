@@ -23,7 +23,7 @@ void *ADaPS_fetch(ADaPS *list, const char *name_in, ...) {
         current = current->next;
     }
     if(flag)
-        SID_trap_error("Variable {%s} was not found in ADaPS structure.", SID_ERROR_LOGIC, name);
+        SID_exit_error("Variable {%s} was not found in ADaPS structure.", SID_ERROR_LOGIC, name);
     va_end(vargs);
     return (r_val);
 }

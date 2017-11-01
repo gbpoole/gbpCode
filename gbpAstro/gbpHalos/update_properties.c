@@ -134,7 +134,8 @@ int main(int argc, char *argv[]) {
         if(i_snap < n_a_list)
             expansion_factor = a_list[i_snap];
         else
-            SID_trap_error("Not enough entries in the expansion factor list (ie %d>=%d).", SID_ERROR_LOGIC, i_snap, n_a_list);
+            SID_exit_error("Not enough entries in the expansion factor list (ie %d>=%d).", SID_ERROR_LOGIC, i_snap,
+                           n_a_list);
 
         int i_run;
         for(i_run = 0; i_run < 2; i_run++) {
@@ -195,15 +196,16 @@ int main(int argc, char *argv[]) {
                     fclose(fp_test);
                     flag_multifile_properties = GBP_FALSE;
                     if(n_props != n_props_all)
-                        SID_trap_error("Halo counts don't agree (ie. %d!=%d) in properties file.", SID_ERROR_LOGIC, n_props, n_props_all);
+                        SID_exit_error("Halo counts don't agree (ie. %d!=%d) in properties file.", SID_ERROR_LOGIC,
+                                       n_props, n_props_all);
                     if(n_files_props != 1)
-                        SID_trap_error(
-                            "Invalid file count (%d) in non-multifile properties file {%s}.", SID_ERROR_LOGIC, n_files_props, filename_test);
+                        SID_exit_error("Invalid file count (%d) in non-multifile properties file {%s}.",
+                                       SID_ERROR_LOGIC, n_files_props, filename_test);
                 } else
-                    SID_trap_error("Could not open properties dataset.", SID_ERROR_IO_OPEN);
+                    SID_exit_error("Could not open properties dataset.", SID_ERROR_IO_OPEN);
             }
             if(i_file != 0)
-                SID_trap_error("Invalid starting file index (%d) in properties file.", SID_ERROR_LOGIC, i_file);
+                SID_exit_error("Invalid starting file index (%d) in properties file.", SID_ERROR_LOGIC, i_file);
 
             // Figure out if the profiles file(s) are multi-file format
             int n_files_profs;
@@ -229,18 +231,21 @@ int main(int argc, char *argv[]) {
                     fclose(fp_test);
                     flag_multifile_profiles = GBP_FALSE;
                     if(n_profs != n_profs_all)
-                        SID_trap_error("Halo counts don't agree (ie. %d!=%d) in profiles file.", SID_ERROR_LOGIC, n_profs, n_profs_all);
+                        SID_exit_error("Halo counts don't agree (ie. %d!=%d) in profiles file.", SID_ERROR_LOGIC,
+                                       n_profs, n_profs_all);
                     if(n_files_profs != 1)
-                        SID_trap_error("Invalid file count (%d) in non-multifile profiles file.", SID_ERROR_LOGIC, n_files_profs);
+                        SID_exit_error("Invalid file count (%d) in non-multifile profiles file.", SID_ERROR_LOGIC,
+                                       n_files_profs);
                 } else
-                    SID_trap_error("Could not open profiles dataset.", SID_ERROR_IO_OPEN);
+                    SID_exit_error("Could not open profiles dataset.", SID_ERROR_IO_OPEN);
             }
             if(i_file != 0)
-                SID_trap_error("Invalid starting file index (%d) in profiles file.", SID_ERROR_LOGIC, i_file);
+                SID_exit_error("Invalid starting file index (%d) in profiles file.", SID_ERROR_LOGIC, i_file);
 
             // Check that the halo counts in the properties and profiles datasets agree
             if(n_profs_all != n_props_all)
-                SID_trap_error("The properties and profiles halo counts don't agree (ie. %d!=%d)", SID_ERROR_LOGIC, n_profs_all, n_props_all);
+                SID_exit_error("The properties and profiles halo counts don't agree (ie. %d!=%d)", SID_ERROR_LOGIC,
+                               n_profs_all, n_props_all);
 
             // Loop over all the halos
             FILE *fp_properties_read  = NULL;
@@ -265,14 +270,14 @@ int main(int argc, char *argv[]) {
                         sprintf(filename_write, "%s/%s.%d", filename_properties_out, filename_properties_out_base, i_file_props);
                     } else {
                         if(i_file_props > 0)
-                            SID_trap_error("Error looping over non-multifile.", SID_ERROR_LOGIC);
+                            SID_exit_error("Error looping over non-multifile.", SID_ERROR_LOGIC);
                         sprintf(filename_read, "%s", filename_properties_in);
                         sprintf(filename_write, "%s", filename_properties_out);
                     }
                     if((fp_properties_read = fopen(filename_read, "r")) == NULL)
-                        SID_trap_error("Could not open file {%s} for reading.", SID_ERROR_IO_OPEN, filename_read);
+                        SID_exit_error("Could not open file {%s} for reading.", SID_ERROR_IO_OPEN, filename_read);
                     if((fp_properties_write = fopen(filename_write, "w")) == NULL)
-                        SID_trap_error("Could not open file {%s} for writing.", SID_ERROR_IO_OPEN, filename_write);
+                        SID_exit_error("Could not open file {%s} for writing.", SID_ERROR_IO_OPEN, filename_write);
                     // Read header
                     fread_verify(&i_file, sizeof(int), 1, fp_properties_read);
                     fread_verify(&n_files_props, sizeof(int), 1, fp_properties_read);
@@ -298,14 +303,14 @@ int main(int argc, char *argv[]) {
                         sprintf(filename_write, "%s/%s.%d", filename_profiles_out, filename_profiles_out_base, i_file_profs);
                     } else {
                         if(i_file_profs > 0)
-                            SID_trap_error("Error looping over non-multifile.", SID_ERROR_LOGIC);
+                            SID_exit_error("Error looping over non-multifile.", SID_ERROR_LOGIC);
                         sprintf(filename_read, "%s", filename_profiles_in);
                         sprintf(filename_write, "%s", filename_profiles_out);
                     }
                     if((fp_profiles_read = fopen(filename_read, "r")) == NULL)
-                        SID_trap_error("Could not open file {%s} for reading.", SID_ERROR_IO_OPEN, filename_read);
+                        SID_exit_error("Could not open file {%s} for reading.", SID_ERROR_IO_OPEN, filename_read);
                     if((fp_profiles_write = fopen(filename_write, "w")) == NULL)
-                        SID_trap_error("Could not open file {%s} for writing.", SID_ERROR_IO_OPEN, filename_write);
+                        SID_exit_error("Could not open file {%s} for writing.", SID_ERROR_IO_OPEN, filename_write);
                     // Read header
                     fread_verify(&i_file, sizeof(int), 1, fp_profiles_read);
                     fread_verify(&n_files_profs, sizeof(int), 1, fp_profiles_read);
@@ -342,9 +347,9 @@ int main(int argc, char *argv[]) {
                         if(fp_properties_write != NULL)
                             fclose(fp_properties_write);
                         if((fp_properties_read = fopen(filename_read, "r")) == NULL)
-                            SID_trap_error("Could not open file {%s} for reading.", SID_ERROR_IO_OPEN, filename_read);
+                            SID_exit_error("Could not open file {%s} for reading.", SID_ERROR_IO_OPEN, filename_read);
                         if((fp_properties_write = fopen(filename_write, "w")) == NULL)
-                            SID_trap_error("Could not open file {%s} for writing.", SID_ERROR_IO_OPEN, filename_write);
+                            SID_exit_error("Could not open file {%s} for writing.", SID_ERROR_IO_OPEN, filename_write);
 
                         // Read header
                         fread_verify(&i_file, sizeof(int), 1, fp_properties_read);
@@ -382,9 +387,9 @@ int main(int argc, char *argv[]) {
                         if(fp_profiles_write != NULL)
                             fclose(fp_profiles_write);
                         if((fp_profiles_read = fopen(filename_read, "r")) == NULL)
-                            SID_trap_error("Could not open file {%s} for reading.", SID_ERROR_IO_OPEN, filename_read);
+                            SID_exit_error("Could not open file {%s} for reading.", SID_ERROR_IO_OPEN, filename_read);
                         if((fp_profiles_write = fopen(filename_write, "w")) == NULL)
-                            SID_trap_error("Could not open file {%s} for writing.", SID_ERROR_IO_OPEN, filename_write);
+                            SID_exit_error("Could not open file {%s} for writing.", SID_ERROR_IO_OPEN, filename_write);
 
                         // Read header
                         fread_verify(&i_file, sizeof(int), 1, fp_profiles_read);
