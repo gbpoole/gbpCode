@@ -10,5 +10,5 @@ void finalize_histogram(hist_info *hist) {
         SID_Allreduce(SID_IN_PLACE, &(hist->count_hist), 1, SID_SIZE_T, SID_SUM, SID.COMM_WORLD);
         SID_Allreduce(SID_IN_PLACE, &(hist->count_all), 1, SID_SIZE_T, SID_SUM, SID.COMM_WORLD);
     }
-    hist->flag_finalized = TRUE;
+    hist->flag_finalized = GBP_TRUE;
 }

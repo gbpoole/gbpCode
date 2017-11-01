@@ -15,12 +15,12 @@ float fetch_treenode_backmatch_score(tree_info *trees, tree_node_info *halo) {
             if(trees->group_backmatch_score != NULL)
                 return (trees->group_backmatch_score[halo->snap_tree][halo->neighbour_index]);
             else
-                SID_trap_error("Group backmatch scores are not defined.  They probably have not been read.", ERROR_LOGIC);
+                SID_trap_error("Group backmatch scores are not defined.  They probably have not been read.", SID_ERROR_LOGIC);
         } else {
             if(trees->subgroup_backmatch_score != NULL)
                 return (trees->subgroup_backmatch_score[halo->snap_tree][halo->neighbour_index]);
             else
-                SID_trap_error("Subgroup backmatch scores are not defined.  They probably have not been read.", ERROR_LOGIC);
+                SID_trap_error("Subgroup backmatch scores are not defined.  They probably have not been read.", SID_ERROR_LOGIC);
         }
     }
     return (-1.);

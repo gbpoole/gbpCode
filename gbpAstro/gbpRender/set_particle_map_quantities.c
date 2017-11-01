@@ -43,8 +43,8 @@ void set_particle_map_quantities(render_info *        render,
         (*y_i) = mq->y[0][i_particle] + render->f_interpolate * dy;
         (*z_i) = mq->z[0][i_particle] + render->f_interpolate * dz;
     } else
-        SID_trap_error("n_interpolate>2 not supported (yet).", ERROR_LOGIC);
-    if(mode == TRUE) {
+        SID_trap_error("n_interpolate>2 not supported (yet).", SID_ERROR_LOGIC);
+    if(mode == GBP_TRUE) {
         if(render->n_interpolate == 1)
             (*h_i) = mq->h_smooth[0][i_particle];
         else if(render->n_interpolate == 2)
@@ -61,11 +61,11 @@ void set_particle_map_quantities(render_info *        render,
                 }
                 if(mq->transfer_rho != NULL) {
                     switch(mq->flag_transfer_rho_log) {
-                        case TRUE:
-                            (*w_i) *= MAX(0., MIN(1., interpolate(mq->transfer_rho, take_log10((double)(*w_i)))));
+                        case GBP_TRUE:
+                            (*w_i) *= GBP_MAX(0., GBP_MIN(1., interpolate(mq->transfer_rho, take_log10((double)(*w_i)))));
                             break;
-                        case FALSE:
-                            (*w_i) *= MAX(0., MIN(1., interpolate(mq->transfer_rho, (double)(*w_i))));
+                        case GBP_FALSE:
+                            (*w_i) *= GBP_MAX(0., GBP_MIN(1., interpolate(mq->transfer_rho, (double)(*w_i))));
                             break;
                     }
                 }
@@ -84,11 +84,11 @@ void set_particle_map_quantities(render_info *        render,
                 }
                 if(mq->transfer_sigma != NULL) {
                     switch(mq->flag_transfer_sigma_log) {
-                        case TRUE:
-                            (*w_i) *= MAX(0., MIN(1., interpolate(mq->transfer_sigma, take_log10((double)(*w_i)))));
+                        case GBP_TRUE:
+                            (*w_i) *= GBP_MAX(0., GBP_MIN(1., interpolate(mq->transfer_sigma, take_log10((double)(*w_i)))));
                             break;
-                        case FALSE:
-                            (*w_i) *= MAX(0., MIN(1., interpolate(mq->transfer_sigma, (double)(*w_i))));
+                        case GBP_FALSE:
+                            (*w_i) *= GBP_MAX(0., GBP_MIN(1., interpolate(mq->transfer_sigma, (double)(*w_i))));
                             break;
                     }
                 }
@@ -97,7 +97,7 @@ void set_particle_map_quantities(render_info *        render,
                 (*w_i) = 1.;
                 break;
             default:
-                SID_trap_error("Unknown w_mode (%d) in make_map.", ERROR_LOGIC, mq->v_mode);
+                SID_trap_error("Unknown w_mode (%d) in make_map.", SID_ERROR_LOGIC, mq->v_mode);
                 break;
         }
         // Set the particle value
@@ -112,17 +112,17 @@ void set_particle_map_quantities(render_info *        render,
                 }
                 if(mq->transfer_sigma != NULL) {
                     switch(mq->flag_transfer_sigma_log) {
-                        case TRUE:
-                            (*v_i) *= MAX(0., MIN(1., interpolate(mq->transfer_rho, take_log10((double)(*v_i)))));
+                        case GBP_TRUE:
+                            (*v_i) *= GBP_MAX(0., GBP_MIN(1., interpolate(mq->transfer_rho, take_log10((double)(*v_i)))));
                             break;
-                        case FALSE:
-                            (*v_i) *= MAX(0., MIN(1., interpolate(mq->transfer_rho, (double)(*v_i))));
+                        case GBP_FALSE:
+                            (*v_i) *= GBP_MAX(0., GBP_MIN(1., interpolate(mq->transfer_rho, (double)(*v_i))));
                             break;
                     }
                 }
                 break;
             default:
-                SID_trap_error("Unknown v_mode (%d) in make_map.", ERROR_LOGIC, mq->v_mode);
+                SID_trap_error("Unknown v_mode (%d) in make_map.", SID_ERROR_LOGIC, mq->v_mode);
                 break;
         }
     }

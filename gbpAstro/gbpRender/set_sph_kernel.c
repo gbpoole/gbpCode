@@ -16,9 +16,9 @@ void set_sph_kernel(double **kernel_radius, double **kernel_table_3d, double **k
     // Determine if the kernel has already been computed
     flag_compute_2d = check_mode_for_flag(mode, SPH_KERNEL_2D);
     if((*kernel_table_3d) == NULL || (flag_compute_2d && (*kernel_table_2d) == NULL))
-        flag_skip = FALSE;
+        flag_skip = GBP_FALSE;
     else
-        flag_skip = TRUE;
+        flag_skip = GBP_TRUE;
 
     if(!flag_skip) {
         // Check if a kernel file is present
@@ -26,7 +26,7 @@ void set_sph_kernel(double **kernel_radius, double **kernel_table_3d, double **k
         sprintf(filename_kernel, "gbpRender_sph_kernel.dat");
 
         // Read it if so ...
-        int   flag_recompute = TRUE;
+        int   flag_recompute = GBP_TRUE;
         FILE *fp_in          = fopen(filename_kernel, "r");
         if(fp_in != NULL) {
             int n_k_in;
@@ -44,7 +44,7 @@ void set_sph_kernel(double **kernel_radius, double **kernel_table_3d, double **k
                     fread_verify((*kernel_table_2d), sizeof(double), N_KERNEL_TABLE + 1, fp_in);
                     fread_verify(kernel_table_2d_average, sizeof(double), 1, fp_in);
                 }
-                flag_recompute = FALSE;
+                flag_recompute = GBP_FALSE;
             }
             fclose(fp_in);
         }
@@ -100,7 +100,7 @@ void set_sph_kernel(double **kernel_radius, double **kernel_table_3d, double **k
                 for(i_table = 0; i_table <= N_KERNEL_TABLE; i_table++)
                     (*kernel_table_3d)[i_table] = norm * exp(-0.5 * (*kernel_radius)[i_table] * (*kernel_radius)[i_table]);
             } else
-                SID_trap_error("Unknown kernel type in set_sph_kernel!", ERROR_LOGIC);
+                SID_trap_error("Unknown kernel type in set_sph_kernel!", SID_ERROR_LOGIC);
 
             // Integrate to form a projected line-of-sight kernel (if requested)
             if(check_mode_for_flag(mode, SPH_KERNEL_2D)) {

@@ -16,7 +16,7 @@ void autotune_MCMC_randomize(MCMC_info *MCMC) {
     SID_log("Creating faux chain (%d iterations)...", SID_LOG_OPEN | SID_LOG_TIMER, MCMC->n_autotune_randomize);
 
     // Start from the initial conditions
-    MCMC->flag_init_chain = TRUE;
+    MCMC->flag_init_chain = GBP_TRUE;
 
     // Start timer
     time(&time_start);

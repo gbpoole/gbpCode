@@ -3,7 +3,7 @@
 #include <gbpHist.h>
 
 void write_trend_property_binning_file(trend_property_info *property, const char *filename_output_root) {
-    char filename_out[MAX_FILENAME_LENGTH];
+    char filename_out[SID_MAX_FILENAME_LENGTH];
     sprintf(filename_out, "%s_%s_bins.txt", filename_output_root, property->name);
     SID_log("Writing binning description file to {%s}...", SID_LOG_OPEN, filename_out);
     if(SID.I_am_Master) {

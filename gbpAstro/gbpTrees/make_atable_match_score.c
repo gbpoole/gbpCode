@@ -13,8 +13,8 @@ int main(int argc, char *argv[]) {
     SID_init(&argc, &argv, NULL, NULL);
 
     // Parse command line
-    char filename_from[MAX_FILENAME_LENGTH];
-    char filename_to[MAX_FILENAME_LENGTH];
+    char filename_from[SID_MAX_FILENAME_LENGTH];
+    char filename_to[SID_MAX_FILENAME_LENGTH];
     strcpy(filename_from, argv[1]);
     int column_from = atoi(argv[2]);
     strcpy(filename_to, argv[3]);
@@ -87,5 +87,5 @@ int main(int argc, char *argv[]) {
     SID_free(SID_FARG line);
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

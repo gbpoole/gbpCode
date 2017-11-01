@@ -68,7 +68,7 @@ int read_matches_header(char *filename_root_in,
     int        n_buffer;
     int        i_buffer;
     int        j_buffer;
-    int        flag_sucessful_completion = TRUE;
+    int        flag_sucessful_completion = GBP_TRUE;
 
     SID_log("Reading header information...", SID_LOG_OPEN);
 
@@ -100,7 +100,7 @@ int read_matches_header(char *filename_root_in,
             int i_read_in;
             sprintf(filename_out, "%s/%sgroup_matches_header.dat", filename_root_in, group_text_prefix);
             if((fp_read_header = fopen(filename_out, "r")) == NULL)
-                SID_trap_error("Could not open file {%s} when reading header information.", ERROR_IO_OPEN, filename_out);
+                SID_trap_error("Could not open file {%s} when reading header information.", SID_ERROR_IO_OPEN, filename_out);
             fread_verify(&i_read_start_in, sizeof(int), 1, fp_read_header);
             fread_verify(&i_read_stop_in, sizeof(int), 1, fp_read_header);
             fread_verify(&n_search_total_in, sizeof(int), 1, fp_read_header);
@@ -111,7 +111,7 @@ int read_matches_header(char *filename_root_in,
             int i_read_next;
             for(j_read = 0, i_read_next = i_read_stop; j_read < (*n_files_return); j_read++, i_read_next -= i_read_step) {
                 // Read-forward to the desired snapshot
-                int flag_continue = TRUE;
+                int flag_continue = GBP_TRUE;
                 while(flag_continue && i_read_in > i_read_start_in) {
                     fread_verify(&i_read_in, sizeof(int), 1, fp_read_header);
                     fread_verify(&n_groups_1, sizeof(int), 1, fp_read_header);
@@ -127,23 +127,23 @@ int read_matches_header(char *filename_root_in,
                                 (*n_groups_return)[j_read] = n_groups_1;
                                 break;
                         }
-                        flag_continue = FALSE;
+                        flag_continue = GBP_FALSE;
                     }
                 }
             }
             fclose(fp_read_header);
             if(j_read != (*n_files_return))
                 SID_trap_error(
-                    "Was not able to read the appriate number of group/subgroup sizes (i.e. %d!=%d)", ERROR_LOGIC, j_read, (*n_files_return));
+                    "Was not able to read the appriate number of group/subgroup sizes (i.e. %d!=%d)", SID_ERROR_LOGIC, j_read, (*n_files_return));
         }
     }
-    SID_Bcast((*n_subgroups_return), (*n_files_return), SID_INT, SID.COMM_WORLD, MASTER_RANK);
-    SID_Bcast((*n_groups_return), (*n_files_return), SID_INT, SID.COMM_WORLD, MASTER_RANK);
+    SID_Bcast((*n_subgroups_return), (*n_files_return), SID_INT, SID.COMM_WORLD, SID_MASTER_RANK);
+    SID_Bcast((*n_groups_return), (*n_files_return), SID_INT, SID.COMM_WORLD, SID_MASTER_RANK);
 
     // Compute some maxs (useful for array allocation)
     calc_max((*n_subgroups_return), n_subgroups_max, (*n_files_return), SID_INT, CALC_MODE_DEFAULT);
     calc_max((*n_groups_return), n_groups_max, (*n_files_return), SID_INT, CALC_MODE_DEFAULT);
-    (*n_halos_max) = MAX((*n_subgroups_max), (*n_groups_max));
+    (*n_halos_max) = GBP_MAX((*n_subgroups_max), (*n_groups_max));
 
     SID_log("Done.", SID_LOG_CLOSE);
 

@@ -11,7 +11,7 @@ void change_gadget_filename(const char *filename_root_in,
                             int         flag_file_type,
                             char *      filename) {
     // Determine/set the filename root and path
-    char filename_path[MAX_FILENAME_LENGTH];
+    char filename_path[SID_MAX_FILENAME_LENGTH];
     strcpy(filename_path, filename_root_in);
     strip_file_root(filename_path);
 

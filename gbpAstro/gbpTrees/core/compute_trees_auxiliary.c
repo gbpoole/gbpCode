@@ -164,7 +164,7 @@ void compute_trees_auxiliary(char *filename_root,
                     i_snap = ((halo_in.snap_num) - i_read_start) / i_read_step;
                     // Check that i_snap range is ok
                     if(i_snap < 0 || i_snap >= n_snap)
-                        SID_trap_error("i_snap=%d! (%d)", ERROR_LOGIC, i_snap, n_snap);
+                        SID_trap_error("i_snap=%d! (%d)", SID_ERROR_LOGIC, i_snap, n_snap);
                     n_halos_snap[i_snap]++;
                 }
             }
@@ -191,9 +191,9 @@ void compute_trees_auxiliary(char *filename_root,
                     j_halo = halo_offset_snap[i_snap] + n_halos_snap[i_snap];
                     // Sanity check: are i_snap and j_halo in the right range?
                     if(i_snap < 0 || i_snap >= n_snap)
-                        SID_trap_error("i_snap=%d! (should be 0->%d)", ERROR_LOGIC, i_snap, n_snap - 1);
+                        SID_trap_error("i_snap=%d! (should be 0->%d)", SID_ERROR_LOGIC, i_snap, n_snap - 1);
                     if(j_halo < 0 || j_halo >= n_halos)
-                        SID_trap_error("j_halo=%d! (shoule be 0->%d)", ERROR_LOGIC, j_halo, n_halos - 1);
+                        SID_trap_error("j_halo=%d! (shoule be 0->%d)", SID_ERROR_LOGIC, j_halo, n_halos - 1);
                     tree_MBP[j_halo]  = j_tree;
                     group_MBP[j_halo] = (size_t)(halo_in.group_halo_first);
                     id_MBP[j_halo]    = (size_t)(halo_in.most_bound_id);
@@ -335,13 +335,13 @@ void compute_trees_auxiliary(char *filename_root,
                 min_index_halo = n_halos - 1;
                 max_index_halo = 0;
                 while(i_halo == group_MBP[group_MBP_index[j_halo]] && j_halo < n_halos - 1) {
-                    min_index_halo = MIN(group_MBP_index[j_halo], min_index_halo);
-                    max_index_halo = MAX(group_MBP_index[j_halo], max_index_halo);
+                    min_index_halo = GBP_MIN(group_MBP_index[j_halo], min_index_halo);
+                    max_index_halo = GBP_MAX(group_MBP_index[j_halo], max_index_halo);
                     j_halo++;
                 }
                 if(i_halo == group_MBP[group_MBP_index[j_halo]] && j_halo < n_halos - 1) {
-                    min_index_halo = MIN(group_MBP_index[j_halo], min_index_halo);
-                    max_index_halo = MAX(group_MBP_index[j_halo], max_index_halo);
+                    min_index_halo = GBP_MIN(group_MBP_index[j_halo], min_index_halo);
+                    max_index_halo = GBP_MAX(group_MBP_index[j_halo], max_index_halo);
                     j_halo++;
                 }
 

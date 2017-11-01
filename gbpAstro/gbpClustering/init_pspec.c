@@ -25,7 +25,7 @@ void init_pspec(pspec_info *pspec,
 
     // Initialize flags
     pspec->mass_assignment_scheme = mass_assignment_scheme;
-    pspec->initialized            = TRUE;
+    pspec->initialized            = GBP_TRUE;
 
     // Initialize constants
     pspec->redshift  = redshift;
@@ -50,7 +50,7 @@ void init_pspec(pspec_info *pspec,
     pspec->dP_k_2D    = (double **)SID_calloc(4 * sizeof(double *));
     int i;
     for(i = 0; i < 4; i++) {
-        pspec->flag_processed[i] = FALSE;
+        pspec->flag_processed[i] = GBP_FALSE;
         pspec->P_k_1D[i]         = (double *)SID_calloc(sizeof(double) * (pspec->n_k_1D));
         pspec->dP_k_1D[i]        = (double *)SID_calloc(sizeof(double) * (pspec->n_k_1D));
         pspec->P_k_2D[i]         = (double *)SID_calloc(sizeof(double) * (pspec->n_k_2D) * (pspec->n_k_2D));

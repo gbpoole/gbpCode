@@ -88,7 +88,7 @@ int main(int argc, char *argv[]) {
         SID_log("%d datasets of size %d specified...", SID_LOG_CONTINUE, n_DS, n_M);
     } else {
         SID_log("SYNTAX: example_fit_line n_datasets size_of_datasets", SID_LOG_COMMENT);
-        SID_exit(ERROR_SYNTAX);
+        SID_exit(SID_ERROR_SYNTAX);
     }
     SID_log("Done.", SID_LOG_CLOSE);
 
@@ -267,7 +267,7 @@ int main(int argc, char *argv[]) {
 
     // Exit
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 
     // Once the code exits, run the 'allresults_MCMC.py'
     //   script on the directory and it will generate

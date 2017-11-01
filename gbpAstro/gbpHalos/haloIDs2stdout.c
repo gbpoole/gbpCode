@@ -4,10 +4,10 @@
 #include <stdlib.h>
 
 int main(int argc, char *argv[]) {
-    char filename_root[MAX_FILENAME_LENGTH];
-    char filename_groups[MAX_FILENAME_LENGTH];
-    char filename_subgroups[MAX_FILENAME_LENGTH];
-    char filename_ids[MAX_FILENAME_LENGTH];
+    char filename_root[SID_MAX_FILENAME_LENGTH];
+    char filename_groups[SID_MAX_FILENAME_LENGTH];
+    char filename_subgroups[SID_MAX_FILENAME_LENGTH];
+    char filename_ids[SID_MAX_FILENAME_LENGTH];
     sprintf(filename_root, "%s", argv[1]);
     int i_snapshot = atoi(argv[2]);
     sprintf(filename_groups, "%s_%03d.catalog_groups", filename_root, i_snapshot);

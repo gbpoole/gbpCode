@@ -91,14 +91,14 @@ int main(int argc, char *argv[]) {
     SID_init(&argc, &argv, NULL, NULL);
 
     // Fetch user inputs
-    char filename_in_root[MAX_FILENAME_LENGTH];
-    char filename_out_root[MAX_FILENAME_LENGTH];
-    char filename_properties_in[MAX_FILENAME_LENGTH];
-    char filename_properties_out[MAX_FILENAME_LENGTH];
-    char filename_profiles_in[MAX_FILENAME_LENGTH];
-    char filename_profiles_out[MAX_FILENAME_LENGTH];
-    char filename_SO_in[MAX_FILENAME_LENGTH];
-    char filename_SO_out[MAX_FILENAME_LENGTH];
+    char filename_in_root[SID_MAX_FILENAME_LENGTH];
+    char filename_out_root[SID_MAX_FILENAME_LENGTH];
+    char filename_properties_in[SID_MAX_FILENAME_LENGTH];
+    char filename_properties_out[SID_MAX_FILENAME_LENGTH];
+    char filename_profiles_in[SID_MAX_FILENAME_LENGTH];
+    char filename_profiles_out[SID_MAX_FILENAME_LENGTH];
+    char filename_SO_in[SID_MAX_FILENAME_LENGTH];
+    char filename_SO_out[SID_MAX_FILENAME_LENGTH];
     strcpy(filename_in_root, argv[1]);
     strcpy(filename_out_root, argv[2]);
     int start_snap     = atoi(argv[3]);
@@ -112,8 +112,8 @@ int main(int argc, char *argv[]) {
 
         // Loop once for subgroups and once for groups
         for(int i_run = 0; i_run < 2; i_run++) {
-            char filename_in[MAX_FILENAME_LENGTH];
-            char filename_out[MAX_FILENAME_LENGTH];
+            char filename_in[SID_MAX_FILENAME_LENGTH];
+            char filename_out[SID_MAX_FILENAME_LENGTH];
             char group_prefix_text[8];
             switch(i_run) {
                 case 0:
@@ -132,12 +132,12 @@ int main(int argc, char *argv[]) {
             sprintf(filename_SO_out, "%s_%03d.catalog_%sgroups_SO", filename_out_root, i_snap, group_prefix_text);
 
             // Create filename bases for each dataset
-            char filename_properties_in_base[MAX_FILENAME_LENGTH];
-            char filename_properties_out_base[MAX_FILENAME_LENGTH];
-            char filename_profiles_in_base[MAX_FILENAME_LENGTH];
-            char filename_profiles_out_base[MAX_FILENAME_LENGTH];
-            char filename_SO_in_base[MAX_FILENAME_LENGTH];
-            char filename_SO_out_base[MAX_FILENAME_LENGTH];
+            char filename_properties_in_base[SID_MAX_FILENAME_LENGTH];
+            char filename_properties_out_base[SID_MAX_FILENAME_LENGTH];
+            char filename_profiles_in_base[SID_MAX_FILENAME_LENGTH];
+            char filename_profiles_out_base[SID_MAX_FILENAME_LENGTH];
+            char filename_SO_in_base[SID_MAX_FILENAME_LENGTH];
+            char filename_SO_out_base[SID_MAX_FILENAME_LENGTH];
             strcpy(filename_properties_in_base, filename_properties_in);
             strcpy(filename_properties_out_base, filename_properties_out);
             strcpy(filename_profiles_in_base, filename_profiles_in);
@@ -156,9 +156,9 @@ int main(int argc, char *argv[]) {
             int   n_files_props;
             int   n_props;
             int   n_props_all;
-            int   flag_multifile_properties = FALSE;
+            int   flag_multifile_properties = GBP_FALSE;
             FILE *fp_test;
-            char  filename_test[MAX_FILENAME_LENGTH];
+            char  filename_test[SID_MAX_FILENAME_LENGTH];
             sprintf(filename_test, "%s/%s.0", filename_properties_in, filename_properties_in_base);
             if((fp_test = fopen(filename_test, "r")) != NULL) {
                 fread_verify(&i_file, sizeof(int), 1, fp_test);
@@ -166,7 +166,7 @@ int main(int argc, char *argv[]) {
                 fread_verify(&n_props, sizeof(int), 1, fp_test);
                 fread_verify(&n_props_all, sizeof(int), 1, fp_test);
                 fclose(fp_test);
-                flag_multifile_properties = TRUE;
+                flag_multifile_properties = GBP_TRUE;
             } else {
                 sprintf(filename_test, "%s", filename_properties_in);
                 if((fp_test = fopen(filename_test, "r")) != NULL) {
@@ -175,22 +175,22 @@ int main(int argc, char *argv[]) {
                     fread_verify(&n_props, sizeof(int), 1, fp_test);
                     fread_verify(&n_props_all, sizeof(int), 1, fp_test);
                     fclose(fp_test);
-                    flag_multifile_properties = FALSE;
+                    flag_multifile_properties = GBP_FALSE;
                     if(n_props != n_props_all)
-                        SID_trap_error("Halo counts don't agree (ie. %d!=%d) in properties file.", ERROR_LOGIC, n_props, n_props_all);
+                        SID_trap_error("Halo counts don't agree (ie. %d!=%d) in properties file.", SID_ERROR_LOGIC, n_props, n_props_all);
                     if(n_files_props != 1)
-                        SID_trap_error("Invalid file count (%d) in non-multifile properties file {%s}.", ERROR_LOGIC, n_files_props, filename_test);
+                        SID_trap_error("Invalid file count (%d) in non-multifile properties file {%s}.", SID_ERROR_LOGIC, n_files_props, filename_test);
                 } else
-                    SID_trap_error("Could not open properties dataset.", ERROR_IO_OPEN);
+                    SID_trap_error("Could not open properties dataset.", SID_ERROR_IO_OPEN);
             }
             if(i_file != 0)
-                SID_trap_error("Invalid starting file index (%d) in properties file.", ERROR_LOGIC, i_file);
+                SID_trap_error("Invalid starting file index (%d) in properties file.", SID_ERROR_LOGIC, i_file);
 
             // Figure out if the profiles file(s) are multi-file format
             int n_files_profs;
             int n_profs;
             int n_profs_all;
-            int flag_multifile_profiles = FALSE;
+            int flag_multifile_profiles = GBP_FALSE;
             sprintf(filename_test, "%s/%s.0", filename_profiles_in, filename_profiles_in_base);
             if((fp_test = fopen(filename_test, "r")) != NULL) {
                 int i_file;
@@ -199,7 +199,7 @@ int main(int argc, char *argv[]) {
                 fread_verify(&n_profs, sizeof(int), 1, fp_test);
                 fread_verify(&n_profs_all, sizeof(int), 1, fp_test);
                 fclose(fp_test);
-                flag_multifile_profiles = TRUE;
+                flag_multifile_profiles = GBP_TRUE;
             } else {
                 sprintf(filename_test, "%s", filename_profiles_in);
                 if((fp_test = fopen(filename_test, "r")) != NULL) {
@@ -208,20 +208,20 @@ int main(int argc, char *argv[]) {
                     fread_verify(&n_profs, sizeof(int), 1, fp_test);
                     fread_verify(&n_profs_all, sizeof(int), 1, fp_test);
                     fclose(fp_test);
-                    flag_multifile_profiles = FALSE;
+                    flag_multifile_profiles = GBP_FALSE;
                     if(n_profs != n_profs_all)
-                        SID_trap_error("Halo counts don't agree (ie. %d!=%d) in profiles file.", ERROR_LOGIC, n_profs, n_profs_all);
+                        SID_trap_error("Halo counts don't agree (ie. %d!=%d) in profiles file.", SID_ERROR_LOGIC, n_profs, n_profs_all);
                     if(n_files_profs != 1)
-                        SID_trap_error("Invalid file count (%d) in non-multifile profiles file.", ERROR_LOGIC, n_files_profs);
+                        SID_trap_error("Invalid file count (%d) in non-multifile profiles file.", SID_ERROR_LOGIC, n_files_profs);
                 } else
-                    SID_trap_error("Could not open profiles dataset.", ERROR_IO_OPEN);
+                    SID_trap_error("Could not open profiles dataset.", SID_ERROR_IO_OPEN);
             }
             if(i_file != 0)
-                SID_trap_error("Invalid starting file index (%d) in profiles file.", ERROR_LOGIC, i_file);
+                SID_trap_error("Invalid starting file index (%d) in profiles file.", SID_ERROR_LOGIC, i_file);
 
             // Check that the halo counts in the properties and profiles datasets agree
             if(n_profs_all != n_props_all)
-                SID_trap_error("The properties and profiles halo counts don't agree (ie. %d!=%d)", ERROR_LOGIC, n_profs_all, n_props_all);
+                SID_trap_error("The properties and profiles halo counts don't agree (ie. %d!=%d)", SID_ERROR_LOGIC, n_profs_all, n_props_all);
             int n_halos_all = n_props_all;
             SID_log("(%d halos)...", SID_LOG_CONTINUE, n_halos_all);
 
@@ -229,8 +229,8 @@ int main(int argc, char *argv[]) {
             int n_files_SO;
             int n_SO;
             int n_SO_all;
-            int flag_multifile_SO = FALSE;
-            int flag_SO_present   = TRUE;
+            int flag_multifile_SO = GBP_FALSE;
+            int flag_SO_present   = GBP_TRUE;
             if(i_run == 1) {
                 // Figure out if the SO file(s) are multi-file format
                 sprintf(filename_test, "%s/%s.0", filename_SO_in, filename_SO_in_base);
@@ -241,7 +241,7 @@ int main(int argc, char *argv[]) {
                     fread_verify(&n_SO, sizeof(int), 1, fp_test);
                     fread_verify(&n_SO_all, sizeof(int), 1, fp_test);
                     fclose(fp_test);
-                    flag_multifile_SO = TRUE;
+                    flag_multifile_SO = GBP_TRUE;
                 } else {
                     sprintf(filename_test, "%s", filename_SO_in);
                     if((fp_test = fopen(filename_test, "r")) != NULL) {
@@ -250,30 +250,30 @@ int main(int argc, char *argv[]) {
                         fread_verify(&n_SO, sizeof(int), 1, fp_test);
                         fread_verify(&n_SO_all, sizeof(int), 1, fp_test);
                         fclose(fp_test);
-                        flag_multifile_SO = FALSE;
+                        flag_multifile_SO = GBP_FALSE;
                         if(n_SO != n_SO_all)
-                            SID_trap_error("Halo counts don't agree (ie. %d!=%d) in SO file.", ERROR_LOGIC, n_SO, n_SO_all);
+                            SID_trap_error("Halo counts don't agree (ie. %d!=%d) in SO file.", SID_ERROR_LOGIC, n_SO, n_SO_all);
                         if(n_files_SO != 1)
-                            SID_trap_error("Invalid file count (%d) in non-multifile SO file.", ERROR_LOGIC, n_files_SO);
+                            SID_trap_error("Invalid file count (%d) in non-multifile SO file.", SID_ERROR_LOGIC, n_files_SO);
                     }
                     // Not all snapshots are garanteed to have an SO dataset.  Continue if one isn't found
                     else {
-                        flag_SO_present = FALSE;
+                        flag_SO_present = GBP_FALSE;
                         SID_log("Could not open SO dataset.", SID_LOG_COMMENT);
                     }
                 }
                 if(i_file != 0)
-                    SID_trap_error("Invalid starting file index (%d) in SO file.", ERROR_LOGIC, i_file);
+                    SID_trap_error("Invalid starting file index (%d) in SO file.", SID_ERROR_LOGIC, i_file);
 
                 // Check that the halo counts in the properties and profiles datasets agree
                 if(n_SO_all != n_props_all && flag_SO_present)
-                    SID_trap_error("The properties and SO halo counts don't agree (ie. %d!=%d)", ERROR_LOGIC, n_SO_all, n_props_all);
+                    SID_trap_error("The properties and SO halo counts don't agree (ie. %d!=%d)", SID_ERROR_LOGIC, n_SO_all, n_props_all);
             }
 
             // If there are fewer than 1000 halos, don't bother
             //    writting to a multi-file
             int n_files_out = n_files_out_in;
-            if(n_halos_all < MAX(n_files_out_in, 1000))
+            if(n_halos_all < GBP_MAX(n_files_out_in, 1000))
                 n_files_out = 1;
 
             // Perform rewrites
@@ -334,7 +334,7 @@ int main(int argc, char *argv[]) {
                     // Open a new input file if need-be
                     while(i_halo_read >= n_halos_read && i_file_read < n_files_rewrite) {
                         if(!flag_multifile && i_file_read > 0)
-                            SID_trap_error("Trying to open a second file in a non-multifile dataset.", ERROR_LOGIC);
+                            SID_trap_error("Trying to open a second file in a non-multifile dataset.", SID_ERROR_LOGIC);
                         if(flag_multifile)
                             sprintf(filename_in, "%s/%s.%d", filename_items_in, filename_items_in_base, i_file_read);
                         else
@@ -348,20 +348,20 @@ int main(int argc, char *argv[]) {
                             fread_verify(&n_halos_read, sizeof(int), 1, fp_read);
                             fread_verify(&n_items_all, sizeof(int), 1, fp_read);
                             if(n_files_in != n_files_rewrite)
-                                SID_trap_error("File counts are not consistant (ie. %d!=%d).", ERROR_LOGIC, n_files_in, n_files_rewrite);
+                                SID_trap_error("File counts are not consistant (ie. %d!=%d).", SID_ERROR_LOGIC, n_files_in, n_files_rewrite);
                         } else
-                            SID_trap_error("Could not open {%s}.", ERROR_IO_OPEN, filename_in);
+                            SID_trap_error("Could not open {%s}.", SID_ERROR_IO_OPEN, filename_in);
                         if(i_file != i_file_read)
-                            SID_trap_error("Invalid file index in (ie. %d!=%d).", ERROR_LOGIC, i_file, i_file_read);
+                            SID_trap_error("Invalid file index in (ie. %d!=%d).", SID_ERROR_LOGIC, i_file, i_file_read);
                         if(n_items_all != n_halos_all)
-                            SID_trap_error("Invalid total halo count in {%s} (ie. %d!=%d).", ERROR_LOGIC, filename_in, n_items_all, n_halos_all);
+                            SID_trap_error("Invalid total halo count in {%s} (ie. %d!=%d).", SID_ERROR_LOGIC, filename_in, n_items_all, n_halos_all);
                         i_halo_read = 0;
                         i_file_read++;
                     }
                     // Open a new output file if need-be
                     if(i_halo_write >= n_halos_write) {
                         if(n_files_out == 0 && i_file_write > 0)
-                            SID_trap_error("Trying to create a second file in a non-multifile dataset.", ERROR_LOGIC);
+                            SID_trap_error("Trying to create a second file in a non-multifile dataset.", SID_ERROR_LOGIC);
                         if(n_files_out > 1) {
                             if(i_file_write == 0)
                                 mkdir(filename_items_out, 02755);
@@ -384,7 +384,7 @@ int main(int argc, char *argv[]) {
                             fwrite(&n_halos_write, sizeof(int), 1, fp_write);
                             fwrite(&n_halos_all, sizeof(int), 1, fp_write);
                         } else
-                            SID_trap_error("Could not create properties file {%s}.", ERROR_IO_OPEN, filename_out);
+                            SID_trap_error("Could not create properties file {%s}.", SID_ERROR_IO_OPEN, filename_out);
                         i_halo_write = 0;
                         i_file_write++;
                     }
@@ -425,13 +425,13 @@ int main(int argc, char *argv[]) {
                 fp_write = NULL;
                 // Sanity check
                 if(j_halo_read != n_halos_all)
-                    SID_trap_error("The proper number of halos was not read (ie. %d!=%d).", ERROR_IO_OPEN, j_halo_read, n_halos_all);
+                    SID_trap_error("The proper number of halos was not read (ie. %d!=%d).", SID_ERROR_IO_OPEN, j_halo_read, n_halos_all);
                 if(j_halo_write != n_halos_all)
-                    SID_trap_error("The proper number of halos was not written (ie. %d!=%d).", ERROR_IO_OPEN, j_halo_write, n_halos_all);
+                    SID_trap_error("The proper number of halos was not written (ie. %d!=%d).", SID_ERROR_IO_OPEN, j_halo_write, n_halos_all);
                 // If any files need to be zero-filled, do so now
                 for(; i_file_write < n_files_out; i_file_write++) {
                     if(n_files_out == 0 && i_file_write > 0)
-                        SID_trap_error("Trying to create a second file in a non-multifile dataset.", ERROR_LOGIC);
+                        SID_trap_error("Trying to create a second file in a non-multifile dataset.", SID_ERROR_LOGIC);
                     if(n_files_out > 1) {
                         if(i_file_write == 0)
                             mkdir(filename_items_out, 02755);
@@ -454,7 +454,7 @@ int main(int argc, char *argv[]) {
                         fwrite(&n_halos_write, sizeof(int), 1, fp_write);
                         fwrite(&n_halos_all, sizeof(int), 1, fp_write);
                     } else
-                        SID_trap_error("Could not create file {%s}.", ERROR_IO_OPEN, filename_out);
+                        SID_trap_error("Could not create file {%s}.", SID_ERROR_IO_OPEN, filename_out);
                 }
                 if(fp_write != NULL)
                     fclose(fp_write);
@@ -466,5 +466,5 @@ int main(int argc, char *argv[]) {
     } // i_snap
     SID_log("Done.", SID_LOG_CLOSE);
 
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

@@ -32,10 +32,10 @@ int main(int argc, char *argv[]) {
     int                  n_subgroups_all;
     int                  n_groups;
     size_t               n_group_local;
-    char                 filename_groups_in[MAX_FILENAME_LENGTH];
-    char                 filename_subgroups_in[MAX_FILENAME_LENGTH];
-    char                 filename_out[MAX_FILENAME_LENGTH];
-    char                 filename_out_root[MAX_FILENAME_LENGTH];
+    char                 filename_groups_in[SID_MAX_FILENAME_LENGTH];
+    char                 filename_subgroups_in[SID_MAX_FILENAME_LENGTH];
+    char                 filename_out[SID_MAX_FILENAME_LENGTH];
+    char                 filename_out_root[SID_MAX_FILENAME_LENGTH];
     char                 group_text_prefix[4];
     int                  i_snap;
     int                  n_groupings;
@@ -154,8 +154,8 @@ int main(int argc, char *argv[]) {
     int                  mode;
 
     // Initialization -- MPI etc.
-    char filename_SSimPL_root[MAX_FILENAME_LENGTH];
-    char filename_halos_version[MAX_FILENAME_LENGTH];
+    char filename_SSimPL_root[SID_MAX_FILENAME_LENGTH];
+    char filename_halos_version[SID_MAX_FILENAME_LENGTH];
     SID_init(&argc, &argv, NULL, NULL);
     strcpy(filename_SSimPL_root, argv[1]);
     strcpy(filename_halos_version, argv[2]);
@@ -170,8 +170,8 @@ int main(int argc, char *argv[]) {
     delta_V_max          = (V_max_hi - V_max_lo) / (double)(n_groupings - 1);
 
     // Set some filename roots
-    char filename_groups_root[MAX_FILENAME_LENGTH];
-    char filename_cat_root[MAX_FILENAME_LENGTH];
+    char filename_groups_root[SID_MAX_FILENAME_LENGTH];
+    char filename_cat_root[SID_MAX_FILENAME_LENGTH];
     sprintf(filename_groups_root, "%s/groups/%s", filename_SSimPL_root, filename_halos_version);
     sprintf(filename_cat_root, "%s/catalogs/%s", filename_SSimPL_root, filename_halos_version);
 
@@ -216,15 +216,15 @@ int main(int argc, char *argv[]) {
     n_subgroups_all = fp_properties_subgroups.n_halos_total;
 
     if(n_groups_all != n_groups)
-        SID_trap_error("There's a mismatch in the number of groups (ie. %d!=%d)", ERROR_LOGIC, n_groups_all, n_groups);
+        SID_trap_error("There's a mismatch in the number of groups (ie. %d!=%d)", SID_ERROR_LOGIC, n_groups_all, n_groups);
     if(n_subgroups_all != n_subgroups)
-        SID_trap_error("There's a mismatch in the number of subgroups (ie. %d!=%d)", ERROR_LOGIC, n_subgroups_all, n_subgroups);
+        SID_trap_error("There's a mismatch in the number of subgroups (ie. %d!=%d)", SID_ERROR_LOGIC, n_subgroups_all, n_subgroups);
 
     SID_log("%d groups and %d subgroups...", SID_LOG_CONTINUE, n_groups_all, n_subgroups_all);
 
     //   ... allocate arrays ...
     int n_halos_max;
-    n_halos_max    = MAX(n_groups_all, n_subgroups_all);
+    n_halos_max    = GBP_MAX(n_groups_all, n_subgroups_all);
     x_halos        = (GBPREAL *)SID_malloc(sizeof(GBPREAL) * n_halos_max);
     y_halos        = (GBPREAL *)SID_malloc(sizeof(GBPREAL) * n_halos_max);
     z_halos        = (GBPREAL *)SID_malloc(sizeof(GBPREAL) * n_halos_max);
@@ -277,12 +277,12 @@ int main(int argc, char *argv[]) {
                     M_FoF[n_halos]        = (double)group_properties.M_vir;
                     V_halos[n_halos]      = (GBPREAL)group_properties.V_max;
                     V_FoF[n_halos]        = (GBPREAL)group_properties.V_max;
-                    x_min                 = MIN(x_min, x_halos[n_halos]);
-                    x_max                 = MAX(x_max, x_halos[n_halos]);
-                    y_min                 = MIN(y_min, y_halos[n_halos]);
-                    y_max                 = MAX(y_max, y_halos[n_halos]);
-                    z_min                 = MIN(z_min, z_halos[n_halos]);
-                    z_max                 = MAX(z_max, z_halos[n_halos]);
+                    x_min                 = GBP_MIN(x_min, x_halos[n_halos]);
+                    x_max                 = GBP_MAX(x_max, x_halos[n_halos]);
+                    y_min                 = GBP_MIN(y_min, y_halos[n_halos]);
+                    y_max                 = GBP_MAX(y_max, y_halos[n_halos]);
+                    z_min                 = GBP_MIN(z_min, z_halos[n_halos]);
+                    z_max                 = GBP_MAX(z_max, z_halos[n_halos]);
                     n_halos++;
                 }
             }
@@ -311,12 +311,12 @@ int main(int argc, char *argv[]) {
                         M_FoF[n_halos]          = (double)group_properties.M_vir;
                         V_halos[n_halos]        = (GBPREAL)subgroup_properties.V_max;
                         V_FoF[n_halos]          = (GBPREAL)group_properties.V_max;
-                        x_min                   = MIN(x_min, x_halos[n_halos]);
-                        x_max                   = MAX(x_max, x_halos[n_halos]);
-                        y_min                   = MIN(y_min, y_halos[n_halos]);
-                        y_max                   = MAX(y_max, y_halos[n_halos]);
-                        z_min                   = MIN(z_min, z_halos[n_halos]);
-                        z_max                   = MAX(z_max, z_halos[n_halos]);
+                        x_min                   = GBP_MIN(x_min, x_halos[n_halos]);
+                        x_max                   = GBP_MAX(x_max, x_halos[n_halos]);
+                        y_min                   = GBP_MIN(y_min, y_halos[n_halos]);
+                        y_max                   = GBP_MAX(y_max, y_halos[n_halos]);
+                        z_min                   = GBP_MIN(z_min, z_halos[n_halos]);
+                        z_max                   = GBP_MAX(z_max, z_halos[n_halos]);
                         n_halos++;
                     }
                 }
@@ -328,7 +328,7 @@ int main(int argc, char *argv[]) {
     SID_log("z_range=%le->%le", SID_LOG_COMMENT, z_min, z_max);
 
     //   ... sort halos by V_max and close files.
-    merge_sort(V_halos, (size_t)n_halos, &V_halos_index, SID_REAL, SORT_COMPUTE_INDEX, FALSE);
+    merge_sort(V_halos, (size_t)n_halos, &V_halos_index, SID_REAL, SORT_COMPUTE_INDEX, GBP_FALSE);
     fclose_catalog(&fp_properties_groups);
     fclose_catalog(&fp_properties_subgroups);
     SID_log("Done.", SID_LOG_CLOSE);
@@ -336,7 +336,7 @@ int main(int argc, char *argv[]) {
     // Initialize cosmology if we're using the bias model to set number densities
     cosmo_info *cosmo = NULL;
     if(flag_use_bias_model) {
-        char filename_cosmology[MAX_FILENAME_LENGTH];
+        char filename_cosmology[SID_MAX_FILENAME_LENGTH];
         sprintf(filename_cosmology, "%s/run", filename_SSimPL_root);
         read_gbpCosmo_file(&cosmo, filename_cosmology);
         init_sigma_M(&cosmo, PSPEC_LINEAR_TF, PSPEC_ALL_MATTER);
@@ -370,7 +370,7 @@ int main(int argc, char *argv[]) {
                 if((V_halos[V_halos_index[i_halo - 1]] - V_grouping) < (V_halos[V_halos_index[i_halo]] - V_grouping))
                     i_halo--;
             }
-            i_halo = MAX(0, i_halo - n_halos_this_grouping / 2);
+            i_halo = GBP_MAX(0, i_halo - n_halos_this_grouping / 2);
 
             // If this grouping pushes past the end of the list, then
             //    skip this grouping and go ahead with the final 'all' list
@@ -515,5 +515,5 @@ int main(int argc, char *argv[]) {
     SID_log("Done.", SID_LOG_CLOSE);
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

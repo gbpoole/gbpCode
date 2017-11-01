@@ -11,8 +11,8 @@ int main(int argc, char *argv[]) {
     char  filename_profiles[256];
     char  filename_out_root[256];
     char  filename_out[256];
-    char  filename_SSimPL[MAX_FILENAME_LENGTH];
-    char  filename_halo_type[MAX_FILENAME_LENGTH];
+    char  filename_SSimPL[SID_MAX_FILENAME_LENGTH];
+    char  filename_halo_type[SID_MAX_FILENAME_LENGTH];
     FILE *fp_out[2];
 
     SID_init(&argc, &argv, NULL, NULL);
@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
 
     // Initialize cosmology
     cosmo_info *cosmo = NULL;
-    char        filename_cosmology[MAX_FILENAME_LENGTH];
+    char        filename_cosmology[SID_MAX_FILENAME_LENGTH];
     sprintf(filename_cosmology, "%s/run", filename_SSimPL);
     read_gbpCosmo_file(&cosmo, filename_cosmology);
     double h_Hubble = ((double *)ADaPS_fetch(cosmo, "h_Hubble"))[0];
@@ -44,7 +44,7 @@ int main(int argc, char *argv[]) {
     // Read parameter file
     double box_size;
     double m_dark;
-    char   filename_run[MAX_FILENAME_LENGTH];
+    char   filename_run[SID_MAX_FILENAME_LENGTH];
     sprintf(filename_run, "%s/run/run.txt", filename_SSimPL);
     parameter_list_info *parameter_list = NULL;
     init_parameter_list(&parameter_list);
@@ -59,7 +59,7 @@ int main(int argc, char *argv[]) {
     SID_log("Particle mass = %.2le Msol/h", SID_LOG_COMMENT, m_dark);
 
     // Read list of redshifts
-    char filename_alist[MAX_FILENAME_LENGTH];
+    char filename_alist[SID_MAX_FILENAME_LENGTH];
     sprintf(filename_alist, "%s/run/a_list.txt", filename_SSimPL);
     FILE *  fp_snaps    = fopen(filename_alist, "r");
     size_t  line_length = 0;
@@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
     fclose(fp_snaps);
     SID_log("No. of snaps  = %d (z=%.2lf to %.2lf)", SID_LOG_COMMENT, n_snaps, z_list[0], z_list[n_snaps - 1]);
 
-    int flag_use_profiles = FALSE;
+    int flag_use_profiles = GBP_FALSE;
 
     int  n_buffer_alloc = 16;
     int *sub_hier       = (int *)SID_malloc(sizeof(int) * n_buffer_alloc);
@@ -93,7 +93,7 @@ int main(int argc, char *argv[]) {
             sprintf(filename_halos, "%s/halos/%s_%03d.catalog_groups", filename_SSimPL, filename_halo_type, snap_number);
             FILE *fp_halos = NULL;
             if((fp_halos = fopen(filename_halos, "r")) == NULL)
-                SID_trap_error("Could not open halo file {%s} for reading.", ERROR_IO_OPEN, filename_halos);
+                SID_trap_error("Could not open halo file {%s} for reading.", SID_ERROR_IO_OPEN, filename_halos);
             int n_groups_halos, group_offset_byte_size;
             fread_verify(&n_groups_halos, sizeof(int), 1, fp_halos);
             fread_verify(&group_offset_byte_size, sizeof(int), 1, fp_halos);
@@ -106,7 +106,7 @@ int main(int argc, char *argv[]) {
                 i_rank_max = 10;
                 sprintf(filename_halos, "%s/halos/%s_%03d.catalog_subgroups", filename_SSimPL, filename_halo_type, snap_number);
                 if((fp_hier = fopen(filename_halos, "r")) == NULL)
-                    SID_trap_error("Could not open halo file {%s} for substructure hierarchy reading.", ERROR_IO_OPEN, filename_halos);
+                    SID_trap_error("Could not open halo file {%s} for substructure hierarchy reading.", SID_ERROR_IO_OPEN, filename_halos);
                 int n_subgroups_halos, subgroup_offset_byte_size;
                 fread_verify(&n_subgroups_halos, sizeof(int), 1, fp_hier);
                 fread_verify(&subgroup_offset_byte_size, sizeof(int), 1, fp_hier);
@@ -137,7 +137,7 @@ int main(int argc, char *argv[]) {
             // Sanity check
             if(n_groups_halos != fp_catalog_groups.n_halos_total)
                 SID_trap_error(
-                    "Group counts in halo and catalog files don't match (ie. %d!=%d).", ERROR_LOGIC, n_groups_halos, fp_catalog_groups.n_halos_total);
+                    "Group counts in halo and catalog files don't match (ie. %d!=%d).", SID_ERROR_LOGIC, n_groups_halos, fp_catalog_groups.n_halos_total);
 
             // Process halos
             SID_log("(%d groups, %d subgroups)...", SID_LOG_CONTINUE, fp_catalog_groups.n_halos_total, fp_catalog_subgroups.n_halos_total);
@@ -176,7 +176,7 @@ int main(int argc, char *argv[]) {
                 // Read substructure hiearchy array (if defined)
                 if(fp_hier != NULL) {
                     if(n_buffer_alloc < n_subgroups_group) {
-                        n_buffer_alloc = MAX(2 * n_buffer_alloc, n_subgroups_group);
+                        n_buffer_alloc = GBP_MAX(2 * n_buffer_alloc, n_subgroups_group);
                         SID_free(SID_FARG sub_hier);
                         sub_hier = (int *)SID_malloc(sizeof(int) * n_buffer_alloc);
                     }
@@ -257,7 +257,7 @@ int main(int argc, char *argv[]) {
                 size_t *data_idx   = NULL;
                 double *bin_median = NULL;
                 int *   hist       = NULL;
-                int     flag_rank  = FALSE;
+                int     flag_rank  = GBP_FALSE;
                 if(i_type == 0) {
                     n_data     = n_groups;
                     data       = groups;
@@ -276,7 +276,7 @@ int main(int argc, char *argv[]) {
                     data_idx   = inclusive_index;
                     bin_median = bin_median_subgroups;
                     hist       = hist_list[i_type];
-                    flag_rank  = TRUE;
+                    flag_rank  = GBP_TRUE;
                     i_rank++;
                 }
 
@@ -460,5 +460,5 @@ int main(int argc, char *argv[]) {
     SID_free(SID_FARG z_list);
     free_cosmo(&cosmo);
 
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

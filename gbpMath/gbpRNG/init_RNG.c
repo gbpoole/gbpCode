@@ -6,9 +6,9 @@ void init_RNG(int *seed, RNG_info *RNG, int mode) {
         init_seed_from_clock(seed);
     RNG->seed = (*seed);
     if(check_mode_for_flag(mode, RNG_GLOBAL))
-        RNG->global = TRUE;
+        RNG->global = GBP_TRUE;
     else
-        RNG->global = FALSE;
+        RNG->global = GBP_FALSE;
 #if USE_SPRNG
 #if USE_MPI
     RNG->stream = init_sprng(SID.My_rank, SID.n_proc, RNG->seed, SPRNG_DEFAULT);
@@ -29,5 +29,5 @@ void init_RNG(int *seed, RNG_info *RNG, int mode) {
 #endif
     RNG->IGauss      = 0;
     RNG->GaussBak    = 0.;
-    RNG->initialized = TRUE;
+    RNG->initialized = GBP_TRUE;
 }

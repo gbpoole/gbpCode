@@ -16,7 +16,7 @@ void write_treenode_list_markers(tree_info *trees, const char *filename_out_root
     char *           catalog_name     = list->catalog_name;
 
     // Open file
-    char filename_out[MAX_FILENAME_LENGTH];
+    char filename_out[SID_MAX_FILENAME_LENGTH];
     sprintf(filename_out, "%s_%s_markers.txt", filename_out_root, list->catalog_name);
     FILE *fp_props_out = fopen(filename_out, "w");
 
@@ -48,7 +48,7 @@ void write_treenode_list_markers(tree_info *trees, const char *filename_out_root
             if(i_rank == 0)
                 n_list_i = n_list_in;
             else {
-                SID_Sendrecv(&n_list_in, 1, SID_INT, MASTER_RANK, 1918270, &n_list_i, 1, SID_INT, i_rank, 1918270, SID.COMM_WORLD);
+                SID_Sendrecv(&n_list_in, 1, SID_INT, SID_MASTER_RANK, 1918270, &n_list_i, 1, SID_INT, i_rank, 1918270, SID.COMM_WORLD);
             }
             for(int i_list = 0; i_list < n_list_i; i_list++, j_list++) {
                 // Point to the halo to be processed
@@ -164,13 +164,13 @@ void write_treenode_list_markers(tree_info *trees, const char *filename_out_root
 
                     // Write properties
                     if(i_rank != 0) {
-                        SID_Sendrecv(&i_z_node, 1, SID_INT, MASTER_RANK, 1918271, &i_z_node, 1, SID_INT, i_rank, 1918271, SID.COMM_WORLD);
-                        SID_Sendrecv(&idx_node, 1, SID_INT, MASTER_RANK, 1918272, &idx_node, 1, SID_INT, i_rank, 1918272, SID.COMM_WORLD);
-                        SID_Sendrecv(&t_node, 1, SID_DOUBLE, MASTER_RANK, 1918273, &t_node, 1, SID_DOUBLE, i_rank, 1918273, SID.COMM_WORLD);
-                        SID_Sendrecv(&z_node, 1, SID_DOUBLE, MASTER_RANK, 1918274, &z_node, 1, SID_DOUBLE, i_rank, 1918274, SID.COMM_WORLD);
-                        SID_Sendrecv(&M_node, 1, SID_DOUBLE, MASTER_RANK, 1918275, &M_node, 1, SID_DOUBLE, i_rank, 1918275, SID.COMM_WORLD);
+                        SID_Sendrecv(&i_z_node, 1, SID_INT, SID_MASTER_RANK, 1918271, &i_z_node, 1, SID_INT, i_rank, 1918271, SID.COMM_WORLD);
+                        SID_Sendrecv(&idx_node, 1, SID_INT, SID_MASTER_RANK, 1918272, &idx_node, 1, SID_INT, i_rank, 1918272, SID.COMM_WORLD);
+                        SID_Sendrecv(&t_node, 1, SID_DOUBLE, SID_MASTER_RANK, 1918273, &t_node, 1, SID_DOUBLE, i_rank, 1918273, SID.COMM_WORLD);
+                        SID_Sendrecv(&z_node, 1, SID_DOUBLE, SID_MASTER_RANK, 1918274, &z_node, 1, SID_DOUBLE, i_rank, 1918274, SID.COMM_WORLD);
+                        SID_Sendrecv(&M_node, 1, SID_DOUBLE, SID_MASTER_RANK, 1918275, &M_node, 1, SID_DOUBLE, i_rank, 1918275, SID.COMM_WORLD);
                         SID_Sendrecv(
-                            &M_node_parent, 1, SID_DOUBLE, MASTER_RANK, 1918276, &M_node_parent, 1, SID_DOUBLE, i_rank, 1918276, SID.COMM_WORLD);
+                            &M_node_parent, 1, SID_DOUBLE, SID_MASTER_RANK, 1918276, &M_node_parent, 1, SID_DOUBLE, i_rank, 1918276, SID.COMM_WORLD);
                     }
                     if(SID.I_am_Master) {
                         int snap_node = -1;
@@ -197,5 +197,5 @@ void write_treenode_list_markers(tree_info *trees, const char *filename_out_root
     SID_free(SID_FARG halo_ID_list);
     SID_free(SID_FARG tree_case_list);
     fclose(fp_props_out);
-    SID_log("Done.", ERROR_LOGIC);
+    SID_log("Done.", SID_ERROR_LOGIC);
 }

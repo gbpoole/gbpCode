@@ -28,17 +28,17 @@ void init_treenode_hist(tree_info *          trees,
 
     // Parse the mode
     if(check_mode_for_flag(mode, TREENODE_HIST_LOG_X))
-        (*hist)->flag_log_x = TRUE;
+        (*hist)->flag_log_x = GBP_TRUE;
     else
-        (*hist)->flag_log_x = FALSE;
+        (*hist)->flag_log_x = GBP_FALSE;
     if(check_mode_for_flag(mode, TREENODE_HIST_LOG_Y))
-        (*hist)->flag_log_y = TRUE;
+        (*hist)->flag_log_y = GBP_TRUE;
     else
-        (*hist)->flag_log_y = FALSE;
+        (*hist)->flag_log_y = GBP_FALSE;
 
     // Parse the axis information
-    int flag_x_found = FALSE;
-    int flag_y_found = FALSE;
+    int flag_x_found = GBP_FALSE;
+    int flag_y_found = GBP_FALSE;
     int n_args_x     = 0;
     int n_args_y     = 0;
     int i_prop_x     = 0;
@@ -49,25 +49,25 @@ void init_treenode_hist(tree_info *          trees,
             i_prop_x        = i_prop;
             (*hist)->x_prop = i_prop_x;
             n_args_x        = treenode_hist_props.n_args[i_prop_x];
-            flag_x_found    = TRUE;
+            flag_x_found    = GBP_TRUE;
             if(n_args_x > TREENODE_HIST_N_ARGS_MAX)
-                SID_trap_error("Increase TREENODE_HIST_N_ARGS_MAX to at least %d.", ERROR_LOGIC, n_args_x);
+                SID_trap_error("Increase TREENODE_HIST_N_ARGS_MAX to at least %d.", SID_ERROR_LOGIC, n_args_x);
         }
         if(!strcmp(y_name_in, treenode_hist_props.name[i_prop])) {
             i_prop_y        = i_prop;
             (*hist)->y_prop = i_prop_y;
             n_args_y        = treenode_hist_props.n_args[i_prop_y];
-            flag_y_found    = TRUE;
+            flag_y_found    = GBP_TRUE;
             if(n_args_y > TREENODE_HIST_N_ARGS_MAX)
-                SID_trap_error("Increase TREENODE_HIST_N_ARGS_MAX to at least %d.", ERROR_LOGIC, n_args_y);
+                SID_trap_error("Increase TREENODE_HIST_N_ARGS_MAX to at least %d.", SID_ERROR_LOGIC, n_args_y);
         }
     }
 
     // Sanity check
     if(!flag_x_found)
-        SID_trap_error("Could not find property definition for {%s} in init_treenode_hist.", ERROR_LOGIC, x_name_in);
+        SID_trap_error("Could not find property definition for {%s} in init_treenode_hist.", SID_ERROR_LOGIC, x_name_in);
     if(!flag_y_found)
-        SID_trap_error("Could not find property definition for {%s} in init_treenode_hist.", ERROR_LOGIC, y_name_in);
+        SID_trap_error("Could not find property definition for {%s} in init_treenode_hist.", SID_ERROR_LOGIC, y_name_in);
 
     // Parse the variable arguments depending on what we've specified for axes
     for(int i_arg = 0; i_arg < n_args_x; i_arg++) {
@@ -76,7 +76,7 @@ void init_treenode_hist(tree_info *          trees,
         else if(treenode_hist_props.arg_type[i_prop_x][i_arg] == SID_INT)
             (*hist)->x_args_i[i_arg] = (int)va_arg(vargs, int);
         else
-            SID_trap_error("Invalid datatype specified in init_treenode_hist for x-axis.", ERROR_LOGIC);
+            SID_trap_error("Invalid datatype specified in init_treenode_hist for x-axis.", SID_ERROR_LOGIC);
     }
     for(int i_arg = 0; i_arg < n_args_y; i_arg++) {
         if(treenode_hist_props.arg_type[i_prop_y][i_arg] == SID_DOUBLE)
@@ -84,7 +84,7 @@ void init_treenode_hist(tree_info *          trees,
         else if(treenode_hist_props.arg_type[i_prop_y][i_arg] == SID_INT)
             (*hist)->y_args_i[i_arg] = (int)va_arg(vargs, int);
         else
-            SID_trap_error("Invalid datatype specified in init_treenode_hist for y-axis.", ERROR_LOGIC);
+            SID_trap_error("Invalid datatype specified in init_treenode_hist for y-axis.", SID_ERROR_LOGIC);
     }
 
     // Specify the size of the histogram in each dimension

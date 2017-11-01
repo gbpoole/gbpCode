@@ -172,7 +172,7 @@ void init_field(int n_d, int *n, double *L, field_info *FFT) {
     }
 
     // Flags
-    FFT->flag_padded = FALSE;
+    FFT->flag_padded = GBP_FALSE;
 
     // Slab info
     FFT->slab.n_x_local       = FFT->n_R_local[0];
@@ -192,9 +192,9 @@ void init_field(int n_d, int *n, double *L, field_info *FFT) {
     n_x_rank              = (int *)SID_malloc(sizeof(int) * SID.n_proc);
     n_x_rank[SID.My_rank] = FFT->slab.n_x_local;
     if(n_x_rank[SID.My_rank] > 0)
-        flag_active = TRUE;
+        flag_active = GBP_TRUE;
     else
-        flag_active = FALSE;
+        flag_active = GBP_FALSE;
     SID_Allreduce(&flag_active, &n_active, 1, SID_INT, SID_SUM, SID.COMM_WORLD);
     SID_Allreduce(&n_x_rank[SID.My_rank], &min_size, 1, SID_INT, SID_MIN, SID.COMM_WORLD);
     SID_Allreduce(&n_x_rank[SID.My_rank], &max_size, 1, SID_INT, SID_MAX, SID.COMM_WORLD);
@@ -225,12 +225,12 @@ void init_field(int n_d, int *n, double *L, field_info *FFT) {
     FFT->slab.rank_to_right = SID.My_rank;
     FFT->slab.rank_to_left  = SID.My_rank;
     if(FFT->slab.n_x_local > 0) {
-        flag_active = TRUE;
+        flag_active = GBP_TRUE;
         n_active    = 1;
         min_size    = FFT->slab.n_x_local;
         max_size    = FFT->slab.n_x_local;
     } else {
-        flag_active = FALSE;
+        flag_active = GBP_FALSE;
         n_active    = 0;
         min_size    = 0;
         max_size    = 0;

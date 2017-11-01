@@ -45,58 +45,58 @@ int assign_particle_to_rank(plist_info *plist,
                             double      z_max,
                             size_t      i_p_min,
                             size_t      i_p_max) {
-    int keep = TRUE;
+    int keep = GBP_TRUE;
     int scatter_rank;
 
     if(mode_mark != READ_GADGET_NONE) {
         if(check_mode_for_flag(mode_mark, READ_GADGET_MARKED)) {
             if(id_list[id_list_index[find_index(id_list, id_p, n_id_list, id_list_index)]] != id_p)
-                keep *= FALSE;
+                keep *= GBP_FALSE;
         }
 #if USE_MPI
         else if(check_mode_for_flag(mode, READ_GADGET_RANDOM)) {
-            scatter_rank = MIN(SID.n_proc - 1, (int)(random_number(RNG) * (GBPREAL)SID.n_proc));
+            scatter_rank = GBP_MIN(SID.n_proc - 1, (int)(random_number(RNG) * (GBPREAL)SID.n_proc));
             if(scatter_rank != SID.My_rank)
-                keep *= FALSE;
+                keep *= GBP_FALSE;
         }
 #endif
         else if(check_mode_for_flag(mode, READ_GADGET_DEFAULT)) {
             if(i_p < i_p_min || i_p > i_p_max)
-                keep *= FALSE;
+                keep *= GBP_FALSE;
         }
         if(check_mode_for_flag(mode, READ_GADGET_X_MIN)) {
             if(x_p < x_min)
-                keep *= FALSE;
+                keep *= GBP_FALSE;
         }
         if(check_mode_for_flag(mode, READ_GADGET_X_MAX)) {
             if(x_p >= x_max)
-                keep *= FALSE;
+                keep *= GBP_FALSE;
         }
         if(check_mode_for_flag(mode, READ_GADGET_Y_MIN)) {
             if(y_p < y_min)
-                keep *= FALSE;
+                keep *= GBP_FALSE;
         }
         if(check_mode_for_flag(mode, READ_GADGET_Y_MAX)) {
             if(y_p >= y_max)
-                keep *= FALSE;
+                keep *= GBP_FALSE;
         }
         if(check_mode_for_flag(mode, READ_GADGET_Z_MIN)) {
             if(z_p < z_min)
-                keep *= FALSE;
+                keep *= GBP_FALSE;
         }
         if(check_mode_for_flag(mode, READ_GADGET_Z_MAX)) {
             if(z_p >= z_max)
-                keep *= FALSE;
+                keep *= GBP_FALSE;
         }
     } else
-        keep *= FALSE;
+        keep *= GBP_FALSE;
     return (keep);
 }
 
 void read_gadget_binary(char *filename_root_in, int snapshot_number, plist_info *plist, int mode) {
     char **      pname;
     char *       name_initpositions;
-    char         filename[MAX_FILENAME_LENGTH];
+    char         filename[SID_MAX_FILENAME_LENGTH];
     char *       read_catalog;
     size_t       i, j, k, l, jj;
     size_t       k_offset[N_GADGET_TYPE];
@@ -160,15 +160,15 @@ void read_gadget_binary(char *filename_root_in, int snapshot_number, plist_info 
     int          record_length_close;
     int          n_return;
     size_t       s_load;
-    int          flag_keep_IDs      = TRUE;
-    int          flag_multimass     = FALSE;
-    int          flag_gas           = FALSE;
-    int          flag_initpositions = FALSE;
-    int          flag_no_velocities = FALSE;
-    int          flag_LONGIDS       = FALSE;
-    int          flag_read_marked   = FALSE;
-    int          flag_read_catalog  = FALSE;
-    int          flag_all_read_all  = FALSE;
+    int          flag_keep_IDs      = GBP_TRUE;
+    int          flag_multimass     = GBP_FALSE;
+    int          flag_gas           = GBP_FALSE;
+    int          flag_initpositions = GBP_FALSE;
+    int          flag_no_velocities = GBP_FALSE;
+    int          flag_LONGIDS       = GBP_FALSE;
+    int          flag_read_marked   = GBP_FALSE;
+    int          flag_read_catalog  = GBP_FALSE;
+    int          flag_all_read_all  = GBP_FALSE;
     int          i_file;
     int          i_rank;
     int          n_files;
@@ -215,11 +215,11 @@ void read_gadget_binary(char *filename_root_in, int snapshot_number, plist_info 
     double       y_max_bcast;
     double       z_min_bcast;
     double       z_max_bcast;
-    int          flag_multifile = FALSE;
+    int          flag_multifile = GBP_FALSE;
     int          flag_file_type = 0;
-    int          flag_filefound = FALSE;
+    int          flag_filefound = GBP_FALSE;
 
-    char filename_in[MAX_FILENAME_LENGTH];
+    char filename_in[SID_MAX_FILENAME_LENGTH];
 
     // Read the header and determine the snapshot type
     gadget_read_info fp_gadget;
@@ -238,21 +238,21 @@ void read_gadget_binary(char *filename_root_in, int snapshot_number, plist_info 
             SID_log("Reading GADGET binary file {%s}...", SID_LOG_OPEN | SID_LOG_TIMER, filename_root_in);
         // This flag is set when we are only reading in
         //   initial particle positions (eg. to set a glass)
-        // If TRUE then only positions will be stored and they
+        // If GBP_TRUE then only positions will be stored and they
         //   will be stored with '_init' at the end of the
         //   variable names
         if(ADaPS_exist(plist->data, "flag_initpositions")) {
             flag_initpositions = ((int *)ADaPS_fetch(plist->data, "flag_initpositions"))[0];
             name_initpositions = (char *)ADaPS_fetch(plist->data, "name_initpositions");
         } else
-            flag_initpositions = FALSE;
+            flag_initpositions = GBP_FALSE;
 
         // This flag is set when we are only reading in
         //   initial particle positions (eg. to set a glass)
         if(ADaPS_exist(plist->data, "flag_no_velocities")) {
-            flag_no_velocities = TRUE;
+            flag_no_velocities = GBP_TRUE;
         } else
-            flag_no_velocities = FALSE;
+            flag_no_velocities = GBP_FALSE;
 
         // This flag is set if we want all cores to read all particles
         if(ADaPS_exist(plist->data, "flag_all_read_all"))
@@ -262,58 +262,58 @@ void read_gadget_binary(char *filename_root_in, int snapshot_number, plist_info 
         if(ADaPS_exist(plist->data, "flag_keep_IDs"))
             flag_keep_IDs = ((int *)ADaPS_fetch(plist->data, "flag_keep_IDs"))[0];
         else
-            flag_keep_IDs = TRUE;
+            flag_keep_IDs = GBP_TRUE;
 
         // These values are set when you want to scale the positions by some factor
         if(ADaPS_exist(plist->data, "x_scale")) {
             x_scale     = ((double *)ADaPS_fetch(plist->data, "x_scale"))[0];
-            flag_xscale = TRUE;
+            flag_xscale = GBP_TRUE;
         } else
-            flag_xscale = FALSE;
+            flag_xscale = GBP_FALSE;
         if(ADaPS_exist(plist->data, "y_scale")) {
             y_scale     = ((double *)ADaPS_fetch(plist->data, "y_scale"))[0];
-            flag_yscale = TRUE;
+            flag_yscale = GBP_TRUE;
         } else
-            flag_yscale = FALSE;
+            flag_yscale = GBP_FALSE;
         if(ADaPS_exist(plist->data, "z_scale")) {
             z_scale     = ((double *)ADaPS_fetch(plist->data, "z_scale"))[0];
-            flag_zscale = TRUE;
+            flag_zscale = GBP_TRUE;
         } else
-            flag_zscale = FALSE;
+            flag_zscale = GBP_FALSE;
 
         // These values are set when you want to apply offsets to the positions
         if(ADaPS_exist(plist->data, "x_offset")) {
             x_offset     = ((double *)ADaPS_fetch(plist->data, "x_offset"))[0];
-            flag_xoffset = TRUE;
+            flag_xoffset = GBP_TRUE;
         } else
-            flag_xoffset = FALSE;
+            flag_xoffset = GBP_FALSE;
         if(ADaPS_exist(plist->data, "y_offset")) {
             y_offset     = ((double *)ADaPS_fetch(plist->data, "y_offset"))[0];
-            flag_yoffset = TRUE;
+            flag_yoffset = GBP_TRUE;
         } else
-            flag_yoffset = FALSE;
+            flag_yoffset = GBP_FALSE;
         if(ADaPS_exist(plist->data, "z_offset")) {
             z_offset     = ((double *)ADaPS_fetch(plist->data, "z_offset"))[0];
-            flag_zoffset = TRUE;
+            flag_zoffset = GBP_TRUE;
         } else
-            flag_zoffset = FALSE;
+            flag_zoffset = GBP_FALSE;
 
         // These values are set when you want to (subsequently) enforce periodic BCs
         if(ADaPS_exist(plist->data, "x_period")) {
             x_period     = ((double *)ADaPS_fetch(plist->data, "x_period"))[0];
-            flag_xperiod = TRUE;
+            flag_xperiod = GBP_TRUE;
         } else
-            flag_xperiod = FALSE;
+            flag_xperiod = GBP_FALSE;
         if(ADaPS_exist(plist->data, "y_period")) {
             y_period     = ((double *)ADaPS_fetch(plist->data, "y_period"))[0];
-            flag_yperiod = TRUE;
+            flag_yperiod = GBP_TRUE;
         } else
-            flag_yperiod = FALSE;
+            flag_yperiod = GBP_FALSE;
         if(ADaPS_exist(plist->data, "z_period")) {
             z_period     = ((double *)ADaPS_fetch(plist->data, "z_period"))[0];
-            flag_zperiod = TRUE;
+            flag_zperiod = GBP_TRUE;
         } else
-            flag_zperiod = FALSE;
+            flag_zperiod = GBP_FALSE;
 
         pname = plist->species;
 
@@ -321,7 +321,7 @@ void read_gadget_binary(char *filename_root_in, int snapshot_number, plist_info 
         SID_log("Reading header...", SID_LOG_OPEN);
         SID_fread_all(&record_length_open, 4, 1, &fp);
         if(record_length_open != GADGET_HEADER_SIZE)
-            SID_log_warning("Problem with GADGET record size (opening size of header is wrong)", ERROR_LOGIC);
+            SID_log_warning("Problem with GADGET record size (opening size of header is wrong)", SID_ERROR_LOGIC);
         s_load = 0;
 
         // Number of particles for each species in this file
@@ -453,7 +453,7 @@ void read_gadget_binary(char *filename_root_in, int snapshot_number, plist_info 
         SID_fread_all(unused, 1, GADGET_HEADER_SIZE - s_load, &fp);
         SID_fread_all(&record_length_close, 4, 1, &fp);
         if(record_length_open != record_length_close)
-            SID_log_warning("Problem with GADGET record size (close of header)", ERROR_LOGIC);
+            SID_log_warning("Problem with GADGET record size (close of header)", SID_ERROR_LOGIC);
 
         // Close file
         SID_fclose(&fp);
@@ -472,16 +472,16 @@ void read_gadget_binary(char *filename_root_in, int snapshot_number, plist_info 
         }
 
         // Is this a multimass snapshot?
-        flag_multimass = FALSE;
+        flag_multimass = GBP_FALSE;
         for(i = 0; i < N_GADGET_TYPE; i++)
             if(n_all[i] > 0 && mass_array[i] == 0.)
-                flag_multimass = TRUE;
+                flag_multimass = GBP_TRUE;
 
         // Is sph being used?
         if(n_all[GADGET_TYPE_GAS] > 0)
-            flag_gas = TRUE;
+            flag_gas = GBP_TRUE;
         else
-            flag_gas = FALSE;
+            flag_gas = GBP_FALSE;
 
         // Define the read mode
         read_mode = READ_GADGET_DEFAULT;
@@ -522,7 +522,7 @@ void read_gadget_binary(char *filename_root_in, int snapshot_number, plist_info 
         } else {
             i_p_min           = 0;
             i_p_max           = n_particles_all - 1;
-            flag_all_read_all = TRUE;
+            flag_all_read_all = GBP_TRUE;
         }
         ADaPS_store(&(plist->data), (void *)(&i_p_min), "rank_i_p_min", ADaPS_SCALAR_SIZE_T);
         ADaPS_store(&(plist->data), (void *)(&i_p_max), "rank_i_p_max", ADaPS_SCALAR_SIZE_T);
@@ -569,25 +569,25 @@ void read_gadget_binary(char *filename_root_in, int snapshot_number, plist_info 
         n_particles_mass_rank = 0;
 
         // Are we reading pre-marked particles?
-        flag_read_marked = FALSE;
+        flag_read_marked = GBP_FALSE;
         for(i = 0; i < N_GADGET_TYPE; i++) {
             if(ADaPS_exist(plist->data, "mark_%s", plist->species[i]))
-                flag_read_marked = TRUE;
+                flag_read_marked = GBP_TRUE;
         }
 
         // Are we reading a catalog of particles?
-        flag_read_catalog = FALSE;
+        flag_read_catalog = GBP_FALSE;
         if(ADaPS_exist(plist->data, "read_catalog")) {
             if(flag_read_marked)
-                SID_trap_error("Can't read a catalog and mark list at the same time (yet).", ERROR_LOGIC);
+                SID_trap_error("Can't read a catalog and mark list at the same time (yet).", SID_ERROR_LOGIC);
             read_catalog      = (char *)ADaPS_fetch(plist->data, "read_catalog");
-            flag_read_catalog = TRUE;
+            flag_read_catalog = GBP_TRUE;
         }
 
         if(flag_read_marked || flag_read_catalog)
             buffer_ids = (void *)SID_malloc(sizeof(long long) * GADGET_BUFFER_SIZE);
 
-        buffer           = (void *)SID_malloc(MAX(3 * sizeof(float), sizeof(long long)) * GADGET_BUFFER_SIZE);
+        buffer           = (void *)SID_malloc(GBP_MAX(3 * sizeof(float), sizeof(long long)) * GADGET_BUFFER_SIZE);
         n_particles_rank = 0;
         for(i_file = 0, i_p_temp = 0; i_file < n_files; i_file++) {
             // Open file
@@ -622,14 +622,14 @@ void read_gadget_binary(char *filename_root_in, int snapshot_number, plist_info 
                 SID_fclose(&fp_ids);
                 int flag_LONGIDS_old = flag_LONGIDS;
                 if(record_length_open / sizeof(int) == n_particles_file)
-                    flag_LONGIDS = FALSE;
+                    flag_LONGIDS = GBP_FALSE;
                 else if(record_length_open / sizeof(long long) == n_particles_file) {
-                    flag_LONGIDS = TRUE;
+                    flag_LONGIDS = GBP_TRUE;
                     SID_log("using (long long) IDs...", SID_LOG_CONTINUE);
                 }
                 if(i_file > 0 && flag_LONGIDS_old != flag_LONGIDS)
                     SID_trap_error(
-                        "ID block sizes/ID types are not consistant accross files (ie. %d!=%d)", ERROR_LOGIC, flag_LONGIDS_old, flag_LONGIDS);
+                        "ID block sizes/ID types are not consistant accross files (ie. %d!=%d)", SID_ERROR_LOGIC, flag_LONGIDS_old, flag_LONGIDS);
             }
 
             // Read positions and count the number needed by this rank from this file
@@ -646,7 +646,7 @@ void read_gadget_binary(char *filename_root_in, int snapshot_number, plist_info 
                         n_id_list = ((size_t *)ADaPS_fetch(plist->data, "n_local_mark_%s", plist->species[i]))[0];
                     else
                         n_id_list = 0;
-                    merge_sort((void *)id_list, (size_t)n_id_list, &id_list_index, SID_SIZE_T, SORT_COMPUTE_INDEX, FALSE);
+                    merge_sort((void *)id_list, (size_t)n_id_list, &id_list_index, SID_SIZE_T, SORT_COMPUTE_INDEX, GBP_FALSE);
                     if(n_id_list == 0)
                         mark_mode = READ_GADGET_NONE;
                     else
@@ -655,12 +655,12 @@ void read_gadget_binary(char *filename_root_in, int snapshot_number, plist_info 
                     if(ADaPS_exist(plist->data, "particle_ids_%s", read_catalog))
                         id_list = (size_t *)ADaPS_fetch(plist->data, "particle_ids_%s", read_catalog);
                     else
-                        SID_trap_error("variable particle_ids_%s no present in data structure!", ERROR_LOGIC, read_catalog);
+                        SID_trap_error("variable particle_ids_%s no present in data structure!", SID_ERROR_LOGIC, read_catalog);
                     if(ADaPS_exist(plist->data, "n_particles_%s", read_catalog))
                         n_id_list = ((size_t *)ADaPS_fetch(plist->data, "n_particles_%s", read_catalog))[0];
                     else
-                        SID_trap_error("variable n_particles_%s no present in data structure!", ERROR_LOGIC, read_catalog);
-                    merge_sort((void *)id_list, (size_t)n_id_list, &id_list_index, SID_SIZE_T, SORT_COMPUTE_INDEX, FALSE);
+                        SID_trap_error("variable n_particles_%s no present in data structure!", SID_ERROR_LOGIC, read_catalog);
+                    merge_sort((void *)id_list, (size_t)n_id_list, &id_list_index, SID_SIZE_T, SORT_COMPUTE_INDEX, GBP_FALSE);
                     if(n_id_list == 0)
                         mark_mode = READ_GADGET_NONE;
                     else
@@ -672,7 +672,7 @@ void read_gadget_binary(char *filename_root_in, int snapshot_number, plist_info 
                     n_id_list     = 0;
                 }
                 for(j = 0, k = 0; j < n_of_type_file[i];) {
-                    n_buffer = MIN(GADGET_BUFFER_SIZE, n_of_type_file[i] - j);
+                    n_buffer = GBP_MIN(GADGET_BUFFER_SIZE, n_of_type_file[i] - j);
                     if(flag_read_marked || flag_read_catalog) {
                         if(flag_LONGIDS)
                             SID_fread_all(buffer_ids, sizeof(long long), n_buffer, &fp_ids);
@@ -790,7 +790,7 @@ void read_gadget_binary(char *filename_root_in, int snapshot_number, plist_info 
                         n_id_list = ((size_t *)ADaPS_fetch(plist->data, "n_local_mark_%s", plist->species[i]))[0];
                     else
                         n_id_list = 0;
-                    merge_sort((void *)id_list, (size_t)n_id_list, &id_list_index, SID_SIZE_T, SORT_COMPUTE_INDEX, FALSE);
+                    merge_sort((void *)id_list, (size_t)n_id_list, &id_list_index, SID_SIZE_T, SORT_COMPUTE_INDEX, GBP_FALSE);
                     if(n_id_list == 0)
                         mark_mode = READ_GADGET_NONE;
                     else
@@ -798,7 +798,7 @@ void read_gadget_binary(char *filename_root_in, int snapshot_number, plist_info 
                 } else if(flag_read_catalog) {
                     id_list   = (size_t *)ADaPS_fetch(plist->data, "particle_ids_%s", read_catalog);
                     n_id_list = ((size_t *)ADaPS_fetch(plist->data, "n_particles_%s", read_catalog))[0];
-                    merge_sort((void *)id_list, (size_t)n_id_list, &id_list_index, SID_SIZE_T, SORT_COMPUTE_INDEX, FALSE);
+                    merge_sort((void *)id_list, (size_t)n_id_list, &id_list_index, SID_SIZE_T, SORT_COMPUTE_INDEX, GBP_FALSE);
                     if(n_id_list == 0)
                         mark_mode = READ_GADGET_NONE;
                     else
@@ -808,9 +808,9 @@ void read_gadget_binary(char *filename_root_in, int snapshot_number, plist_info 
                     id_list   = NULL;
                     n_id_list = 0;
                 }
-                list_file_rank[i][i_file] = (size_t *)SID_malloc(sizeof(size_t) * MAX(1, n_of_type_file_rank[i][i_file]));
+                list_file_rank[i][i_file] = (size_t *)SID_malloc(sizeof(size_t) * GBP_MAX(1, n_of_type_file_rank[i][i_file]));
                 for(j = 0, k = 0; j < n_of_type_file[i];) {
-                    n_buffer = MIN(GADGET_BUFFER_SIZE, n_of_type_file[i] - j);
+                    n_buffer = GBP_MIN(GADGET_BUFFER_SIZE, n_of_type_file[i] - j);
                     if(flag_read_marked || flag_read_catalog) {
                         if(flag_LONGIDS)
                             SID_fread_all(buffer_ids, sizeof(long long), n_buffer, &fp_ids);
@@ -910,7 +910,7 @@ void read_gadget_binary(char *filename_root_in, int snapshot_number, plist_info 
         if(ADaPS_exist(plist->data, "flag_read_scatter"))
             SID_free((void **)&RNG);
         if(n_of_type_rank[GADGET_TYPE_GAS] == 0)
-            flag_gas = FALSE;
+            flag_gas = GBP_FALSE;
         n_particles_all = 0;
 
 #if USE_MPI
@@ -927,24 +927,24 @@ void read_gadget_binary(char *filename_root_in, int snapshot_number, plist_info 
         SID_log("Done.", SID_LOG_CLOSE);
 
         // Allocate data arrays
-        x_array = (GBPREAL *)SID_malloc(sizeof(GBPREAL) * (size_t)(MAX(1, n_particles_rank)));
-        y_array = (GBPREAL *)SID_malloc(sizeof(GBPREAL) * (size_t)(MAX(1, n_particles_rank)));
-        z_array = (GBPREAL *)SID_malloc(sizeof(GBPREAL) * (size_t)(MAX(1, n_particles_rank)));
+        x_array = (GBPREAL *)SID_malloc(sizeof(GBPREAL) * (size_t)(GBP_MAX(1, n_particles_rank)));
+        y_array = (GBPREAL *)SID_malloc(sizeof(GBPREAL) * (size_t)(GBP_MAX(1, n_particles_rank)));
+        z_array = (GBPREAL *)SID_malloc(sizeof(GBPREAL) * (size_t)(GBP_MAX(1, n_particles_rank)));
         if(!flag_initpositions) {
             if(!flag_no_velocities) {
-                vx_array = (GBPREAL *)SID_malloc(sizeof(GBPREAL) * (size_t)(MAX(1, n_particles_rank)));
-                vy_array = (GBPREAL *)SID_malloc(sizeof(GBPREAL) * (size_t)(MAX(1, n_particles_rank)));
-                vz_array = (GBPREAL *)SID_malloc(sizeof(GBPREAL) * (size_t)(MAX(1, n_particles_rank)));
+                vx_array = (GBPREAL *)SID_malloc(sizeof(GBPREAL) * (size_t)(GBP_MAX(1, n_particles_rank)));
+                vy_array = (GBPREAL *)SID_malloc(sizeof(GBPREAL) * (size_t)(GBP_MAX(1, n_particles_rank)));
+                vz_array = (GBPREAL *)SID_malloc(sizeof(GBPREAL) * (size_t)(GBP_MAX(1, n_particles_rank)));
             }
             if(flag_keep_IDs)
-                id_array = (size_t *)SID_malloc(sizeof(size_t) * (size_t)(MAX(1, n_particles_rank)));
+                id_array = (size_t *)SID_malloc(sizeof(size_t) * (size_t)(GBP_MAX(1, n_particles_rank)));
             if(flag_multimass)
-                M_array = (double *)SID_malloc(sizeof(double) * (size_t)(MAX(1, n_particles_mass_rank)));
+                M_array = (double *)SID_malloc(sizeof(double) * (size_t)(GBP_MAX(1, n_particles_mass_rank)));
             if(flag_gas) {
-                u_array      = (GBPREAL *)SID_malloc(sizeof(GBPREAL) * (size_t)(MAX(1, n_of_type_rank[GADGET_TYPE_GAS])));
-                rho_array    = (GBPREAL *)SID_malloc(sizeof(GBPREAL) * (size_t)(MAX(1, n_of_type_rank[GADGET_TYPE_GAS])));
-                T_array      = (GBPREAL *)SID_malloc(sizeof(GBPREAL) * (size_t)(MAX(1, n_of_type_rank[GADGET_TYPE_GAS])));
-                smooth_array = (GBPREAL *)SID_malloc(sizeof(GBPREAL) * (size_t)(MAX(1, n_of_type_rank[GADGET_TYPE_GAS])));
+                u_array      = (GBPREAL *)SID_malloc(sizeof(GBPREAL) * (size_t)(GBP_MAX(1, n_of_type_rank[GADGET_TYPE_GAS])));
+                rho_array    = (GBPREAL *)SID_malloc(sizeof(GBPREAL) * (size_t)(GBP_MAX(1, n_of_type_rank[GADGET_TYPE_GAS])));
+                T_array      = (GBPREAL *)SID_malloc(sizeof(GBPREAL) * (size_t)(GBP_MAX(1, n_of_type_rank[GADGET_TYPE_GAS])));
+                smooth_array = (GBPREAL *)SID_malloc(sizeof(GBPREAL) * (size_t)(GBP_MAX(1, n_of_type_rank[GADGET_TYPE_GAS])));
             }
         }
 
@@ -982,7 +982,7 @@ void read_gadget_binary(char *filename_root_in, int snapshot_number, plist_info 
             SID_fread_all(&record_length_open, 4, 1, &fp);
             for(i = 0; i < N_GADGET_TYPE; i++) {
                 for(j = 0, k = 0; j < n_of_type_file[i];) {
-                    n_buffer = MIN(GADGET_BUFFER_SIZE, n_of_type_file[i] - j);
+                    n_buffer = GBP_MIN(GADGET_BUFFER_SIZE, n_of_type_file[i] - j);
                     SID_fread_all(buffer, sizeof(float), 3 * n_buffer, &fp);
                     for(jj = 0; jj < n_buffer; jj++, j++) {
                         f1_value = ((float *)buffer)[3 * jj + 0];
@@ -1025,10 +1025,10 @@ void read_gadget_binary(char *filename_root_in, int snapshot_number, plist_info 
             }
             SID_fread_all(&record_length_close, 4, 1, &fp);
             if(record_length_open != record_length_close)
-                SID_log_warning("Problem with GADGET record size (close of positions)", ERROR_LOGIC);
+                SID_log_warning("Problem with GADGET record size (close of positions)", SID_ERROR_LOGIC);
             SID_log("Done.", SID_LOG_CLOSE);
 
-            // Read the rest only if flag_initpositions!=TRUE
+            // Read the rest only if flag_initpositions!=GBP_TRUE
             if(!flag_initpositions) {
                 if(!flag_no_velocities) {
                     // Read velocities
@@ -1036,7 +1036,7 @@ void read_gadget_binary(char *filename_root_in, int snapshot_number, plist_info 
                     SID_fread_all(&record_length_open, 4, 1, &fp);
                     for(i = 0; i < N_GADGET_TYPE; i++) {
                         for(j = 0, k = 0; j < n_of_type_file[i];) {
-                            n_buffer = MIN(GADGET_BUFFER_SIZE, n_of_type_file[i] - j);
+                            n_buffer = GBP_MIN(GADGET_BUFFER_SIZE, n_of_type_file[i] - j);
                             SID_fread_all(buffer, sizeof(float), 3 * n_buffer, &fp);
                             for(jj = 0; jj < n_buffer; jj++, j++) {
                                 f1_value = ((float *)buffer)[3 * jj + 0];
@@ -1055,7 +1055,7 @@ void read_gadget_binary(char *filename_root_in, int snapshot_number, plist_info 
                     }
                     SID_fread_all(&record_length_close, 4, 1, &fp);
                     if(record_length_open != record_length_close)
-                        SID_log_warning("Problem with GADGET record size (close of velocities)", ERROR_LOGIC);
+                        SID_log_warning("Problem with GADGET record size (close of velocities)", SID_ERROR_LOGIC);
                     SID_log("Done.", SID_LOG_CLOSE);
                 } else {
                     SID_fread_all(&record_length_open, 4, 1, &fp);
@@ -1073,7 +1073,7 @@ void read_gadget_binary(char *filename_root_in, int snapshot_number, plist_info 
                 SID_fread_all(&record_length_open, 4, 1, &fp);
                 for(i = 0; i < N_GADGET_TYPE; i++) {
                     for(j = 0, k = 0; j < n_of_type_file[i];) {
-                        n_buffer = MIN(GADGET_BUFFER_SIZE, n_of_type_file[i] - j);
+                        n_buffer = GBP_MIN(GADGET_BUFFER_SIZE, n_of_type_file[i] - j);
                         if(flag_LONGIDS)
                             SID_fread_all(buffer, sizeof(long long), n_buffer, &fp);
                         else
@@ -1099,7 +1099,7 @@ void read_gadget_binary(char *filename_root_in, int snapshot_number, plist_info 
                 }
                 SID_fread_all(&record_length_close, 4, 1, &fp);
                 if(record_length_open != record_length_close)
-                    SID_log_warning("Problem with GADGET record size (close of ids)", ERROR_LOGIC);
+                    SID_log_warning("Problem with GADGET record size (close of ids)", SID_ERROR_LOGIC);
                 SID_log("Done.", SID_LOG_CLOSE);
 
                 // Read masses (if needed)
@@ -1110,7 +1110,7 @@ void read_gadget_binary(char *filename_root_in, int snapshot_number, plist_info 
                     for(i = 0; i < N_GADGET_TYPE; i++) {
                         if(mass_array[i] == 0.) {
                             for(j = 0, k = 0; j < n_of_type_file[i];) {
-                                n_buffer = MIN(GADGET_BUFFER_SIZE, n_of_type_file[i] - j);
+                                n_buffer = GBP_MIN(GADGET_BUFFER_SIZE, n_of_type_file[i] - j);
                                 SID_fread_all(buffer, sizeof(float), n_buffer, &fp);
                                 for(jj = 0; jj < n_buffer; jj++, j++) {
                                     f1_value = ((float *)buffer)[jj];
@@ -1126,7 +1126,7 @@ void read_gadget_binary(char *filename_root_in, int snapshot_number, plist_info 
                     }
                     SID_fread_all(&record_length_close, 4, 1, &fp);
                     if(record_length_open != record_length_close)
-                        SID_log_warning("Problem with GADGET record size (close of masses)", ERROR_LOGIC);
+                        SID_log_warning("Problem with GADGET record size (close of masses)", SID_ERROR_LOGIC);
                     SID_log("Done.", SID_LOG_CLOSE);
                 }
 
@@ -1137,7 +1137,7 @@ void read_gadget_binary(char *filename_root_in, int snapshot_number, plist_info 
                     SID_log("Reading gas properties...", SID_LOG_OPEN | SID_LOG_TIMER);
                     SID_fread_all(&record_length_open, 4, 1, &fp);
                     for(j = 0, k = 0; j < n_of_type_file[i];) {
-                        n_buffer = MIN(GADGET_BUFFER_SIZE, n_of_type_file[i] - j);
+                        n_buffer = GBP_MIN(GADGET_BUFFER_SIZE, n_of_type_file[i] - j);
                         SID_fread_all(buffer, sizeof(float), n_buffer, &fp);
                         for(jj = 0; jj < n_buffer; jj++, j++) {
                             f1_value = ((float *)buffer)[jj];
@@ -1151,12 +1151,12 @@ void read_gadget_binary(char *filename_root_in, int snapshot_number, plist_info 
                     }
                     SID_fread_all(&record_length_close, 4, 1, &fp);
                     if(record_length_open != record_length_close)
-                        SID_log_warning("Problem with GADGET record size (close of internal energies)", ERROR_LOGIC);
+                        SID_log_warning("Problem with GADGET record size (close of internal energies)", SID_ERROR_LOGIC);
 
                     // Read densities
                     SID_fread_all(&record_length_open, 4, 1, &fp);
                     for(j = 0, k = 0; j < n_of_type_file[i];) {
-                        n_buffer = MIN(GADGET_BUFFER_SIZE, n_of_type_file[i] - j);
+                        n_buffer = GBP_MIN(GADGET_BUFFER_SIZE, n_of_type_file[i] - j);
                         SID_fread_all(buffer, sizeof(float), n_buffer, &fp);
                         for(jj = 0; jj < n_buffer; jj++, j++) {
                             f1_value = ((float *)buffer)[jj];
@@ -1171,12 +1171,12 @@ void read_gadget_binary(char *filename_root_in, int snapshot_number, plist_info 
                     }
                     SID_fread_all(&record_length_close, 4, 1, &fp);
                     if(record_length_open != record_length_close)
-                        SID_log_warning("Problem with GADGET record size (close of densities)", ERROR_LOGIC);
+                        SID_log_warning("Problem with GADGET record size (close of densities)", SID_ERROR_LOGIC);
 
                     // Read smoothing lengths
                     SID_fread_all(&record_length_open, 4, 1, &fp);
                     for(j = 0, k = 0; j < n_of_type_file[i];) {
-                        n_buffer = MIN(GADGET_BUFFER_SIZE, n_of_type_file[i] - j);
+                        n_buffer = GBP_MIN(GADGET_BUFFER_SIZE, n_of_type_file[i] - j);
                         SID_fread_all(buffer, sizeof(float), n_buffer, &fp);
                         for(jj = 0; jj < n_buffer; jj++, j++) {
                             f1_value = ((float *)buffer)[jj];
@@ -1190,7 +1190,7 @@ void read_gadget_binary(char *filename_root_in, int snapshot_number, plist_info 
                     }
                     SID_fread_all(&record_length_close, 4, 1, &fp);
                     if(record_length_open != record_length_close)
-                        SID_log_warning("Problem with GADGET record size (close of smoothing lengths)", ERROR_LOGIC);
+                        SID_log_warning("Problem with GADGET record size (close of smoothing lengths)", SID_ERROR_LOGIC);
 
                     // Compute temperatures for gas
                     for(j = 0, k = 0; j < n_of_type_file[GADGET_TYPE_GAS]; j++) {

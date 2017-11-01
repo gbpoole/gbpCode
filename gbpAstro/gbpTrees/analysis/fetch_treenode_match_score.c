@@ -16,12 +16,12 @@ double fetch_treenode_match_score(tree_info *trees, tree_node_info *halo) {
             if(trees->group_match_scores != NULL)
                 match_score = trees->group_match_scores[halo->snap_tree][halo->neighbour_index];
             else
-                SID_trap_error("Group match scores are not defined.  They probably have not been read.", ERROR_LOGIC);
+                SID_trap_error("Group match scores are not defined.  They probably have not been read.", SID_ERROR_LOGIC);
         } else {
             if(trees->subgroup_match_scores != NULL)
                 match_score = trees->subgroup_match_scores[halo->snap_tree][halo->neighbour_index];
             else
-                SID_trap_error("Subgroup match scores are not defined.  They probably have not been read.", ERROR_LOGIC);
+                SID_trap_error("Subgroup match scores are not defined.  They probably have not been read.", SID_ERROR_LOGIC);
         }
         return ((double)match_score);
     }

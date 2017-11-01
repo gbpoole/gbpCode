@@ -19,7 +19,7 @@ void write_grid(field_info *field,
     SID_log("Writing {%s} grid...", SID_LOG_OPEN, grid_identifier);
 
     // Set output filename
-    char filename_out[MAX_FILENAME_LENGTH];
+    char filename_out[SID_MAX_FILENAME_LENGTH];
     sprintf(filename_out, "%s_grid.dat", filename_out_root);
 
     // Write header if this is the first grid
@@ -43,7 +43,7 @@ void write_grid(field_info *field,
                     fwrite(&mass_assignment_scheme, sizeof(int), 1, fp_out);
                     break;
                 default:
-                    SID_trap_error("Unknown mass assignment scheme (%d) in write_grid().", ERROR_LOGIC, mass_assignment_scheme);
+                    SID_trap_error("Unknown mass assignment scheme (%d) in write_grid().", SID_ERROR_LOGIC, mass_assignment_scheme);
             }
         } else
             fp_out = fopen(filename_out, "a");

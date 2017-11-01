@@ -77,7 +77,7 @@ int main(int argc, char *argv[]) {
             fopen_catalog(filename_catalog_root, i_file, READ_CATALOG_GROUPS | READ_CATALOG_PROPERTIES, &fp_group_properties);
             if(fp_group_properties.n_halos_total != n_groups)
                 SID_trap_error(
-                    "Halo counts in group files and catalogs don't match (ie. %d!=%d)", ERROR_LOGIC, fp_group_properties.n_halos_total, n_groups);
+                    "Halo counts in group files and catalogs don't match (ie. %d!=%d)", SID_ERROR_LOGIC, fp_group_properties.n_halos_total, n_groups);
             for(int i_group = 0; i_group < n_groups; i_group++) {
                 fread_catalog_file(&fp_group_properties, NULL, NULL, &group_properties, NULL, i_group);
                 x_array[i_group] = group_properties.position_MBP[0];
@@ -119,7 +119,7 @@ int main(int argc, char *argv[]) {
 
             // Sort PHKs
             SID_log("Sorting PHKs...", SID_LOG_OPEN);
-            merge_sort((void *)PHK_group, n_groups, &PHK_group_index, SID_INT, SORT_COMPUTE_INDEX, FALSE);
+            merge_sort((void *)PHK_group, n_groups, &PHK_group_index, SID_INT, SORT_COMPUTE_INDEX, GBP_FALSE);
             SID_log("Done.", SID_LOG_CLOSE);
 
             // Count the number of particles
@@ -158,5 +158,5 @@ int main(int argc, char *argv[]) {
     }
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

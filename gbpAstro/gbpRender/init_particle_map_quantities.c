@@ -13,10 +13,10 @@ void init_particle_map_quantities(map_quantities_info *mq, render_info *render, 
     SID_log("Initializing quantities...", SID_LOG_OPEN);
 
     // Defaults
-    mq->flag_weigh              = FALSE;
-    mq->flag_line_integral      = FALSE;
-    mq->flag_transfer_sigma_log = FALSE;
-    mq->flag_transfer_rho_log   = FALSE;
+    mq->flag_weigh              = GBP_FALSE;
+    mq->flag_line_integral      = GBP_FALSE;
+    mq->flag_transfer_sigma_log = GBP_FALSE;
+    mq->flag_transfer_rho_log   = GBP_FALSE;
     mq->n_particles             = 0;
     mq->mass_array              = 0.;
     mq->h_smooth                = (float **)SID_malloc(sizeof(float *) * render->n_interpolate);
@@ -39,13 +39,13 @@ void init_particle_map_quantities(map_quantities_info *mq, render_info *render, 
     int i_type;
     mq->ptype_used = (int *)SID_malloc(sizeof(int) * N_GADGET_TYPE);
     for(i_type = 0; i_type < N_GADGET_TYPE; i_type++)
-        mq->ptype_used[i_type] = FALSE;
+        mq->ptype_used[i_type] = GBP_FALSE;
 
     // Render a dark matter velocity dispersion map
     if(!strcmp(render->camera->RGB_param, "sigma_v_dark") && !strcmp(render->camera->Y_param, "tau_dark")) {
-        mq->ptype_used[GADGET_TYPE_DARK] = TRUE;
-        mq->flag_weigh                   = TRUE;
-        mq->flag_line_integral           = TRUE;
+        mq->ptype_used[GADGET_TYPE_DARK] = GBP_TRUE;
+        mq->flag_weigh                   = GBP_TRUE;
+        mq->flag_line_integral           = GBP_TRUE;
         mq->n_particles                  = ((size_t *)ADaPS_fetch(render->plist_list[0]->data, "n_dark"))[0];
         mq->v_mode                       = MAKE_MAP_MODE_SIGMA;
         mq->w_mode                       = MAKE_MAP_MODE_RHO;
@@ -54,14 +54,14 @@ void init_particle_map_quantities(map_quantities_info *mq, render_info *render, 
                 mq->rho[i_snap] = (float *)ADaPS_fetch(render->plist_list[i_snap]->data, "rho_dark");
             if(ADaPS_exist(transfer_list, "rho_dark")) {
                 if(ADaPS_exist(transfer_list, "rho_dark_log"))
-                    mq->flag_transfer_rho_log = TRUE;
+                    mq->flag_transfer_rho_log = GBP_TRUE;
                 mq->transfer_rho = (interp_info *)ADaPS_fetch(transfer_list, "rho_dark");
             } else {
-                mq->flag_transfer_rho_log = FALSE;
+                mq->flag_transfer_rho_log = GBP_FALSE;
                 mq->transfer_rho          = NULL;
             }
         } else
-            SID_trap_error("No densities available in make_map.", ERROR_LOGIC);
+            SID_trap_error("No densities available in make_map.", SID_ERROR_LOGIC);
 
         // Use sigma_v for values
         if(ADaPS_exist(render->plist_list[0]->data, "sigma_v_dark")) {
@@ -69,18 +69,18 @@ void init_particle_map_quantities(map_quantities_info *mq, render_info *render, 
                 mq->sigma[i_snap] = (float *)ADaPS_fetch(render->plist_list[i_snap]->data, "sigma_v_dark");
             if(ADaPS_exist(transfer_list, "sigma_v_dark")) {
                 if(ADaPS_exist(transfer_list, "sigma_v_dark_log"))
-                    mq->flag_transfer_sigma_log = TRUE;
+                    mq->flag_transfer_sigma_log = GBP_TRUE;
                 mq->transfer_sigma = (interp_info *)ADaPS_fetch(transfer_list, "sigma_v_dark");
             } else {
-                mq->flag_transfer_sigma_log = FALSE;
+                mq->flag_transfer_sigma_log = GBP_FALSE;
                 mq->transfer_sigma          = NULL;
             }
         } else
-            SID_trap_error("No sigma_v's available in make_map.", ERROR_LOGIC);
+            SID_trap_error("No sigma_v's available in make_map.", SID_ERROR_LOGIC);
     } else if(!strcmp(render->camera->Y_param, "sigma_v_dark") && !strcmp(render->camera->RGB_param, "tau_dark")) {
-        mq->ptype_used[GADGET_TYPE_DARK] = TRUE;
-        mq->flag_weigh                   = TRUE;
-        mq->flag_line_integral           = TRUE;
+        mq->ptype_used[GADGET_TYPE_DARK] = GBP_TRUE;
+        mq->flag_weigh                   = GBP_TRUE;
+        mq->flag_line_integral           = GBP_TRUE;
         mq->n_particles                  = ((size_t *)ADaPS_fetch(render->plist_list[0]->data, "n_dark"))[0];
         mq->v_mode                       = MAKE_MAP_MODE_SIGMA;
         mq->w_mode                       = MAKE_MAP_MODE_RHO;
@@ -89,14 +89,14 @@ void init_particle_map_quantities(map_quantities_info *mq, render_info *render, 
                 mq->rho[i_snap] = (float *)ADaPS_fetch(render->plist_list[i_snap]->data, "sigma_v_dark");
             if(ADaPS_exist(transfer_list, "sigma_v_dark")) {
                 if(ADaPS_exist(transfer_list, "sigma_v_dark_log"))
-                    mq->flag_transfer_rho_log = TRUE;
+                    mq->flag_transfer_rho_log = GBP_TRUE;
                 mq->transfer_rho = (interp_info *)ADaPS_fetch(transfer_list, "sigma_v_dark");
             } else {
-                mq->flag_transfer_rho_log = FALSE;
+                mq->flag_transfer_rho_log = GBP_FALSE;
                 mq->transfer_rho          = NULL;
             }
         } else
-            SID_trap_error("No densities available in make_map.", ERROR_LOGIC);
+            SID_trap_error("No densities available in make_map.", SID_ERROR_LOGIC);
 
         // Use rho for values
         if(ADaPS_exist(render->plist_list[0]->data, "rho_dark")) {
@@ -104,18 +104,18 @@ void init_particle_map_quantities(map_quantities_info *mq, render_info *render, 
                 mq->sigma[i_snap] = (float *)ADaPS_fetch(render->plist_list[i_snap]->data, "rho_dark");
             if(ADaPS_exist(transfer_list, "rho_dark")) {
                 if(ADaPS_exist(transfer_list, "rho_dark_log"))
-                    mq->flag_transfer_sigma_log = TRUE;
+                    mq->flag_transfer_sigma_log = GBP_TRUE;
                 mq->transfer_sigma = (interp_info *)ADaPS_fetch(transfer_list, "rho_dark");
             } else {
-                mq->flag_transfer_sigma_log = FALSE;
+                mq->flag_transfer_sigma_log = GBP_FALSE;
                 mq->transfer_sigma          = NULL;
             }
         } else
-            SID_trap_error("No sigma_v's available in make_map.", ERROR_LOGIC);
+            SID_trap_error("No sigma_v's available in make_map.", SID_ERROR_LOGIC);
     } else if(!strcmp(render->camera->RGB_param, "sigma_v_dark") && render->camera->flag_velocity_space) {
-        mq->ptype_used[GADGET_TYPE_DARK] = TRUE;
-        mq->flag_weigh                   = FALSE;
-        mq->flag_line_integral           = TRUE;
+        mq->ptype_used[GADGET_TYPE_DARK] = GBP_TRUE;
+        mq->flag_weigh                   = GBP_FALSE;
+        mq->flag_line_integral           = GBP_TRUE;
         mq->n_particles                  = ((size_t *)ADaPS_fetch(render->plist_list[0]->data, "n_dark"))[0];
         mq->v_mode                       = MAKE_MAP_MODE_SIGMA;
         mq->w_mode                       = MAKE_MAP_INV_SIGMA;
@@ -126,17 +126,17 @@ void init_particle_map_quantities(map_quantities_info *mq, render_info *render, 
                 mq->sigma[i_snap] = (float *)ADaPS_fetch(render->plist_list[i_snap]->data, "sigma_v_dark");
             if(ADaPS_exist(transfer_list, "sigma_v_dark")) {
                 if(ADaPS_exist(transfer_list, "sigma_v_dark_log"))
-                    mq->flag_transfer_sigma_log = TRUE;
+                    mq->flag_transfer_sigma_log = GBP_TRUE;
                 mq->transfer_sigma = (interp_info *)ADaPS_fetch(transfer_list, "sigma_v_dark");
             } else {
-                mq->flag_transfer_sigma_log = FALSE;
+                mq->flag_transfer_sigma_log = GBP_FALSE;
                 mq->transfer_sigma          = NULL;
             }
         } else
-            SID_trap_error("No sigma_v's available in make_map.", ERROR_LOGIC);
+            SID_trap_error("No sigma_v's available in make_map.", SID_ERROR_LOGIC);
     } else
         SID_trap_error("Unknown rendering configuration RGB={%s} Y={%s} w/ flag_velocity_space=%d.",
-                       ERROR_LOGIC,
+                       SID_ERROR_LOGIC,
                        render->camera->RGB_param,
                        render->camera->Y_param,
                        render->camera->flag_velocity_space);
@@ -148,7 +148,7 @@ void init_particle_map_quantities(map_quantities_info *mq, render_info *render, 
             // This code can use one-and-only-one particle type at a time at the moment
             n_type_used++;
             if(n_type_used > 1)
-                SID_trap_error("An invalid number of particle types (%d) are being used in make_map.", ERROR_LOGIC, n_type_used);
+                SID_trap_error("An invalid number of particle types (%d) are being used in make_map.", SID_ERROR_LOGIC, n_type_used);
             if(render->camera->flag_velocity_space) {
                 for(i_snap = 0; i_snap < render->n_interpolate; i_snap++) {
                     mq->x[i_snap] = (GBPREAL *)ADaPS_fetch(render->plist_list[i_snap]->data, "vx_%s", render->plist_list[i_snap]->species[i_type]);

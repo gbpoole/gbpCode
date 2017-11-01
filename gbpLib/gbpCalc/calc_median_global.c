@@ -17,7 +17,7 @@ void calc_median_global(void *data_local, void *result, size_t n_data_local, SID
     int     rank_1_local, rank_1, rank_2_local, rank_2;
 
 #if USE_MPI
-    SID_trap_error("calc_median_global has not been implemented yet!", ERROR_LOGIC);
+    SID_trap_error("calc_median_global has not been implemented yet!", SID_ERROR_LOGIC);
 /*
 MPI_Allreduce(&n_data_local,&n_data,1,MPI_SIZE_T,MPI_SUM,MPI_COMM_WORLD);
 if(n_data>0){
@@ -26,18 +26,18 @@ if(n_data>0){
          n_data_local,
          &index,
          type,
-         FALSE,
-         TRUE,
-         FALSE);
+         GBP_FALSE,
+         GBP_TRUE,
+         GBP_FALSE);
     index_1=n_data/2-1;
     index_2=n_data/2;
     sort(index,
          n_data_local,
          &idx,
          SID_SIZE_T,
-         TRUE,
-         TRUE,
-         FALSE);
+         GBP_TRUE,
+         GBP_TRUE,
+         GBP_FALSE);
     i_lo    =0;
     i_hi    =n_data_local-1;
     index_lo=index[idx[i_lo]];
@@ -56,20 +56,20 @@ if(n_data>0){
     } while(i_hi-i_lo>2);
     if(index_1==index[i_lo]){
       i_1   =i_lo;
-      flag_1=TRUE;
+      flag_1=GBP_TRUE;
     }
     else
-      flag_1=FALSE;
+      flag_1=GBP_FALSE;
     if(index_2==index[i_lo]){
       i_2   =i_lo;
-      flag_2=TRUE;
+      flag_2=GBP_TRUE;
     }
     else if(index_2==index[i_hi]){
       i_2   =i_hi;
-      flag_2=TRUE;
+      flag_2=GBP_TRUE;
     }
     else
-      flag_2=FALSE;
+      flag_2=GBP_FALSE;
     if(!(n_data%2)){
       if(flag_1){
         rank_1_local=SID.My_rank;
@@ -82,7 +82,7 @@ if(n_data>0){
           else if(type==SID_SIZE_T)
             value_1=((size_t *)data_local)[i_1];
           else
-            SID_trap_error("type not supported by calc_median_global.",ERROR_LOGIC);
+            SID_trap_error("type not supported by calc_median_global.",SID_ERROR_LOGIC);
         }
       }
       else
@@ -101,7 +101,7 @@ if(n_data>0){
         else if(type==SID_SIZE_T)
           value_2=((size_t *)data_local)[i_2];
         else
-          SID_trap_error("type not supported by calc_median_global.",ERROR_LOGIC);
+          SID_trap_error("type not supported by calc_median_global.",SID_ERROR_LOGIC);
     }
     else
       rank_2_local=-1;
@@ -125,7 +125,7 @@ if(n_data>0){
       else if(type==SID_SIZE_T)
         median=((size_t *)data_local)[0];
       else
-        SID_trap_error("type not supported by calc_median_global.",ERROR_LOGIC);
+        SID_trap_error("type not supported by calc_median_global.",SID_ERROR_LOGIC);
 }
 else
   median=0.;

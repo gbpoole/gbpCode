@@ -12,24 +12,24 @@ int main(int argc, char *argv[]) {
 
     // Fetch user inputs
     if(argc != 5)
-        SID_trap_error("Invalid syntax.", ERROR_SYNTAX);
-    char filename_SSimPL_in[MAX_FILENAME_LENGTH];
-    char filename_halo_type[MAX_FILENAME_LENGTH];
+        SID_trap_error("Invalid syntax.", SID_ERROR_SYNTAX);
+    char filename_SSimPL_in[SID_MAX_FILENAME_LENGTH];
+    char filename_halo_type[SID_MAX_FILENAME_LENGTH];
     strcpy(filename_SSimPL_in, argv[1]);
     strcpy(filename_halo_type, argv[2]);
     int i_snap_lo = atoi(argv[3]);
     int i_snap_hi = atoi(argv[4]);
 
     // Set which files will be processed
-    int flag_process_halos     = TRUE;
-    int flag_process_catalogs  = TRUE;
-    int flag_process_grids     = TRUE;
-    int flag_process_snapshots = TRUE;
+    int flag_process_halos     = GBP_TRUE;
+    int flag_process_catalogs  = GBP_TRUE;
+    int flag_process_grids     = GBP_TRUE;
+    int flag_process_snapshots = GBP_TRUE;
 
     // Loop over the given snapshot range
     SID_log("Processing group/subgroup statistics for files #%d->#%d...", SID_LOG_OPEN | SID_LOG_TIMER, i_snap_lo, i_snap_hi);
     for(int i_snap = i_snap_lo; i_snap <= i_snap_hi; i_snap++) {
-        char filename_in[MAX_FILENAME_LENGTH];
+        char filename_in[SID_MAX_FILENAME_LENGTH];
         SID_log("Processing snapshot #%03d...", SID_LOG_OPEN | SID_LOG_TIMER, i_snap);
         // Process halos
         if(flag_process_halos) {
@@ -62,5 +62,5 @@ int main(int argc, char *argv[]) {
     }
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

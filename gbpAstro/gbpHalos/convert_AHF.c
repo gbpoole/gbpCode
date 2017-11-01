@@ -157,12 +157,12 @@ int main(int argc, char *argv[]) {
 
             // Find largest id so we know what size to write the ids with
             for(i_particle = 0, id_largest = 0; i_particle < n_particles_AHF; i_particle++)
-                id_largest = MAX(id_largest, particle_ids_AHF[i_particle]);
+                id_largest = GBP_MAX(id_largest, particle_ids_AHF[i_particle]);
             if(id_largest > INT_MAX) {
-                flag_long_ids = TRUE;
+                flag_long_ids = GBP_TRUE;
                 id_byte_size  = sizeof(size_t);
             } else {
-                flag_long_ids = FALSE;
+                flag_long_ids = GBP_FALSE;
                 id_byte_size  = sizeof(int);
             }
 
@@ -196,7 +196,7 @@ int main(int argc, char *argv[]) {
                 if(match_id[i_group] < 0)
                     match_id[i_group] = i_group; // Unmatched halos should be matched to themselves
                 hierarchy_level[i_group] = substructure_level;
-                substructure_level_max   = MAX(substructure_level, substructure_level_max);
+                substructure_level_max   = GBP_MAX(substructure_level, substructure_level_max);
             }
             // needed? ADaPS_store(&(plist.data),(void *)(match_id),"match_substructure",ADaPS_DEFAULT);
             SID_log("Done.", SID_LOG_CLOSE);
@@ -222,12 +222,12 @@ int main(int argc, char *argv[]) {
                         i_group = j_group;
                 }
                 // ... and set particle's group to a dummy value if this particle instance is not from the deepest group
-                for(j_particle = 0, flag_found = FALSE; j_particle < k_particle; j_particle++) {
+                for(j_particle = 0, flag_found = GBP_FALSE; j_particle < k_particle; j_particle++) {
                     if(particle_group[particle_ids_AHF_index[i_particle + j_particle]] != i_group || flag_found) {
                         particle_group[particle_ids_AHF_index[i_particle + j_particle]] = -1;
                         n_particles_AHF_not_used++;
                     } else
-                        flag_found = TRUE;
+                        flag_found = GBP_TRUE;
                 }
             }
             SID_free((void **)&particle_ids_AHF_index);
@@ -264,7 +264,7 @@ int main(int argc, char *argv[]) {
 
             // Find the largest subgroup's size
             for(i_group = 0, n_subgroups = 0, subgroup_size_max = 0; i_group < n_groups_AHF; i_group++)
-                subgroup_size_max = MAX(subgroup_size[i_group], subgroup_size_max);
+                subgroup_size_max = GBP_MAX(subgroup_size[i_group], subgroup_size_max);
 
             // Generate group_size array
             for(i_group = 0; i_group < n_groups_AHF; i_group++)
@@ -301,7 +301,7 @@ int main(int argc, char *argv[]) {
                 n_subgroups += n_subgroups_group;
 
                 // Largest number of subgroups
-                n_subgroups_group_max = MAX(n_subgroups_group_max, n_subgroups_group);
+                n_subgroups_group_max = GBP_MAX(n_subgroups_group_max, n_subgroups_group);
 
                 // Count groups
                 if(n_subgroups_group > 0)
@@ -312,7 +312,7 @@ int main(int argc, char *argv[]) {
 
         // Find largest subgroup and count the number of particles in groups
         for(i_group = 0, max_subgroup_size = 0, n_particles_in_groups = 0; i_group < n_groups_AHF; i_group++) {
-            max_subgroup_size = MAX(max_subgroup_size, subgroup_size[i_group]);
+            max_subgroup_size = GBP_MAX(max_subgroup_size, subgroup_size[i_group]);
             if(subgroup_size[i_group] > 0)
                 n_particles_in_groups += (size_t)subgroup_size[i_group];
         }
@@ -361,7 +361,7 @@ int main(int argc, char *argv[]) {
         fwrite(&n_subgroups, sizeof(int), 1, fp_out_hierarchy_A);
         fwrite(&id_byte_size, sizeof(int), 1, fp_out_particles);
         switch(flag_long_ids) {
-            case TRUE:
+            case GBP_TRUE:
                 fwrite(&n_particles_in_groups, sizeof(size_t), 1, fp_out_particles);
                 break;
             default:
@@ -429,7 +429,7 @@ int main(int argc, char *argv[]) {
                     j_particle++, k_particle++) {
                     if(particle_group[j_particle] == j_subgroup) {
                         switch(flag_long_ids) {
-                            case TRUE:
+                            case GBP_TRUE:
                                 ((size_t *)particle_buffer)[i_particle++] = (size_t)(particle_ids_AHF[j_particle]);
                                 break;
                             default:
@@ -441,7 +441,7 @@ int main(int argc, char *argv[]) {
                 if(i_particle == subgroup_size[j_subgroup])
                     fwrite(particle_buffer, id_byte_size, i_particle, fp_out_particles);
                 else
-                    SID_trap_error("Subgroup size mismatch!", ERROR_LOGIC);
+                    SID_trap_error("Subgroup size mismatch!", SID_ERROR_LOGIC);
             }
 
             SID_free((void **)&subgroup_size_list_index);
@@ -519,5 +519,5 @@ int main(int argc, char *argv[]) {
     }
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

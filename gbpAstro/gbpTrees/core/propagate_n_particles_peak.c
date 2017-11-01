@@ -23,13 +23,13 @@ void propagate_n_particles_peak(tree_horizontal_extended_info **groups,
             this_group->n_particles_peak = this_group->n_particles;
         // ... else check current size against a (previously) propagated result.
         else
-            this_group->n_particles_peak = MAX(this_group->n_particles_peak, this_group->n_particles);
+            this_group->n_particles_peak = GBP_MAX(this_group->n_particles_peak, this_group->n_particles);
 
         // Propagate peak particle counts forward (unless this halo is a merging fragment)
         tree_horizontal_extended_info *this_group_desc = set_extended_descendant(groups, this_group, i_read, n_wrap);
         if(this_group_desc != NULL) {
             if(check_if_type_is_fragmented(this_group->type) == check_if_type_is_fragmented(this_group_desc->type))
-                this_group_desc->n_particles_peak = MAX(this_group_desc->n_particles_peak, this_group->n_particles_peak);
+                this_group_desc->n_particles_peak = GBP_MAX(this_group_desc->n_particles_peak, this_group->n_particles_peak);
         }
 
         // Process subgroups
@@ -46,13 +46,13 @@ void propagate_n_particles_peak(tree_horizontal_extended_info **groups,
             //     To protect against transient mass exchanges, we only consider situations
             //     where non-dominants are satellites or dominants are centrals
             else if(!(flag_most_massive && !flag_dominant))
-                this_subgroup->n_particles_peak = MAX(this_subgroup->n_particles_peak, this_subgroup->n_particles);
+                this_subgroup->n_particles_peak = GBP_MAX(this_subgroup->n_particles_peak, this_subgroup->n_particles);
 
             // Propagate peak particle counts forward (unless this halo is a merging fragment)
             tree_horizontal_extended_info *this_subgroup_desc = set_extended_descendant(subgroups, this_subgroup, i_read, n_wrap);
             if(this_subgroup_desc != NULL) {
                 if(check_if_type_is_fragmented(this_subgroup->type) == check_if_type_is_fragmented(this_subgroup_desc->type))
-                    this_subgroup_desc->n_particles_peak = MAX(this_subgroup_desc->n_particles_peak, this_subgroup->n_particles_peak);
+                    this_subgroup_desc->n_particles_peak = GBP_MAX(this_subgroup_desc->n_particles_peak, this_subgroup->n_particles_peak);
             }
         }
     }

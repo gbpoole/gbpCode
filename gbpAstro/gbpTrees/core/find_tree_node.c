@@ -10,14 +10,14 @@
 #include <gbpTrees_build.h>
 
 int find_tree_node(tree_info *trees, int node_file, int node_index, int group_mode, tree_node_info **found_node) {
-    // group_mode==TRUE if we are looking for a group, FALSE for substructure
+    // group_mode==GBP_TRUE if we are looking for a group, GBP_FALSE for substructure
     if(node_file >= 0 && node_index >= 0) {
         tree_node_info **halo_array;
         int *            halo_indices;
         int              index_index;
         int              n_halos;
         int              i_wrap = node_file % trees->n_wrap_lookup;
-        if(group_mode == TRUE) {
+        if(group_mode == GBP_TRUE) {
             n_halos      = trees->n_groups_snap_local[node_file];
             halo_indices = trees->group_indices[i_wrap];
             halo_array   = trees->group_array[i_wrap];
@@ -31,13 +31,13 @@ int find_tree_node(tree_info *trees, int node_file, int node_index, int group_mo
             index_index++;
         if(halo_indices[index_index] != node_index) {
             (*found_node) = NULL;
-            return (FALSE);
+            return (GBP_FALSE);
         } else {
             (*found_node) = halo_array[index_index];
-            return (TRUE);
+            return (GBP_TRUE);
         }
     } else {
         (*found_node) = NULL;
-        return (TRUE);
+        return (GBP_TRUE);
     }
 }

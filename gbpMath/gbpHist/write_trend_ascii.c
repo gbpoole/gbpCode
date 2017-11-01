@@ -4,7 +4,7 @@
 
 void write_trend_ascii(trend_info *trend, const char *filename_output_root) {
     // Set filename and open file
-    char filename[MAX_FILENAME_LENGTH];
+    char filename[SID_MAX_FILENAME_LENGTH];
     sprintf(filename, "%s_%s.txt", filename_output_root, trend->ordinate->name);
     FILE *fp_out;
     SID_log("Writing trend to {%s}...", SID_LOG_OPEN, filename);

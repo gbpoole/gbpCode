@@ -14,9 +14,9 @@ void add_group_to_list(int tree_id, int *tree_ids, int *n_tree_ids);
 void add_group_to_list(int tree_id, int *tree_ids, int *n_tree_ids) {
     int flag_found;
     int i_tree_id;
-    for(i_tree_id = 0, flag_found = FALSE; i_tree_id < (*n_tree_ids) && !flag_found; i_tree_id++) {
+    for(i_tree_id = 0, flag_found = GBP_FALSE; i_tree_id < (*n_tree_ids) && !flag_found; i_tree_id++) {
         if(tree_id == tree_ids[i_tree_id]) {
-            flag_found = TRUE;
+            flag_found = GBP_TRUE;
             break;
         }
     }
@@ -28,9 +28,9 @@ void add_scale_to_list(float scale, float *scales, int *n_scales);
 void add_scale_to_list(float scale, float *scales, int *n_scales) {
     int flag_found;
     int i_scale;
-    for(i_scale = 0, flag_found = FALSE; i_scale < (*n_scales) && !flag_found; i_scale++) {
+    for(i_scale = 0, flag_found = GBP_FALSE; i_scale < (*n_scales) && !flag_found; i_scale++) {
         if(scale == scales[i_scale]) {
-            flag_found = TRUE;
+            flag_found = GBP_TRUE;
             break;
         }
     }
@@ -42,9 +42,9 @@ int scale_to_snap(float scale, float *scales, int n_scales);
 int scale_to_snap(float scale, float *scales, int n_scales) {
     int flag_found;
     int i_scale;
-    for(i_scale = 0, flag_found = FALSE; i_scale < n_scales && !flag_found; i_scale++) {
+    for(i_scale = 0, flag_found = GBP_FALSE; i_scale < n_scales && !flag_found; i_scale++) {
         if(scale == scales[i_scale]) {
-            flag_found = TRUE;
+            flag_found = GBP_TRUE;
             break;
         }
     }
@@ -53,7 +53,7 @@ int scale_to_snap(float scale, float *scales, int n_scales) {
         for(i_scale = 0; i_scale < n_scales; i_scale++)
             SID_log("%f", SID_LOG_COMMENT, scales[i_scale]);
         SID_log("", SID_LOG_CLOSE | SID_LOG_NOPRINT);
-        SID_trap_error("Could not find scale=%f in list of scales!", ERROR_LOGIC, scale);
+        SID_trap_error("Could not find scale=%f in list of scales!", SID_ERROR_LOGIC, scale);
     }
     return (i_scale);
 }
@@ -119,7 +119,7 @@ int main(int argc, char *argv[]) {
     int    halo_id;
     int    group_id;
     int    search_id;
-    int    flag_init = TRUE;
+    int    flag_init = GBP_TRUE;
     int    n_halos_written;
     int    descendant_id;
     int    num_prog;
@@ -274,10 +274,10 @@ int main(int argc, char *argv[]) {
                             scales_check[i_scale] = scales[i_scale];
                     } else {
                         if(n_scales != n_scales_check)
-                            SID_trap_error("n_scales mismatch (ie. %d!=%d)", ERROR_LOGIC, n_scales, n_scales_check);
+                            SID_trap_error("n_scales mismatch (ie. %d!=%d)", SID_ERROR_LOGIC, n_scales, n_scales_check);
                         for(i_scale = 0; i_scale < n_scales; i_scale++) {
                             if(scales[i_scale] != scales_check[i_scale])
-                                SID_trap_error("scale mismatch (ie. %lf!=%lf)", ERROR_LOGIC, scales[i_scale], scales_check[i_scale]);
+                                SID_trap_error("scale mismatch (ie. %lf!=%lf)", SID_ERROR_LOGIC, scales[i_scale], scales_check[i_scale]);
                         }
                     }
 
@@ -390,7 +390,7 @@ int main(int argc, char *argv[]) {
                                         group_id = 0;
                                     add_group_to_list(group_id, tree_ids, &n_tree_ids);
                                     if(n_tree_ids > N_UPIDS_MAX)
-                                        SID_trap_error("Increase N_UPIDS_MAX!", ERROR_LOGIC);
+                                        SID_trap_error("Increase N_UPIDS_MAX!", SID_ERROR_LOGIC);
                                 }
                                 i_halo++;
                                 j_halo++;
@@ -401,14 +401,14 @@ int main(int argc, char *argv[]) {
                         if(i_tree == i_tree_next_report) {
                             i_report++;
                             SID_log("%3d%% complete.", SID_LOG_COMMENT | SID_LOG_TIMER, 10 * i_report);
-                            i_tree_next_report = MIN(n_trees_in, n_trees_in * (i_report + 1) / 10);
+                            i_tree_next_report = GBP_MIN(n_trees_in, n_trees_in * (i_report + 1) / 10);
                         }
                         i_tree++;
                     }
                     if(i_tree != n_trees_in)
                         SID_trap_error(
-                            "The number of trees read (%d) does not equal the number listed in the header (%d)!", ERROR_LOGIC, i_tree, n_trees_in);
-                    merge_sort(tree_ids, (size_t)n_tree_ids, NULL, SID_INT, SORT_INPLACE_ONLY, TRUE);
+                            "The number of trees read (%d) does not equal the number listed in the header (%d)!", SID_ERROR_LOGIC, i_tree, n_trees_in);
+                    merge_sort(tree_ids, (size_t)n_tree_ids, NULL, SID_INT, SORT_INPLACE_ONLY, GBP_TRUE);
                     SID_log("(%d trees and %d halos found; %d output-trees will result)...Done.", SID_LOG_CLOSE, n_trees_in, n_halos, n_tree_ids);
 
                     // Allocate trees
@@ -422,7 +422,7 @@ int main(int argc, char *argv[]) {
                     // Bolshoi trees have substructure masses included in parent masses.  We need to remove this!
                     SID_log("Correcting masses...", SID_LOG_OPEN | SID_LOG_TIMER);
                     memcpy(M_vir_array, M_vir_in_array, n_halos * sizeof(float));
-                    merge_sort(halo_id_array, (size_t)n_halos, &halo_id_index, SID_INT, SORT_COMPUTE_INDEX, FALSE);
+                    merge_sort(halo_id_array, (size_t)n_halos, &halo_id_index, SID_INT, SORT_COMPUTE_INDEX, GBP_FALSE);
                     sprintf(filename_missing_parents_out, "/nfs/cluster/darren/simon/Bolshoi_trees/trees_%d.%d.missing", n_scales - 1, i_write);
                     fp_missing_parents_out = fopen(filename_missing_parents_out, "w");
                     for(i_halo = 0; i_halo < n_halos; i_halo++) {
@@ -443,7 +443,7 @@ int main(int argc, char *argv[]) {
                                         z_array[i_halo]);
                             else
                                 M_vir_array[halo_index] -= M_vir_in_array[i_halo];
-                            M_vir_array[halo_index] = MAX(M_vir_array[halo_index], m_p);
+                            M_vir_array[halo_index] = GBP_MAX(M_vir_array[halo_index], m_p);
                         }
                     }
                     fclose(fp_missing_parents_out);
@@ -505,7 +505,7 @@ int main(int argc, char *argv[]) {
                                 else {
                                     j_tree = find_index_int(tree_ids, search_id, n_tree_ids, NULL);
                                     if(tree_ids[j_tree] != search_id)
-                                        SID_trap_error("Arg! Couldn't find tree_id=%d in the list", ERROR_LOGIC, search_id);
+                                        SID_trap_error("Arg! Couldn't find tree_id=%d in the list", SID_ERROR_LOGIC, search_id);
                                 }
                                 n_trees_tree[j_tree]++;
                             }
@@ -568,7 +568,7 @@ int main(int argc, char *argv[]) {
                             if(i_report == 9)
                                 i_tree_next_report = n_trees_in;
                             else
-                                i_tree_next_report = MIN(n_trees_in, n_trees_in * (i_report + 1) / 10);
+                                i_tree_next_report = GBP_MIN(n_trees_in, n_trees_in * (i_report + 1) / 10);
                         }
                     }
                     fclose(fp_in);
@@ -633,7 +633,7 @@ int main(int argc, char *argv[]) {
                     */
 
                     // Print some stats for this input file
-                    merge_sort(n_trees_tree, (size_t)n_trees_out, NULL, SID_INT, SORT_INPLACE_ONLY, TRUE);
+                    merge_sort(n_trees_tree, (size_t)n_trees_out, NULL, SID_INT, SORT_INPLACE_ONLY, GBP_TRUE);
                     SID_log("Min # of input_trees to a tree: %d", SID_LOG_COMMENT, n_trees_tree[0]);
                     SID_log("Med # of input_trees to a tree: %d", SID_LOG_COMMENT, n_trees_tree[n_trees_out / 2]);
                     SID_log("Max # of input_trees to a tree: %d", SID_LOG_COMMENT, n_trees_tree[n_trees_out - 1]);
@@ -655,5 +655,5 @@ int main(int argc, char *argv[]) {
     }
     free_RNG(&RNG);
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

@@ -12,7 +12,7 @@ double deltat_a(cosmo_info **cosmo, double a_1, double a_2) {
     if(!ADaPS_exist(*cosmo, "deltat_a_interp"))
         init_deltat_a(cosmo);
     interp = (interp_info *)ADaPS_fetch(*cosmo, "deltat_a_interp");
-    a_lo   = MAX(MIN(a_1, a_2), DELTAT_A_MIN_A);
-    a_hi   = MAX(a_1, a_2);
+    a_lo   = GBP_MAX(GBP_MIN(a_1, a_2), DELTAT_A_MIN_A);
+    a_hi   = GBP_MAX(a_1, a_2);
     return (interpolate_integral(interp, a_lo, a_hi));
 }

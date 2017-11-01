@@ -78,7 +78,7 @@ int compute_group_analysis(halo_properties_info *properties,
     double                 V_max, R_max;
     double                 Delta, Omega;
     double                 norm;
-    int                    flag_interpolated = FALSE;
+    int                    flag_interpolated = GBP_FALSE;
     const gsl_interp_type *interp_type;
     double                 sigma_cor, sigma_halo;
     double                 M_cor, M_halo;
@@ -125,7 +125,7 @@ int compute_group_analysis(halo_properties_info *properties,
 
     // Set the number of profile bins and the number of particles per bin
     profile->n_bins =
-        MAX(MIN_PROFILE_BINS, MIN((int)((6.2 * log10((double)n_particles) - 3.5) + ((double)n_particles / 1000.) + 1), MAX_PROFILE_BINS));
+        GBP_MAX(MIN_PROFILE_BINS, GBP_MIN((int)((6.2 * log10((double)n_particles) - 3.5) + ((double)n_particles / 1000.) + 1), MAX_PROFILE_BINS));
     n_per_bin = (double)(n_particles) / (double)profile->n_bins;
 
     // There's nothing to do if there are no particles
@@ -246,7 +246,7 @@ int compute_group_analysis(halo_properties_info *properties,
             double vy_cen_temp = 0.;
             double vz_cen_temp = 0.;
             int    n_cen       = 0;
-            for(i_particle = 0; i_particle < MIN(30, n_particles); i_particle++) {
+            for(i_particle = 0; i_particle < GBP_MIN(30, n_particles); i_particle++) {
                 vx_cen_temp += vx[i_particle];
                 vy_cen_temp += vy[i_particle];
                 vz_cen_temp += vz[i_particle];
@@ -334,7 +334,7 @@ int compute_group_analysis(halo_properties_info *properties,
         }
 
         // Interpolate to get R_vir
-        flag_interpolated  = FALSE;
+        flag_interpolated  = GBP_FALSE;
         properties->R_halo = profile->bins[profile->n_bins - 1].r_max;
         if(profile->n_bins > 1) {
             // Remove any small-radius monotonic increases from the interpolation interval
@@ -366,7 +366,7 @@ int compute_group_analysis(halo_properties_info *properties,
                     init_interpolate(y_interp, r_interp, n_bins_temp, interp_type, &vir_interpolate);
                     properties->R_vir = (float)take_alog10(interpolate(vir_interpolate, take_log10(Delta)));
                     free_interpolate(SID_FARG vir_interpolate, NULL);
-                    flag_interpolated = TRUE;
+                    flag_interpolated = GBP_TRUE;
                 } else if(y_interp[0] < take_log10(Delta)) {
                     properties->R_vir = (float)take_alog10(r_interp[0]);
                     flag_interpolated = FLAG_INTERP_MIN_BIN;
@@ -393,7 +393,7 @@ int compute_group_analysis(halo_properties_info *properties,
         // Compute v_COM(R_vir)
         for(i_profile = 0; i_profile < profile->n_bins; i_profile++)
             r_interp[i_profile] = (double)profile->bins[i_profile].r_max;
-        if(flag_interpolated == TRUE) {
+        if(flag_interpolated == GBP_TRUE) {
             for(i_profile = 0; i_profile < profile->n_bins; i_profile++)
                 y_interp[i_profile] = (double)profile->bins[i_profile].velocity_COM[0];
             init_interpolate(r_interp, y_interp, profile->n_bins, interp_type, &vir_interpolate);
@@ -554,7 +554,7 @@ int compute_group_analysis(halo_properties_info *properties,
         interp_type = gsl_interp_linear;
 
         // Perform normal interpolation from profiles to get the rest of the global quantities
-        if(flag_interpolated == TRUE) {
+        if(flag_interpolated == GBP_TRUE) {
             //  ... COM positions ...
             for(i_profile = 0; i_profile < profile->n_bins; i_profile++)
                 y_interp[i_profile] = (double)profile->bins[i_profile].position_COM[0] / expansion_factor;
@@ -616,7 +616,7 @@ int compute_group_analysis(halo_properties_info *properties,
                     for(i_profile = 0; i_profile < profile->n_bins; i_profile++)
                         y_interp[i_profile] = (double)cos(profile->bins[i_profile].shape_eigen_vectors[i][j]);
                     init_interpolate(r_interp, y_interp, profile->n_bins, interp_type, &vir_interpolate);
-                    properties->shape_eigen_vectors[i][j] = (float)acos(MAX(0, MIN(1., interpolate(vir_interpolate, properties->R_vir))));
+                    properties->shape_eigen_vectors[i][j] = (float)acos(GBP_MAX(0, GBP_MIN(1., interpolate(vir_interpolate, properties->R_vir))));
                     free_interpolate(SID_FARG vir_interpolate, NULL);
                 }
                 norm = sqrt(properties->shape_eigen_vectors[i][0] * properties->shape_eigen_vectors[i][0] +

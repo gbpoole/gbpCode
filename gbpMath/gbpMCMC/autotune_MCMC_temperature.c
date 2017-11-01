@@ -35,7 +35,7 @@ void autotune_MCMC_temperature(MCMC_info *MCMC) {
     temperature_hi    = MCMC->temperature;
     temperature_lo    = 0.;
     temperature       = temperature_hi;
-    flag_raise_range  = TRUE;
+    flag_raise_range  = GBP_TRUE;
     i_autotune        = 0;
 
     // Iterate with a bisection algorythm until convergence
@@ -52,14 +52,14 @@ void autotune_MCMC_temperature(MCMC_info *MCMC) {
             // If the success is too low, the temperature has to go down
             else {
                 temperature_hi   = temperature;
-                flag_raise_range = FALSE;
+                flag_raise_range = GBP_FALSE;
             }
             temperature = 0.5 * (temperature_hi + temperature_lo);
         }
         set_MCMC_temperature(MCMC, temperature);
 
         // Start from the initial conditions for each iteration
-        MCMC->flag_init_chain = TRUE;
+        MCMC->flag_init_chain = GBP_TRUE;
 
         // Start timer
         time(&time_start);
@@ -67,7 +67,7 @@ void autotune_MCMC_temperature(MCMC_info *MCMC) {
         // Generate a success rate for the current trial temperature.
         //   We iterate a few times if sucess is < 1% because we
         //   might just be starting in a bad spot.
-        int flag_continue = TRUE;
+        int flag_continue = GBP_TRUE;
         int i_trial       = 0;
         while(flag_continue) {
             MCMC->n_propositions = 0;
@@ -76,7 +76,7 @@ void autotune_MCMC_temperature(MCMC_info *MCMC) {
                 generate_MCMC_chain(MCMC);
             success = 100. * (double)(MCMC->n_success) / (double)MCMC->n_propositions;
             if(success > 1. || i_trial >= 5)
-                flag_continue = FALSE;
+                flag_continue = GBP_FALSE;
             i_trial++;
         }
 

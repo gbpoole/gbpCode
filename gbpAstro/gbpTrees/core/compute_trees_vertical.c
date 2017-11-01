@@ -12,8 +12,8 @@
 void compute_trees_vertical(char *filename_SSimPL_dir, char *filename_halo_version_root, char *filename_trees_name, int n_dim_files) {
     SID_log("Constructing vertical merger trees...", SID_LOG_OPEN | SID_LOG_TIMER);
 
-    char filename_trees_root[MAX_FILENAME_LENGTH];
-    char filename_halos_root[MAX_FILENAME_LENGTH];
+    char filename_trees_root[SID_MAX_FILENAME_LENGTH];
+    char filename_halos_root[SID_MAX_FILENAME_LENGTH];
     sprintf(filename_trees_root, "%s/trees/%s", filename_SSimPL_dir, filename_trees_name);
     sprintf(filename_halos_root, "%s/halos/%s", filename_SSimPL_dir, filename_halo_version_root);
 

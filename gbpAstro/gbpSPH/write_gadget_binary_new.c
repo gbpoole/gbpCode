@@ -79,11 +79,11 @@ void write_gadget_binary_block(plist_info *plist,
                     size_t n_buffer;
                     for(size_t j_particle = 0; j_particle < n_of_type;) {
                         // Set the buffer size
-                        size_t n_buffer = MIN(WRITE_BUFFER_SIZE_LOCAL, n_of_type - j_particle);
+                        size_t n_buffer = GBP_MIN(WRITE_BUFFER_SIZE_LOCAL, n_of_type - j_particle);
                         if(n_buffer > n_of_type_file_left)
                             n_buffer = n_of_type_file_left;
                         // Communicate the buffer; MASTER->MASTER
-                        if(i_rank == MASTER_RANK) {
+                        if(i_rank == SID_MASTER_RANK) {
                             for(int i_variable = 0; i_variable < n_variables; i_variable++)
                                 memcpy(buffer_alloc[i_variable],
                                        &(local_array[i_variable][j_particle * storage_size[i_variable]]),
@@ -96,7 +96,7 @@ void write_gadget_binary_block(plist_info *plist,
                                 SID_Sendrecv(&(local_array[i_variable][j_particle * storage_size[i_variable]]),
                                              n_buffer * storage_size[i_variable],
                                              SID_BYTE,
-                                             MASTER_RANK,
+                                             SID_MASTER_RANK,
                                              191273,
                                              buffer_alloc[i_variable],
                                              n_buffer * storage_size[i_variable],
@@ -130,7 +130,7 @@ void write_gadget_binary_block(plist_info *plist,
                                     fwrite(&block_size, sizeof(int), 1, fp_out);
                                     fclose(fp_out);
                                 }
-                                char filename_out[MAX_FILENAME_LENGTH];
+                                char filename_out[SID_MAX_FILENAME_LENGTH];
                                 if(n_files == 1)
                                     sprintf(filename_out, "%s", filename_out_root);
                                 else
@@ -159,7 +159,7 @@ void write_gadget_binary_block(plist_info *plist,
                                         fwrite(&block_size, sizeof(int), 1, fp_out);
                                         fclose(fp_out);
                                     }
-                                    char filename_out[MAX_FILENAME_LENGTH];
+                                    char filename_out[SID_MAX_FILENAME_LENGTH];
                                     if(n_files == 1)
                                         sprintf(filename_out, "%s", filename_out_root);
                                     else
@@ -172,7 +172,7 @@ void write_gadget_binary_block(plist_info *plist,
                                         fwrite(&block_size, sizeof(int), 1, fp_out);
                                     }
                                 }
-                                n_write_file  = MIN(n_buffer, n_of_type - j_particle);
+                                n_write_file  = GBP_MIN(n_buffer, n_of_type - j_particle);
                                 n_bytes_write = n_write_file * buffer_item_size;
 
                                 // Write vectors
@@ -287,7 +287,7 @@ void write_gadget_binary_new(plist_info *plist, char *filename_out_root, int n_f
             header->n_file[i_type] = (int)set_n_of_type_file_left_local(n_all[i_type], 0, i_file, n_files);
 
         // Set filename
-        char filename_out[MAX_FILENAME_LENGTH];
+        char filename_out[SID_MAX_FILENAME_LENGTH];
         if(n_files > 1)
             sprintf(filename_out, "%s.%d", filename_out_root, i_file);
         else

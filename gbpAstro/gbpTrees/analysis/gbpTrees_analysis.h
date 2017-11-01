@@ -4,13 +4,13 @@
 
 // V Preprocessor definitions V
 
-#define PROCESS_TREES_GROUPS TTTP01
-#define PROCESS_TREES_SUBGROUPS TTTP02
+#define PROCESS_TREES_GROUPS SID_TTTP01
+#define PROCESS_TREES_SUBGROUPS SID_TTTP02
 #define PROCESS_TREES_BOTH PROCESS_TREES_GROUPS | PROCESS_TREES_SUBGROUPS
 #define PROCESS_TREES_DEFAULT PROCESS_TREES_BOTH
 
-#define PRECOMPUTE_TREENODE_MARKER_GROUPS TTTP01
-#define PRECOMPUTE_TREENODE_MARKER_SUBGROUPS TTTP02
+#define PRECOMPUTE_TREENODE_MARKER_GROUPS SID_TTTP01
+#define PRECOMPUTE_TREENODE_MARKER_SUBGROUPS SID_TTTP02
 
 // A Preprocessor definitions A
 
@@ -31,7 +31,7 @@ struct tree_markers_stats_info {
 
 typedef struct treenode_list_info treenode_list_info;
 struct treenode_list_info {
-    char             catalog_name[MAX_FILENAME_LENGTH];
+    char             catalog_name[SID_MAX_FILENAME_LENGTH];
     int              n_list;
     int              n_list_local;
     int              n_list_alloc;

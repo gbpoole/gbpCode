@@ -14,7 +14,7 @@ void write_treenode_hist(tree_info *trees, const char *filename_out_root, treeno
     SID_log("Writing treenode histograms to", SID_LOG_OPEN);
 
     // Set filename roots
-    char filename_out[MAX_FILENAME_LENGTH];
+    char filename_out[SID_MAX_FILENAME_LENGTH];
     char x_name[TREENODE_HIST_NAME_LENGTH];
     char y_name[TREENODE_HIST_NAME_LENGTH];
     sprintf(x_name, "%s", treenode_hist_props.name[hist->x_prop]);
@@ -66,7 +66,7 @@ void write_treenode_hist(tree_info *trees, const char *filename_out_root, treeno
                     if(i_bin == 0)
                         bin_i = trees->z_list[i_min];
                     else
-                        bin_i = trees->z_list[MIN(i_min + i_bin * di - 1, trees->n_snaps - 1)];
+                        bin_i = trees->z_list[GBP_MIN(i_min + i_bin * di - 1, trees->n_snaps - 1)];
                     break;
                 }
                 case 1:   // M_vir
@@ -81,7 +81,7 @@ void write_treenode_hist(tree_info *trees, const char *filename_out_root, treeno
                     break;
                 }
                 default:
-                    SID_trap_error("Invalid property passed to write_treenode_hist().", ERROR_LOGIC);
+                    SID_trap_error("Invalid property passed to write_treenode_hist().", SID_ERROR_LOGIC);
                     break;
             }
             fprintf(fp_out, "%le\n", bin_i);

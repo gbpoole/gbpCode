@@ -78,5 +78,5 @@ int main(int argc, char *argv[]) {
     free_cosmo(&cosmo);
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

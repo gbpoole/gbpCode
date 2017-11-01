@@ -36,16 +36,16 @@ void process_gadget_file(const char *status_message,
     size_t *n_particles_type_local;
     size_t *n_particles_type;
     size_t  n_particles_local                    = 0;
-    int     flag_n_particles_type_local_allocate = FALSE;
+    int     flag_n_particles_type_local_allocate = GBP_FALSE;
     if(n_particles_type_local_pass == NULL) {
         n_particles_type_local               = (size_t *)SID_malloc(sizeof(size_t) * N_GADGET_TYPE);
-        flag_n_particles_type_local_allocate = TRUE;
+        flag_n_particles_type_local_allocate = GBP_TRUE;
     } else
         n_particles_type_local = n_particles_type_local_pass;
-    int flag_n_particles_type_allocate = FALSE;
+    int flag_n_particles_type_allocate = GBP_FALSE;
     if(n_particles_type_pass == NULL) {
         n_particles_type               = (size_t *)SID_malloc(sizeof(size_t) * N_GADGET_TYPE);
-        flag_n_particles_type_allocate = TRUE;
+        flag_n_particles_type_allocate = GBP_TRUE;
     } else
         n_particles_type = n_particles_type_pass;
     for(int i_type = 0; i_type < N_GADGET_TYPE; i_type++) {
@@ -60,7 +60,7 @@ void process_gadget_file(const char *status_message,
     int                flag_file_type = fp_gadget.flag_file_type;
     gadget_header_info header         = fp_gadget.header;
     if(!flag_filefound)
-        SID_trap_error("File not found.", ERROR_LOGIC);
+        SID_trap_error("File not found.", SID_ERROR_LOGIC);
 
     // Create a count of all the particles in the snapshot
     size_t n_particles_snap = fp_gadget.n_particles;
@@ -70,20 +70,20 @@ void process_gadget_file(const char *status_message,
     int i_file_skip;
     int flag_all_to_all;
     int flag_I_am_reader;
-    int all_to_all_reader_rank = MASTER_RANK;
+    int all_to_all_reader_rank = SID_MASTER_RANK;
     if(check_mode_for_flag(mode, PROCESS_GADGET_BINARY_ALL_TO_ALL)) {
         i_file          = 0;
         i_file_skip     = 1;
-        flag_all_to_all = TRUE;
+        flag_all_to_all = GBP_TRUE;
         if(SID.My_rank == all_to_all_reader_rank)
-            flag_I_am_reader = TRUE;
+            flag_I_am_reader = GBP_TRUE;
         else
-            flag_I_am_reader = FALSE;
+            flag_I_am_reader = GBP_FALSE;
     } else {
         i_file           = SID.My_rank;
         i_file_skip      = SID.n_proc;
-        flag_all_to_all  = FALSE;
-        flag_I_am_reader = TRUE;
+        flag_all_to_all  = GBP_FALSE;
+        flag_I_am_reader = GBP_TRUE;
     }
 
     // Allocate buffers
@@ -95,7 +95,7 @@ void process_gadget_file(const char *status_message,
 
     // Loop over the files
     pcounter_info pcounter;
-    int           flag_active                 = TRUE;
+    int           flag_active                 = GBP_TRUE;
     int           n_ranks_active              = SID.n_proc;
     size_t        n_particles_processed_local = 0;
     size_t        n_particles_processed       = 0;
@@ -105,7 +105,7 @@ void process_gadget_file(const char *status_message,
         size_t record_length;
         int    record_length_open;
         int    record_length_close;
-        char   filename[MAX_FILENAME_LENGTH];
+        char   filename[SID_MAX_FILENAME_LENGTH];
         set_gadget_filename(&fp_gadget, i_file, filename);
         FILE *fp_pos = fopen(filename, "r");
         FILE *fp_vel = fopen(filename, "r");
@@ -117,9 +117,9 @@ void process_gadget_file(const char *status_message,
         fread_verify(&header, sizeof(gadget_header_info), 1, fp_pos);
         fread_verify(&record_length_close, 4, 1, fp_pos);
         // if((size_t)record_length_open!=record_length_close)
-        //  SID_log_warning("Problem with GADGET record size (close of header)",ERROR_LOGIC);
+        //  SID_log_warning("Problem with GADGET record size (close of header)",SID_ERROR_LOGIC);
         // if((size_t)record_length_open!=sizeof(gadget_header_info))
-        //  SID_log_warning("Problem with GADGET header size",ERROR_LOGIC);
+        //  SID_log_warning("Problem with GADGET header size",SID_ERROR_LOGIC);
         fseeko(fp_pos, (off_t)(4), SEEK_CUR);
         fseeko(fp_vel, (off_t)(2 * 4 + sizeof(gadget_header_info)), SEEK_SET);
         fseeko(fp_ids, (off_t)(2 * 4 + sizeof(gadget_header_info)), SEEK_SET);
@@ -135,7 +135,7 @@ void process_gadget_file(const char *status_message,
         fseeko(fp_vel, (off_t)(record_length), SEEK_CUR);
         fread_verify(&record_length_close, 4, 1, fp_vel);
         // if(record_length_open!=record_length_close)
-        //  SID_log_warning("Problem with GADGET record size (close of positions)",ERROR_LOGIC);
+        //  SID_log_warning("Problem with GADGET record size (close of positions)",SID_ERROR_LOGIC);
         fseeko(fp_vel, (off_t)(4), SEEK_CUR);
         fseeko(fp_ids, (off_t)(2 * 4 + record_length), SEEK_CUR);
 
@@ -145,25 +145,25 @@ void process_gadget_file(const char *status_message,
         fseeko(fp_ids, (off_t)(record_length), SEEK_CUR);
         fread_verify(&record_length_close, 4, 1, fp_ids);
         // if(record_length_open!=record_length_close)
-        //  SID_log_warning("Problem with GADGET record size (close of velocities)",ERROR_LOGIC);
+        //  SID_log_warning("Problem with GADGET record size (close of velocities)",SID_ERROR_LOGIC);
         fread_verify(&record_length_open, 4, 1, fp_ids);
 
         // Determine what kind of IDs we have
         size_t ID_byte_size;
-        int    flag_force_long_IDs = FALSE;
+        int    flag_force_long_IDs = GBP_FALSE;
         if(j_file == 0) {
             if((size_t)record_length_open == (n_particles_file * sizeof(uint64_t)) || flag_force_long_IDs) {
-                (*flag_long_IDs) = TRUE;
+                (*flag_long_IDs) = GBP_TRUE;
                 ID_byte_size     = sizeof(uint64_t);
                 SID_log("Assuming long IDs.", SID_LOG_COMMENT);
             } else if((size_t)record_length_open == (n_particles_file * sizeof(int))) {
-                (*flag_long_IDs) = FALSE;
+                (*flag_long_IDs) = GBP_FALSE;
                 ID_byte_size     = sizeof(int);
                 SID_log("Assuming integer IDs.", SID_LOG_COMMENT);
             } else {
-                (*flag_long_IDs) = TRUE;
+                (*flag_long_IDs) = GBP_TRUE;
                 ID_byte_size     = sizeof(uint64_t);
-                SID_log_warning("Header does not match ID block size.  Could not determine the IDs type.  Assuming long IDs.", ERROR_LOGIC);
+                SID_log_warning("Header does not match ID block size.  Could not determine the IDs type.  Assuming long IDs.", SID_ERROR_LOGIC);
             }
         }
 
@@ -174,7 +174,7 @@ void process_gadget_file(const char *status_message,
         size_t n_buffer = 0;
         for(i_type = 0, i_particle = 0; i_type < N_GADGET_TYPE; i_type++) {
             for(size_t j_particle = 0; j_particle < header.n_file[i_type]; i_particle += n_buffer, j_particle += n_buffer) {
-                n_buffer = MIN(PROCESS_GADGET_FILE_BUFFER_SIZE, header.n_file[i_type] - j_particle);
+                n_buffer = GBP_MIN(PROCESS_GADGET_FILE_BUFFER_SIZE, header.n_file[i_type] - j_particle);
                 if(flag_I_am_reader) {
                     fread_verify(pos_buffer, sizeof(GBPREAL), 3 * n_buffer, fp_pos);
                     fread_verify(vel_buffer, sizeof(GBPREAL), 3 * n_buffer, fp_vel);
@@ -188,10 +188,10 @@ void process_gadget_file(const char *status_message,
                 for(int i_buffer = 0; i_buffer < n_buffer; i_buffer++) {
                     size_t ID_i;
                     switch((*flag_long_IDs)) {
-                        case TRUE:
+                        case GBP_TRUE:
                             ID_i = (size_t)(ids_buffer_long[i_buffer]);
                             break;
-                        case FALSE:
+                        case GBP_FALSE:
                             ID_i = (size_t)(ids_buffer_int[i_buffer]);
                             break;
                     }
@@ -213,9 +213,9 @@ void process_gadget_file(const char *status_message,
                                         ID_i);
                         n_particles_type_local[i_type]++;
                         n_particles_local++;
-                        fp_gadget.first_action_call = FALSE;
+                        fp_gadget.first_action_call = GBP_FALSE;
                     }
-                    fp_gadget.first_select_call = FALSE;
+                    fp_gadget.first_select_call = GBP_FALSE;
                 }
                 n_particles_processed_local += n_buffer;
                 SID_Allreduce(&flag_active, &n_ranks_active, 1, SID_INT, SID_SUM, SID.COMM_WORLD);
@@ -231,7 +231,7 @@ void process_gadget_file(const char *status_message,
     // Ranks that are finished still need to communicate
     //   particle counts and update the progress counter
     //   until all ranks are done
-    flag_active = FALSE;
+    flag_active = GBP_FALSE;
     do {
         SID_Allreduce(&flag_active, &n_ranks_active, 1, SID_INT, SID_SUM, SID.COMM_WORLD);
         SID_Allreduce(&n_particles_processed_local, &n_particles_processed, 1, SID_SIZE_T, SID_SUM, SID.COMM_WORLD);

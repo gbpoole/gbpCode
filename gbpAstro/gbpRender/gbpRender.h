@@ -12,41 +12,41 @@
 #endif
 
 #define MAKE_MAP_DEFAULT 0
-#define MAKE_MAP_APPLY_DIMMING TTTP01
-#define MAKE_MAP_COLOUR TTTP02
-#define MAKE_MAP_LUMINOSITY TTTP03
-#define MAKE_MAP_NO_WEIGHTING TTTP04
-#define MAKE_MAP_MODE_RHO TTTP05
-#define MAKE_MAP_MODE_SIGMA TTTP06
-#define MAKE_MAP_INV_SIGMA TTTP07
+#define MAKE_MAP_APPLY_DIMMING SID_TTTP01
+#define MAKE_MAP_COLOUR SID_TTTP02
+#define MAKE_MAP_LUMINOSITY SID_TTTP03
+#define MAKE_MAP_NO_WEIGHTING SID_TTTP04
+#define MAKE_MAP_MODE_RHO SID_TTTP05
+#define MAKE_MAP_MODE_SIGMA SID_TTTP06
+#define MAKE_MAP_INV_SIGMA SID_TTTP07
 
 #define N_KERNEL_TABLE 20000
-#define SPH_KERNEL_2D TTTP01
-#define SPH_KERNEL_GADGET TTTP02
-#define SPH_KERNEL_GASOLINE TTTP03
-#define SPH_KERNEL_GAUSSIAN TTTP04
+#define SPH_KERNEL_2D SID_TTTP01
+#define SPH_KERNEL_GADGET SID_TTTP02
+#define SPH_KERNEL_GASOLINE SID_TTTP03
+#define SPH_KERNEL_GAUSSIAN SID_TTTP04
 
-#define CAMERA_MONO TTTP00
-#define CAMERA_STEREO TTTP01
-#define CAMERA_PLANE_PARALLEL TTTP02
-#define CAMERA_LOG_RGB TTTP03
-#define CAMERA_LOG_Y TTTP04
+#define CAMERA_MONO SID_TTTP00
+#define CAMERA_STEREO SID_TTTP01
+#define CAMERA_PLANE_PARALLEL SID_TTTP02
+#define CAMERA_LOG_RGB SID_TTTP03
+#define CAMERA_LOG_Y SID_TTTP04
 #define CAMERA_DEFAULT CAMERA_MONO
 
-#define CAMERA_RGB_MODE_1CHANNEL TTTP01
-#define CAMERA_RGB_MODE_MARKED TTTP02
+#define CAMERA_RGB_MODE_1CHANNEL SID_TTTP01
+#define CAMERA_RGB_MODE_MARKED SID_TTTP02
 #define CAMERA_RGB_MODE_DEFAULT CAMERA_RGB_MODE_1CHANNEL
 
-#define RENDER_INIT_PERSPECTIVE TTTP01
-#define RENDER_INIT_EVOLVE TTTP02
+#define RENDER_INIT_PERSPECTIVE SID_TTTP01
+#define RENDER_INIT_EVOLVE SID_TTTP02
 #define RENDER_INIT_DEFAULT RENDER_INIT_PERSPECTIVE
 
-#define SET_RENDER_DEFAULT TTTP01
-#define SET_RENDER_RESCALE TTTP02
-#define SET_RENDER_GADGET TTTP03
+#define SET_RENDER_DEFAULT SID_TTTP01
+#define SET_RENDER_RESCALE SID_TTTP02
+#define SET_RENDER_GADGET SID_TTTP03
 
-#define WRITE_FRAME_DEFAULT TTTP01
-#define WRITE_FRAME_PNG_ONLY TTTP02
+#define WRITE_FRAME_DEFAULT SID_TTTP01
+#define WRITE_FRAME_PNG_ONLY SID_TTTP02
 
 #define RENDER_SWS_FLAGS SWS_BICUBIC
 #define RENDER_FORMAT_DEFAULT "mpeg"
@@ -54,13 +54,13 @@
 #define RENDER_GOP_SIZE 2
 #define RENDER_QSCALE 1
 
-#define WRITE_IMAGE_PNG TTTP01
-#define WRITE_IMAGE_RAW TTTP02
-#define WRITE_IMAGE_LOG TTTP03
+#define WRITE_IMAGE_PNG SID_TTTP01
+#define WRITE_IMAGE_RAW SID_TTTP02
+#define WRITE_IMAGE_LOG SID_TTTP03
 #define WRITE_IMAGE_DEFAULT (WRITE_IMAGE_PNG | WRITE_IMAGE_RAW)
 
-#define READ_GADGET_RENDER_SCATTER TTTP01
-#define READ_GADGET_RENDER_ID_ORDERED TTTP02
+#define READ_GADGET_RENDER_SCATTER SID_TTTP01
+#define READ_GADGET_RENDER_ID_ORDERED SID_TTTP02
 #define READ_GADGET_RENDER_DEFAULT READ_GADGET_RENDER_SCATTER
 
 #define RENDER_INVALID_SSIMPL_DIR ":%* invalid directory *%:"
@@ -75,7 +75,7 @@ struct image_info {
     double     range[2];
     int **     colour_table;
     double *   values;
-    char       colourmapselect[MAX_FILENAME_LENGTH];
+    char       colourmapselect[SID_MAX_FILENAME_LENGTH];
     int        n_colours;
 };
 
@@ -111,7 +111,7 @@ struct perspective_info {
     double FOV;           // Minimum field of view at object position
     double time;          // Used for time-evolving movies
     double focus_shift_x; // After all transformations are applied, this shifts everything in the image-frame.  Useful
-    double focus_shift_y; //    for cases where you want flag_comoving=FALSE but don't want (0,0,0) in the image-centre.
+    double focus_shift_y; //    for cases where you want flag_comoving=GBP_FALSE but don't want (0,0,0) in the image-centre.
     // The following things are ancillary parameters that don't need to be
     //    set by the user ... they are set when the scene is sealed.
     double d_near_field;       // Distance to the near-field cut-off
@@ -130,7 +130,7 @@ struct scene_info {
     int                first_frame;
     int                last_frame;
     perspective_info **perspectives;
-    int                sealed; // Set to TRUE only if scene initialization has been finalized
+    int                sealed; // Set to GBP_TRUE only if scene initialization has been finalized
     int                flag_time_set;
     int                flag_p_o_set;
     int                flag_radius_set;
@@ -140,9 +140,9 @@ struct scene_info {
 #define GBPRENDER_DEPTH_ARRAY_ID_SIZE 32
 typedef struct camera_info camera_info;
 struct camera_info {
-    int               sealed; // Set to TRUE if camera initialization has been finalized
+    int               sealed; // Set to GBP_TRUE if camera initialization has been finalized
     int               camera_mode;
-    char              colour_table[MAX_FILENAME_LENGTH];
+    char              colour_table[SID_MAX_FILENAME_LENGTH];
     int               flag_velocity_space;
     int               width;
     int               height;
@@ -294,7 +294,7 @@ struct render_info {
     int     colour_index_black;
     int     colour_index_white;
 
-    int sealed; // TRUE if the render is fully initialized
+    int sealed; // GBP_TRUE if the render is fully initialized
 };
 
 typedef struct map_quantities_info map_quantities_info;

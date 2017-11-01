@@ -49,7 +49,7 @@ void read_trees_match_scores(tree_info *trees, char *filename_SSimPL_dir, int mo
             int             n_halos;
             tree_node_info *first_neighbour;
             char            group_text_prefix[5];
-            int             flag_proceed = TRUE;
+            int             flag_proceed = GBP_TRUE;
             float *         match_score_local;
             switch(i_type) {
                 case 0:
@@ -97,7 +97,7 @@ void read_trees_match_scores(tree_info *trees, char *filename_SSimPL_dir, int mo
                             list_init_local[current->neighbour_index] = -1;
                         current = current->next_neighbour;
                     }
-                    merge_sort(file_idx_list_local, (size_t)n_list_local, &file_idx_list_local_index, SID_INT, SORT_COMPUTE_INDEX, FALSE);
+                    merge_sort(file_idx_list_local, (size_t)n_list_local, &file_idx_list_local_index, SID_INT, SORT_COMPUTE_INDEX, GBP_FALSE);
 
                     // Set filenames
                     char filename_in_dir_snap[256];
@@ -118,7 +118,7 @@ void read_trees_match_scores(tree_info *trees, char *filename_SSimPL_dir, int mo
                     SID_fread_all(&n_groups_j, sizeof(int), 1, &fp_in);
                     if(i_read_file != i_read || j_read_file != j_read)
                         SID_trap_error("Invalid file numbers in an input match file (ie %d!=%d or %d!=%d in {%s})",
-                                       ERROR_LOGIC,
+                                       SID_ERROR_LOGIC,
                                        i_read_file,
                                        i_read,
                                        j_read_file,
@@ -126,7 +126,7 @@ void read_trees_match_scores(tree_info *trees, char *filename_SSimPL_dir, int mo
                                        filename_in);
                     if(i_read_file != trees->snap_list[i_snap] || j_read_file != trees->snap_list[j_snap])
                         SID_trap_error("The wrong match file is being read (ie %d!=%d or %d!=%d)",
-                                       ERROR_LOGIC,
+                                       SID_ERROR_LOGIC,
                                        i_read_file,
                                        trees->snap_list[i_snap],
                                        j_read_file,
@@ -150,7 +150,7 @@ void read_trees_match_scores(tree_info *trees, char *filename_SSimPL_dir, int mo
                     }
                     if(l_read != n_list_local)
                         SID_trap_error("An incorrect number of matches were read (ie. %d!=%d) for snaphot %d->%d",
-                                       ERROR_LOGIC,
+                                       SID_ERROR_LOGIC,
                                        l_read,
                                        n_list_local,
                                        i_read,
@@ -164,7 +164,7 @@ void read_trees_match_scores(tree_info *trees, char *filename_SSimPL_dir, int mo
             for(i_neighbour = 0; i_neighbour < n_halos; i_neighbour++)
                 if(list_init_local[i_neighbour] != 1 && list_init_local[i_neighbour] >= 0)
                     SID_trap_error("Neighbour %d of %d was not processed correctly (init=%d) for snapshot %d.",
-                                   ERROR_LOGIC,
+                                   SID_ERROR_LOGIC,
                                    i_neighbour,
                                    n_halos,
                                    list_init_local[i_neighbour],

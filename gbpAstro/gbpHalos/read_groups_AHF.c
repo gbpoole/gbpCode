@@ -89,5 +89,5 @@ void read_groups_AHF(char *filename_groups_root, int i_file, int mode, plist_inf
 
         SID_log("Done.", SID_LOG_CLOSE);
     } else
-        SID_trap_error("Could not open {%s}!", ERROR_IO_READ, filename_ids);
+        SID_trap_error("Could not open {%s}!", SID_ERROR_IO_READ, filename_ids);
 }

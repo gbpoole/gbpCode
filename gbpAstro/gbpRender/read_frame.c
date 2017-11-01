@@ -9,13 +9,13 @@
 #include <gbpRender.h>
 
 void read_frame(render_info *render, int frame) {
-    char filename_RGB[MAX_FILENAME_LENGTH];
-    char filename_Y[MAX_FILENAME_LENGTH];
-    char filename_RGBY[MAX_FILENAME_LENGTH];
-    char filename_RY[MAX_FILENAME_LENGTH];
-    char filename_GY[MAX_FILENAME_LENGTH];
-    char filename_BY[MAX_FILENAME_LENGTH];
-    char filename_RGBY_MARKED[MAX_FILENAME_LENGTH];
+    char filename_RGB[SID_MAX_FILENAME_LENGTH];
+    char filename_Y[SID_MAX_FILENAME_LENGTH];
+    char filename_RGBY[SID_MAX_FILENAME_LENGTH];
+    char filename_RY[SID_MAX_FILENAME_LENGTH];
+    char filename_GY[SID_MAX_FILENAME_LENGTH];
+    char filename_BY[SID_MAX_FILENAME_LENGTH];
+    char filename_RGBY_MARKED[SID_MAX_FILENAME_LENGTH];
 
     // Read stereo-images
     SID_log("Reading rendered frame...", SID_LOG_OPEN | SID_LOG_TIMER);
@@ -57,7 +57,7 @@ void read_frame(render_info *render, int frame) {
             image_GY          = render->camera->image_GY;
             image_BY          = render->camera->image_BY;
         } else
-            SID_trap_error("Undefined image set index in read_frame().", ERROR_LOGIC);
+            SID_trap_error("Undefined image set index in read_frame().", SID_ERROR_LOGIC);
         for(int i_depth = 0; i_depth < render->camera->n_depth; i_depth++) {
             if(i_depth == (render->camera->n_depth - 1)) {
                 sprintf(filename_RGB, "RGB_%s_%05d", set_label, frame);

@@ -25,9 +25,9 @@ void compute_PHK_boundary_keys(int     PHK_bit_size,
 
     // Sanity checks
     if(domain_key_max > (num1dim * num1dim * num1dim))
-        SID_trap_error("domain_key_max>num1dim^3 (ie %zd>%zd) in compute_PHK_boundry_keys", ERROR_LOGIC, domain_key_max, num1dim * num1dim * num1dim);
+        SID_trap_error("domain_key_max>num1dim^3 (ie %zd>%zd) in compute_PHK_boundry_keys", SID_ERROR_LOGIC, domain_key_max, num1dim * num1dim * num1dim);
     if(domain_key_max < domain_key_min)
-        SID_trap_error("domain_key_max<domain_key_min (ie %zd<%zd) in compute_PHK_volume_keys", ERROR_LOGIC, domain_key_min, domain_key_max);
+        SID_trap_error("domain_key_max<domain_key_min (ie %zd<%zd) in compute_PHK_volume_keys", SID_ERROR_LOGIC, domain_key_min, domain_key_max);
 
     // Iterate, building-up layers over the thickness of the boundary
     PHK_t *keys_last;
@@ -53,14 +53,14 @@ void compute_PHK_boundary_keys(int     PHK_bit_size,
         (*n_keys_return) = 0;
         for(key = domain_key_min; key <= domain_key_max; key++) {
             compute_PHK_volume_keys(PHK_bit_size, key, 0, 1, &n_test, &PHK_test);
-            for(i_test = 0, flag = TRUE; i_test < n_test && flag; i_test++) {
+            for(i_test = 0, flag = GBP_TRUE; i_test < n_test && flag; i_test++) {
                 if(PHK_test[i_test] < domain_key_min || PHK_test[i_test] > domain_key_max) {
                     (*n_keys_return)++;
-                    flag = FALSE;
+                    flag = GBP_FALSE;
                 } else if(i_width > 0) {
                     if(is_a_member(&(PHK_test[i_test]), keys_last, n_keys_last, SID_PHK_T)) {
                         (*n_keys_return)++;
-                        flag = FALSE;
+                        flag = GBP_FALSE;
                     }
                 }
             }
@@ -72,14 +72,14 @@ void compute_PHK_boundary_keys(int     PHK_bit_size,
         // Find keys
         for(key = domain_key_min, count = 0; key <= domain_key_max; key++) {
             compute_PHK_volume_keys(PHK_bit_size, key, 0, 1, &n_test, &PHK_test);
-            for(i_test = 0, flag = TRUE; i_test < n_test && flag; i_test++) {
+            for(i_test = 0, flag = GBP_TRUE; i_test < n_test && flag; i_test++) {
                 if(PHK_test[i_test] < domain_key_min || PHK_test[i_test] > domain_key_max) {
                     (*keys_return)[count++] = key;
-                    flag                    = FALSE;
+                    flag                    = GBP_FALSE;
                 } else if(i_width > 0) {
                     if(is_a_member(&(PHK_test[i_test]), keys_last, n_keys_last, SID_PHK_T)) {
                         (*keys_return)[count++] = key;
-                        flag                    = FALSE;
+                        flag                    = GBP_FALSE;
                     }
                 }
             }

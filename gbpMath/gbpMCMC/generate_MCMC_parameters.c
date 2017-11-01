@@ -28,7 +28,7 @@ void generate_MCMC_parameters(MCMC_info *MCMC) {
 
     // Initialize a few things on the first call
     switch(MCMC->first_parameter_call) {
-        case TRUE:
+        case GBP_TRUE:
             n_P                        = MCMC->n_P;
             P_new                      = MCMC->P_new;
             P_chain                    = MCMC->P_chain;
@@ -39,13 +39,13 @@ void generate_MCMC_parameters(MCMC_info *MCMC) {
             m                          = MCMC->m;
             RNG                        = MCMC->RNG;
             factor                     = 2.4 / sqrt((double)MCMC->n_M_total);
-            MCMC->first_parameter_call = FALSE;
+            MCMC->first_parameter_call = GBP_FALSE;
             reflect_priors             = check_mode_for_flag(MCMC->mode, MCMC_MODE_REFLECT_PRIORS);
             break;
     }
 
     // Loop until a satisfactory set of parameters has been selected
-    flag_continue = TRUE;
+    flag_continue = GBP_TRUE;
     while(flag_continue) {
         // Generate a random displacement vector
         factor_i = MCMC->temperature * factor;
@@ -73,12 +73,12 @@ void generate_MCMC_parameters(MCMC_info *MCMC) {
                     P_new[i_P] = 2 * (P_limit_max[i_P]) - P_new[i_P];
             }
         } else {
-            for(i_P = 0, flag_continue = FALSE; i_P < n_P; i_P++)
+            for(i_P = 0, flag_continue = GBP_FALSE; i_P < n_P; i_P++)
                 if(P_new[i_P] < P_limit_min[i_P] || P_new[i_P] > P_limit_max[i_P])
-                    flag_continue = TRUE;
+                    flag_continue = GBP_TRUE;
         }
     }
 
     if(!check_mode_for_flag(MCMC->mode, MCMC_MODE_PARALLEL))
-        SID_Bcast(P_new, n_P, SID_DOUBLE, MCMC->comm, MASTER_RANK);
+        SID_Bcast(P_new, n_P, SID_DOUBLE, MCMC->comm, SID_MASTER_RANK);
 }

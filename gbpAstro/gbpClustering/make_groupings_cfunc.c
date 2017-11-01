@@ -19,11 +19,11 @@ int main(int argc, char *argv[]) {
     int    i_grouping;
     int    i_grouping_start;
     int    i_grouping_stop;
-    char   filename_in[MAX_FILENAME_LENGTH];
-    char   filename_cosmology[MAX_FILENAME_LENGTH];
-    char   filename_in_root[MAX_FILENAME_LENGTH];
-    char   filename_in_model[MAX_FILENAME_LENGTH];
-    char   filename_out_root[MAX_FILENAME_LENGTH];
+    char   filename_in[SID_MAX_FILENAME_LENGTH];
+    char   filename_cosmology[SID_MAX_FILENAME_LENGTH];
+    char   filename_in_root[SID_MAX_FILENAME_LENGTH];
+    char   filename_in_model[SID_MAX_FILENAME_LENGTH];
+    char   filename_out_root[SID_MAX_FILENAME_LENGTH];
     char   grouping_name[6];
     char   filename_TF[256];
     char   n_string[64];
@@ -42,7 +42,7 @@ int main(int argc, char *argv[]) {
     // Initialization -- MPI etc.
     SID_init(&argc, &argv, NULL, NULL);
     if(argc != 7)
-        SID_trap_error("Incorrect syntax.", ERROR_SYNTAX);
+        SID_trap_error("Incorrect syntax.", SID_ERROR_SYNTAX);
 
     // Parse arguments
     int n_jack;
@@ -57,7 +57,7 @@ int main(int argc, char *argv[]) {
 
     // Count the number of objects involved
     int   n_groupings_in;
-    char  filename_count[MAX_FILENAME_LENGTH];
+    char  filename_count[SID_MAX_FILENAME_LENGTH];
     FILE *fp_count;
     sprintf(filename_count, "%s_stats.dat", filename_in_root);
     fp_count       = fopen(filename_count, "r");
@@ -70,7 +70,7 @@ int main(int argc, char *argv[]) {
     int n_groupings;
     n_groupings = i_grouping_stop - i_grouping_start + 1;
     if(n_groupings < 1)
-        SID_trap_error("No groupings have been selected (you chose start=%d, stop=%d).", ERROR_LOGIC, i_grouping_start, i_grouping_stop);
+        SID_trap_error("No groupings have been selected (you chose start=%d, stop=%d).", SID_ERROR_LOGIC, i_grouping_start, i_grouping_stop);
 
     SID_log("Producing correllation functions for %d halo grouping(s)...", SID_LOG_OPEN | SID_LOG_TIMER, n_groupings);
 
@@ -108,7 +108,7 @@ int main(int argc, char *argv[]) {
         &cfunc, filename_cosmology, n_data, n_random, n_bits_PHK, redshift, box_size, n_jack, r_min_l1D, r_max_1D, dr_1D, r_min_2D, r_max_2D, dr_2D);
 
     // Process each grouping in turn
-    int flag_compute_randoms = TRUE;
+    int flag_compute_randoms = GBP_TRUE;
     for(i_grouping = i_grouping_start; i_grouping <= i_grouping_stop; i_grouping++) {
         SID_log("Processing grouping #%03d...", SID_LOG_OPEN | SID_LOG_TIMER, i_grouping);
 
@@ -165,17 +165,17 @@ int main(int argc, char *argv[]) {
 
             // Generate randoms
             if(flag_compute_randoms) {
-                char filename_randoms[MAX_FILENAME_LENGTH];
+                char filename_randoms[SID_MAX_FILENAME_LENGTH];
                 sprintf(filename_randoms, "%s_randoms.dat", filename_out_root);
                 generate_randoms(&cfunc, &plist, "halos", "randoms", filename_randoms);
-                flag_compute_randoms = FALSE;
+                flag_compute_randoms = GBP_FALSE;
             }
 
             // Compute power spectrum
             compute_cfunc(&plist, "halos", "randoms", &cfunc, i_run);
 
             // Now that all 4 runs are done, let's write the results
-            char filename_out_root_grouping[MAX_FILENAME_LENGTH];
+            char filename_out_root_grouping[SID_MAX_FILENAME_LENGTH];
             sprintf(filename_out_root_grouping, "%s_grouping_%03d", filename_out_root, i_grouping);
             write_cfunc(&cfunc, filename_out_root_grouping, &plist, "halos", "randoms", i_run);
 
@@ -189,5 +189,5 @@ int main(int argc, char *argv[]) {
     free_cfunc(&cfunc);
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

@@ -11,10 +11,10 @@
 int check_camera_sealed(camera_info *camera, int check_value) {
     if(!(camera->sealed == check_value)) {
         if(check_value)
-            SID_trap_error("An unsealed camera is beig accessed when it is supposed to be sealed.", ERROR_LOGIC);
+            SID_trap_error("An unsealed camera is beig accessed when it is supposed to be sealed.", SID_ERROR_LOGIC);
         else
-            SID_trap_error("A sealed camera is beig accessed when it is supposed to be unsealed.", ERROR_LOGIC);
-        return (FALSE);
+            SID_trap_error("A sealed camera is beig accessed when it is supposed to be unsealed.", SID_ERROR_LOGIC);
+        return (GBP_FALSE);
     }
-    return (TRUE);
+    return (GBP_TRUE);
 }

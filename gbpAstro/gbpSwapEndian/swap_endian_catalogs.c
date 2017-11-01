@@ -24,11 +24,11 @@ void swap_endian_catalogs_properties_local(const char *filename_in_root,
 
     // Sanity check
     if(check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE) && check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE))
-        SID_trap_error("Invalid mode flag (%d) in swap_endian_catalogs_properties_local().", ERROR_LOGIC, mode);
+        SID_trap_error("Invalid mode flag (%d) in swap_endian_catalogs_properties_local().", SID_ERROR_LOGIC, mode);
 
     // Set filenames
-    char filename_in[MAX_FILENAME_LENGTH];
-    char filename_out[MAX_FILENAME_LENGTH];
+    char filename_in[SID_MAX_FILENAME_LENGTH];
+    char filename_out[SID_MAX_FILENAME_LENGTH];
     sprintf(filename_in,
             "%s/%s_%03d.catalog_%sgroups_properties/%s_%03d.catalog_%sgroups_properties.%d",
             filename_in_root,
@@ -53,14 +53,14 @@ void swap_endian_catalogs_properties_local(const char *filename_in_root,
     // Open input and output files
     FILE *fp_in     = NULL;
     FILE *fp_out    = NULL;
-    int   flag_type = FALSE;
+    int   flag_type = GBP_FALSE;
     if((fp_in = fopen(filename_in, "r")) == NULL) {
         sprintf(filename_in, "%s/%s_%03d.catalog_%sgroups_properties", filename_in_root, filename_halo_type, snap_number, prefix);
         if((fp_in = fopen(filename_in, "r")) == NULL)
-            SID_trap_error("Could not open {%s} for reading.", ERROR_IO_OPEN, filename_in_root);
-        flag_type = TRUE;
+            SID_trap_error("Could not open {%s} for reading.", SID_ERROR_IO_OPEN, filename_in_root);
+        flag_type = GBP_TRUE;
     } else {
-        char filename_dir[MAX_FILENAME_LENGTH];
+        char filename_dir[SID_MAX_FILENAME_LENGTH];
         sprintf(filename_dir, "%s/%s_%03d.catalog_%sgroups_properties", filename_out_root, filename_halo_type, snap_number, prefix);
         mkdir(filename_dir, 02755);
     }
@@ -76,7 +76,7 @@ void swap_endian_catalogs_properties_local(const char *filename_in_root,
 
     // Sanity check
     if(flag_type && n_files != 1)
-        SID_trap_error("Single file format dataset {%s} has n_files=%d (ie !=1) in its header.", ERROR_LOGIC, filename_in, n_files);
+        SID_trap_error("Single file format dataset {%s} has n_files=%d (ie !=1) in its header.", SID_ERROR_LOGIC, filename_in, n_files);
 
     int i_file;
     for(i_file = 0; i_file < n_files; i_file++) {
@@ -107,9 +107,9 @@ void swap_endian_catalogs_properties_local(const char *filename_in_root,
                     i_file);
         }
         if((fp_in = fopen(filename_in, "r")) == NULL)
-            SID_trap_error("Could not open {%s} for reading.", ERROR_IO_OPEN, filename_in);
+            SID_trap_error("Could not open {%s} for reading.", SID_ERROR_IO_OPEN, filename_in);
         if((fp_out = fopen(filename_out, "w")) == NULL)
-            SID_trap_error("Could not open {%s} for writing.", ERROR_IO_OPEN, filename_out);
+            SID_trap_error("Could not open {%s} for writing.", SID_ERROR_IO_OPEN, filename_out);
 
         // Read the header and rewind
         int n_halos_file;
@@ -174,11 +174,11 @@ void swap_endian_catalogs_profiles_local(const char *filename_in_root,
 
     // Sanity check
     if(check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE) && check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE))
-        SID_trap_error("Invalid mode flag (%d) in swap_endian_catalogs_profiles_local().", ERROR_LOGIC, mode);
+        SID_trap_error("Invalid mode flag (%d) in swap_endian_catalogs_profiles_local().", SID_ERROR_LOGIC, mode);
 
     // Set filenames
-    char filename_in[MAX_FILENAME_LENGTH];
-    char filename_out[MAX_FILENAME_LENGTH];
+    char filename_in[SID_MAX_FILENAME_LENGTH];
+    char filename_out[SID_MAX_FILENAME_LENGTH];
     sprintf(filename_in,
             "%s/%s_%03d.catalog_%sgroups_profiles/%s_%03d.catalog_%sgroups_profiles.%d",
             filename_in_root,
@@ -203,14 +203,14 @@ void swap_endian_catalogs_profiles_local(const char *filename_in_root,
     // Open input and output files
     FILE *fp_in     = NULL;
     FILE *fp_out    = NULL;
-    int   flag_type = FALSE;
+    int   flag_type = GBP_FALSE;
     if((fp_in = fopen(filename_in, "r")) == NULL) {
         sprintf(filename_in, "%s/%s_%03d.catalog_%sgroups_profiles", filename_in_root, filename_halo_type, snap_number, prefix);
         if((fp_in = fopen(filename_in, "r")) == NULL)
-            SID_trap_error("Could not open {%s} for reading.", ERROR_IO_OPEN, filename_in_root);
-        flag_type = TRUE;
+            SID_trap_error("Could not open {%s} for reading.", SID_ERROR_IO_OPEN, filename_in_root);
+        flag_type = GBP_TRUE;
     } else {
-        char filename_dir[MAX_FILENAME_LENGTH];
+        char filename_dir[SID_MAX_FILENAME_LENGTH];
         sprintf(filename_dir, "%s/%s_%03d.catalog_%sgroups_profiles", filename_out_root, filename_halo_type, snap_number, prefix);
         mkdir(filename_dir, 02755);
     }
@@ -226,7 +226,7 @@ void swap_endian_catalogs_profiles_local(const char *filename_in_root,
 
     // Sanity check
     if(flag_type && n_files != 1)
-        SID_trap_error("Single file format dataset {%s} has n_files=%d (ie !=1) in its header.", ERROR_LOGIC, filename_in, n_files);
+        SID_trap_error("Single file format dataset {%s} has n_files=%d (ie !=1) in its header.", SID_ERROR_LOGIC, filename_in, n_files);
 
     for(int i_file = 0; i_file < n_files; i_file++) {
         // Open the files
@@ -256,9 +256,9 @@ void swap_endian_catalogs_profiles_local(const char *filename_in_root,
                     i_file);
         }
         if((fp_in = fopen(filename_in, "r")) == NULL)
-            SID_trap_error("Could not open {%s} for reading.", ERROR_IO_OPEN, filename_in);
+            SID_trap_error("Could not open {%s} for reading.", SID_ERROR_IO_OPEN, filename_in);
         if((fp_out = fopen(filename_out, "w")) == NULL)
-            SID_trap_error("Could not open {%s} for writing.", ERROR_IO_OPEN, filename_out);
+            SID_trap_error("Could not open {%s} for writing.", SID_ERROR_IO_OPEN, filename_out);
 
         // Read the header and rewind
         int n_halos_file;
@@ -334,11 +334,11 @@ void swap_endian_catalogs_SO_local(const char *filename_in_root,
 
     // Sanity check
     if(check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE) && check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE))
-        SID_trap_error("Invalid mode flag (%d) in swap_endian_catalogs_properties_local().", ERROR_LOGIC, mode);
+        SID_trap_error("Invalid mode flag (%d) in swap_endian_catalogs_properties_local().", SID_ERROR_LOGIC, mode);
 
     // Set filenames
-    char filename_in[MAX_FILENAME_LENGTH];
-    char filename_out[MAX_FILENAME_LENGTH];
+    char filename_in[SID_MAX_FILENAME_LENGTH];
+    char filename_out[SID_MAX_FILENAME_LENGTH];
     sprintf(filename_in,
             "%s/%s_%03d.catalog_%sgroups_SO/%s_%03d.catalog_%sgroups_SO.%d",
             filename_in_root,
@@ -363,16 +363,16 @@ void swap_endian_catalogs_SO_local(const char *filename_in_root,
     // Open input and output files
     FILE *fp_in     = NULL;
     FILE *fp_out    = NULL;
-    int   flag_type = FALSE;
+    int   flag_type = GBP_FALSE;
     if((fp_in = fopen(filename_in, "r")) == NULL) {
         sprintf(filename_in, "%s/%s_%03d.catalog_%sgroups_SO", filename_in_root, filename_halo_type, snap_number, prefix);
         if((fp_in = fopen(filename_in, "r")) == NULL) {
             SID_log("not present.", SID_LOG_CLOSE);
             return;
         }
-        flag_type = TRUE;
+        flag_type = GBP_TRUE;
     } else {
-        char filename_dir[MAX_FILENAME_LENGTH];
+        char filename_dir[SID_MAX_FILENAME_LENGTH];
         sprintf(filename_dir, "%s/%s_%03d.catalog_%sgroups_SO", filename_out_root, filename_halo_type, snap_number, prefix);
         mkdir(filename_dir, 02755);
     }
@@ -388,7 +388,7 @@ void swap_endian_catalogs_SO_local(const char *filename_in_root,
 
     // Sanity check
     if(flag_type && n_files != 1)
-        SID_trap_error("Single file format dataset {%s} has n_files=%d (ie !=1) in its header.", ERROR_LOGIC, filename_in, n_files);
+        SID_trap_error("Single file format dataset {%s} has n_files=%d (ie !=1) in its header.", SID_ERROR_LOGIC, filename_in, n_files);
 
     // Process each file in turn
     for(int i_file = 0; i_file < n_files; i_file++) {
@@ -419,9 +419,9 @@ void swap_endian_catalogs_SO_local(const char *filename_in_root,
                     i_file);
         }
         if((fp_in = fopen(filename_in, "r")) == NULL)
-            SID_trap_error("Could not open {%s} for reading.", ERROR_IO_OPEN, filename_in);
+            SID_trap_error("Could not open {%s} for reading.", SID_ERROR_IO_OPEN, filename_in);
         if((fp_out = fopen(filename_out, "w")) == NULL)
-            SID_trap_error("Could not open {%s} for writing.", ERROR_IO_OPEN, filename_out);
+            SID_trap_error("Could not open {%s} for writing.", SID_ERROR_IO_OPEN, filename_out);
 
         // Read the header and rewind
         int n_halos_file;

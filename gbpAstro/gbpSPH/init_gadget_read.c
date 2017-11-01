@@ -6,11 +6,11 @@
 
 int init_gadget_read(char *filename_root_in, int snapshot_number, gadget_read_info *fp_gadget) {
     // Determine/set the filename root
-    int flag_filefound = FALSE;
+    int flag_filefound = GBP_FALSE;
     if(SID.I_am_Master) {
-        char  filename[MAX_FILENAME_LENGTH];
-        char  filename_root[MAX_FILENAME_LENGTH];
-        char  filename_path[MAX_FILENAME_LENGTH];
+        char  filename[SID_MAX_FILENAME_LENGTH];
+        char  filename_root[SID_MAX_FILENAME_LENGTH];
+        char  filename_path[SID_MAX_FILENAME_LENGTH];
         int   record_length_in;
         FILE *fp;
         strcpy(filename_root, filename_root_in);
@@ -38,8 +38,8 @@ int init_gadget_read(char *filename_root_in, int snapshot_number, gadget_read_in
                 sprintf(filename, "%s", filename_root_in);
             fp = fopen(filename, "r");
             if(fp != NULL) {
-                flag_filefound              = TRUE;
-                (fp_gadget->flag_multifile) = FALSE;
+                flag_filefound              = GBP_TRUE;
+                (fp_gadget->flag_multifile) = GBP_FALSE;
                 (fp_gadget->flag_file_type) = i_type;
             }
             // ... if that doesn't work, check for multi-file
@@ -47,16 +47,16 @@ int init_gadget_read(char *filename_root_in, int snapshot_number, gadget_read_in
                 strcat(filename, ".0");
                 fp = fopen(filename, "r");
                 if(fp != NULL) {
-                    flag_filefound              = TRUE;
-                    (fp_gadget->flag_multifile) = TRUE;
+                    flag_filefound              = GBP_TRUE;
+                    (fp_gadget->flag_multifile) = GBP_TRUE;
                     (fp_gadget->flag_file_type) = i_type;
                 }
             }
         }
 
         // Initialize some flags
-        fp_gadget->first_select_call = TRUE;
-        fp_gadget->first_action_call = TRUE;
+        fp_gadget->first_select_call = GBP_TRUE;
+        fp_gadget->first_action_call = GBP_TRUE;
 
         // Read the first header if we've found a file ok
         if(flag_filefound) {
@@ -72,8 +72,8 @@ int init_gadget_read(char *filename_root_in, int snapshot_number, gadget_read_in
             fp_gadget->n_particles += fp_gadget->n_all[i_type];
         }
     }
-    SID_Bcast(fp_gadget, sizeof(gadget_read_info), SID_CHAR, SID.COMM_WORLD, MASTER_RANK);
-    SID_Bcast(&flag_filefound, 1, SID_INT, SID.COMM_WORLD, MASTER_RANK);
+    SID_Bcast(fp_gadget, sizeof(gadget_read_info), SID_CHAR, SID.COMM_WORLD, SID_MASTER_RANK);
+    SID_Bcast(&flag_filefound, 1, SID_INT, SID.COMM_WORLD, SID_MASTER_RANK);
 
     return (flag_filefound);
 }

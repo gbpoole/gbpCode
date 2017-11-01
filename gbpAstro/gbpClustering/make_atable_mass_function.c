@@ -9,9 +9,9 @@
 
 int main(int argc, char *argv[]) {
     double redshift;
-    char   filename_in[MAX_FILENAME_LENGTH];
-    char   filename_out[MAX_FILENAME_LENGTH];
-    char   filename_cosmology[MAX_FILENAME_LENGTH];
+    char   filename_in[SID_MAX_FILENAME_LENGTH];
+    char   filename_out[SID_MAX_FILENAME_LENGTH];
+    char   filename_cosmology[SID_MAX_FILENAME_LENGTH];
     double box_size;
     double lM_min, dlM;
     char * line        = NULL;
@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
     // Initialization -- MPI etc.
     SID_init(&argc, &argv, NULL, NULL);
     if(argc != 11)
-        SID_trap_error("Incorrect syntax.", ERROR_SYNTAX);
+        SID_trap_error("Incorrect syntax.", SID_ERROR_SYNTAX);
 
     // Parse arguments
     strcpy(filename_in, argv[1]);
@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
     // Open file
     FILE *fp_in;
     if((fp_in = fopen(filename_in, "r")) == NULL)
-        SID_trap_error("Could not open {%s} for reading.", ERROR_IO_OPEN, filename_in);
+        SID_trap_error("Could not open {%s} for reading.", SID_ERROR_IO_OPEN, filename_in);
 
     // Allocate memory for the data. Read it and sort it in ascending order
     SID_log("Reading data...", SID_LOG_OPEN | SID_LOG_TIMER);
@@ -170,5 +170,5 @@ int main(int argc, char *argv[]) {
     SID_free(SID_FARG hist);
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

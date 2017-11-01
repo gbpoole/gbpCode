@@ -4,10 +4,10 @@
 void compute_FFT(field_info *FFT) {
     // Add the FFTW padding if we need to.  The log message
     //   is only needed if we do add a buffer.
-    int flag_log_message = FALSE;
+    int flag_log_message = GBP_FALSE;
     if(add_buffer_FFT_R(FFT)) {
         SID_log("Performing FFT...", SID_LOG_OPEN | SID_LOG_TIMER);
-        flag_log_message = TRUE;
+        flag_log_message = GBP_TRUE;
     }
 
 // Perform the FFT

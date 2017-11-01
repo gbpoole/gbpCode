@@ -28,7 +28,7 @@ void compute_substructure_order_recursive(tree_node_info *parent, int *score_par
         }
         if(n_halos != parent->n_substructures)
             SID_trap_error(
-                "Invalid halo count (%d!=%d) in compute_substructure_order_score_recursive().", ERROR_LOGIC, n_halos, parent->n_substructures);
+                "Invalid halo count (%d!=%d) in compute_substructure_order_score_recursive().", SID_ERROR_LOGIC, n_halos, parent->n_substructures);
 
         // Sort the resulting scores (ascending!) ...
         size_t *score_index = NULL;
@@ -63,5 +63,5 @@ void compute_substructure_order_recursive(tree_node_info *parent, int *score_par
         if(score_parent != NULL)
             (*score_parent) = parent->n_particles;
     } else
-        SID_trap_error("Invalid mode (%d) in assign_substructure_order_recursive().", ERROR_LOGIC, mode);
+        SID_trap_error("Invalid mode (%d) in assign_substructure_order_recursive().", SID_ERROR_LOGIC, mode);
 }

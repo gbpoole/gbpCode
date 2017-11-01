@@ -10,7 +10,7 @@ int main(int argc, char *argv[]) {
     int         i_frame;
     int         width;
     int         height;
-    char        colour_table[MAX_FILENAME_LENGTH];
+    char        colour_table[SID_MAX_FILENAME_LENGTH];
     image_info *image;
     char        file_out[256];
     double *    image_array;
@@ -34,10 +34,10 @@ int main(int argc, char *argv[]) {
             image_array[i_pixel] = (double)(i_x + 1) / (double)width;
         }
     }
-    set_image_RGB(image, 0., 1., FALSE);
+    set_image_RGB(image, 0., 1., GBP_FALSE);
     write_image(image, ".", file_out, WRITE_IMAGE_PNG);
     free_image(&image);
     SID_log("Done.", SID_LOG_CLOSE);
 
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

@@ -12,7 +12,7 @@ int main(int argc, char *argv[]) {
     int          i_frame_start;
     int          i_frame_stop;
     render_info *render = NULL;
-    char         filename_script[MAX_FILENAME_LENGTH];
+    char         filename_script[SID_MAX_FILENAME_LENGTH];
     int          mode;
     double       RGB_min;
     double       RGB_max;
@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
     SID_init(&argc, &argv, NULL, NULL);
 
     // Parse cmd line arguments
-    int flag_force_render = FALSE;
+    int flag_force_render = GBP_FALSE;
     strcpy(filename_script, argv[1]);
     if(argc == 4) {
         i_frame_start = atoi(argv[2]);
@@ -31,9 +31,9 @@ int main(int argc, char *argv[]) {
     } else if(argc == 5) {
         i_frame_start     = atoi(argv[2]);
         i_frame_stop      = atoi(argv[3]);
-        flag_force_render = (atoi(argv[4]) == TRUE);
+        flag_force_render = (atoi(argv[4]) == GBP_TRUE);
     } else if(argc != 2)
-        SID_trap_error("Invalid number of arguments.", ERROR_SYNTAX);
+        SID_trap_error("Invalid number of arguments.", SID_ERROR_SYNTAX);
 
     SID_log("Rendering script file {%s}...", SID_LOG_OPEN | SID_LOG_TIMER, filename_script);
 
@@ -85,5 +85,5 @@ int main(int argc, char *argv[]) {
     free_render(&render);
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

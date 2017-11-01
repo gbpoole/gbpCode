@@ -109,12 +109,12 @@ void init_gbpCosmo2gbpCosmo(cosmo_info **           cosmo_source,
         iter++;
         status = gsl_multimin_fminimizer_iterate(s);
         if(status)
-            SID_trap_error("Error encountered during minimisation in init_gbpCosmo2gbpCosmo() (status=%d).", ERROR_LOGIC, status);
+            SID_trap_error("Error encountered during minimisation in init_gbpCosmo2gbpCosmo() (status=%d).", SID_ERROR_LOGIC, status);
         size   = gsl_multimin_fminimizer_size(s);
         status = gsl_multimin_test_size(size, 1e-2);
     } while(status == GSL_CONTINUE && iter <= iter_max);
     if(status != GSL_SUCCESS)
-        SID_trap_error("Failed to converge during minimisation in init_gbpCosmo2gbpCosmo() (status=%d,iter=%d).", ERROR_LOGIC, status, iter);
+        SID_trap_error("Failed to converge during minimisation in init_gbpCosmo2gbpCosmo() (status=%d,iter=%d).", SID_ERROR_LOGIC, status, iter);
 
     // Finalize results
     double Omega_M_source           = ((double *)ADaPS_fetch(*cosmo_source, "Omega_M"))[0];

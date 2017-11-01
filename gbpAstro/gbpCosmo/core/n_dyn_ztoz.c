@@ -19,8 +19,8 @@ double delta_n_dyn_local(double a_1, double a_2, cosmo_info **cosmo) {
     double                     abs_accuracy = 1e-4;
     double                     rel_accuracy = 1e-4;
     double                     abs_error;
-    double                     a_lo = MIN(a_1, a_2);
-    double                     a_hi = MAX(a_1, a_2);
+    double                     a_lo = GBP_MIN(a_1, a_2);
+    double                     a_hi = GBP_MAX(a_1, a_2);
     gsl_integration_workspace *wspace;
     gsl_function               integrand;
     integrand.function = dn_dyn_dt_local;
@@ -32,7 +32,7 @@ double delta_n_dyn_local(double a_1, double a_2, cosmo_info **cosmo) {
 }
 
 double n_dyn_ztoz(double redshift_1, double redshift_2, cosmo_info *cosmo) {
-    double redshift_lo = MIN(redshift_1, redshift_2);
-    double redshift_hi = MAX(redshift_1, redshift_2);
+    double redshift_lo = GBP_MIN(redshift_1, redshift_2);
+    double redshift_hi = GBP_MAX(redshift_1, redshift_2);
     return (delta_n_dyn_local(a_of_z(redshift_hi), a_of_z(redshift_lo), &cosmo));
 }

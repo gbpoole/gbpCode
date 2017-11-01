@@ -36,7 +36,7 @@ int write_image_FITS(void *image, SID_Datatype dtype, int n_D, int *D_in, const 
     fits_create_file(&fp, filename, &status);
     if(status) {
         ffgmsg(error_msg);
-        SID_trap_error("FITS create file: filename={%s} status=%d message={%s}", ERROR_IO_OPEN, filename, status, error_msg);
+        SID_trap_error("FITS create file: filename={%s} status=%d message={%s}", SID_ERROR_IO_OPEN, filename, status, error_msg);
     }
 
     // Count the number of pixels
@@ -48,12 +48,12 @@ int write_image_FITS(void *image, SID_Datatype dtype, int n_D, int *D_in, const 
         fits_create_img(fp, FLOAT_IMG, n_D, D, &status);
         if(status) {
             ffgmsg(error_msg);
-            SID_trap_error("FITS create image: filename={%s} status=%d message={%s}", ERROR_IO_OPEN, filename, status, error_msg);
+            SID_trap_error("FITS create image: filename={%s} status=%d message={%s}", SID_ERROR_IO_OPEN, filename, status, error_msg);
         }
         fits_write_img(fp, TFLOAT, fpixel, n_pixels, image, &status);
         if(status) {
             ffgmsg(error_msg);
-            SID_trap_error("FITS write image: filename={%s} status=%d message={%s}", ERROR_IO_OPEN, filename, status, error_msg);
+            SID_trap_error("FITS write image: filename={%s} status=%d message={%s}", SID_ERROR_IO_OPEN, filename, status, error_msg);
         }
         bit_pix = FLOAT_IMG;
     }
@@ -62,12 +62,12 @@ int write_image_FITS(void *image, SID_Datatype dtype, int n_D, int *D_in, const 
         fits_create_img(fp, DOUBLE_IMG, n_D, D, &status);
         if(status) {
             ffgmsg(error_msg);
-            SID_trap_error("FITS create image: filename={%s} status=%d message={%s}", ERROR_IO_OPEN, filename, status, error_msg);
+            SID_trap_error("FITS create image: filename={%s} status=%d message={%s}", SID_ERROR_IO_OPEN, filename, status, error_msg);
         }
         fits_write_img(fp, TDOUBLE, fpixel, n_pixels, image, &status);
         if(status) {
             ffgmsg(error_msg);
-            SID_trap_error("FITS write image: filename={%s} status=%d message={%s}", ERROR_IO_OPEN, filename, status, error_msg);
+            SID_trap_error("FITS write image: filename={%s} status=%d message={%s}", SID_ERROR_IO_OPEN, filename, status, error_msg);
         }
         bit_pix = DOUBLE_IMG;
     }
@@ -76,19 +76,19 @@ int write_image_FITS(void *image, SID_Datatype dtype, int n_D, int *D_in, const 
         fits_create_img(fp, LONG_IMG, n_D, D, &status);
         if(status) {
             ffgmsg(error_msg);
-            SID_trap_error("FITS create image: filename={%s} status=%d message={%s}", ERROR_IO_OPEN, filename, status, error_msg);
+            SID_trap_error("FITS create image: filename={%s} status=%d message={%s}", SID_ERROR_IO_OPEN, filename, status, error_msg);
         }
         fits_write_img(fp, TINT, fpixel, n_pixels, image, &status);
         if(status) {
             ffgmsg(error_msg);
-            SID_trap_error("FITS write image: filename={%s} status=%d message={%s}", ERROR_IO_OPEN, filename, status, error_msg);
+            SID_trap_error("FITS write image: filename={%s} status=%d message={%s}", SID_ERROR_IO_OPEN, filename, status, error_msg);
         }
         bit_pix = LONG_IMG;
     }
 
     // Throw error if the given dtype is not supported
     else
-        SID_trap_error("Unsupported datatype in write_image_FITS", ERROR_LOGIC);
+        SID_trap_error("Unsupported datatype in write_image_FITS", SID_ERROR_LOGIC);
 
     // Set extension name
     if(ext_name != NULL)

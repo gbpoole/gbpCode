@@ -13,8 +13,8 @@ int main(int argc, char *argv[]) {
     SID_init(&argc, &argv, NULL, NULL);
 
     // Fetch user inputs
-    char filename_in_root[MAX_FILENAME_LENGTH];
-    char filename_out_root[MAX_FILENAME_LENGTH];
+    char filename_in_root[SID_MAX_FILENAME_LENGTH];
+    char filename_out_root[SID_MAX_FILENAME_LENGTH];
     int  start_snap;
     int  stop_snap;
     int  step_snap;
@@ -32,12 +32,12 @@ int main(int argc, char *argv[]) {
         SID_log("Processing snapshot No. %d...", SID_LOG_OPEN | SID_LOG_TIMER, i_snap);
 
         // Open files
-        char  filename_in_base[MAX_FILENAME_LENGTH];
-        char  filename_groups_in[MAX_FILENAME_LENGTH];
-        char  filename_subgroups_in[MAX_FILENAME_LENGTH];
-        char  filename_ids_in[MAX_FILENAME_LENGTH];
-        char  filename_indices_in[MAX_FILENAME_LENGTH];
-        char  filename_ids_out[MAX_FILENAME_LENGTH];
+        char  filename_in_base[SID_MAX_FILENAME_LENGTH];
+        char  filename_groups_in[SID_MAX_FILENAME_LENGTH];
+        char  filename_subgroups_in[SID_MAX_FILENAME_LENGTH];
+        char  filename_ids_in[SID_MAX_FILENAME_LENGTH];
+        char  filename_indices_in[SID_MAX_FILENAME_LENGTH];
+        char  filename_ids_out[SID_MAX_FILENAME_LENGTH];
         char  group_prefix_text[8];
         FILE *fp_groups_size_in      = NULL;
         FILE *fp_groups_offset_in    = NULL;
@@ -54,17 +54,17 @@ int main(int argc, char *argv[]) {
         sprintf(filename_ids_in, "%s_%03d.catalog_particles", filename_in_root, i_snap);
         sprintf(filename_ids_out, "%s_%03d.catalog_particles", filename_out_root, i_snap);
         if((fp_groups_size_in = fopen(filename_groups_in, "r")) == NULL)
-            SID_trap_error("Could not open {%s}", ERROR_IO_OPEN, filename_groups_in);
+            SID_trap_error("Could not open {%s}", SID_ERROR_IO_OPEN, filename_groups_in);
         if((fp_groups_offset_in = fopen(filename_groups_in, "r")) == NULL)
-            SID_trap_error("Could not open {%s}", ERROR_IO_OPEN, filename_groups_in);
+            SID_trap_error("Could not open {%s}", SID_ERROR_IO_OPEN, filename_groups_in);
         if((fp_groups_nsubs_in = fopen(filename_groups_in, "r")) == NULL)
-            SID_trap_error("Could not open {%s}", ERROR_IO_OPEN, filename_groups_in);
+            SID_trap_error("Could not open {%s}", SID_ERROR_IO_OPEN, filename_groups_in);
         if((fp_subgroups_size_in = fopen(filename_subgroups_in, "r")) == NULL)
-            SID_trap_error("Could not open {%s}", ERROR_IO_OPEN, filename_subgroups_in);
+            SID_trap_error("Could not open {%s}", SID_ERROR_IO_OPEN, filename_subgroups_in);
         if((fp_subgroups_offset_in = fopen(filename_subgroups_in, "r")) == NULL)
-            SID_trap_error("Could not open {%s}", ERROR_IO_OPEN, filename_subgroups_in);
+            SID_trap_error("Could not open {%s}", SID_ERROR_IO_OPEN, filename_subgroups_in);
         if((fp_ids_in = fopen(filename_ids_in, "r")) == NULL)
-            SID_trap_error("Could not open {%s}", ERROR_IO_OPEN, filename_ids_in);
+            SID_trap_error("Could not open {%s}", SID_ERROR_IO_OPEN, filename_ids_in);
         fp_ids_out = fopen(filename_ids_out, "w");
 
         // Deal with the indices file(s) separately because they have a multi-file format
@@ -84,11 +84,11 @@ int main(int argc, char *argv[]) {
         if((fp_indices_in = fopen(filename_indices_in, "r")) == NULL) {
             sprintf(filename_indices_in, "%s_%03d.catalog_subgroups_indices", filename_in_root, i_snap);
             if((fp_indices_in = fopen(filename_indices_in, "r")) == NULL)
-                SID_trap_error("Could not open {%s}", ERROR_IO_OPEN, filename_indices_in);
+                SID_trap_error("Could not open {%s}", SID_ERROR_IO_OPEN, filename_indices_in);
             else
-                flag_indices_multifile = FALSE;
+                flag_indices_multifile = GBP_FALSE;
         } else
-            flag_indices_multifile = TRUE;
+            flag_indices_multifile = GBP_TRUE;
         fread_verify(&i_file_indices_in, sizeof(int), 1, fp_indices_in);
         fread_verify(&n_files_indices, sizeof(int), 1, fp_indices_in);
         fread_verify(&n_subgroups_indices_i, sizeof(int), 1, fp_indices_in);
@@ -112,27 +112,27 @@ int main(int argc, char *argv[]) {
         if(byte_size_ids == sizeof(int)) {
             SID_log("(int IDs)...", SID_LOG_CONTINUE);
             int n_particles_in;
-            flag_long_ids = FALSE;
+            flag_long_ids = GBP_FALSE;
             fread_verify(&n_particles_in, sizeof(int), 1, fp_ids_in);
             n_particles = (size_t)n_particles_in;
         } else if(byte_size_ids == sizeof(long long)) {
             SID_log("(long long IDs)...", SID_LOG_CONTINUE);
-            flag_long_ids = TRUE;
+            flag_long_ids = GBP_TRUE;
             fread_verify(&n_particles, sizeof(size_t), 1, fp_ids_in);
         } else
-            SID_trap_error("Invalid particle ID byte size (%d).", ERROR_LOGIC, byte_size_ids);
+            SID_trap_error("Invalid particle ID byte size (%d).", SID_ERROR_LOGIC, byte_size_ids);
         if(byte_size_group_offsets == sizeof(unsigned int))
-            flag_long_group_offsets = FALSE;
+            flag_long_group_offsets = GBP_FALSE;
         else if(byte_size_group_offsets == sizeof(int64_t))
-            flag_long_group_offsets = TRUE;
+            flag_long_group_offsets = GBP_TRUE;
         else
-            SID_trap_error("Invalid group offset byte size (%d).", ERROR_LOGIC, byte_size_group_offsets);
+            SID_trap_error("Invalid group offset byte size (%d).", SID_ERROR_LOGIC, byte_size_group_offsets);
         if(byte_size_subgroup_offsets == sizeof(unsigned int))
-            flag_long_subgroup_offsets = FALSE;
+            flag_long_subgroup_offsets = GBP_FALSE;
         else if(byte_size_subgroup_offsets == sizeof(int64_t))
-            flag_long_subgroup_offsets = TRUE;
+            flag_long_subgroup_offsets = GBP_TRUE;
         else
-            SID_trap_error("Invalid subgroup offset byte size (%d).", ERROR_LOGIC, byte_size_subgroup_offsets);
+            SID_trap_error("Invalid subgroup offset byte size (%d).", SID_ERROR_LOGIC, byte_size_subgroup_offsets);
         fseeko(fp_groups_offset_in, (off_t)(2 * sizeof(int) + n_groups * sizeof(int)), SEEK_SET);
         fseeko(fp_groups_nsubs_in, (off_t)(2 * sizeof(int) + n_groups * (sizeof(int) + byte_size_group_offsets)), SEEK_SET);
         fseeko(fp_subgroups_offset_in, (off_t)(2 * sizeof(int) + n_subgroups * sizeof(int)), SEEK_SET);
@@ -230,11 +230,11 @@ int main(int argc, char *argv[]) {
                     if((fp_indices_in = fopen(filename_indices_in, "r")) == NULL) {
                         sprintf(filename_indices_in, "%s_%03d.catalog_subgroups_indices", filename_in_root, i_snap);
                         if((fp_indices_in = fopen(filename_indices_in, "r")) == NULL)
-                            SID_trap_error("Could not open {%s}", ERROR_IO_OPEN, filename_indices_in);
+                            SID_trap_error("Could not open {%s}", SID_ERROR_IO_OPEN, filename_indices_in);
                         else
-                            flag_indices_multifile = FALSE;
+                            flag_indices_multifile = GBP_FALSE;
                     } else
-                        flag_indices_multifile = TRUE;
+                        flag_indices_multifile = GBP_TRUE;
                     fread_verify(&i_file_indices_in, sizeof(int), 1, fp_indices_in);
                     fread_verify(&n_files_indices, sizeof(int), 1, fp_indices_in);
                     fread_verify(&n_subgroups_indices_i, sizeof(int), 1, fp_indices_in);
@@ -244,7 +244,7 @@ int main(int argc, char *argv[]) {
                 fread_verify(&n_particles_indices, sizeof(int), 1, fp_indices_in);
                 if(n_particles_indices != n_particles_sub)
                     SID_trap_error("Subgroup sizes don't match between files (ie %d!=%d) for i_group=%d/k_subgroup=%d",
-                                   ERROR_LOGIC,
+                                   SID_ERROR_LOGIC,
                                    n_particles_indices,
                                    n_particles_sub,
                                    i_group,
@@ -290,5 +290,5 @@ int main(int argc, char *argv[]) {
     }
     SID_log("Done.", SID_LOG_CLOSE);
 
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

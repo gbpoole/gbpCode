@@ -10,13 +10,13 @@
 float compute_f_stretch(double d_image_plane, float z_i, int flag_plane_parallel) {
     float f_i;
     switch(flag_plane_parallel) {
-        case FALSE:
+        case GBP_FALSE:
             if(z_i > 0.f)
                 f_i = (float)d_image_plane / (float)z_i;
             else // save the divisions if we won't be rendering the particle anyways
                 f_i = 0.f;
             break;
-        case TRUE:
+        case GBP_TRUE:
             f_i = 1.f;
             break;
     }

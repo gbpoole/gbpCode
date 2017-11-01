@@ -13,13 +13,13 @@ void generate_randoms(cfunc_info *cfunc, plist_info *plist, const char *species_
 
     // Check if a randoms file has been given (and check if it has the right number of items)
     FILE *fp_randoms;
-    int   flag_read_randoms = FALSE;
+    int   flag_read_randoms = GBP_FALSE;
     fp_randoms              = fopen(filename_out_randoms, "r");
     if(fp_randoms != NULL) {
         size_t n_randoms_file;
         n_randoms_file = (size_t)count_lines_data(fp_randoms);
         if(n_randoms_file == n_random_target)
-            flag_read_randoms = TRUE;
+            flag_read_randoms = GBP_TRUE;
     }
 
     // Print log message
@@ -92,7 +92,7 @@ void generate_randoms(cfunc_info *cfunc, plist_info *plist, const char *species_
 
     // Sanity check
     if(n_random != n_random_target)
-        SID_trap_error("There's a count mismatch while generating random (ie. %zd!=%zd).", ERROR_LOGIC, n_random, n_random_target);
+        SID_trap_error("There's a count mismatch while generating random (ie. %zd!=%zd).", SID_ERROR_LOGIC, n_random, n_random_target);
 
     // Create the arrays
     GBPREAL *x_random;
@@ -168,13 +168,13 @@ void generate_randoms(cfunc_info *cfunc, plist_info *plist, const char *species_
     }
 
     // Tell cfunc to compute the RR's next time.  This only needs to be done once.
-    cfunc->flag_compute_RR = TRUE;
+    cfunc->flag_compute_RR = GBP_TRUE;
 
     // Sort PHKs
     size_t *PHK_index;
     size_t *PHK_index_boundary;
-    merge_sort(PHK_random, n_random_local, &PHK_index, SID_SIZE_T, SORT_COMPUTE_INDEX, FALSE);
-    merge_sort(PHK_random, n_boundary, &PHK_index_boundary, SID_SIZE_T, SORT_COMPUTE_INDEX, FALSE);
+    merge_sort(PHK_random, n_random_local, &PHK_index, SID_SIZE_T, SORT_COMPUTE_INDEX, GBP_FALSE);
+    merge_sort(PHK_random, n_boundary, &PHK_index_boundary, SID_SIZE_T, SORT_COMPUTE_INDEX, GBP_FALSE);
 
     // Store the arrays
     ADaPS_store(&(plist->data), (void *)&n_random, "n_all_%s", ADaPS_SCALAR_SIZE_T, random_name);

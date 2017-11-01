@@ -8,9 +8,9 @@
 void compute_histogram_range(hist_info *hist, double confidence_percent, int mode, double *x_peak, double *x_lo, double *x_hi) {
     // Sanity check
     if(check_mode_for_flag(mode, GBP_HISTOGRAM_RANGE_ALL) && check_mode_for_flag(mode, GBP_HISTOGRAM_RANGE_HIST))
-        SID_trap_error("Multiple range mode flags have been set in compute_histogram_range().", ERROR_LOGIC);
+        SID_trap_error("Multiple range mode flags have been set in compute_histogram_range().", SID_ERROR_LOGIC);
     if(!check_mode_for_flag(mode, GBP_HISTOGRAM_RANGE_ALL) && !check_mode_for_flag(mode, GBP_HISTOGRAM_RANGE_HIST))
-        SID_trap_error("No range mode flags have been set in compute_histogram_range().", ERROR_LOGIC);
+        SID_trap_error("No range mode flags have been set in compute_histogram_range().", SID_ERROR_LOGIC);
 
     // Set defaults
     int i_peak = hist->n_bins / 2;
@@ -27,7 +27,7 @@ void compute_histogram_range(hist_info *hist, double confidence_percent, int mod
     if(n_norm > 0) {
         // Sort counts
         size_t *hist_index = NULL;
-        merge_sort(hist->bin_count, (size_t)(hist->n_bins), &hist_index, SID_SIZE_T, SORT_COMPUTE_INDEX, FALSE);
+        merge_sort(hist->bin_count, (size_t)(hist->n_bins), &hist_index, SID_SIZE_T, SORT_COMPUTE_INDEX, GBP_FALSE);
 
         // Set confidence interval count
         size_t target = (size_t)(0.01 * confidence_percent * (double)n_norm);

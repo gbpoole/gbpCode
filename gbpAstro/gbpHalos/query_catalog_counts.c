@@ -10,8 +10,8 @@
 int main(int argc, char *argv[]) {
     SID_init(&argc, &argv, NULL, NULL);
 
-    char filename_SSimPL[MAX_FILENAME_LENGTH];
-    char filename_halo_type[MAX_FILENAME_LENGTH];
+    char filename_SSimPL[SID_MAX_FILENAME_LENGTH];
+    char filename_halo_type[SID_MAX_FILENAME_LENGTH];
     strcpy(filename_SSimPL, argv[1]);
     strcpy(filename_halo_type, argv[2]);
 
@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
         FILE *fp_out = stdout;
 
         // Count the number of snapshots and read their expansion factors
-        char filename_a_list[MAX_FILENAME_LENGTH];
+        char filename_a_list[SID_MAX_FILENAME_LENGTH];
         sprintf(filename_a_list, "%s/run/a_list.txt", filename_SSimPL);
         FILE * fp_a_list   = fopen(filename_a_list, "r");
         int    n_snaps     = count_lines_data(fp_a_list);
@@ -34,8 +34,8 @@ int main(int argc, char *argv[]) {
         fclose(fp_a_list);
 
         for(int i_snap = 0; i_snap < n_snaps; i_snap++) {
-            char filename_group_properties[MAX_FILENAME_LENGTH];
-            char filename_subgroup_properties[MAX_FILENAME_LENGTH];
+            char filename_group_properties[SID_MAX_FILENAME_LENGTH];
+            char filename_subgroup_properties[SID_MAX_FILENAME_LENGTH];
             sprintf(filename_group_properties, "%s/catalogs/%s", filename_SSimPL, filename_halo_type);
             sprintf(filename_subgroup_properties, "%s/catalogs/%s", filename_SSimPL, filename_halo_type);
             fp_catalog_info fp_group_properties;
@@ -66,5 +66,5 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

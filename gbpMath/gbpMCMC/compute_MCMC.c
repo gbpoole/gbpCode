@@ -13,20 +13,20 @@
 #include <gsl/gsl_interp.h>
 
 void compute_MCMC(MCMC_info *MCMC) {
-    char          filename_output_dir[MAX_FILENAME_LENGTH];
-    char          filename_chain_dir[MAX_FILENAME_LENGTH];
-    char          filename_results_dir[MAX_FILENAME_LENGTH];
-    char          filename_plots_dir[MAX_FILENAME_LENGTH];
-    char          filename_run[MAX_FILENAME_LENGTH];
-    char          filename_chain[MAX_FILENAME_LENGTH];
-    char          filename_chain_config[MAX_FILENAME_LENGTH];
-    char          filename_chain_covariance[MAX_FILENAME_LENGTH];
-    char          filename_stats[MAX_FILENAME_LENGTH];
-    char          filename_coverage[MAX_FILENAME_LENGTH];
-    char          filename_histograms[MAX_FILENAME_LENGTH];
-    char          filename_results[MAX_FILENAME_LENGTH];
-    char          filename_stop[MAX_FILENAME_LENGTH];
-    char          column_txt[MAX_FILENAME_LENGTH];
+    char          filename_output_dir[SID_MAX_FILENAME_LENGTH];
+    char          filename_chain_dir[SID_MAX_FILENAME_LENGTH];
+    char          filename_results_dir[SID_MAX_FILENAME_LENGTH];
+    char          filename_plots_dir[SID_MAX_FILENAME_LENGTH];
+    char          filename_run[SID_MAX_FILENAME_LENGTH];
+    char          filename_chain[SID_MAX_FILENAME_LENGTH];
+    char          filename_chain_config[SID_MAX_FILENAME_LENGTH];
+    char          filename_chain_covariance[SID_MAX_FILENAME_LENGTH];
+    char          filename_stats[SID_MAX_FILENAME_LENGTH];
+    char          filename_coverage[SID_MAX_FILENAME_LENGTH];
+    char          filename_histograms[SID_MAX_FILENAME_LENGTH];
+    char          filename_results[SID_MAX_FILENAME_LENGTH];
+    char          filename_stop[SID_MAX_FILENAME_LENGTH];
+    char          column_txt[SID_MAX_FILENAME_LENGTH];
     char          problem_name_test[MCMC_NAME_SIZE];
     char          P_name_test[MCMC_NAME_SIZE];
     char          format_string[64];
@@ -57,7 +57,7 @@ void compute_MCMC(MCMC_info *MCMC) {
     int           i_iteration, j_iteration;
     int           flag_continue;
     char          flag_success;
-    int           flag_stop = FALSE;
+    int           flag_stop = GBP_FALSE;
     int           i_coverage;
     int           j_coverage;
     int           bin_x;
@@ -173,8 +173,8 @@ void compute_MCMC(MCMC_info *MCMC) {
     int           dummy_t;
     int           n_iterations_file_total;
     int           n_iterations_file_burn;
-    int           flag_restart     = FALSE;
-    int           flag_minimize_IO = FALSE;
+    int           flag_restart     = GBP_FALSE;
+    int           flag_minimize_IO = GBP_FALSE;
     MCMC_DS_info *current_DS;
     MCMC_DS_info *next_DS;
 
@@ -283,7 +283,7 @@ void compute_MCMC(MCMC_info *MCMC) {
 
     // Perform integration
     SID_log("Initializing integration...", SID_LOG_OPEN);
-    MCMC->flag_integrate_on = TRUE;
+    MCMC->flag_integrate_on = GBP_TRUE;
 
     // Make sure the needed directories exist
     mkdir(filename_output_dir, 02755);
@@ -295,57 +295,57 @@ void compute_MCMC(MCMC_info *MCMC) {
     if(SID.I_am_Master) {
         // If run.dat already exists, this is a restart.  Check that it is consistant with the current run.
         if((fp_run = fopen(filename_run, "rb")) != NULL) {
-            flag_restart = TRUE;
+            flag_restart = GBP_TRUE;
             SID_log("Checking the consistancy of this run with the previous run...", SID_LOG_OPEN);
             fread_verify(problem_name_test, sizeof(char), MCMC_NAME_SIZE, fp_run);
             if(strcmp(problem_name_test, MCMC->problem_name))
-                SID_trap_error("Problem names are inconsistant (i.e. {%s}!={%s}).", ERROR_LOGIC, MCMC->problem_name, problem_name_test);
+                SID_trap_error("Problem names are inconsistant (i.e. {%s}!={%s}).", SID_ERROR_LOGIC, MCMC->problem_name, problem_name_test);
             fread_verify(&n_chains_test, sizeof(int), 1, fp_run);
-            MCMC->n_chains = MAX(MCMC->n_chains, n_chains_test);
+            MCMC->n_chains = GBP_MAX(MCMC->n_chains, n_chains_test);
             fread_verify(&n_avg_test, sizeof(int), 1, fp_run);
             if(n_avg_test != n_avg)
-                SID_trap_error("Integration averaging intervals are inconsistant (i.e. %d!=%d).", ERROR_LOGIC, n_avg, n_avg_test);
+                SID_trap_error("Integration averaging intervals are inconsistant (i.e. %d!=%d).", SID_ERROR_LOGIC, n_avg, n_avg_test);
             fread_verify(&flag_autocor_on_test, sizeof(int), 1, fp_run);
             if(flag_autocor_on_test != flag_autocor_on)
-                SID_trap_error("Autocorrelation flags are inconsistant (i.e. %d!=%d).", ERROR_LOGIC, flag_autocor_on, flag_autocor_on_test);
+                SID_trap_error("Autocorrelation flags are inconsistant (i.e. %d!=%d).", SID_ERROR_LOGIC, flag_autocor_on, flag_autocor_on_test);
             fread_verify(&flag_no_map_write_test, sizeof(int), 1, fp_run);
             if(flag_no_map_write_test != flag_no_map_write)
-                SID_trap_error("Map write flags are inconsistant (i.e. %d!=%d).", ERROR_LOGIC, flag_no_map_write, flag_no_map_write_test);
+                SID_trap_error("Map write flags are inconsistant (i.e. %d!=%d).", SID_ERROR_LOGIC, flag_no_map_write, flag_no_map_write_test);
             fread_verify(&n_P_test, sizeof(int), 1, fp_run);
             if(n_P_test != n_P)
-                SID_trap_error("The number of paramaters is inconsistant (i.e. %d!=%d).", ERROR_LOGIC, n_P, n_P_test);
+                SID_trap_error("The number of paramaters is inconsistant (i.e. %d!=%d).", SID_ERROR_LOGIC, n_P, n_P_test);
             MCMC->P_name_length = 0;
             for(i_P = 0; i_P < n_P; i_P++) {
                 fread_verify(P_name_test, sizeof(char), MCMC_NAME_SIZE, fp_run);
                 if(strcmp(P_name_test, MCMC->P_names[i_P]))
-                    SID_trap_error("Parameter #%d's names are inconsistant (i.e. {%s}!={%s}).", ERROR_LOGIC, i_P, MCMC->P_names[i_P], P_name_test);
+                    SID_trap_error("Parameter #%d's names are inconsistant (i.e. {%s}!={%s}).", SID_ERROR_LOGIC, i_P, MCMC->P_names[i_P], P_name_test);
                 fread_verify(&P_init_test, sizeof(double), 1, fp_run);
                 // if(P_init_test!=MCMC->P_init[i_P])
-                //   SID_trap_error("Parameter #%d's initial values are inconsistant (i.e. %le!=%le).",ERROR_LOGIC,i_P,MCMC->P_init[i_P],P_init_test);
+                //   SID_trap_error("Parameter #%d's initial values are inconsistant (i.e. %le!=%le).",SID_ERROR_LOGIC,i_P,MCMC->P_init[i_P],P_init_test);
                 fread_verify(&P_min_test, sizeof(double), 1, fp_run);
                 if(P_min_test != MCMC->P_limit_min[i_P])
                     SID_trap_error(
-                        "Parameter #%d's minimum values are inconsistant (i.e. %le!=%le).", ERROR_LOGIC, i_P, MCMC->P_limit_min[i_P], P_min_test);
+                        "Parameter #%d's minimum values are inconsistant (i.e. %le!=%le).", SID_ERROR_LOGIC, i_P, MCMC->P_limit_min[i_P], P_min_test);
                 fread_verify(&P_max_test, sizeof(double), 1, fp_run);
                 if(P_max_test != MCMC->P_limit_max[i_P])
                     SID_trap_error(
-                        "Parameter #%d's maximum values are inconsistant (i.e. %le!=%le).", ERROR_LOGIC, i_P, MCMC->P_limit_max[i_P], P_max_test);
-                MCMC->P_name_length = MAX(MCMC->P_name_length, strlen(MCMC->P_names[i_P]));
+                        "Parameter #%d's maximum values are inconsistant (i.e. %le!=%le).", SID_ERROR_LOGIC, i_P, MCMC->P_limit_max[i_P], P_max_test);
+                MCMC->P_name_length = GBP_MAX(MCMC->P_name_length, strlen(MCMC->P_names[i_P]));
             }
             sprintf(MCMC->P_name_format, "%%-%ds", MCMC->P_name_length);
             fread_verify(&n_arrays_test, sizeof(int), 1, fp_run);
             if(n_arrays_test != MCMC->n_arrays)
-                SID_trap_error("Numbers of project arrays are inconsistant (i.e. %d!=%d).", ERROR_LOGIC, MCMC->n_arrays, n_arrays_test);
+                SID_trap_error("Numbers of project arrays are inconsistant (i.e. %d!=%d).", SID_ERROR_LOGIC, MCMC->n_arrays, n_arrays_test);
             for(i_array = 0; i_array < MCMC->n_arrays; i_array++) {
                 fread_verify(&array_name_test, sizeof(char), MCMC_NAME_SIZE, fp_run);
                 if(strcmp(array_name_test, MCMC->array_name[i_array]))
                     SID_trap_error(
-                        "Project array names are inconsisitant (i.e. {%s}!={%s}).", ERROR_LOGIC, MCMC->array_name[i_array], array_name_test);
+                        "Project array names are inconsisitant (i.e. {%s}!={%s}).", SID_ERROR_LOGIC, MCMC->array_name[i_array], array_name_test);
                 for(i_P = 0; i_P < n_P; i_P++) {
                     fread_verify(&array_test, sizeof(double), 1, fp_run);
                     if(array_test != MCMC->array[i_array][i_P])
                         SID_trap_error("Project array #%d element #%d is inconsistant (i.e. %le!=%le).",
-                                       ERROR_LOGIC,
+                                       SID_ERROR_LOGIC,
                                        i_array,
                                        i_P,
                                        MCMC->array[i_array][i_P],
@@ -354,22 +354,22 @@ void compute_MCMC(MCMC_info *MCMC) {
             }
             fread_verify(&n_DS_test, sizeof(int), 1, fp_run);
             if(n_DS_test != n_DS)
-                SID_trap_error("The number of datasets is inconsistant (i.e. %d!=%d).", ERROR_LOGIC, n_DS, n_DS_test);
+                SID_trap_error("The number of datasets is inconsistant (i.e. %d!=%d).", SID_ERROR_LOGIC, n_DS, n_DS_test);
             current_DS = MCMC->DS;
             i_DS       = 0;
             while(current_DS != NULL) {
                 next_DS = current_DS->next;
                 fread_verify(name_test, sizeof(char), MCMC_NAME_SIZE, fp_run);
                 if(strcmp(name_test, current_DS->name))
-                    SID_trap_error("Dataset #%d's names are inconsistant (i.e. {%s}!={%s}).", ERROR_LOGIC, i_DS, current_DS->name, name_test);
+                    SID_trap_error("Dataset #%d's names are inconsistant (i.e. {%s}!={%s}).", SID_ERROR_LOGIC, i_DS, current_DS->name, name_test);
                 fread_verify(&n_M_test, sizeof(int), 1, fp_run);
                 if(n_M_test != n_M[i_DS])
-                    SID_trap_error("The sizes of dataset #%d are inconsistant (i.e. %d!=%d).", ERROR_LOGIC, i_DS, n_M_test, n_M[i_DS]);
+                    SID_trap_error("The sizes of dataset #%d are inconsistant (i.e. %d!=%d).", SID_ERROR_LOGIC, i_DS, n_M_test, n_M[i_DS]);
                 for(i_M = 0; i_M < current_DS->n_M; i_M++) {
                     fread_verify(&M_target_test, sizeof(double), 1, fp_run);
                     if(M_target_test != current_DS->M_target[i_M])
                         SID_trap_error("Dataset #%d, element #%d is inconsistant (i.e. %le!=%le).",
-                                       ERROR_LOGIC,
+                                       SID_ERROR_LOGIC,
                                        i_DS,
                                        i_M,
                                        current_DS->M_target[i_M],
@@ -379,7 +379,7 @@ void compute_MCMC(MCMC_info *MCMC) {
                     fread_verify(&dM_target_test, sizeof(double), 1, fp_run);
                     if(dM_target_test != current_DS->dM_target[i_M])
                         SID_trap_error("Dataset #%d, uncertainty element #%d is inconsistant (i.e. %le!=%le).",
-                                       ERROR_LOGIC,
+                                       SID_ERROR_LOGIC,
                                        i_DS,
                                        i_M,
                                        current_DS->M_target[i_M],
@@ -388,12 +388,12 @@ void compute_MCMC(MCMC_info *MCMC) {
                 fread_verify(&n_arrays_test, sizeof(int), 1, fp_run);
                 if(n_arrays_test != current_DS->n_arrays)
                     SID_trap_error(
-                        "The number of arrays in dataset #%d is inconsistant (i.e. %d!=%d).", ERROR_LOGIC, i_DS, n_arrays_test, current_DS->n_arrays);
+                        "The number of arrays in dataset #%d is inconsistant (i.e. %d!=%d).", SID_ERROR_LOGIC, i_DS, n_arrays_test, current_DS->n_arrays);
                 for(i_array = 0; i_array < current_DS->n_arrays; i_array++) {
                     fread_verify(array_name_test, sizeof(char), MCMC_NAME_SIZE, fp_run);
                     if(strcmp(array_name_test, current_DS->array_name[i_array]))
                         SID_trap_error("Array name #%d for dataset #%d is inconsisitant (i.e. {%s}!={%s}).",
-                                       ERROR_LOGIC,
+                                       SID_ERROR_LOGIC,
                                        i_array,
                                        i_DS,
                                        current_DS->array_name[i_array],
@@ -402,7 +402,7 @@ void compute_MCMC(MCMC_info *MCMC) {
                         fread_verify(&array_test, sizeof(double), 1, fp_run);
                         if(array_test != current_DS->array[i_array][i_M])
                             SID_trap_error("Array #%d, element #%d for dataset #%d is inconsistant (i.e. %le!=%le).",
-                                           ERROR_LOGIC,
+                                           SID_ERROR_LOGIC,
                                            i_array,
                                            i_M,
                                            i_DS,
@@ -420,7 +420,7 @@ void compute_MCMC(MCMC_info *MCMC) {
         else {
             SID_log("Write header file...", SID_LOG_OPEN);
             if((fp_run = fopen(filename_run, "wb")) == NULL)
-                SID_trap_error("Could not open file for writing {%s}.", ERROR_IO_OPEN, filename_run);
+                SID_trap_error("Could not open file for writing {%s}.", SID_ERROR_IO_OPEN, filename_run);
             // Stuff relating to this MCMC project
             fwrite(MCMC->problem_name, sizeof(char), MCMC_NAME_SIZE, fp_run);
             fwrite(&(MCMC->n_chains), sizeof(int), 1, fp_run);
@@ -459,9 +459,9 @@ void compute_MCMC(MCMC_info *MCMC) {
             SID_log("Done.", SID_LOG_CLOSE);
         }
     }
-    SID_Bcast(&flag_restart, 1, SID_INT, MCMC->comm, MASTER_RANK);
-    SID_Bcast(&(MCMC->n_chains), 1, SID_INT, MCMC->comm, MASTER_RANK);
-    SID_Bcast(&(MCMC->P_name_length), 1, SID_INT, MCMC->comm, MASTER_RANK);
+    SID_Bcast(&flag_restart, 1, SID_INT, MCMC->comm, SID_MASTER_RANK);
+    SID_Bcast(&(MCMC->n_chains), 1, SID_INT, MCMC->comm, SID_MASTER_RANK);
+    SID_Bcast(&(MCMC->P_name_length), 1, SID_INT, MCMC->comm, SID_MASTER_RANK);
     sprintf(MCMC->P_name_format, "%%-%ds", MCMC->P_name_length);
 
     // If this is NOT a restart, start from scratch ...
@@ -487,16 +487,16 @@ void compute_MCMC(MCMC_info *MCMC) {
         // Perform autotuning (if requested)
         if(check_mode_for_flag(MCMC->mode, MCMC_MODE_AUTOTUNE))
             autotune_MCMC(MCMC);
-        MCMC->flag_init_chain = TRUE;
+        MCMC->flag_init_chain = GBP_TRUE;
 
         // Set the initial state
         SID_log("Writing chain config file...", SID_LOG_OPEN);
         if((fp_chain = fopen(filename_chain, "wb")) == NULL)
-            SID_trap_error("Could not open file for writing {%s}.", ERROR_IO_OPEN, filename_chain);
+            SID_trap_error("Could not open file for writing {%s}.", SID_ERROR_IO_OPEN, filename_chain);
         if((fp_stats = fopen(filename_stats, "wb")) == NULL)
-            SID_trap_error("Could not open file for writing {%s}.", ERROR_IO_OPEN, filename_stats);
+            SID_trap_error("Could not open file for writing {%s}.", SID_ERROR_IO_OPEN, filename_stats);
         if((fp_chain_config = fopen(filename_chain_config, "wb")) == NULL)
-            SID_trap_error("Could not open file for writing {%s}.", ERROR_IO_OPEN, filename_chain_config);
+            SID_trap_error("Could not open file for writing {%s}.", SID_ERROR_IO_OPEN, filename_chain_config);
         fwrite(&n_iterations_file_total, sizeof(int), 1, fp_chain_config);
         fwrite(&n_iterations_file_burn, sizeof(int), 1, fp_chain_config);
         fwrite(&(MCMC->temperature), sizeof(double), 1, fp_chain_config);
@@ -509,7 +509,7 @@ void compute_MCMC(MCMC_info *MCMC) {
     // ... else read the state we left-off from ...
     else if(my_chain == SID.My_rank) {
         SID_log("Loading previous state...", SID_LOG_OPEN);
-        MCMC->flag_init_chain = FALSE;
+        MCMC->flag_init_chain = GBP_FALSE;
         // ... fetch the number of intervals that have already been computed ...
         n_iterations_file_total = 0;
         if((fp_chain_config = fopen(filename_chain_config, "rb")) != NULL) {
@@ -595,7 +595,7 @@ void compute_MCMC(MCMC_info *MCMC) {
             SID_log("Done.", SID_LOG_CLOSE);
         } else {
             memcpy(P_last, P_init, n_P * sizeof(double));
-            MCMC->flag_init_chain = TRUE;
+            MCMC->flag_init_chain = GBP_TRUE;
             fp_chain              = fopen(filename_chain, "wb");
             fp_stats              = fopen(filename_stats, "wb");
         }
@@ -660,7 +660,7 @@ void compute_MCMC(MCMC_info *MCMC) {
             i_iteration_next_report = 20;
 
         // Loop until this phase (burn or integrate) is done
-        flag_continue = TRUE;
+        flag_continue = GBP_TRUE;
         while(flag_continue) {
             // Process one averaging interval at a time
 
@@ -685,7 +685,7 @@ void compute_MCMC(MCMC_info *MCMC) {
 
                         // ... and write to the chain file
                         switch(flag_minimize_IO) {
-                            case TRUE:
+                            case GBP_TRUE:
                                 MCMC->flag_success_buffer[i_iteration_buffer]      = flag_success;
                                 MCMC->ln_likelihood_new_buffer[i_iteration_buffer] = MCMC->ln_likelihood_new;
                                 i_iteration_buffer++;
@@ -791,7 +791,7 @@ void compute_MCMC(MCMC_info *MCMC) {
                 if(time_diff > 0.1)
                     SID_log("\tMean time for single model call: %.1f", SID_LOG_COMMENT, time_diff);
                 i_iteration_next_report =
-                    MIN(n_iterations_phase, i_iteration_start + (n_iterations_phase - i_iteration_start) * (i_report + 1) / n_report);
+                    GBP_MIN(n_iterations_phase, i_iteration_start + (n_iterations_phase - i_iteration_start) * (i_report + 1) / n_report);
             }
 
             // Check to see if a stop has been called to the run ...
@@ -799,24 +799,24 @@ void compute_MCMC(MCMC_info *MCMC) {
                 if((fp_stop = fopen(filename_stop, "r")) != NULL) {
                     fclose(fp_stop);
                     // remove(filename_stop);
-                    flag_stop = TRUE;
+                    flag_stop = GBP_TRUE;
                 }
             }
-            SID_Bcast(&flag_stop, 1, SID_INT, MCMC->comm, MASTER_RANK);
+            SID_Bcast(&flag_stop, 1, SID_INT, MCMC->comm, SID_MASTER_RANK);
 
             // ... if so, stop all ranks and cancel the subsequent analysis stage
             if(flag_stop) {
-                flag_continue          = FALSE;
-                MCMC->flag_analysis_on = FALSE;
+                flag_continue          = GBP_FALSE;
+                MCMC->flag_analysis_on = GBP_FALSE;
                 i_phase                = 3;
                 SID_log("*** Stop file found.  Terminating run. ***", SID_LOG_COMMENT);
             }
 
             // Check to see if this phase's iterations are complete
             if(i_iteration >= n_iterations_phase)
-                flag_continue = FALSE;
+                flag_continue = GBP_FALSE;
 
-        } // while flag_continue=TRUE
+        } // while flag_continue=GBP_TRUE
 
         // Report progress
         SID_log("Completed iterations in this phase: %d (%d requested)", SID_LOG_COMMENT, i_iteration, n_iterations_phase);

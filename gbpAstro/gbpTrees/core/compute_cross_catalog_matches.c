@@ -71,7 +71,7 @@ int compute_cross_catalog_matches(char *filename_root_in_1,
     int        flag_compute_header_subgroups;
     int        flag_compute_header_groups;
     int        flag_compute_header;
-    int        flag_sucessful_completion = TRUE;
+    int        flag_sucessful_completion = GBP_TRUE;
 
     if(!strcmp(filename_root_in_1, filename_root_in_2))
         SID_log("Processing matches for catalog {%s} bewtween snapshots #%03d and #%03d...",
@@ -92,7 +92,7 @@ int compute_cross_catalog_matches(char *filename_root_in_1,
     strcpy(filename_out_name, filename_root_out);
 
     // Check if all the needed files are present
-    int flag_all_inputs_present = TRUE;
+    int flag_all_inputs_present = GBP_TRUE;
     flag_all_inputs_present &= check_for_matching_input_files(filename_root_in_1, i_read_1);
     flag_all_inputs_present &= check_for_matching_input_files(filename_root_in_2, i_read_2);
 
@@ -125,7 +125,7 @@ int compute_cross_catalog_matches(char *filename_root_in_1,
     n_bits_PHK_2 = ((int *)ADaPS_fetch(plist2.data, "n_bits_PHK_%s", filename_cat2))[0];
     // SID_set_verbosity(SID_SET_VERBOSITY_DEFAULT);
     if(n_bits_PHK_1 != n_bits_PHK_2)
-        SID_trap_error("The PHK bit-sizeo of the two catalog's precomputed PHKs don't match (ie %d!=%d).", ERROR_LOGIC, n_bits_PHK_1, n_bits_PHK_2);
+        SID_trap_error("The PHK bit-sizeo of the two catalog's precomputed PHKs don't match (ie %d!=%d).", SID_ERROR_LOGIC, n_bits_PHK_1, n_bits_PHK_2);
 
     // First match one way, then the other
     int         k_order;

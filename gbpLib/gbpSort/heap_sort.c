@@ -25,7 +25,7 @@ void heap_sort(void *data_in, size_t n_data, size_t **index, SID_Datatype data_t
     else if(data_type == SID_DOUBLE)
         data_size = sizeof(double);
     else
-        SID_trap_error("Unsupported data type {%d}", ERROR_LOGIC, data_type);
+        SID_trap_error("Unsupported data type {%d}", SID_ERROR_LOGIC, data_type);
 
     // Allocate scratch space and sort indices (if needed)
     rra = SID_malloc(data_size);
@@ -37,9 +37,9 @@ void heap_sort(void *data_in, size_t n_data, size_t **index, SID_Datatype data_t
     } else {
         fprintf(stderr, "ERROR (heap_sort): flag_in_place {%d} must be SORT_COMPUTE_INPLACE||SORT_COMPUTE_NOT_INPLACE\n", flag_in_place);
     }
-    flag_indices_used = FALSE;
+    flag_indices_used = GBP_FALSE;
     if(flag_compute_index == SORT_COMPUTE_INDEX || flag_compute_index == SORT_COMPUTE_RANK) {
-        flag_indices_used = TRUE;
+        flag_indices_used = GBP_TRUE;
         idx_sort          = (size_t *)SID_malloc(sizeof(size_t) * n_data);
         for(i = 0; i < n_data; i++)
             idx_sort[i] = i;

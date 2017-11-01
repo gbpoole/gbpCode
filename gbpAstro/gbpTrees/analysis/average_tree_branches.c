@@ -16,7 +16,7 @@ void average_tree_branches(const char *catalog_name) {
     FILE *fp_tracks_in = NULL;
     if(SID.I_am_Master) {
         // Create and open the output files
-        char filename_tracks_in[MAX_FILENAME_LENGTH];
+        char filename_tracks_in[SID_MAX_FILENAME_LENGTH];
         sprintf(filename_tracks_in, "%s_tracks.dat", catalog_name);
         SID_log("Processing {%s}...", SID_LOG_OPEN, filename_tracks_in);
         fp_tracks_in = fopen(filename_tracks_in, "r");
@@ -89,7 +89,7 @@ void average_tree_branches(const char *catalog_name) {
             for(int i_bin = 0; i_bin < n_M_bins; i_bin++)
                 n_i[i_snap] += M_hist[i_snap][i_bin];
             if(n_i[i_snap] > 0) {
-                merge_sort(M_hist[i_snap], (size_t)n_M_bins, &M_hist_index, SID_INT, SORT_COMPUTE_INDEX, FALSE);
+                merge_sort(M_hist[i_snap], (size_t)n_M_bins, &M_hist_index, SID_INT, SORT_COMPUTE_INDEX, GBP_FALSE);
                 int i_peak  = M_hist_index[n_M_bins - 1];
                 int i_68_lo = M_hist_index[n_M_bins - 1];
                 int i_68_hi = M_hist_index[n_M_bins - 1];
@@ -117,7 +117,7 @@ void average_tree_branches(const char *catalog_name) {
         }
 
         // Write results
-        char  filename_out[MAX_FILENAME_LENGTH];
+        char  filename_out[SID_MAX_FILENAME_LENGTH];
         FILE *fp_out;
         sprintf(filename_out, "%s_tracks.txt", catalog_name);
         fp_out = fopen(filename_out, "w");

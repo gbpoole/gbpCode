@@ -41,19 +41,19 @@ void process_SSimPL_halos(render_info *render,
     i_read = render->trees->snap_list[i_read];
 
     // Set the filename roots
-    char filename_trees_root[MAX_FILENAME_LENGTH];
-    char filename_halos_root[MAX_FILENAME_LENGTH];
-    char filename_catalogs_root[MAX_FILENAME_LENGTH];
+    char filename_trees_root[SID_MAX_FILENAME_LENGTH];
+    char filename_halos_root[SID_MAX_FILENAME_LENGTH];
+    char filename_catalogs_root[SID_MAX_FILENAME_LENGTH];
     sprintf(filename_trees_root, "%s/trees/%s", render->filename_SSimPL_root, render->filename_trees_version);
     sprintf(filename_halos_root, "%s/halos/%s", render->filename_SSimPL_root, render->filename_halos_version);
     sprintf(filename_catalogs_root, "%s/catalogs/%s", render->filename_SSimPL_root, render->filename_halos_version);
 
     // Initialize filename paths
-    char filename_input_file_root[MAX_FILENAME_LENGTH];
-    char filename_input_dir_horizontal[MAX_FILENAME_LENGTH];
-    char filename_input_dir_horizontal_groups[MAX_FILENAME_LENGTH];
-    char filename_input_dir_horizontal_subgroups[MAX_FILENAME_LENGTH];
-    char filename_input_dir_horizontal_trees[MAX_FILENAME_LENGTH];
+    char filename_input_file_root[SID_MAX_FILENAME_LENGTH];
+    char filename_input_dir_horizontal[SID_MAX_FILENAME_LENGTH];
+    char filename_input_dir_horizontal_groups[SID_MAX_FILENAME_LENGTH];
+    char filename_input_dir_horizontal_subgroups[SID_MAX_FILENAME_LENGTH];
+    char filename_input_dir_horizontal_trees[SID_MAX_FILENAME_LENGTH];
     strcpy(filename_input_file_root, filename_trees_root);
     strip_path(filename_input_file_root);
     sprintf(filename_input_dir_horizontal, "%s/horizontal", filename_trees_root);
@@ -62,15 +62,15 @@ void process_SSimPL_halos(render_info *render,
     sprintf(filename_input_dir_horizontal_trees, "%s/trees", filename_input_dir_horizontal);
 
     // Open horizontal tree file
-    char   filename_in[MAX_FILENAME_LENGTH];
+    char   filename_in[SID_MAX_FILENAME_LENGTH];
     SID_fp fp_trees_in;
     sprintf(filename_in, "%s/horizontal_trees_%03d.dat", filename_input_dir_horizontal_trees, i_read);
     SID_fopen(filename_in, "r", &fp_trees_in);
 
     // Open the halo files
-    char   filename_input_halos_groups[MAX_FILENAME_LENGTH];
-    char   filename_input_halos_subgroups[MAX_FILENAME_LENGTH];
-    char   filename_ids[MAX_FILENAME_LENGTH];
+    char   filename_input_halos_groups[SID_MAX_FILENAME_LENGTH];
+    char   filename_input_halos_subgroups[SID_MAX_FILENAME_LENGTH];
+    char   filename_ids[SID_MAX_FILENAME_LENGTH];
     int    n_groups_cat;
     int    n_subgroups_cat;
     int    offset_size;
@@ -127,14 +127,14 @@ void process_SSimPL_halos(render_info *render,
     SID_fp_buffer *fp_groups_offset_buffer    = NULL;
     SID_fp_buffer *fp_trees_in_buffer         = NULL;
     size_t         n_bytes_trees              = sizeof(int) * ((8 * (size_t)n_groups) + (7 * (size_t)n_subgroups));
-    init_SID_fp_buffer(&fp_subgroups_length, (size_t)n_subgroups * sizeof(int), SIZE_OF_MEGABYTE, &fp_subgroups_length_buffer);
-    init_SID_fp_buffer(&fp_subgroups_offset, (size_t)n_subgroups * offset_size, SIZE_OF_MEGABYTE, &fp_subgroups_offset_buffer);
-    init_SID_fp_buffer(&fp_groups_length, (size_t)n_groups * sizeof(int), SIZE_OF_MEGABYTE, &fp_groups_length_buffer);
-    init_SID_fp_buffer(&fp_groups_offset, (size_t)n_groups * offset_size, SIZE_OF_MEGABYTE, &fp_groups_offset_buffer);
-    init_SID_fp_buffer(&fp_trees_in, n_bytes_trees, SIZE_OF_MEGABYTE, &fp_trees_in_buffer);
+    init_SID_fp_buffer(&fp_subgroups_length, (size_t)n_subgroups * sizeof(int), SID_SIZE_OF_MEGABYTE, &fp_subgroups_length_buffer);
+    init_SID_fp_buffer(&fp_subgroups_offset, (size_t)n_subgroups * offset_size, SID_SIZE_OF_MEGABYTE, &fp_subgroups_offset_buffer);
+    init_SID_fp_buffer(&fp_groups_length, (size_t)n_groups * sizeof(int), SID_SIZE_OF_MEGABYTE, &fp_groups_length_buffer);
+    init_SID_fp_buffer(&fp_groups_offset, (size_t)n_groups * offset_size, SID_SIZE_OF_MEGABYTE, &fp_groups_offset_buffer);
+    init_SID_fp_buffer(&fp_trees_in, n_bytes_trees, SID_SIZE_OF_MEGABYTE, &fp_trees_in_buffer);
 
     // Open IDs file and initialize the IDs array
-    int    flag_long_ids = TRUE;
+    int    flag_long_ids = GBP_TRUE;
     size_t n_ids         = 0;
     SID_fp fp_ids;
     if(i_pass) {
@@ -144,7 +144,7 @@ void process_SSimPL_halos(render_info *render,
             int n_ids_i;
             SID_fread_all(&n_ids_i, sizeof(int), 1, &fp_ids);
             n_ids         = (size_t)n_ids_i;
-            flag_long_ids = FALSE;
+            flag_long_ids = GBP_FALSE;
         } else
             SID_fread_all(&n_ids, sizeof(size_t), 1, &fp_ids);
     }
@@ -153,7 +153,7 @@ void process_SSimPL_halos(render_info *render,
     for(int i_group = 0; i_group < n_groups; i_group++) {
         int n_particles_group;
         SID_fread_all_buffer(&n_particles_group, sizeof(int), 1, fp_groups_length_buffer);
-        largest_group = MAX(largest_group, n_particles_group);
+        largest_group = GBP_MAX(largest_group, n_particles_group);
     }
 
     // Allocate IDs
@@ -192,10 +192,10 @@ void process_SSimPL_halos(render_info *render,
         SID_fread_all_buffer(&(group_i.n_particles_peak), sizeof(int), 1, fp_trees_in_buffer);
         SID_fread_all_buffer(&(group_i.n_subgroups), sizeof(int), 1, fp_trees_in_buffer);
         switch(flag_long_ids) {
-            case TRUE:
+            case GBP_TRUE:
                 SID_fread_all_buffer(&(group_i.offset), offset_size, 1, fp_groups_offset_buffer);
                 break;
-            case FALSE: {
+            case GBP_FALSE: {
                 int offset_i;
                 SID_fread_all_buffer(&offset_i, offset_size, 1, fp_groups_offset_buffer);
                 group_i.offset = (size_t)offset_i;
@@ -207,7 +207,7 @@ void process_SSimPL_halos(render_info *render,
         fread_catalog_file(&fp_properties_groups, NULL, NULL, &(group_i.properties), NULL, i_group);
 
         // Read each subgroup in turn
-        int             flag_group_ids_unread = TRUE;
+        int             flag_group_ids_unread = GBP_TRUE;
         int             j_subgroup;
         int             i_subgroup_valid;
         tree_node_info *group_node;
@@ -223,10 +223,10 @@ void process_SSimPL_halos(render_info *render,
             SID_fread_all_buffer(&(subgroup_i.file_index), sizeof(int), 1, fp_trees_in_buffer);
             SID_fread_all_buffer(&(subgroup_i.n_particles_peak), sizeof(int), 1, fp_trees_in_buffer);
             switch(flag_long_ids) {
-                case TRUE:
+                case GBP_TRUE:
                     SID_fread_all_buffer(&(subgroup_i.offset), offset_size, 1, fp_subgroups_offset_buffer);
                     break;
-                case FALSE: {
+                case GBP_FALSE: {
                     int offset_i;
                     SID_fread_all_buffer(&offset_i, offset_size, 1, fp_subgroups_offset_buffer);
                     subgroup_i.offset = (size_t)offset_i;
@@ -245,13 +245,13 @@ void process_SSimPL_halos(render_info *render,
                         SID_fseek(&fp_ids, (off_t)(group_i.offset - index_last_read), id_byte_size, SEEK_CUR);
                         SID_fread_all(ids, id_byte_size, group_i.n_particles, &fp_ids);
                         index_last_read       = (size_t)group_i.offset + (size_t)group_i.n_particles;
-                        flag_group_ids_unread = FALSE;
+                        flag_group_ids_unread = GBP_FALSE;
                     }
                     switch(flag_long_ids) {
-                        case TRUE:
+                        case GBP_TRUE:
                             subgroup_i.ids = &(ids_l[subgroup_i.offset - group_i.offset]);
                             break;
-                        case FALSE:
+                        case GBP_FALSE:
                             subgroup_i.ids = &(ids_i[subgroup_i.offset - group_i.offset]);
                             break;
                     }

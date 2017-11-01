@@ -27,7 +27,7 @@ void propagate_progenitor_info(int *        n_groups,
 
     // Sanity check
     if(n_wrap <= (2 * n_search + 1))
-        SID_trap_error("n_skip is not large enough in propagate_progenitor_info() (ie. %d<=%d)", ERROR_LOGIC, n_wrap, (2 * n_search + 1));
+        SID_trap_error("n_skip is not large enough in propagate_progenitor_info() (ie. %d<=%d)", SID_ERROR_LOGIC, n_wrap, (2 * n_search + 1));
 
     // Allocate new data structures for propagating information
     tree_horizontal_extended_info **subgroups_read;
@@ -42,7 +42,7 @@ void propagate_progenitor_info(int *        n_groups,
     // Loop over all the used snapshots (first set write counters to last-used values)
     int max_tree_id_subgroup;
     int max_tree_id_group;
-    int flag_init_write = TRUE;
+    int flag_init_write = GBP_TRUE;
     int i_read          = i_write_last;
     int j_read          = j_write_last;
     int l_read          = l_write_last;
@@ -83,12 +83,12 @@ void propagate_progenitor_info(int *        n_groups,
             // Sanity checks
             if(n_groups_in != n_groups[l_read])
                 SID_trap_error("n_groups!=what it should be (ie.%d!=%d).  This might be a problem with the snapshot indexing.",
-                               ERROR_LOGIC,
+                               SID_ERROR_LOGIC,
                                n_groups_in,
                                n_groups[l_read]);
             if(n_subgroups_in != n_subgroups[l_read])
                 SID_trap_error("n_subgroups!=what it should be (ie.%d!=%d).  This might be a problem with the snapshot indexing.",
-                               ERROR_LOGIC,
+                               SID_ERROR_LOGIC,
                                n_subgroups_in,
                                n_subgroups[l_read]);
         }
@@ -225,7 +225,7 @@ void propagate_progenitor_info(int *        n_groups,
                 i_write++;
                 l_write--;
                 j_write += i_read_step;
-                flag_init_write = FALSE;
+                flag_init_write = GBP_FALSE;
             }
         }
     }

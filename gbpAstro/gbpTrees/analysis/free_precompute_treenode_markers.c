@@ -17,7 +17,7 @@ void free_precompute_treenode_markers(tree_info *trees, int mode) {
     else if(check_mode_for_flag(mode, PRECOMPUTE_TREENODE_MARKER_SUBGROUPS))
         markers = trees->subgroup_markers;
     else
-        SID_trap_error("Neither group nor subgroup mode is set in init_treenode_markers_all() when one is needed.", ERROR_LOGIC);
+        SID_trap_error("Neither group nor subgroup mode is set in init_treenode_markers_all() when one is needed.", SID_ERROR_LOGIC);
 
     // Perform deallocation
     if(markers != NULL) {

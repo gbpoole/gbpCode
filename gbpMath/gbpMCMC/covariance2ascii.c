@@ -8,10 +8,10 @@
 #include <gbpMCMC.h>
 
 int main(int argc, char *argv[]) {
-    char   filename_in1[MAX_FILENAME_LENGTH];
-    char   filename_in2[MAX_FILENAME_LENGTH];
-    char   filename_in_root[MAX_FILENAME_LENGTH];
-    char   filename_out[MAX_FILENAME_LENGTH];
+    char   filename_in1[SID_MAX_FILENAME_LENGTH];
+    char   filename_in2[SID_MAX_FILENAME_LENGTH];
+    char   filename_in_root[SID_MAX_FILENAME_LENGTH];
+    char   filename_out[SID_MAX_FILENAME_LENGTH];
     int    n_iterations_file_total, n_iterations_file_burn;
     double temperature;
     FILE * fp_in1;
@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
         SID_log("n_iterations_file_burn  = %d", SID_LOG_COMMENT, n_iterations_file_burn);
         SID_log("temperature             = %.3f", SID_LOG_COMMENT, temperature);
     } else
-        SID_trap_error("Could not open file {%s}.", ERROR_IO_READ, filename_in1);
+        SID_trap_error("Could not open file {%s}.", SID_ERROR_IO_READ, filename_in1);
 
     SID_log("Converting covariance matrix file to ascii format...", SID_LOG_OPEN);
     if((fp_in2 = fopen(filename_in2, "r")) != NULL) {
@@ -52,10 +52,10 @@ int main(int argc, char *argv[]) {
             }
         }
     } else
-        SID_trap_error("Could not open file {%s}.", ERROR_IO_READ, filename_in2);
+        SID_trap_error("Could not open file {%s}.", SID_ERROR_IO_READ, filename_in2);
     SID_log("Done.", SID_LOG_CLOSE);
     fclose(fp_in1);
     fclose(fp_in2);
     fclose(fp_out);
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

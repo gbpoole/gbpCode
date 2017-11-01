@@ -33,9 +33,9 @@ void write_gadget_bin(char *filename_out, plist_info *plist) {
                         GBPREAL *z        = (GBPREAL *)ADaPS_fetch(plist->data, "z_%s", plist->species[i_species]);
                         size_t * id       = (size_t *)ADaPS_fetch(plist->data, "id_%s", plist->species[i_species]);
                         size_t * id_index = NULL;
-                        merge_sort(id, n_p, &id_index, SID_SIZE_T, SORT_COMPUTE_INDEX, FALSE);
+                        merge_sort(id, n_p, &id_index, SID_SIZE_T, SORT_COMPUTE_INDEX, GBP_FALSE);
                         for(int i_p = 0; i_p < n_p_all; i_p++) {
-                            int flag = FALSE;
+                            int flag = GBP_FALSE;
                             if(j_p < n_p) {
                                 size_t index = id_index[j_p];
                                 if(id[index] == i_p) {
@@ -48,13 +48,13 @@ void write_gadget_bin(char *filename_out, plist_info *plist) {
                                     fwrite(&z_i, sizeof(float), 1, fp_out);
                                     // fprintf(fp_out,"%3d %le %le %le\n",id[index],x_i,y_i,z_i);
                                     j_p++;
-                                    flag = TRUE;
+                                    flag = GBP_TRUE;
                                 }
                             }
                             int n_write = 0;
                             SID_Allreduce(&flag, &n_write, 1, SID_INT, SID_SUM, SID.COMM_WORLD);
                             if(n_write != 1)
-                                SID_trap_error("Particle %d was not written correctly.", ERROR_LOGIC, i_p);
+                                SID_trap_error("Particle %d was not written correctly.", SID_ERROR_LOGIC, i_p);
                         }
                     }
                 }

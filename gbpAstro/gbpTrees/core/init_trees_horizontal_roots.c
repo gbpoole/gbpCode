@@ -52,7 +52,7 @@ void init_trees_horizontal_roots(tree_horizontal_info **groups,
                  match_index,
                  NULL,
                  f_match_moment_diff_min,
-                 TRUE);
+                 GBP_TRUE);
 
     int n_groups = n_halos_1_matches;
 
@@ -66,36 +66,36 @@ void init_trees_horizontal_roots(tree_horizontal_info **groups,
             groups[i_search][i_group].n_back_matches                    = 0;
             groups[i_search][i_group].descendant.halo                   = NULL;
             groups[i_search][i_group].descendant.score                  = 0.;
-            groups[i_search][i_group].descendant.flag_two_way           = FALSE;
-            groups[i_search][i_group].descendant.flag_back_match        = FALSE;
+            groups[i_search][i_group].descendant.flag_two_way           = GBP_FALSE;
+            groups[i_search][i_group].descendant.flag_back_match        = GBP_FALSE;
             groups[i_search][i_group].first_progenitor.halo             = NULL;
             groups[i_search][i_group].first_progenitor.score            = 0.;
-            groups[i_search][i_group].first_progenitor.flag_two_way     = FALSE;
-            groups[i_search][i_group].first_progenitor.flag_back_match  = FALSE;
+            groups[i_search][i_group].first_progenitor.flag_two_way     = GBP_FALSE;
+            groups[i_search][i_group].first_progenitor.flag_back_match  = GBP_FALSE;
             groups[i_search][i_group].last_progenitor.halo              = NULL;
             groups[i_search][i_group].last_progenitor.score             = 0.;
-            groups[i_search][i_group].last_progenitor.flag_two_way      = FALSE;
-            groups[i_search][i_group].last_progenitor.flag_back_match   = FALSE;
+            groups[i_search][i_group].last_progenitor.flag_two_way      = GBP_FALSE;
+            groups[i_search][i_group].last_progenitor.flag_back_match   = GBP_FALSE;
             groups[i_search][i_group].next_progenitor.halo              = NULL;
             groups[i_search][i_group].next_progenitor.score             = 0.;
-            groups[i_search][i_group].next_progenitor.flag_two_way      = FALSE;
-            groups[i_search][i_group].next_progenitor.flag_back_match   = FALSE;
+            groups[i_search][i_group].next_progenitor.flag_two_way      = GBP_FALSE;
+            groups[i_search][i_group].next_progenitor.flag_back_match   = GBP_FALSE;
             groups[i_search][i_group].forematch_first.halo              = NULL;
             groups[i_search][i_group].forematch_first.score             = 0.;
-            groups[i_search][i_group].forematch_first.flag_two_way      = FALSE;
-            groups[i_search][i_group].forematch_first.flag_back_match   = FALSE;
+            groups[i_search][i_group].forematch_first.flag_two_way      = GBP_FALSE;
+            groups[i_search][i_group].forematch_first.flag_back_match   = GBP_FALSE;
             groups[i_search][i_group].forematch_default.halo            = NULL;
             groups[i_search][i_group].forematch_default.score           = 0.;
-            groups[i_search][i_group].forematch_default.flag_two_way    = FALSE;
-            groups[i_search][i_group].forematch_default.flag_back_match = FALSE;
+            groups[i_search][i_group].forematch_default.flag_two_way    = GBP_FALSE;
+            groups[i_search][i_group].forematch_default.flag_back_match = GBP_FALSE;
             groups[i_search][i_group].forematch_best.halo               = NULL;
             groups[i_search][i_group].forematch_best.score              = 0.;
-            groups[i_search][i_group].forematch_best.flag_two_way       = FALSE;
-            groups[i_search][i_group].forematch_best.flag_back_match    = FALSE;
+            groups[i_search][i_group].forematch_best.flag_two_way       = GBP_FALSE;
+            groups[i_search][i_group].forematch_best.flag_back_match    = GBP_FALSE;
             groups[i_search][i_group].bridge_backmatch.halo             = NULL;
             groups[i_search][i_group].bridge_backmatch.score            = 0.;
-            groups[i_search][i_group].bridge_backmatch.flag_two_way     = FALSE;
-            groups[i_search][i_group].bridge_backmatch.flag_back_match  = FALSE;
+            groups[i_search][i_group].bridge_backmatch.flag_two_way     = GBP_FALSE;
+            groups[i_search][i_group].bridge_backmatch.flag_back_match  = GBP_FALSE;
             groups[i_search][i_group].back_matches                      = NULL;
             groups[i_search][i_group].type                              = TREE_CASE_INVALID;
             groups[i_search][i_group].id                                = -1;
@@ -153,7 +153,7 @@ void init_trees_horizontal_roots(tree_horizontal_info **groups,
                  match_index,
                  NULL,
                  f_match_moment_diff_min,
-                 TRUE);
+                 GBP_TRUE);
 
     int n_subgroups = n_halos_1_matches;
     int i_subgroup;
@@ -178,36 +178,36 @@ void init_trees_horizontal_roots(tree_horizontal_info **groups,
             subgroups[i_search][i_subgroup].n_back_matches                    = 0;
             subgroups[i_search][i_subgroup].descendant.halo                   = NULL;
             subgroups[i_search][i_subgroup].descendant.score                  = 0.;
-            subgroups[i_search][i_subgroup].descendant.flag_two_way           = FALSE;
-            subgroups[i_search][i_subgroup].descendant.flag_back_match        = FALSE;
+            subgroups[i_search][i_subgroup].descendant.flag_two_way           = GBP_FALSE;
+            subgroups[i_search][i_subgroup].descendant.flag_back_match        = GBP_FALSE;
             subgroups[i_search][i_subgroup].first_progenitor.halo             = NULL;
             subgroups[i_search][i_subgroup].first_progenitor.score            = 0.;
-            subgroups[i_search][i_subgroup].first_progenitor.flag_two_way     = FALSE;
-            subgroups[i_search][i_subgroup].first_progenitor.flag_back_match  = FALSE;
+            subgroups[i_search][i_subgroup].first_progenitor.flag_two_way     = GBP_FALSE;
+            subgroups[i_search][i_subgroup].first_progenitor.flag_back_match  = GBP_FALSE;
             subgroups[i_search][i_subgroup].last_progenitor.halo              = NULL;
             subgroups[i_search][i_subgroup].last_progenitor.score             = 0.;
-            subgroups[i_search][i_subgroup].last_progenitor.flag_two_way      = FALSE;
-            subgroups[i_search][i_subgroup].last_progenitor.flag_back_match   = FALSE;
+            subgroups[i_search][i_subgroup].last_progenitor.flag_two_way      = GBP_FALSE;
+            subgroups[i_search][i_subgroup].last_progenitor.flag_back_match   = GBP_FALSE;
             subgroups[i_search][i_subgroup].next_progenitor.halo              = NULL;
             subgroups[i_search][i_subgroup].next_progenitor.score             = 0.;
-            subgroups[i_search][i_subgroup].next_progenitor.flag_two_way      = FALSE;
-            subgroups[i_search][i_subgroup].next_progenitor.flag_back_match   = FALSE;
+            subgroups[i_search][i_subgroup].next_progenitor.flag_two_way      = GBP_FALSE;
+            subgroups[i_search][i_subgroup].next_progenitor.flag_back_match   = GBP_FALSE;
             subgroups[i_search][i_subgroup].forematch_first.halo              = NULL;
             subgroups[i_search][i_subgroup].forematch_first.score             = 0.;
-            subgroups[i_search][i_subgroup].forematch_first.flag_two_way      = FALSE;
-            subgroups[i_search][i_subgroup].forematch_first.flag_back_match   = FALSE;
+            subgroups[i_search][i_subgroup].forematch_first.flag_two_way      = GBP_FALSE;
+            subgroups[i_search][i_subgroup].forematch_first.flag_back_match   = GBP_FALSE;
             subgroups[i_search][i_subgroup].forematch_default.halo            = NULL;
             subgroups[i_search][i_subgroup].forematch_default.score           = 0.;
-            subgroups[i_search][i_subgroup].forematch_default.flag_two_way    = FALSE;
-            subgroups[i_search][i_subgroup].forematch_default.flag_back_match = FALSE;
+            subgroups[i_search][i_subgroup].forematch_default.flag_two_way    = GBP_FALSE;
+            subgroups[i_search][i_subgroup].forematch_default.flag_back_match = GBP_FALSE;
             subgroups[i_search][i_subgroup].forematch_best.halo               = NULL;
             subgroups[i_search][i_subgroup].forematch_best.score              = 0.;
-            subgroups[i_search][i_subgroup].forematch_best.flag_two_way       = FALSE;
-            subgroups[i_search][i_subgroup].forematch_best.flag_back_match    = FALSE;
+            subgroups[i_search][i_subgroup].forematch_best.flag_two_way       = GBP_FALSE;
+            subgroups[i_search][i_subgroup].forematch_best.flag_back_match    = GBP_FALSE;
             subgroups[i_search][i_subgroup].bridge_backmatch.halo             = NULL;
             subgroups[i_search][i_subgroup].bridge_backmatch.score            = 0.;
-            subgroups[i_search][i_subgroup].bridge_backmatch.flag_two_way     = FALSE;
-            subgroups[i_search][i_subgroup].bridge_backmatch.flag_back_match  = FALSE;
+            subgroups[i_search][i_subgroup].bridge_backmatch.flag_two_way     = GBP_FALSE;
+            subgroups[i_search][i_subgroup].bridge_backmatch.flag_back_match  = GBP_FALSE;
             subgroups[i_search][i_subgroup].back_matches                      = NULL;
             subgroups[i_search][i_subgroup].type                              = TREE_CASE_INVALID;
             subgroups[i_search][i_subgroup].id                                = -1;

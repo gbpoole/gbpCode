@@ -42,11 +42,11 @@ int swap_endian_snapshot(const char *filename_in_root,
 
     // Sanity check
     if(check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE) && check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE))
-        SID_trap_error("Invalid mode flag (%d) in swap_endian_catalogs_properties_local().", ERROR_LOGIC, mode);
+        SID_trap_error("Invalid mode flag (%d) in swap_endian_catalogs_properties_local().", SID_ERROR_LOGIC, mode);
 
     // Set filenames
-    char filename_in[MAX_FILENAME_LENGTH];
-    char filename_out[MAX_FILENAME_LENGTH];
+    char filename_in[SID_MAX_FILENAME_LENGTH];
+    char filename_out[SID_MAX_FILENAME_LENGTH];
     if(region_number < 0) {
         sprintf(filename_in, "%s/snapshots/snapshot_%03d/snapshot_%03d.%d", filename_in_root, snap_number, snap_number, 0);
         sprintf(filename_out, "%s/snapshots/snapshot_%03d/snapshot_%03d.%d", filename_out_root, snap_number, snap_number, 0);
@@ -72,7 +72,7 @@ int swap_endian_snapshot(const char *filename_in_root,
     // Open input and output files
     FILE *fp_in     = NULL;
     FILE *fp_out    = NULL;
-    int   flag_type = FALSE;
+    int   flag_type = GBP_FALSE;
     if((fp_in = fopen(filename_in, "r")) == NULL) {
         if(region_number < 0)
             sprintf(filename_in, "%s/snapshots/snapshot_%03d", filename_in_root, snap_number);
@@ -80,11 +80,11 @@ int swap_endian_snapshot(const char *filename_in_root,
             sprintf(filename_in, "%s/snapshots/snapshot_region%03d_%03d", filename_in_root, region_number, snap_number);
         if((fp_in = fopen(filename_in, "r")) == NULL) {
             SID_log("not present.", SID_LOG_CLOSE);
-            return (FALSE);
+            return (GBP_FALSE);
         }
-        flag_type = TRUE;
+        flag_type = GBP_TRUE;
     } else {
-        char filename_dir[MAX_FILENAME_LENGTH];
+        char filename_dir[SID_MAX_FILENAME_LENGTH];
         if(region_number < 0)
             sprintf(filename_dir, "%s/snapshots/snapshot_%03d", filename_out_root, snap_number);
         else
@@ -111,7 +111,7 @@ int swap_endian_snapshot(const char *filename_in_root,
     //    this out with)
     int IDs_byte_size        = 0;
     int n_particles_file     = 0;
-    int flag_ID_size_not_set = TRUE;
+    int flag_ID_size_not_set = GBP_TRUE;
     for(int i_file = 0; i_file < n_files && flag_ID_size_not_set; i_file++) {
         if(flag_type) {
             if(region_number < 0) {
@@ -145,7 +145,7 @@ int swap_endian_snapshot(const char *filename_in_root,
             }
         }
         if((fp_in = fopen(filename_in, "r")) == NULL)
-            SID_trap_error("Could not open {%s} for reading.", ERROR_IO_OPEN, filename_in);
+            SID_trap_error("Could not open {%s} for reading.", SID_ERROR_IO_OPEN, filename_in);
         fread_verify(&block_size_in, sizeof(int), 1, fp_in);
         fread_verify(&header, sizeof(gadget_header_info), 1, fp_in);
         fread_verify(&block_size_out, sizeof(int), 1, fp_in);
@@ -163,16 +163,16 @@ int swap_endian_snapshot(const char *filename_in_root,
             else if(n_particles_file == (block_size_in / sizeof(long long)))
                 IDs_byte_size = sizeof(long long);
             else
-                SID_trap_error("Can not determine particle ID size from IDs block size (%d).", ERROR_LOGIC, block_size_in);
+                SID_trap_error("Can not determine particle ID size from IDs block size (%d).", SID_ERROR_LOGIC, block_size_in);
             SID_log("%d-byte IDs...", SID_LOG_CONTINUE, IDs_byte_size);
-            flag_ID_size_not_set = FALSE;
+            flag_ID_size_not_set = GBP_FALSE;
         }
         fclose(fp_in);
     }
 
     // Sanity check
     if(flag_type && n_files != 1)
-        SID_trap_error("Single file format dataset {%s} has n_files=%d (ie !=1) in its header.", ERROR_LOGIC, filename_in, n_files);
+        SID_trap_error("Single file format dataset {%s} has n_files=%d (ie !=1) in its header.", SID_ERROR_LOGIC, filename_in, n_files);
 
     int i_file;
     for(i_file = 0; i_file < n_files; i_file++) {
@@ -209,9 +209,9 @@ int swap_endian_snapshot(const char *filename_in_root,
             }
         }
         if((fp_in = fopen(filename_in, "r")) == NULL)
-            SID_trap_error("Could not open {%s} for reading.", ERROR_IO_OPEN, filename_in);
+            SID_trap_error("Could not open {%s} for reading.", SID_ERROR_IO_OPEN, filename_in);
         if((fp_out = fopen(filename_out, "w")) == NULL)
-            SID_trap_error("Could not open {%s} for writing.", ERROR_IO_OPEN, filename_out);
+            SID_trap_error("Could not open {%s} for writing.", SID_ERROR_IO_OPEN, filename_out);
 
         // Allocate buffer
         char *buffer = (char *)SID_malloc(sizeof(double) * 3);
@@ -255,5 +255,5 @@ int swap_endian_snapshot(const char *filename_in_root,
 
     (*IDs_byte_size_return) = IDs_byte_size;
     SID_log("Done.", SID_LOG_CLOSE);
-    return (TRUE);
+    return (GBP_TRUE);
 }

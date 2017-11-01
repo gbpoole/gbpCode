@@ -12,7 +12,7 @@ void write_frame(render_info *render, int frame, int mode) {
     SID_log("Writing rendered frame...", SID_LOG_OPEN | SID_LOG_TIMER);
 
     // Create directory if needed
-    char filename_out_dir_raw[MAX_FILENAME_LENGTH];
+    char filename_out_dir_raw[SID_MAX_FILENAME_LENGTH];
     sprintf(filename_out_dir_raw, "%s/raw", render->filename_out_dir);
     mkdir(render->filename_out_dir, 02755);
     mkdir(filename_out_dir_raw, 02755);
@@ -63,21 +63,21 @@ void write_frame(render_info *render, int frame, int mode) {
             image_RGBY_MARKED = render->camera->image_RGBY_MARKED;
             stereo_offset_dir = 0;
         } else
-            SID_trap_error("Undefined image set index in read_frame().", ERROR_LOGIC);
+            SID_trap_error("Undefined image set index in read_frame().", SID_ERROR_LOGIC);
 
         // Compute the depth for this stereo iteration
         set_camera_depths(render, stereo_offset_dir);
 
         // Write a set of images for each depth
-        int flag_iteration_used = FALSE;
+        int flag_iteration_used = GBP_FALSE;
         for(int i_depth = 0; i_depth < render->camera->n_depth; i_depth++) {
-            char filename_RGB[MAX_FILENAME_LENGTH];
-            char filename_Y[MAX_FILENAME_LENGTH];
-            char filename_RGBY[MAX_FILENAME_LENGTH];
-            char filename_RGBY_MARKED[MAX_FILENAME_LENGTH];
-            char filename_RY[MAX_FILENAME_LENGTH];
-            char filename_GY[MAX_FILENAME_LENGTH];
-            char filename_BY[MAX_FILENAME_LENGTH];
+            char filename_RGB[SID_MAX_FILENAME_LENGTH];
+            char filename_Y[SID_MAX_FILENAME_LENGTH];
+            char filename_RGBY[SID_MAX_FILENAME_LENGTH];
+            char filename_RGBY_MARKED[SID_MAX_FILENAME_LENGTH];
+            char filename_RY[SID_MAX_FILENAME_LENGTH];
+            char filename_GY[SID_MAX_FILENAME_LENGTH];
+            char filename_BY[SID_MAX_FILENAME_LENGTH];
             int  mode_png = mode;
             if(i_depth == 0) {
                 sprintf(filename_RGB, "RGB_%s_%05d", set_label, frame);
@@ -99,31 +99,31 @@ void write_frame(render_info *render, int frame, int mode) {
             }
             if(image_RGB != NULL) {
                 write_image(image_RGB[i_depth], render->filename_out_dir, filename_RGB, mode & (~WRITE_IMAGE_PNG));
-                flag_iteration_used = TRUE;
+                flag_iteration_used = GBP_TRUE;
             }
             if(image_Y != NULL) {
                 write_image(image_Y[i_depth], render->filename_out_dir, filename_Y, mode & (~WRITE_IMAGE_PNG));
-                flag_iteration_used = TRUE;
+                flag_iteration_used = GBP_TRUE;
             }
             if(image_RGBY != NULL) {
                 write_image(image_RGBY[i_depth], render->filename_out_dir, filename_RGBY, mode_png);
-                flag_iteration_used = TRUE;
+                flag_iteration_used = GBP_TRUE;
             }
             if(image_RY != NULL) {
                 write_image(image_RY[i_depth], render->filename_out_dir, filename_RY, mode & (~WRITE_IMAGE_PNG));
-                flag_iteration_used = TRUE;
+                flag_iteration_used = GBP_TRUE;
             }
             if(image_GY != NULL) {
                 write_image(image_GY[i_depth], render->filename_out_dir, filename_GY, mode & (~WRITE_IMAGE_PNG));
-                flag_iteration_used = TRUE;
+                flag_iteration_used = GBP_TRUE;
             }
             if(image_BY != NULL) {
                 write_image(image_BY[i_depth], render->filename_out_dir, filename_BY, mode & (~WRITE_IMAGE_PNG));
-                flag_iteration_used = TRUE;
+                flag_iteration_used = GBP_TRUE;
             }
             if(image_RGBY_MARKED != NULL) {
                 write_image(image_RGBY_MARKED[i_depth], render->filename_out_dir, filename_RGBY_MARKED, mode_png);
-                flag_iteration_used = TRUE;
+                flag_iteration_used = GBP_TRUE;
             }
         }
 

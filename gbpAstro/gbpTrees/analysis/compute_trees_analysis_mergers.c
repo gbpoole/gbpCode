@@ -32,7 +32,7 @@ void compute_trees_analysis_mergers(tree_info *trees, char *filename_out_root_in
         neighbour_list_start = trees->first_neighbour_subgroups;
     }
 
-    char filename_out_root[MAX_FILENAME_LENGTH];
+    char filename_out_root[SID_MAX_FILENAME_LENGTH];
     sprintf(filename_out_root, "%s_%sgroup", filename_out_root_in, group_prefix);
 
     SID_log("Performing %sgroup merger analysis...", SID_LOG_OPEN | SID_LOG_TIMER, group_prefix);

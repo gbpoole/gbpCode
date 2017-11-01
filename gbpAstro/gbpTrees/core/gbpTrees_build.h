@@ -12,63 +12,63 @@
 
 // Tree finalization and reading modes
 #define TREE_READ_DEFAULT 0
-#define TREE_SUBSTRUCTURE_ORDER_DEFAULT TTTP00
-#define TREE_PROGENITOR_ORDER_DELUCIA TTTP01
-#define TREE_PROGENITOR_ORDER_N_PARTICLES TTTP02
-#define TREE_PROGENITOR_ORDER_N_PARTICLES_INCLUSIVE TTTP03
-#define TREE_PROGENITOR_ORDER_N_PARTICLES_PEAK TTTP04
-#define TREE_PROGENITOR_ORDER_N_PARTICLES_INCLUSIVE_PEAK TTTP05
-#define TREE_READ_EXTENDED_POINTERS TTTP06
-#define TREE_READ_HEADER_ONLY TTTP07
-#define TREE_MODE_REFERENCE TTTP08
-#define TREE_MODE_SUBSTRUCTURE_HIERARCHY_ON TTTP09
+#define TREE_SUBSTRUCTURE_ORDER_DEFAULT SID_TTTP00
+#define TREE_PROGENITOR_ORDER_DELUCIA SID_TTTP01
+#define TREE_PROGENITOR_ORDER_N_PARTICLES SID_TTTP02
+#define TREE_PROGENITOR_ORDER_N_PARTICLES_INCLUSIVE SID_TTTP03
+#define TREE_PROGENITOR_ORDER_N_PARTICLES_PEAK SID_TTTP04
+#define TREE_PROGENITOR_ORDER_N_PARTICLES_INCLUSIVE_PEAK SID_TTTP05
+#define TREE_READ_EXTENDED_POINTERS SID_TTTP06
+#define TREE_READ_HEADER_ONLY SID_TTTP07
+#define TREE_MODE_REFERENCE SID_TTTP08
+#define TREE_MODE_SUBSTRUCTURE_HIERARCHY_ON SID_TTTP09
 #define TREE_PROGENITOR_ORDER_DEFAULT TREE_PROGENITOR_ORDER_N_PARTICLES_PEAK
 #define TREE_MODE_DEFAULT (TREE_SUBSTRUCTURE_ORDER_DEFAULT | TREE_PROGENITOR_ORDER_DEFAULT | TREE_MODE_SUBSTRUCTURE_HIERARCHY_ON)
 
 // If any of these are changed, don't forget to modify parse_match_type.c (TTTPXX means "two-to-the-power-XX")
-#define TREE_CASE_NO_PROGENITORS TTTP00  // Set for halos that have no progenitors.
-#define TREE_CASE_MAIN_PROGENITOR TTTP01 // Set for the progenitor with the highest match score.
-#define TREE_CASE_MOST_MASSIVE TTTP02    // Marks the most massive substructure.
-#define TREE_CASE_DOMINANT TTTP03        // Marks the dominant     substructure.
-#define TREE_CASE_REMNANT TTTP04         // Set for halos with more than one progenitor.
-#define TREE_CASE_MERGER_PRIMARY TTTP05  // Set when a halo is deemed to be the primary   progenitor of a merger
-#define TREE_CASE_MERGER TTTP06          // Set when a halo is deemed to be the secondary progenitor of a merger
-#define TREE_CASE_STRAYED TTTP07         // Set for halos for which a descendant was not found
-#define TREE_CASE_DROPPED TTTP08         // Set if file_offset>1 and TREE_CASE_MATCHED_TO_BRIDGE is not set
-#define TREE_CASE_BRIDGED TTTP09         // Set for halos with multiple unique back-matches from halos with unique IDs
-#define TREE_CASE_EMERGED TTTP10         // Set when a match is made identifying this halo as emerged
+#define TREE_CASE_NO_PROGENITORS SID_TTTP00  // Set for halos that have no progenitors.
+#define TREE_CASE_MAIN_PROGENITOR SID_TTTP01 // Set for the progenitor with the highest match score.
+#define TREE_CASE_MOST_MASSIVE SID_TTTP02    // Marks the most massive substructure.
+#define TREE_CASE_DOMINANT SID_TTTP03        // Marks the dominant     substructure.
+#define TREE_CASE_REMNANT SID_TTTP04         // Set for halos with more than one progenitor.
+#define TREE_CASE_MERGER_PRIMARY SID_TTTP05  // Set when a halo is deemed to be the primary   progenitor of a merger
+#define TREE_CASE_MERGER SID_TTTP06          // Set when a halo is deemed to be the secondary progenitor of a merger
+#define TREE_CASE_STRAYED SID_TTTP07         // Set for halos for which a descendant was not found
+#define TREE_CASE_DROPPED SID_TTTP08         // Set if file_offset>1 and TREE_CASE_MATCHED_TO_BRIDGE is not set
+#define TREE_CASE_BRIDGED SID_TTTP09         // Set for halos with multiple unique back-matches from halos with unique IDs
+#define TREE_CASE_EMERGED SID_TTTP10         // Set when a match is made identifying this halo as emerged
 #define TREE_CASE_FRAGMENTED_NEW \
-    TTTP11 // Set for halos that have been marked TREE_CASE_EMERGED_CANDIDATE but not TREE_CASE_EMERGED
+    SID_TTTP11 // Set for halos that have been marked TREE_CASE_EMERGED_CANDIDATE but not TREE_CASE_EMERGED
            //    (unless it's the backmatch with the most massive descendant; that halo is considered
            //     to be the source of any fragmented halos)
 #define TREE_CASE_FRAGMENTED_STRAYED \
-    TTTP12 // Set for halos that are marked TREE_CASE_FRAGMENTED (see below), and whose
+    SID_TTTP12 // Set for halos that are marked TREE_CASE_FRAGMENTED (see below), and whose
            //    decendant_id!=a valid id (ie they are not a progenitor of anything).
 #define TREE_CASE_FRAGMENTED_NORMAL \
-    TTTP13 // Set for halos that are marked TREE_CASE_FRAGMENTED (see below), but
+    SID_TTTP13 // Set for halos that are marked TREE_CASE_FRAGMENTED (see below), but
            //    are otherwise part of a connected progenitor line
 #define TREE_CASE_FRAGMENTED_OTHER \
-    TTTP14 // Currently unused.  Saved for future use when we may mark other types of fragmented
+    SID_TTTP14 // Currently unused.  Saved for future use when we may mark other types of fragmented
            //    halos (relic fragmented halos, for example).
 #define TREE_CASE_EMERGED_CANDIDATE \
-    TTTP15                                  // Set when a halo is identified as a unique back-match to a halo marked TREE_CASE_BRIDGED and
+    SID_TTTP15                                  // Set when a halo is identified as a unique back-match to a halo marked TREE_CASE_BRIDGED and
                                             //    is not selected as the bridged halo's descendant.  This switch is turned off if the halo
                                             //    is marked TREE_CASE_EMERGED or TREE_CASE_FRAGMENTED_NEW.
-#define TREE_CASE_MATCHED_TO_EMERGED TTTP16 // Set when a halo is matched to an emerged halo
-#define TREE_CASE_2WAY_MATCH TTTP17         // Set when the match between a halo and it's descendant is mutual
+#define TREE_CASE_MATCHED_TO_EMERGED SID_TTTP16 // Set when a halo is matched to an emerged halo
+#define TREE_CASE_2WAY_MATCH SID_TTTP17         // Set when the match between a halo and it's descendant is mutual
 #define TREE_CASE_SET_BY_BACKMATCH \
-    TTTP18                                // Set in cases where a descendant was set using backmatch information, rather
+    SID_TTTP18                                // Set in cases where a descendant was set using backmatch information, rather
                                           //    than forematch information.  In these cases, the halo's given matching score and
                                           //    2way flag are from the back match info, not the forematch info.
-#define TREE_CASE_DOMINANT_DROPPED TTTP19 // Marks a group whose dominant substructure is presently dropped
-#define TREE_CASE_GHOST TTTP20            // Marks ghost halos in ghost-populated trees
+#define TREE_CASE_DOMINANT_DROPPED SID_TTTP19 // Marks a group whose dominant substructure is presently dropped
+#define TREE_CASE_GHOST SID_TTTP20            // Marks ghost halos in ghost-populated trees
 #define TREE_CASE_GHOST_NULL \
-    TTTP21                               // Marks a ghost halo where a subgroup is it's own group.
+    SID_TTTP21                               // Marks a ghost halo where a subgroup is it's own group.
                                          //    This is a default behaviour that occurs when a group is strayed but one of
                                          //    it's subgroups isn't.
-#define TREE_CASE_REINIT_DOMINANT TTTP22 // For internal use.  This should never be seen in the output.
-#define TREE_CASE_UNPROCESSED TTTP23     // For internal use.  This should never be seen in the output.
-#define TREE_CASE_INVALID TTTP24         // For internal use.  This should never be seen in the output.
+#define TREE_CASE_REINIT_DOMINANT SID_TTTP22 // For internal use.  This should never be seen in the output.
+#define TREE_CASE_UNPROCESSED SID_TTTP23     // For internal use.  This should never be seen in the output.
+#define TREE_CASE_INVALID SID_TTTP24         // For internal use.  This should never be seen in the output.
 
 #ifdef _MAIN
 int n_tree_case_flag_list = 23;
@@ -111,11 +111,11 @@ extern const char *tree_case_flag_list_text[];
 #define INIT_TREE_DATA_GROUPS 1
 #define INIT_TREE_DATA_DEFAULT INIT_TREE_DATA_SUBGROUPS
 
-#define READ_TREES_CATALOGS_SUBGROUPS TTTP01
-#define READ_TREES_CATALOGS_GROUPS TTTP02
-#define READ_TREES_CATALOGS_PROFILES TTTP03
-#define READ_TREES_CATALOGS_SAGE TTTP04
-#define READ_TREES_CATALOGS_SHORT TTTP05
+#define READ_TREES_CATALOGS_SUBGROUPS SID_TTTP01
+#define READ_TREES_CATALOGS_GROUPS SID_TTTP02
+#define READ_TREES_CATALOGS_PROFILES SID_TTTP03
+#define READ_TREES_CATALOGS_SAGE SID_TTTP04
+#define READ_TREES_CATALOGS_SHORT SID_TTTP05
 #define READ_TREES_CATALOGS_BOTH (READ_TREES_CATALOGS_GROUPS | READ_TREES_CATALOGS_SUBGROUPS)
 #define READ_TREES_CATALOGS_ALL (READ_TREES_CATALOGS_BOTH) | READ_TREES_CATALOGS_PROFILES
 #define READ_TREES_CATALOGS_DEFAULT READ_TREES_CATALOGS_BOTH
@@ -308,14 +308,14 @@ typedef struct tree_info tree_info;
 struct tree_info {
     int mode;
     // Filename info
-    char filename_root[MAX_FILENAME_LENGTH];
-    char filename_root_horizontal[MAX_FILENAME_LENGTH];
-    char filename_root_horizontal_trees[MAX_FILENAME_LENGTH];
-    char filename_root_analysis[MAX_FILENAME_LENGTH];
-    char filename_SSimPL_dir[MAX_FILENAME_LENGTH];
-    char filename_halos_version[MAX_FILENAME_LENGTH];
-    char filename_trees_version[MAX_FILENAME_LENGTH];
-    char name[MAX_FILENAME_LENGTH];
+    char filename_root[SID_MAX_FILENAME_LENGTH];
+    char filename_root_horizontal[SID_MAX_FILENAME_LENGTH];
+    char filename_root_horizontal_trees[SID_MAX_FILENAME_LENGTH];
+    char filename_root_analysis[SID_MAX_FILENAME_LENGTH];
+    char filename_SSimPL_dir[SID_MAX_FILENAME_LENGTH];
+    char filename_halos_version[SID_MAX_FILENAME_LENGTH];
+    char filename_trees_version[SID_MAX_FILENAME_LENGTH];
+    char name[SID_MAX_FILENAME_LENGTH];
     // Snapshot info
     int     i_read_start;
     int     i_read_stop;

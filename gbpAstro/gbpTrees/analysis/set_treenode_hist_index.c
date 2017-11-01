@@ -95,7 +95,7 @@ int set_treenode_hist_index(tree_info *trees, treenode_hist_info *hist, tree_nod
             break;
         }
         default:
-            SID_trap_error("Invalid property passed to add_to_treenode_hist().", ERROR_LOGIC);
+            SID_trap_error("Invalid property passed to add_to_treenode_hist().", SID_ERROR_LOGIC);
             break;
     }
     return (i_d);

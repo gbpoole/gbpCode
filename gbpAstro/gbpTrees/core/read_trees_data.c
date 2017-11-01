@@ -32,7 +32,7 @@ void read_trees_data(tree_info *trees, char *filename_root, int mode, SID_Dataty
     int *   list_init_local;
     size_t *file_idx_list_local_index;
     int     n_list_local;
-    int     n_alloc     = MAX(trees->max_n_subgroups_snap_local, trees->max_n_groups_snap_local);
+    int     n_alloc     = GBP_MAX(trees->max_n_subgroups_snap_local, trees->max_n_groups_snap_local);
     file_idx_list_local = (int *)SID_malloc(sizeof(int) * n_alloc);
     nebr_idx_list_local = (int *)SID_malloc(sizeof(int) * n_alloc);
     list_init_local     = (int *)SID_malloc(sizeof(int) * n_alloc);
@@ -50,7 +50,7 @@ void read_trees_data(tree_info *trees, char *filename_root, int mode, SID_Dataty
             char            group_text_prefix[5];
             int             open_catalog_mode;
             char *          data_in;
-            int             flag_proceed = TRUE;
+            int             flag_proceed = GBP_TRUE;
             switch(i_type) {
                 case 0:
                     flag_proceed = check_mode_for_flag(mode, READ_TREES_DATA_SUBGROUPS);
@@ -96,8 +96,8 @@ void read_trees_data(tree_info *trees, char *filename_root, int mode, SID_Dataty
                 }
                 if(n_list_local != n_halos)
                     SID_trap_error(
-                        "Count mismatch for %sgroups in read_trees_data() (ie. %d!=%d)", ERROR_LOGIC, group_text_prefix, n_list_local, n_halos);
-                merge_sort(file_idx_list_local, (size_t)n_list_local, &file_idx_list_local_index, SID_INT, SORT_COMPUTE_INDEX, FALSE);
+                        "Count mismatch for %sgroups in read_trees_data() (ie. %d!=%d)", SID_ERROR_LOGIC, group_text_prefix, n_list_local, n_halos);
+                merge_sort(file_idx_list_local, (size_t)n_list_local, &file_idx_list_local_index, SID_INT, SORT_COMPUTE_INDEX, GBP_FALSE);
 
                 // Set filename and open file
                 char filename_cat_in[256];
@@ -116,7 +116,7 @@ void read_trees_data(tree_info *trees, char *filename_root, int mode, SID_Dataty
                     fread_verify(&n_halos_total, sizeof(int), 1, fp_data);
                     //              if(n_halos_total!=n_halos_all)
                     //                 SID_trap_error("Count of halos in data file does not match trees (ie.
-                    //                 %d!=%d).",ERROR_LOGIC,n_halos_total,n_halos_all);
+                    //                 %d!=%d).",SID_ERROR_LOGIC,n_halos_total,n_halos_all);
 
                     // Perform read
                     int k_read;
@@ -140,11 +140,11 @@ void read_trees_data(tree_info *trees, char *filename_root, int mode, SID_Dataty
                     if(l_read != n_list_local)
                         SID_log_warning("Invalid read count: %d!=%d", SID_WARNING_DEFAULT, l_read, n_list_local);
                     //              if(l_read!=n_list_local)
-                    //                 SID_trap_error("An incorrect number of matches were read (ie. %d!=%d) for snaphot %d",ERROR_LOGIC,
+                    //                 SID_trap_error("An incorrect number of matches were read (ie. %d!=%d) for snaphot %d",SID_ERROR_LOGIC,
                     //                                l_read,n_list_local,i_read);
                     //              for(i_neighbour=0;i_neighbour<n_halos;i_neighbour++)
                     //                 if(list_init_local[i_neighbour]!=1 && list_init_local[i_neighbour]>=0)
-                    //                    SID_trap_error("Neighbour %d of %d was not processed correctly (init=%d) for snapshot %d.",ERROR_LOGIC,
+                    //                    SID_trap_error("Neighbour %d of %d was not processed correctly (init=%d) for snapshot %d.",SID_ERROR_LOGIC,
                     //                                   i_neighbour,n_halos,list_init_local[i_neighbour],i_read);
                 } else {
                     if(data_in != NULL) {

@@ -12,5 +12,5 @@ int grab_real(char *line, int n, GBPREAL *return_value) {
 #else
     sscanf(word, "%f", return_value);
 #endif
-    return (ERROR_NONE);
+    return (SID_ERROR_NONE);
 }

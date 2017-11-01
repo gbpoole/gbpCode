@@ -17,8 +17,8 @@ int find_treenode_branch_leaf(tree_info *trees, tree_node_info *halo, tree_node_
             (*branch_leaf) = next;
             next           = (*branch_leaf)->progenitor_first;
         }
-        return (TRUE);
+        return (GBP_TRUE);
     }
     (*branch_leaf) = NULL;
-    return (FALSE);
+    return (GBP_FALSE);
 }

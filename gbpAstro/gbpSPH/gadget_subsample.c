@@ -50,7 +50,7 @@ int main(int argc, char *argv[]) {
     if(argc != 4) {
         fprintf(stderr, "\n syntax: %s filename_in_root snapshot_number subsample_factor\n", argv[0]);
         fprintf(stderr, " ------\n\n");
-        return (ERROR_SYNTAX);
+        return (SID_ERROR_SYNTAX);
     } else {
         strcpy(filename_in_root, argv[1]);
         i_snap           = atoi(argv[2]);
@@ -70,7 +70,7 @@ int main(int argc, char *argv[]) {
     int                flag_file_type = fp_gadget.flag_file_type;
     gadget_header_info header         = fp_gadget.header;
     if(!flag_filefound)
-        SID_trap_error("File not found.", ERROR_LOGIC);
+        SID_trap_error("File not found.", SID_ERROR_LOGIC);
     if(flag_filefound)
         n_files = header.n_files;
     else
@@ -84,7 +84,7 @@ int main(int argc, char *argv[]) {
             n_all_keep[i_type] = 0;
         for(i_file = SID.My_rank, j_file = 0; j_file < n_files; i_file += SID.n_proc, j_file += SID.n_proc) {
             if(n_files > 1)
-                SID_log("Processing file(s) %d->%d...", SID_LOG_OPEN, j_file, MIN(j_file + SID.n_proc - 1, n_files - 1));
+                SID_log("Processing file(s) %d->%d...", SID_LOG_OPEN, j_file, GBP_MIN(j_file + SID.n_proc - 1, n_files - 1));
             if(i_file < n_files) {
                 set_gadget_filename(&fp_gadget, i_file, filename_in);
                 fp = fopen(filename_in, "r");
@@ -127,13 +127,13 @@ int main(int argc, char *argv[]) {
         SID_log("Writing subsampled snapshot...", SID_LOG_OPEN | SID_LOG_TIMER);
         for(i_file = SID.My_rank, j_file = 0; j_file < n_files; i_file += SID.n_proc, j_file += SID.n_proc) {
             if(n_files > 1)
-                SID_log("Processing file(s) %d->%d...", SID_LOG_OPEN, j_file, MIN(j_file + SID.n_proc - 1, n_files - 1));
+                SID_log("Processing file(s) %d->%d...", SID_LOG_OPEN, j_file, GBP_MIN(j_file + SID.n_proc - 1, n_files - 1));
             if(i_file < n_files) {
                 set_gadget_filename(&fp_gadget, i_file, filename_in);
                 change_gadget_filename(filename_in_root, "snapshot_subsample", i_snap, i_file, flag_multifile, flag_file_type, filename_out);
                 if(i_file == 0) {
                     FILE *fp_test;
-                    char  filename_out_directory[MAX_FILENAME_LENGTH];
+                    char  filename_out_directory[SID_MAX_FILENAME_LENGTH];
                     strcpy(filename_out_directory, filename_out);
                     strip_file_root(filename_out_directory);
                     if((fp_test = fopen(filename_out_directory, "r")) == NULL)
@@ -211,10 +211,10 @@ int main(int argc, char *argv[]) {
                 init_RNG(&seed, &RNG, RNG_DEFAULT);
                 fread_verify(&record_length_in, sizeof(int), 1, fp);
                 if(record_length_in / sizeof(int) == n_init_total) {
-                    flag_long_ids = FALSE;
+                    flag_long_ids = GBP_FALSE;
                     record_length = n_keep_total * sizeof(int);
                 } else {
-                    flag_long_ids = TRUE;
+                    flag_long_ids = GBP_TRUE;
                     record_length = n_keep_total * sizeof(long long);
                 }
                 fwrite(&record_length, sizeof(int), 1, fp_out);
@@ -247,7 +247,7 @@ int main(int argc, char *argv[]) {
         }
         SID_log("Done.", SID_LOG_CLOSE);
     } else
-        SID_log_error("File not found.", ERROR_IO_READ);
+        SID_log_error("File not found.", SID_ERROR_IO_READ);
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

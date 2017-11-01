@@ -44,7 +44,7 @@ void seal_scenes(render_info *render) {
             }
 
             // Set the flag saying that this scene has been sealed
-            current_scene->sealed = TRUE;
+            current_scene->sealed = GBP_TRUE;
             SID_log("Done.", SID_LOG_CLOSE);
         }
         current_scene = current_scene->next;

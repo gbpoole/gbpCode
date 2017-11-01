@@ -50,5 +50,5 @@ int find_treenode_last_merger(tree_info *      trees,
         }
         return ((*remnant) != NULL);
     }
-    return (FALSE);
+    return (GBP_FALSE);
 }

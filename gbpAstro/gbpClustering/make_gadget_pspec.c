@@ -117,7 +117,7 @@ void read_gadget_binary_local(char *filename_root_in, int snapshot_number, int i
             SID_log(" particles...", SID_LOG_CONTINUE);
 
         // Count the number of particles that will be scattered to each rank
-        char     filename[MAX_FILENAME_LENGTH];
+        char     filename[SID_MAX_FILENAME_LENGTH];
         size_t   k_particle;
         int      i_file;
         int      record_length_open;
@@ -155,7 +155,7 @@ void read_gadget_binary_local(char *filename_root_in, int snapshot_number, int i
             fread_verify(&header, sizeof(gadget_header_info), 1, fp_pos);
             fread_verify(&record_length_close, 4, 1, fp_pos);
             if(record_length_open != record_length_close)
-                SID_log_warning("Problem with GADGET record size (close of header)", ERROR_LOGIC);
+                SID_log_warning("Problem with GADGET record size (close of header)", SID_ERROR_LOGIC);
             fread_verify(&record_length_open, 4, 1, fp_pos);
 
             // Create a file pointer to the velocities
@@ -167,20 +167,20 @@ void read_gadget_binary_local(char *filename_root_in, int snapshot_number, int i
             fseeko(fp_vel, (off_t)(record_length_open), SEEK_CUR);
             fread_verify(&record_length_close, 4, 1, fp_vel);
             if(record_length_open != record_length_close)
-                SID_log_warning("Problem with GADGET record size (close of header)", ERROR_LOGIC);
+                SID_log_warning("Problem with GADGET record size (close of header)", SID_ERROR_LOGIC);
             fread_verify(&record_length_open, 4, 1, fp_vel);
 
             // We only have to worry about z-space effects for domain decomposition in this one case.
             if(i_coord == 1) {
                 for(i_type = 0; i_type < N_GADGET_TYPE; i_type++) {
                     for(i_particle = 0; i_particle < header.n_file[i_type]; i_particle += i_step) {
-                        i_step = MIN(READ_BUFFER_SIZE_LOCAL, header.n_file[i_type] - i_particle);
+                        i_step = GBP_MIN(READ_BUFFER_SIZE_LOCAL, header.n_file[i_type] - i_particle);
                         if(SID.I_am_Master) {
                             fread_verify(pos_buffer, sizeof(GBPREAL), 3 * i_step, fp_pos);
                             fread_verify(vel_buffer, sizeof(GBPREAL), 3 * i_step, fp_vel);
                         }
-                        SID_Bcast(pos_buffer, 3 * i_step, SID_REAL, SID.COMM_WORLD, MASTER_RANK);
-                        SID_Bcast(vel_buffer, 3 * i_step, SID_REAL, SID.COMM_WORLD, MASTER_RANK);
+                        SID_Bcast(pos_buffer, 3 * i_step, SID_REAL, SID.COMM_WORLD, SID_MASTER_RANK);
+                        SID_Bcast(vel_buffer, 3 * i_step, SID_REAL, SID.COMM_WORLD, SID_MASTER_RANK);
                         for(i_buffer = 0; i_buffer < i_step; i_buffer++) {
                             index    = 3 * i_buffer;
                             pos_test = x_vspace_local(pos_buffer[index], vel_buffer[index], h_Hubble, redshift, cosmo);
@@ -196,10 +196,10 @@ void read_gadget_binary_local(char *filename_root_in, int snapshot_number, int i
             } else {
                 for(i_type = 0; i_type < N_GADGET_TYPE; i_type++) {
                     for(i_particle = 0; i_particle < header.n_file[i_type]; i_particle += i_step) {
-                        i_step = MIN(READ_BUFFER_SIZE_LOCAL, header.n_file[i_type] - i_particle);
+                        i_step = GBP_MIN(READ_BUFFER_SIZE_LOCAL, header.n_file[i_type] - i_particle);
                         if(SID.I_am_Master)
                             fread_verify(pos_buffer, sizeof(GBPREAL), 3 * i_step, fp_pos);
-                        SID_Bcast(pos_buffer, 3 * i_step, SID_REAL, SID.COMM_WORLD, MASTER_RANK);
+                        SID_Bcast(pos_buffer, 3 * i_step, SID_REAL, SID.COMM_WORLD, SID_MASTER_RANK);
                         for(i_buffer = 0; i_buffer < i_step; i_buffer++) {
                             pos_test = pos_buffer[3 * i_buffer];
                             if(pos_test < 0)
@@ -258,7 +258,7 @@ void read_gadget_binary_local(char *filename_root_in, int snapshot_number, int i
             fread_verify(&header, sizeof(gadget_header_info), 1, fp_pos);
             fread_verify(&record_length_close, 4, 1, fp_pos);
             if(record_length_open != record_length_close)
-                SID_log_warning("Problem with GADGET record size (close of header)", ERROR_LOGIC);
+                SID_log_warning("Problem with GADGET record size (close of header)", SID_ERROR_LOGIC);
             fread_verify(&record_length_open, 4, 1, fp_pos);
 
             // Create a file pointer to the velocities
@@ -270,7 +270,7 @@ void read_gadget_binary_local(char *filename_root_in, int snapshot_number, int i
             fseeko(fp_vel, (off_t)(record_length_open), SEEK_CUR);
             fread_verify(&record_length_close, 4, 1, fp_vel);
             if(record_length_open != record_length_close)
-                SID_log_warning("Problem with GADGET record size (close of header)", ERROR_LOGIC);
+                SID_log_warning("Problem with GADGET record size (close of header)", SID_ERROR_LOGIC);
             fread_verify(&record_length_open, 4, 1, fp_vel);
 
             // Perform the read and populate the local position arrays
@@ -279,15 +279,15 @@ void read_gadget_binary_local(char *filename_root_in, int snapshot_number, int i
             int    i_type;
             for(i_type = 0; i_type < N_GADGET_TYPE; i_type++) {
                 for(i_particle = 0; i_particle < header.n_file[i_type]; i_particle += i_step) {
-                    i_step = MIN(READ_BUFFER_SIZE_LOCAL, header.n_file[i_type] - i_particle);
+                    i_step = GBP_MIN(READ_BUFFER_SIZE_LOCAL, header.n_file[i_type] - i_particle);
                     if(SID.I_am_Master) {
                         fread_verify(pos_buffer, sizeof(GBPREAL), 3 * i_step, fp_pos);
                         if(i_coord > 0)
                             fread_verify(vel_buffer, sizeof(GBPREAL), 3 * i_step, fp_vel);
                     }
-                    SID_Bcast(pos_buffer, 3 * i_step, SID_REAL, SID.COMM_WORLD, MASTER_RANK);
+                    SID_Bcast(pos_buffer, 3 * i_step, SID_REAL, SID.COMM_WORLD, SID_MASTER_RANK);
                     if(i_coord > 0)
-                        SID_Bcast(vel_buffer, 3 * i_step, SID_REAL, SID.COMM_WORLD, MASTER_RANK);
+                        SID_Bcast(vel_buffer, 3 * i_step, SID_REAL, SID.COMM_WORLD, SID_MASTER_RANK);
                     for(i_buffer = 0; i_buffer < i_step; i_buffer++) {
                         double x_test;
                         double y_test;
@@ -316,7 +316,7 @@ void read_gadget_binary_local(char *filename_root_in, int snapshot_number, int i
                                 d_bar += fabs(d);
                                 break;
                             default:
-                                SID_trap_error("Invalid i_coord=%d in read_gadget()", ERROR_LOGIC, i_coord);
+                                SID_trap_error("Invalid i_coord=%d in read_gadget()", SID_ERROR_LOGIC, i_coord);
                                 break;
                         }
                         if(x_test < 0)
@@ -368,11 +368,11 @@ void read_gadget_binary_local(char *filename_root_in, int snapshot_number, int i
         SID_Allreduce(&n_particles_local, &n_particles_read, 1, SID_SIZE_T, SID_SUM, SID.COMM_WORLD);
         if(n_particles_read != n_particles_test)
             SID_trap_error(
-                "Total particle counts don't make sense after read_gadget (ie. %zd!=%zd).", ERROR_LOGIC, n_particles_read, n_particles_test);
+                "Total particle counts don't make sense after read_gadget (ie. %zd!=%zd).", SID_ERROR_LOGIC, n_particles_read, n_particles_test);
         for(i_type = 0; i_type < N_GADGET_TYPE; i_type++) {
             SID_Allreduce(&(n_of_type_local[i_type]), &(n_of_type[i_type]), 1, SID_SIZE_T, SID_SUM, SID.COMM_WORLD);
             if(n_of_type[i_type] != n_all[i_type])
-                SID_trap_error("Particle counts don't make sense after read_gadget (ie. %zd!=%zd).", ERROR_LOGIC, n_of_type[i_type], n_all[i_type]);
+                SID_trap_error("Particle counts don't make sense after read_gadget (ie. %zd!=%zd).", SID_ERROR_LOGIC, n_of_type[i_type], n_all[i_type]);
         }
 
         // Store results
@@ -443,8 +443,8 @@ int main(int argc, char *argv[]) {
 
     // Parse arguments
     int  grid_size;
-    char filename_in_root[MAX_FILENAME_LENGTH];
-    char filename_out_root[MAX_FILENAME_LENGTH];
+    char filename_in_root[SID_MAX_FILENAME_LENGTH];
+    char filename_out_root[SID_MAX_FILENAME_LENGTH];
     char cosmo_name[16];
     int  distribution_scheme;
     strcpy(filename_in_root, argv[1]);
@@ -464,7 +464,7 @@ int main(int argc, char *argv[]) {
         else if(!strcmp(argv[6], "d20") || !strcmp(argv[6], "D20"))
             distribution_scheme = MAP2GRID_DIST_DWT20;
         else
-            SID_trap_error("Invalid distribution scheme {%s} specified.", ERROR_SYNTAX, argv[6]);
+            SID_trap_error("Invalid distribution scheme {%s} specified.", SID_ERROR_SYNTAX, argv[6]);
     }
     SID_log("Processing the power spectra of {%s}, snapshot #%d...", SID_LOG_OPEN | SID_LOG_TIMER, filename_in_root, snapshot_number);
 
@@ -567,7 +567,7 @@ int main(int argc, char *argv[]) {
             init_plist(&plist, &(pspec[0].FFT.slab), GADGET_LENGTH, GADGET_MASS, GADGET_VELOCITY);
 
             // Initialization -- read gadget file
-            char filename_root[MAX_FILENAME_LENGTH];
+            char filename_root[SID_MAX_FILENAME_LENGTH];
             read_gadget_binary_local(filename_in_root, snapshot_number, i_run, &(pspec[0].FFT.slab), cosmo, &plist);
 
             // Generate power spectra
@@ -575,7 +575,7 @@ int main(int argc, char *argv[]) {
                 // Compute power spectrum and write results
                 if(n_all[i_species] > 0) {
                     compute_pspec(&plist, plist.species[i_species], &(pspec[i_species]), i_run);
-                    char filename_out_species[MAX_FILENAME_LENGTH];
+                    char filename_out_species[SID_MAX_FILENAME_LENGTH];
                     SID_log("Writing results for the %s particles...", SID_LOG_OPEN, plist.species[i_species]);
                     sprintf(filename_out_species, "%s_%s", filename_out_root, plist.species[i_species]);
                     write_pspec(&(pspec[i_species]), filename_out_species, &plist, plist.species[i_species]);
@@ -600,5 +600,5 @@ int main(int argc, char *argv[]) {
 
     SID_log("Done.", SID_LOG_CLOSE);
 
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

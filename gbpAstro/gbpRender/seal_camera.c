@@ -29,7 +29,7 @@ void seal_camera(render_info *render) {
         // Initialize image buffers
         if(check_mode_for_flag(render->camera->camera_mode, CAMERA_STEREO)) {
             // LEFT
-            int flag_images_defined = FALSE;
+            int flag_images_defined = GBP_FALSE;
             if(check_mode_for_flag(render->camera->RGB_mode, CAMERA_RGB_MODE_1CHANNEL)) {
                 render->camera->image_RGB_left  = (image_info **)SID_malloc(sizeof(image_info *) * render->camera->n_depth_alloc);
                 render->camera->image_Y_left    = (image_info **)SID_malloc(sizeof(image_info *) * render->camera->n_depth_alloc);
@@ -41,7 +41,7 @@ void seal_camera(render_info *render) {
                     init_image(
                         render->camera->width, render->camera->height, render->camera->colour_table, &(render->camera->image_RGBY_left[i_depth]));
                 }
-                flag_images_defined = TRUE;
+                flag_images_defined = GBP_TRUE;
             }
             if(check_mode_for_flag(render->camera->RGB_mode, CAMERA_RGB_MODE_MARKED)) {
                 render->camera->image_RY_left          = (image_info **)SID_malloc(sizeof(image_info *) * render->camera->n_depth_alloc);
@@ -57,12 +57,12 @@ void seal_camera(render_info *render) {
                                "greyscale",
                                &(render->camera->image_RGBY_MARKED_left[i_depth])); // use greyscale as a dummy
                 }
-                flag_images_defined = TRUE;
+                flag_images_defined = GBP_TRUE;
             }
             if(!flag_images_defined)
-                SID_trap_error("Invalid camera RGB mode (%d) specified in seal_camera().", ERROR_LOGIC, render->camera->RGB_mode);
+                SID_trap_error("Invalid camera RGB mode (%d) specified in seal_camera().", SID_ERROR_LOGIC, render->camera->RGB_mode);
             // RIGHT
-            flag_images_defined = FALSE;
+            flag_images_defined = GBP_FALSE;
             if(check_mode_for_flag(render->camera->RGB_mode, CAMERA_RGB_MODE_1CHANNEL)) {
                 render->camera->image_RGB_right  = (image_info **)SID_malloc(sizeof(image_info *) * render->camera->n_depth_alloc);
                 render->camera->image_Y_right    = (image_info **)SID_malloc(sizeof(image_info *) * render->camera->n_depth_alloc);
@@ -74,7 +74,7 @@ void seal_camera(render_info *render) {
                     init_image(
                         render->camera->width, render->camera->height, render->camera->colour_table, &(render->camera->image_RGBY_right[i_depth]));
                 }
-                flag_images_defined = TRUE;
+                flag_images_defined = GBP_TRUE;
             }
             if(check_mode_for_flag(render->camera->RGB_mode, CAMERA_RGB_MODE_MARKED)) {
                 render->camera->image_RY_right          = (image_info **)SID_malloc(sizeof(image_info *) * render->camera->n_depth_alloc);
@@ -90,12 +90,12 @@ void seal_camera(render_info *render) {
                                "greyscale",
                                &(render->camera->image_RGBY_MARKED_right[i_depth])); // use greyscale as a dummy
                 }
-                flag_images_defined = TRUE;
+                flag_images_defined = GBP_TRUE;
             }
             if(!flag_images_defined)
-                SID_trap_error("Invalid camera RGB mode (%d) specified in seal_camera().", ERROR_LOGIC, render->camera->RGB_mode);
+                SID_trap_error("Invalid camera RGB mode (%d) specified in seal_camera().", SID_ERROR_LOGIC, render->camera->RGB_mode);
         } else {
-            int flag_images_defined = FALSE;
+            int flag_images_defined = GBP_FALSE;
             if(check_mode_for_flag(render->camera->RGB_mode, CAMERA_RGB_MODE_1CHANNEL)) {
                 render->camera->image_RGB  = (image_info **)SID_malloc(sizeof(image_info *) * render->camera->n_depth_alloc);
                 render->camera->image_Y    = (image_info **)SID_malloc(sizeof(image_info *) * render->camera->n_depth_alloc);
@@ -105,7 +105,7 @@ void seal_camera(render_info *render) {
                     init_image(render->camera->width, render->camera->height, "greyscale", &(render->camera->image_Y[i_depth]));
                     init_image(render->camera->width, render->camera->height, render->camera->colour_table, &(render->camera->image_RGBY[i_depth]));
                 }
-                flag_images_defined = TRUE;
+                flag_images_defined = GBP_TRUE;
             }
             if(check_mode_for_flag(render->camera->RGB_mode, CAMERA_RGB_MODE_MARKED)) {
                 render->camera->image_RY          = (image_info **)SID_malloc(sizeof(image_info *) * render->camera->n_depth_alloc);
@@ -121,14 +121,14 @@ void seal_camera(render_info *render) {
                                "greyscale",
                                &(render->camera->image_RGBY_MARKED[i_depth])); // use greyscale as a dummy
                 }
-                flag_images_defined = TRUE;
+                flag_images_defined = GBP_TRUE;
             }
             if(!flag_images_defined)
-                SID_trap_error("Invalid camera RGB mode (%d) specified in seal_camera().", ERROR_LOGIC, render->camera->RGB_mode);
+                SID_trap_error("Invalid camera RGB mode (%d) specified in seal_camera().", SID_ERROR_LOGIC, render->camera->RGB_mode);
         }
 
         // Set the flag saying that camera has been sealed
-        render->camera->sealed = TRUE;
+        render->camera->sealed = GBP_TRUE;
 
         SID_log("Done.", SID_LOG_CLOSE);
     }

@@ -20,8 +20,8 @@ double delta_n_dyn(double a_1, double a_2, cosmo_info **cosmo) {
     double                     abs_accuracy = 0.;
     double                     rel_accuracy = 1e-4;
     double                     abs_error;
-    double                     a_lo = MIN(a_1, a_2);
-    double                     a_hi = MAX(a_1, a_2);
+    double                     a_lo = GBP_MIN(a_1, a_2);
+    double                     a_hi = GBP_MAX(a_1, a_2);
     gsl_integration_workspace *wspace;
     gsl_function               integrand;
     integrand.function = dn_dyn_dt;
@@ -36,8 +36,8 @@ int main(int argc, char *argv[]) {
     SID_init(&argc, &argv, NULL, NULL);
 
     // Parse arguments
-    char filename_cosmo[MAX_FILENAME_LENGTH];
-    char filename_list_in[MAX_FILENAME_LENGTH];
+    char filename_cosmo[SID_MAX_FILENAME_LENGTH];
+    char filename_list_in[SID_MAX_FILENAME_LENGTH];
     strcpy(filename_cosmo, argv[1]);
     strcpy(filename_list_in, argv[2]);
 
@@ -56,10 +56,10 @@ int main(int argc, char *argv[]) {
     double a_lo_table = a_list[0];
     double a_hi_table = a_list[n_list - 1];
     for(int i_list = 0; i_list < n_list; i_list++) {
-        a_lo_table = MIN(a_lo_table, a_list[i_list]);
-        a_hi_table = MAX(a_hi_table, a_list[i_list]);
+        a_lo_table = GBP_MIN(a_lo_table, a_list[i_list]);
+        a_hi_table = GBP_MAX(a_hi_table, a_list[i_list]);
     }
-    a_lo_table = MIN(a_lo_table, 1e-4);
+    a_lo_table = GBP_MIN(a_lo_table, 1e-4);
 
     SID_log("Creating extended snapshot list...", SID_LOG_OPEN);
 
@@ -141,5 +141,5 @@ int main(int argc, char *argv[]) {
     free_cosmo(&cosmo);
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

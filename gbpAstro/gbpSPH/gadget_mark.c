@@ -25,9 +25,9 @@ int main(int argc, char *argv[]) {
     // Parse command line
     if(argc <= 1) {
         SID_log_error("\nsyntax: %s filename_in snapshot filename_out [box/sphere] [x_min,xmax,y_min,y_max,z_min,z_max/x_cen,y_cen,z_cen,radius]",
-                      ERROR_SYNTAX,
+                      SID_ERROR_SYNTAX,
                       argv[0]);
-        SID_trap_error("------\n", ERROR_SYNTAX);
+        SID_trap_error("------\n", SID_ERROR_SYNTAX);
     } else {
         strcpy(filename_in, argv[1]);
         snapshot = atoi(argv[2]);
@@ -37,7 +37,7 @@ int main(int argc, char *argv[]) {
         else if(!strcmp(argv[4], "sphere"))
             flag_mode = VOLUME_SPHERE;
         else
-            SID_trap_error("Valid modes are \"box\" or \"sphere\".", ERROR_SYNTAX);
+            SID_trap_error("Valid modes are \"box\" or \"sphere\".", SID_ERROR_SYNTAX);
         if(flag_mode == VOLUME_BOX)
             n_input_vals = 6;
         else if(flag_mode == VOLUME_SPHERE)
@@ -94,5 +94,5 @@ int main(int argc, char *argv[]) {
         SID_free((void **)&input_vals);
     SID_log("Done.", SID_LOG_CLOSE);
 
-    return (ERROR_NONE);
+    return (SID_ERROR_NONE);
 }

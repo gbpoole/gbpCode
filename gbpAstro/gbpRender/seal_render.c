@@ -17,10 +17,10 @@ void seal_render(render_info *render) {
             FILE *fp_list = NULL;
             if(SID.I_am_Master) {
                 if((fp_list = fopen(render->snap_a_list_filename, "r")) == NULL)
-                    SID_trap_error("Could not open snapshot a_list {%s}", ERROR_IO_OPEN, render->snap_a_list_filename);
+                    SID_trap_error("Could not open snapshot a_list {%s}", SID_ERROR_IO_OPEN, render->snap_a_list_filename);
                 render->n_snap_a_list = count_lines_data(fp_list);
             }
-            SID_Bcast(&(render->n_snap_a_list), 1, SID_INT, SID.COMM_WORLD, MASTER_RANK);
+            SID_Bcast(&(render->n_snap_a_list), 1, SID_INT, SID.COMM_WORLD, SID_MASTER_RANK);
             render->snap_a_list = (double *)SID_malloc(sizeof(double) * render->n_snap_a_list);
             if(SID.I_am_Master) {
                 char * line        = NULL;
@@ -32,7 +32,7 @@ void seal_render(render_info *render) {
                 fclose(fp_list);
                 SID_free(SID_FARG line);
             }
-            SID_Bcast(render->snap_a_list, render->n_snap_a_list, SID_DOUBLE, SID.COMM_WORLD, MASTER_RANK);
+            SID_Bcast(render->snap_a_list, render->n_snap_a_list, SID_DOUBLE, SID.COMM_WORLD, SID_MASTER_RANK);
         }
 
         // Seal the scenes
@@ -42,7 +42,7 @@ void seal_render(render_info *render) {
         render->n_frames = render->last_scene->last_frame + 1;
 
         // Set the flag saying that render has been sealed
-        render->sealed = TRUE;
+        render->sealed = GBP_TRUE;
     }
 
     SID_log("Done.", SID_LOG_CLOSE);

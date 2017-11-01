@@ -80,15 +80,15 @@ void display_gadget_info(plist_info *plist) {
                     n_of_type[i] = ((size_t *)ADaPS_fetch(plist->data, "n_%s", pname[i]))[0];
                     if(n_of_type[i] > 0) {
                         n_particles += n_of_type[i];
-                        flag_used[i] = TRUE;
+                        flag_used[i] = GBP_TRUE;
                         n_type_used++;
                     } else {
                         n_of_type[i] = 0;
-                        flag_used[i] = FALSE;
+                        flag_used[i] = GBP_FALSE;
                     }
                 } else {
                     n_of_type[i] = 0;
-                    flag_used[i] = FALSE;
+                    flag_used[i] = GBP_FALSE;
                 }
             }
 
@@ -280,8 +280,8 @@ void display_gadget_info(plist_info *plist) {
                             min_i = ((size_t *)ADaPS_fetch(plist->data, var_name))[0];
                             max_i = ((size_t *)ADaPS_fetch(plist->data, var_name))[0];
                             for(j = 1; j < n_of_type[i]; j++) {
-                                min_i = (size_t)MIN(min_i, ((size_t *)ADaPS_fetch(plist->data, var_name))[j]);
-                                max_i = (size_t)MAX(max_i, ((size_t *)ADaPS_fetch(plist->data, var_name))[j]);
+                                min_i = (size_t)GBP_MIN(min_i, ((size_t *)ADaPS_fetch(plist->data, var_name))[j]);
+                                max_i = (size_t)GBP_MAX(max_i, ((size_t *)ADaPS_fetch(plist->data, var_name))[j]);
                             }
                             fprintf(stderr, "%11s  %11zu  %11zu\n", var_name, min_i, max_i);
                         }

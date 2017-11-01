@@ -89,8 +89,8 @@ int main(int argc, char *argv[]) {
     SID_init(&argc, &argv, NULL, NULL);
 
     // Fetch user inputs
-    char filename_in_root[MAX_FILENAME_LENGTH];
-    char filename_out_root[MAX_FILENAME_LENGTH];
+    char filename_in_root[SID_MAX_FILENAME_LENGTH];
+    char filename_out_root[SID_MAX_FILENAME_LENGTH];
     int  start_snap;
     int  stop_snap;
     strcpy(filename_in_root, argv[1]);
@@ -106,8 +106,8 @@ int main(int argc, char *argv[]) {
         SID_log("Processing snapshot No. %d...", SID_LOG_OPEN | SID_LOG_TIMER, i_snap);
         int i_run;
         for(i_run = 0; i_run < 2; i_run++) {
-            char filename_in[MAX_FILENAME_LENGTH];
-            char filename_out[MAX_FILENAME_LENGTH];
+            char filename_in[SID_MAX_FILENAME_LENGTH];
+            char filename_out[SID_MAX_FILENAME_LENGTH];
             char group_prefix_text[8];
             switch(i_run) {
                 case 0:
@@ -124,7 +124,7 @@ int main(int argc, char *argv[]) {
             FILE *fp_in;
             FILE *fp_out;
             if((fp_in = fopen(filename_in, "r")) == NULL)
-                SID_trap_error("Could not open {%s}", ERROR_IO_OPEN, filename_in);
+                SID_trap_error("Could not open {%s}", SID_ERROR_IO_OPEN, filename_in);
             fp_out = fopen(filename_out, "w");
 
             // Process n_groups
@@ -153,7 +153,7 @@ int main(int argc, char *argv[]) {
                     offset_ll = (int64_t)offset_in;
                     fwrite(&offset_ll, offset_size, 1, fp_out);
                 } else
-                    SID_trap_error("Invalid offset size (%d)", ERROR_LOGIC);
+                    SID_trap_error("Invalid offset size (%d)", SID_ERROR_LOGIC);
             }
 
             // Process n_subgroups
@@ -176,5 +176,5 @@ int main(int argc, char *argv[]) {
     }
     SID_log("Done.", SID_LOG_CLOSE);
 
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

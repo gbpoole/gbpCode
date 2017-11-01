@@ -12,21 +12,21 @@
 #include <gsl/gsl_interp.h>
 
 void analyze_MCMC(MCMC_info *MCMC) {
-    char          filename_output_dir[MAX_FILENAME_LENGTH];
-    char          filename_chain_dir[MAX_FILENAME_LENGTH];
-    char          filename_results_dir[MAX_FILENAME_LENGTH];
-    char          filename_plots_dir[MAX_FILENAME_LENGTH];
-    char          filename_run[MAX_FILENAME_LENGTH];
-    char          filename_chain[MAX_FILENAME_LENGTH];
-    char          filename_chain_config[MAX_FILENAME_LENGTH];
-    char          filename_stats[MAX_FILENAME_LENGTH];
-    char          filename_coverage[MAX_FILENAME_LENGTH];
-    char          filename_chain_covariance[MAX_FILENAME_LENGTH];
-    char          filename_covariance[MAX_FILENAME_LENGTH];
-    char          filename_histograms[MAX_FILENAME_LENGTH];
-    char          filename_results[MAX_FILENAME_LENGTH];
-    char          filename_stop[MAX_FILENAME_LENGTH];
-    char          column_txt[MAX_FILENAME_LENGTH];
+    char          filename_output_dir[SID_MAX_FILENAME_LENGTH];
+    char          filename_chain_dir[SID_MAX_FILENAME_LENGTH];
+    char          filename_results_dir[SID_MAX_FILENAME_LENGTH];
+    char          filename_plots_dir[SID_MAX_FILENAME_LENGTH];
+    char          filename_run[SID_MAX_FILENAME_LENGTH];
+    char          filename_chain[SID_MAX_FILENAME_LENGTH];
+    char          filename_chain_config[SID_MAX_FILENAME_LENGTH];
+    char          filename_stats[SID_MAX_FILENAME_LENGTH];
+    char          filename_coverage[SID_MAX_FILENAME_LENGTH];
+    char          filename_chain_covariance[SID_MAX_FILENAME_LENGTH];
+    char          filename_covariance[SID_MAX_FILENAME_LENGTH];
+    char          filename_histograms[SID_MAX_FILENAME_LENGTH];
+    char          filename_results[SID_MAX_FILENAME_LENGTH];
+    char          filename_stop[SID_MAX_FILENAME_LENGTH];
+    char          column_txt[SID_MAX_FILENAME_LENGTH];
     char          problem_name_test[MCMC_NAME_SIZE];
     char          P_name_test[MCMC_NAME_SIZE];
     char          name_test[MCMC_NAME_SIZE];
@@ -51,7 +51,7 @@ void analyze_MCMC(MCMC_info *MCMC) {
     int           i_iteration, j_iteration;
     int           flag_continue;
     char          flag_success;
-    int           flag_stop = FALSE;
+    int           flag_stop = GBP_FALSE;
     int           i_coverage;
     int           j_coverage;
     int           i_proposal;
@@ -188,7 +188,7 @@ void analyze_MCMC(MCMC_info *MCMC) {
     int           j_covariance;
     int           n_iterations_file_total;
     int           n_iterations_file_burn;
-    int           flag_restart = FALSE;
+    int           flag_restart = GBP_FALSE;
     int           size_temp1;
     int           size_temp2[2];
 
@@ -366,11 +366,11 @@ void analyze_MCMC(MCMC_info *MCMC) {
             for(j_M = 0; j_M < coverage_size; j_M++)
                 M_histogram[i_DS][i_M][j_M] = 0;
         }
-        n_residual = MAX(n_residual, n_M[i_DS]);
+        n_residual = GBP_MAX(n_residual, n_M[i_DS]);
         current_DS = next_DS;
     }
     if(next_DS != NULL)
-        SID_trap_error("Invalid dataset count in analyze_MCMC().", ERROR_LOGIC);
+        SID_trap_error("Invalid dataset count in analyze_MCMC().", SID_ERROR_LOGIC);
     residual       = (double *)SID_malloc(sizeof(double) * n_residual);
     coverage_true  = (size_t **)SID_malloc(sizeof(size_t *) * n_coverage);
     coverage_false = (size_t **)SID_malloc(sizeof(size_t *) * n_coverage);
@@ -407,7 +407,7 @@ void analyze_MCMC(MCMC_info *MCMC) {
     if(flag_minimize_IO || !check_mode_for_flag(MCMC->mode, MCMC_MODE_ANALYZE_ALL_RUNS))
         n_runs = 1;
     else {
-        int flag_continue = TRUE;
+        int flag_continue = GBP_TRUE;
         while(flag_continue) {
             // Set chain filename
             if(n_runs == 0)
@@ -420,7 +420,7 @@ void analyze_MCMC(MCMC_info *MCMC) {
                 n_runs++;
                 fclose(fp_chain);
             } else
-                flag_continue = FALSE;
+                flag_continue = GBP_FALSE;
         }
         SID_log("Analyzing %d chain(s).", SID_LOG_COMMENT, n_runs);
     }
@@ -442,23 +442,23 @@ void analyze_MCMC(MCMC_info *MCMC) {
 
                 // Read number of iterations
                 if((fp_chain = fopen(filename_chain_config, "rb")) == NULL)
-                    SID_trap_error("Could not open chain configuration file {%s}.", ERROR_IO_OPEN, filename_chain_config);
+                    SID_trap_error("Could not open chain configuration file {%s}.", SID_ERROR_IO_OPEN, filename_chain_config);
                 fread_verify(&n_iterations, sizeof(int), 1, fp_chain);
                 fread_verify(&n_iterations_burn, sizeof(int), 1, fp_chain);
                 fclose(fp_chain);
 
                 // Open chain file
                 if((fp_chain = fopen(filename_chain, "rb")) == NULL)
-                    SID_trap_error("Could not open chain file {%s}.", ERROR_IO_OPEN, filename_chain);
+                    SID_trap_error("Could not open chain file {%s}.", SID_ERROR_IO_OPEN, filename_chain);
             }
             i_iteration_buffer = 0;
             i_P_buffer         = 0;
             i_M_buffer         = 0;
             ln_likelihood_peak = -1e20;
-            for(i_iteration = 0, flag_init = TRUE; i_iteration < n_iterations; i_iteration++) {
+            for(i_iteration = 0, flag_init = GBP_TRUE; i_iteration < n_iterations; i_iteration++) {
                 for(i_avg = 0; i_avg < n_avg; i_avg++) {
                     switch(flag_minimize_IO) {
-                        case TRUE:
+                        case GBP_TRUE:
                             flag_success      = MCMC->flag_success_buffer[i_iteration_buffer];
                             ln_likelihood_new = MCMC->ln_likelihood_new_buffer[i_iteration_buffer];
                             i_iteration_buffer++;
@@ -489,7 +489,7 @@ void analyze_MCMC(MCMC_info *MCMC) {
                                 for(i_DS = 0; i_DS < n_DS; i_DS++)
                                     memcpy(M_last[i_DS], M_new[i_DS], (size_t)n_M[i_DS] * sizeof(double));
                             }
-                            flag_init = FALSE;
+                            flag_init = GBP_FALSE;
                         }
                         n_used++;
                         // Compute covariance matrix
@@ -563,22 +563,22 @@ void analyze_MCMC(MCMC_info *MCMC) {
 
                 // Read number of iterations
                 if((fp_chain = fopen(filename_chain_config, "rb")) == NULL)
-                    SID_trap_error("Could not open chain configuration file {%s}.", ERROR_IO_OPEN, filename_chain);
+                    SID_trap_error("Could not open chain configuration file {%s}.", SID_ERROR_IO_OPEN, filename_chain);
                 fread_verify(&n_iterations, sizeof(int), 1, fp_chain);
                 fread_verify(&n_iterations_burn, sizeof(int), 1, fp_chain);
                 fclose(fp_chain);
 
                 // Open chain file
                 if((fp_chain = fopen(filename_chain, "rb")) == NULL)
-                    SID_trap_error("Could not open chain file {%s}.", ERROR_IO_OPEN, filename_chain);
+                    SID_trap_error("Could not open chain file {%s}.", SID_ERROR_IO_OPEN, filename_chain);
             }
             i_iteration_buffer = 0;
             i_P_buffer         = 0;
             i_M_buffer         = 0;
-            for(i_iteration = 0, flag_init = TRUE; i_iteration < n_iterations; i_iteration++) {
+            for(i_iteration = 0, flag_init = GBP_TRUE; i_iteration < n_iterations; i_iteration++) {
                 for(i_avg = 0; i_avg < n_avg; i_avg++) {
                     switch(flag_minimize_IO) {
-                        case TRUE:
+                        case GBP_TRUE:
                             flag_success      = MCMC->flag_success_buffer[i_iteration_buffer];
                             ln_likelihood_new = MCMC->ln_likelihood_new_buffer[i_iteration_buffer];
                             i_iteration_buffer++;
@@ -607,7 +607,7 @@ void analyze_MCMC(MCMC_info *MCMC) {
                             ln_likelihood_last = ln_likelihood_new;
                             for(i_DS = 0; i_DS < n_DS; i_DS++)
                                 memcpy(M_last[i_DS], M_new[i_DS], (size_t)n_M[i_DS] * sizeof(double));
-                            flag_init = FALSE;
+                            flag_init = GBP_FALSE;
                         }
                         // Build coverage maps
                         if(flag_success) {
@@ -636,7 +636,7 @@ void analyze_MCMC(MCMC_info *MCMC) {
                                 if(bin_x >= 0 && bin_x < coverage_size && bin_y >= 0 && bin_y < coverage_size) {
                                     coverage_keep[i_coverage][bin_x * coverage_size + bin_y]++;
                                     max_L_surface[i_coverage][bin_x * coverage_size + bin_y] =
-                                        MAX(max_L_surface[i_coverage][bin_x * coverage_size + bin_y], ln_likelihood_last);
+                                        GBP_MAX(max_L_surface[i_coverage][bin_x * coverage_size + bin_y], ln_likelihood_last);
                                     mean_L_surface[i_coverage][bin_x * coverage_size + bin_y] += ln_likelihood_last;
                                 }
                             }
@@ -648,7 +648,7 @@ void analyze_MCMC(MCMC_info *MCMC) {
                             if(bin_x >= 0 && bin_x < coverage_size) {
                                 P_histogram[i_P][bin_x]++;
                                 mean_L_histogram[i_P][bin_x] += ln_likelihood_last;
-                                max_L_histogram[i_P][bin_x] = MAX(max_L_histogram[i_P][bin_x], ln_likelihood_last);
+                                max_L_histogram[i_P][bin_x] = GBP_MAX(max_L_histogram[i_P][bin_x], ln_likelihood_last);
                             }
                         }
                         for(i_DS = 0; i_DS < n_DS; i_DS++) {
@@ -711,7 +711,7 @@ void analyze_MCMC(MCMC_info *MCMC) {
         // Write covariance matrix
         if(SID.I_am_Master) {
             if((fp_covariance = fopen(filename_covariance, "wb")) == NULL)
-                SID_trap_error("Could not open {%s} for writing.", ERROR_IO_OPEN, filename_covariance);
+                SID_trap_error("Could not open {%s} for writing.", SID_ERROR_IO_OPEN, filename_covariance);
             fwrite(&n_P, sizeof(int), 1, fp_covariance);
             fwrite(V_compute, sizeof(double), n_P * n_P, fp_covariance);
             fclose(fp_covariance);
@@ -722,7 +722,7 @@ void analyze_MCMC(MCMC_info *MCMC) {
         if(!flag_no_map_write) {
             for(i_DS = 0; i_DS < n_DS; i_DS++) {
                 for(i_M = 0; i_M < n_M[i_DS]; i_M++) {
-                    merge_sort(M_histogram[i_DS][i_M], (size_t)coverage_size, &histogram_index, SID_SIZE_T, SORT_COMPUTE_INDEX, FALSE);
+                    merge_sort(M_histogram[i_DS][i_M], (size_t)coverage_size, &histogram_index, SID_SIZE_T, SORT_COMPUTE_INDEX, GBP_FALSE);
                     accumulator   = M_histogram[i_DS][i_M][histogram_index[coverage_size - 1]];
                     M_best_index  = histogram_index[coverage_size - 1];
                     M_lo_68_index = histogram_index[coverage_size - 1];
@@ -760,7 +760,7 @@ void analyze_MCMC(MCMC_info *MCMC) {
 
         // Compute parameter confidence intervals from histograms
         for(i_P = 0; i_P < n_P; i_P++) {
-            merge_sort(P_histogram[i_P], (size_t)coverage_size, &histogram_index, SID_SIZE_T, SORT_COMPUTE_INDEX, FALSE);
+            merge_sort(P_histogram[i_P], (size_t)coverage_size, &histogram_index, SID_SIZE_T, SORT_COMPUTE_INDEX, GBP_FALSE);
             accumulator   = P_histogram[i_P][histogram_index[coverage_size - 1]];
             P_best_index  = histogram_index[coverage_size - 1];
             P_lo_68_index = histogram_index[coverage_size - 1];
@@ -795,7 +795,7 @@ void analyze_MCMC(MCMC_info *MCMC) {
         // Compute parameter confidence contours from coverage maps
         for(i_coverage = 0; i_coverage < n_coverage; i_coverage++) {
             merge_sort(
-                coverage_keep[i_coverage], (size_t)(coverage_size * coverage_size), &coverage_keep_index, SID_SIZE_T, SORT_COMPUTE_INDEX, FALSE);
+                coverage_keep[i_coverage], (size_t)(coverage_size * coverage_size), &coverage_keep_index, SID_SIZE_T, SORT_COMPUTE_INDEX, GBP_FALSE);
             accumulator              = coverage_keep[i_coverage][coverage_keep_index[coverage_size * coverage_size - 1]];
             P_contour_68[i_coverage] = coverage_keep[i_coverage][coverage_keep_index[coverage_size * coverage_size - 1]];
             for(j_P = (coverage_size * coverage_size) - 2; j_P >= 0 && ((double)accumulator / (double)n_used) < 0.68; j_P--) {
@@ -1040,7 +1040,7 @@ void analyze_MCMC(MCMC_info *MCMC) {
                     append_image_FITS(residual, SID_DOUBLE, current_DS->n_D, current_DS->D, filename_results, "RESIDUAL_BEST");
                 }
 #else
-                SID_trap_error("2D analysis can only be written if you compile with USE_CFITSIO=1", ERROR_LOGIC);
+                SID_trap_error("2D analysis can only be written if you compile with USE_CFITSIO=1", SID_ERROR_LOGIC);
 #endif
             }
             current_DS = next_DS;

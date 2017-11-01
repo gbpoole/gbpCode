@@ -62,7 +62,7 @@ void add_progenitor_to_halo(tree_horizontal_info **halos,
         int file_offset_new = (halos_j[j_halo].file) - (new_progenitor.halo->file);
         int file_offset_old = (halos_j[j_halo].file) - (old_progenitor.halo->file);
         if(file_offset_new <= 0 || file_offset_old <= 0)
-            SID_trap_error("Progenitor file offset is invalid (ie either %d<=0 or %d<=0).", ERROR_LOGIC, file_offset_new, file_offset_old);
+            SID_trap_error("Progenitor file offset is invalid (ie either %d<=0 or %d<=0).", SID_ERROR_LOGIC, file_offset_new, file_offset_old);
         // Create a new first progenitor ...
         if(check_if_halo_is_better_main_progenitor(&(halos_j[j_halo]), &old_progenitor, &new_progenitor)) {
             // ... let the new main progenitor inherit the descendant's id and root file number...

@@ -14,15 +14,15 @@ void init_camera(camera_info **camera, int mode) {
     // Initialize camera
     (*camera)              = (camera_info *)SID_malloc(sizeof(camera_info));
     (*camera)->camera_mode = mode;
-    (*camera)->sealed      = FALSE;
+    (*camera)->sealed      = GBP_FALSE;
 
     // Initialize the perspective information for this camera
     init_perspective(&((*camera)->perspective));
 
     // Initialze image information
-    (*camera)->flag_velocity_space    = FALSE;
+    (*camera)->flag_velocity_space    = GBP_FALSE;
     (*camera)->n_depth                = 0;
-    (*camera)->flag_depth_init        = TRUE;
+    (*camera)->flag_depth_init        = GBP_TRUE;
     (*camera)->depth_array            = NULL;
     (*camera)->depth_array_identifier = NULL;
     (*camera)->depth_array_x          = NULL;

@@ -9,7 +9,7 @@ void calc_mean_global(void *data_local, void *result, size_t n_data_local, SID_D
     if(check_mode_for_flag(mode, CALC_MODE_ABS))
         flag_abs = CALC_MODE_ABS;
     else
-        flag_abs = FALSE;
+        flag_abs = GBP_FALSE;
 
     calc_sum_global(&n_data_local, &n_data, 1, SID_SIZE_T, CALC_MODE_DEFAULT, comm);
     if(n_data < 1) {
@@ -24,7 +24,7 @@ void calc_mean_global(void *data_local, void *result, size_t n_data_local, SID_D
         else if(type == SID_SIZE_T)
             ((size_t *)result)[0] = 0;
         else
-            SID_trap_error("Unknown variable type in calc_min", ERROR_LOGIC);
+            SID_trap_error("Unknown variable type in calc_min", SID_ERROR_LOGIC);
     } else {
         calc_sum_global(data_local, &temp, n_data_local, type, CALC_MODE_RETURN_DOUBLE | flag_abs, comm);
         temp /= (double)n_data;

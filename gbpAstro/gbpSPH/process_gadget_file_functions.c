@@ -24,12 +24,12 @@ int select_gadget_cube(gadget_read_info *fp_gadget,
         half_box_size  = 0.5 * ((select_gadget_volume_params_info *)params)->box_size;
         box_size       = ((select_gadget_volume_params_info *)params)->box_size;
     }
-    int flag_select = TRUE;
+    int flag_select = GBP_TRUE;
     for(int i_coord = 0; i_coord < 3 && flag_select; i_coord++) {
         GBPREAL coord = pos[i_coord] - cen[i_coord];
         force_periodic(&coord, -half_box_size, box_size);
         if(coord < (-half_cube_size) || coord > half_cube_size)
-            flag_select = FALSE;
+            flag_select = GBP_FALSE;
     }
     return (flag_select);
 }
@@ -54,18 +54,18 @@ int select_gadget_sphere(gadget_read_info *fp_gadget,
         half_box_size  = 0.5 * ((select_gadget_volume_params_info *)params)->box_size;
         box_size       = ((select_gadget_volume_params_info *)params)->box_size;
     }
-    int     flag_select = TRUE;
+    int     flag_select = GBP_TRUE;
     GBPREAL radius2     = 0;
     for(int i_coord = 0; i_coord < 3 && flag_select; i_coord++) {
         GBPREAL coord = pos[i_coord] - cen[i_coord];
         force_periodic(&coord, -half_box_size, box_size);
         if(coord < (-sphere_radius) || coord > sphere_radius)
-            flag_select = FALSE;
+            flag_select = GBP_FALSE;
         else
             radius2 += (coord * coord);
     }
     if(radius2 > sphere_radius2)
-        flag_select = FALSE;
+        flag_select = GBP_FALSE;
 
     return (flag_select);
 }
@@ -166,5 +166,5 @@ int select_gadget_all(gadget_read_info *fp_gadget,
                       GBPREAL *         pos,
                       GBPREAL *         vel,
                       size_t            ID_i) {
-    return (TRUE);
+    return (GBP_TRUE);
 }

@@ -39,20 +39,20 @@ size_t mark_particles(plist_info *plist, int run_mode, double *input_vals, const
                     z = (GBPREAL *)ADaPS_fetch(plist->data, "z_%s", plist->species[i_species]);
                     // Loop over all particles
                     for(i_particle = 0; i_particle < n_particles_local; i_particle++) {
-                        mark_array[i_particle] = FALSE;
+                        mark_array[i_particle] = GBP_FALSE;
                         switch(flag_volume_sphere) {
-                            case TRUE:
+                            case GBP_TRUE:
                                 if(add_quad(3,
                                             (double)(x[i_particle]) - input_vals[0],
                                             (double)(y[i_particle]) - input_vals[1],
                                             (double)(z[i_particle]) - input_vals[2]) <= input_vals[3])
-                                    mark_array[i_particle] = TRUE;
+                                    mark_array[i_particle] = GBP_TRUE;
                                 break;
-                            case FALSE:
+                            case GBP_FALSE:
                                 if(x[i_particle] >= (GBPREAL)input_vals[0] && x[i_particle] <= (GBPREAL)input_vals[1]) {
                                     if(y[i_particle] >= (GBPREAL)input_vals[2] && y[i_particle] <= (GBPREAL)input_vals[3]) {
                                         if(z[i_particle] >= (GBPREAL)input_vals[4] && z[i_particle] <= (GBPREAL)input_vals[5]) {
-                                            mark_array[i_particle] = TRUE;
+                                            mark_array[i_particle] = GBP_TRUE;
                                         }
                                     }
                                 }

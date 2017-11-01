@@ -13,9 +13,9 @@ void write_cfunc(cfunc_info *cfunc, const char *filename_out_root, plist_info *p
     SID_log("Writing correlation functions...", SID_LOG_OPEN | SID_LOG_TIMER);
     if(SID.I_am_Master) {
         // Set output filenames
-        char filename_out_1D_ascii[MAX_FILENAME_LENGTH];
-        char filename_out_1D[MAX_FILENAME_LENGTH];
-        char filename_out_2D[MAX_FILENAME_LENGTH];
+        char filename_out_1D_ascii[SID_MAX_FILENAME_LENGTH];
+        char filename_out_1D[SID_MAX_FILENAME_LENGTH];
+        char filename_out_2D[SID_MAX_FILENAME_LENGTH];
         sprintf(filename_out_1D_ascii, "%s_1D_cfunc.ascii", filename_out_root);
         sprintf(filename_out_1D, "%s_1D_cfunc.dat", filename_out_root);
         sprintf(filename_out_2D, "%s_2D_cfunc.dat", filename_out_root);
@@ -29,7 +29,7 @@ void write_cfunc(cfunc_info *cfunc, const char *filename_out_root, plist_info *p
         // Write 1-D Results to an ascii file
         FILE *fp_out;
         int   i_r;
-        char  grouping_name[MAX_FILENAME_LENGTH];
+        char  grouping_name[SID_MAX_FILENAME_LENGTH];
         strcpy(grouping_name, filename_out_root);
         strip_path(grouping_name);
         fp_out = fopen(filename_out_1D_ascii, "w");

@@ -8,7 +8,7 @@
 #include <gbpMCMC.h>
 
 int main(int argc, char *argv[]) {
-    char      filename_root[MAX_FILENAME_LENGTH];
+    char      filename_root[SID_MAX_FILENAME_LENGTH];
     int       coverage_size = 100;
     MCMC_info MCMC;
 
@@ -33,5 +33,5 @@ int main(int argc, char *argv[]) {
     SID_log("Done.", SID_LOG_CLOSE);
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

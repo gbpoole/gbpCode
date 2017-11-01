@@ -72,7 +72,7 @@ int read_HDF5_3D(char *arrayName, char *filename, float **data_out, float *themi
  
 /* Malloc data_out */
 	if(( *data_out =(float *)SID_malloc(dims[0]*sizeof(float))) == NULL) {
-			SID_trap_error("Malloc of %s array failed",ERROR_MEMORY, buf);
+			SID_trap_error("Malloc of %s array failed",SID_ERROR_MEMORY, buf);
 	}
 
   /* Position has x,y,z while other arrays are just vectors */
@@ -103,8 +103,8 @@ int read_HDF5_3D(char *arrayName, char *filename, float **data_out, float *themi
  for (i=0; i<n_values/nrow; i++ )
  {
   	for (j=0; j<nrow; j++){
-		*themin = MIN(*themin, (*data_out)[i*nrow+j]);
-		*themax = MAX(*themax, (*data_out)[i*nrow+j]);
+		*themin = GBP_MIN(*themin, (*data_out)[i*nrow+j]);
+		*themax = GBP_MAX(*themax, (*data_out)[i*nrow+j]);
 		(*count)++;
 	}
  }

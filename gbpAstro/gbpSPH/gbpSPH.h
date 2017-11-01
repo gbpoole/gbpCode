@@ -4,7 +4,7 @@
 #include <gbpMath.h>
 #include <gbpCosmo.h>
 
-#define GADGET_BUFFER_SIZE SIZE_OF_MEGABYTE
+#define GADGET_BUFFER_SIZE SID_SIZE_OF_MEGABYTE
 
 #define GADGET_HEADER_SIZE 256
 #define N_GADGET_TYPE 6
@@ -21,39 +21,39 @@
 
 #define SMOOTH_N_QUANTITIES 3
 #define SMOOTH_DEFAULT 0
-#define SMOOTH_DENSITY TTTP01
-#define SMOOTH_SIGMA_V TTTP02
-#define SMOOTH_NOT_PERIODIC TTTP03
-#define SMOOTH_LONGIDS TTTP04
+#define SMOOTH_DENSITY SID_TTTP01
+#define SMOOTH_SIGMA_V SID_TTTP02
+#define SMOOTH_NOT_PERIODIC SID_TTTP03
+#define SMOOTH_LONGIDS SID_TTTP04
 
-#define READ_SMOOTH_LOG_SIGMA TTTP01
-#define READ_SMOOTH_LOG_RHO TTTP02
+#define READ_SMOOTH_LOG_SIGMA SID_TTTP01
+#define READ_SMOOTH_LOG_RHO SID_TTTP02
 
 #define READ_GADGET_DEFAULT 0
-#define READ_GADGET_NO_HUBBLE TTTP00
-#define READ_GADGET_NONE TTTP01
-#define READ_GADGET_RANDOM TTTP02
-#define READ_GADGET_MARKED TTTP03
-#define READ_GADGET_X_MIN TTTP04
-#define READ_GADGET_X_MAX TTTP05
-#define READ_GADGET_Y_MIN TTTP06
-#define READ_GADGET_Y_MAX TTTP07
-#define READ_GADGET_Z_MIN TTTP08
-#define READ_GADGET_Z_MAX TTTP09
+#define READ_GADGET_NO_HUBBLE SID_TTTP00
+#define READ_GADGET_NONE SID_TTTP01
+#define READ_GADGET_RANDOM SID_TTTP02
+#define READ_GADGET_MARKED SID_TTTP03
+#define READ_GADGET_X_MIN SID_TTTP04
+#define READ_GADGET_X_MAX SID_TTTP05
+#define READ_GADGET_Y_MIN SID_TTTP06
+#define READ_GADGET_Y_MAX SID_TTTP07
+#define READ_GADGET_Z_MIN SID_TTTP08
+#define READ_GADGET_Z_MAX SID_TTTP09
 
 // Stuff for marking particles
 #define MARK_DEFAULT 0
-#define MARK_READ_ALL TTTP00
-#define MARK_LIST_ONLY TTTP01
-#define VOLUME_BOX TTTP02
-#define VOLUME_SPHERE TTTP03
-#define MARK_PROPERTY TTTP04
-#define MARK_INIT TTTP05
-#define MARK_AND TTTP06
-#define MARK_OR TTTP07
+#define MARK_READ_ALL SID_TTTP00
+#define MARK_LIST_ONLY SID_TTTP01
+#define VOLUME_BOX SID_TTTP02
+#define VOLUME_SPHERE SID_TTTP03
+#define MARK_PROPERTY SID_TTTP04
+#define MARK_INIT SID_TTTP05
+#define MARK_AND SID_TTTP06
+#define MARK_OR SID_TTTP07
 
 #define PROCESS_GADGET_BINARY_DEFAULT 0
-#define PROCESS_GADGET_BINARY_ALL_TO_ALL TTTP00
+#define PROCESS_GADGET_BINARY_ALL_TO_ALL SID_TTTP00
 
 typedef struct gadget_header_info gadget_header_info;
 struct gadget_header_info {
@@ -82,7 +82,7 @@ struct gadget_read_info {
     gadget_header_info header;
     size_t             n_all[N_GADGET_TYPE];
     size_t             n_particles;
-    char               filename_root[MAX_FILENAME_LENGTH];
+    char               filename_root[SID_MAX_FILENAME_LENGTH];
     int                snapshot_number;
     int                flag_multifile;
     int                flag_file_type;

@@ -65,15 +65,15 @@ void display_gadget_header(plist_info *plist) {
             n_of_type[i] = ((size_t *)ADaPS_fetch(plist->data, "n_%s", pname[i]))[0];
             if(n_of_type[i] > 0) {
                 n_particles += n_of_type[i];
-                flag_used[i] = TRUE;
+                flag_used[i] = GBP_TRUE;
                 n_type_used++;
             } else {
                 n_of_type[i] = 0;
-                flag_used[i] = FALSE;
+                flag_used[i] = GBP_FALSE;
             }
         } else {
             n_of_type[i] = 0;
-            flag_used[i] = FALSE;
+            flag_used[i] = GBP_FALSE;
         }
     }
 

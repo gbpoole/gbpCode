@@ -10,7 +10,7 @@
 #include <gbpTrees_analysis.h>
 
 int check_treenode_if_merger(tree_node_info *halo) {
-    int r_val = FALSE;
+    int r_val = GBP_FALSE;
     // If this halo is undefined, it can't be a merger
     if(halo != NULL) {
         tree_node_info *descendant = halo->descendant;
@@ -18,7 +18,7 @@ int check_treenode_if_merger(tree_node_info *halo) {
         if(descendant != NULL) {
             tree_node_info *progenitor_primary = descendant->progenitor_primary;
             // If this halo's primary is undefined or it is the halo itself, it can't be a merger.
-            //    Return TRUE otherwise.
+            //    Return GBP_TRUE otherwise.
             r_val = (progenitor_primary != NULL && progenitor_primary != halo);
         }
     }

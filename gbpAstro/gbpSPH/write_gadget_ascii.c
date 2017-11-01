@@ -28,7 +28,7 @@ void write_gadget_ascii(char *filename_out, plist_info *plist, size_t *write_ord
             h_Hubble = ((double *)ADaPS_fetch(plist->data, "h_Hubble"))[0];
 
             // Open file
-            if(i_rank == MASTER_RANK) {
+            if(i_rank == SID_MASTER_RANK) {
                 fp = fopen(filename_out, "w");
                 fprintf(fp, "#Columns:\n");
                 fprintf(fp, "#  1) Gadget particle type\n");

@@ -353,10 +353,10 @@ void make_ids_list(render_info *         render,
     // Allocate the array for the list
     (*n_ids_list) = params.n_ids_list;
     switch(flag_long_ids) {
-        case TRUE:
+        case GBP_TRUE:
             (*ids_list) = SID_malloc(sizeof(size_t) * (*n_ids_list));
             break;
-        case FALSE:
+        case GBP_FALSE:
             (*ids_list) = SID_malloc(sizeof(int) * (*n_ids_list));
             break;
     }
@@ -376,11 +376,11 @@ void make_ids_list(render_info *         render,
 
     // Sort the list in place
     switch(flag_long_ids) {
-        case TRUE:
-            merge_sort((*ids_list), (*n_ids_list), NULL, SID_SIZE_T, SORT_INPLACE_ONLY, TRUE);
+        case GBP_TRUE:
+            merge_sort((*ids_list), (*n_ids_list), NULL, SID_SIZE_T, SORT_INPLACE_ONLY, GBP_TRUE);
             break;
-        case FALSE:
-            merge_sort((*ids_list), (*n_ids_list), NULL, SID_INT, SORT_INPLACE_ONLY, TRUE);
+        case GBP_FALSE:
+            merge_sort((*ids_list), (*n_ids_list), NULL, SID_INT, SORT_INPLACE_ONLY, GBP_TRUE);
             break;
     }
 }
@@ -409,7 +409,7 @@ void apply_mark_list(render_info *  render,
     size_t *ids             = (size_t *)ADaPS_fetch(render->plist_list[i_snap]->data, "id_%s", render->plist_list[i_snap]->species[i_type]);
     size_t *ids_index;
     if(!ADaPS_exist(render->plist_list[i_snap]->data, "id_%s_index", render->plist_list[i_snap]->species[i_type])) {
-        merge_sort(ids, n_species_local, &ids_index, SID_SIZE_T, SORT_COMPUTE_INDEX, FALSE);
+        merge_sort(ids, n_species_local, &ids_index, SID_SIZE_T, SORT_COMPUTE_INDEX, GBP_FALSE);
         ADaPS_store(&(render->plist_list[i_snap]->data), ids_index, "id_%s_index", ADaPS_DEFAULT, render->plist_list[i_snap]->species[i_type]);
     } else
         ids_index = (size_t *)ADaPS_fetch(render->plist_list[i_snap]->data, "id_%s_index", render->plist_list[i_snap]->species[i_type]);
@@ -468,12 +468,12 @@ void execute_marking_argument_local(render_info *render, mark_arg_info *arg, hal
     else if(!strcmp(arg->type, "<n_p"))
         SID_log("Marking groups with less than %d particles...", SID_LOG_OPEN | SID_LOG_TIMER, arg->ival[0]);
     else
-        SID_trap_error("Invalid selection type {%s} in perform_marking().", ERROR_LOGIC, arg->type);
+        SID_trap_error("Invalid selection type {%s} in perform_marking().", SID_ERROR_LOGIC, arg->type);
     for(int i_snap = 0; i_snap < render->n_interpolate; i_snap++) {
         // TODO: This error is necessary because the interpolation (as coded presently) gets scrambled
         //    if the same particles are not invovled in both snapshots.
         if(render->n_interpolate > 1)
-            SID_trap_error("n_interpolate>1 not supported in marking.", ERROR_LOGIC);
+            SID_trap_error("n_interpolate>1 not supported in marking.", SID_ERROR_LOGIC);
         if(render->n_interpolate > 1)
             SID_log("Processing snapshot %d...", SID_LOG_OPEN | SID_LOG_TIMER);
         plist_info *plist       = render->plist_list[i_snap];
@@ -585,7 +585,7 @@ void execute_marking_argument_local(render_info *render, mark_arg_info *arg, hal
                             count_function  = count_group_ids_local;
                             action_function = add_group_to_ids_list_local;
                         } else
-                            SID_trap_error("Option {%s} not properly implemented in perform_marking().", ERROR_LOGIC, arg->type);
+                            SID_trap_error("Option {%s} not properly implemented in perform_marking().", SID_ERROR_LOGIC, arg->type);
 
                         // Create list of particles to mark
                         void * ids_list   = NULL;
@@ -610,7 +610,7 @@ void execute_marking_argument_local(render_info *render, mark_arg_info *arg, hal
                         SID_free(SID_FARG ids_list);
                         SID_free(SID_FARG val_list);
                     } else
-                        SID_trap_error("Invalid selection type {%s} in perform_marking().", ERROR_LOGIC, arg->type);
+                        SID_trap_error("Invalid selection type {%s} in perform_marking().", SID_ERROR_LOGIC, arg->type);
                     n_particles += n_species_local;
                 }
             }
@@ -643,7 +643,7 @@ void perform_marking(render_info *render) {
             if(current_arg->flag_keep_properties) {
                 if(i_mark_properties >= render->n_mark_properties)
                     SID_trap_error(
-                        "Marked properties array has been over-run (i.e. %d>=%d)", ERROR_LOGIC, i_mark_properties, render->n_mark_properties);
+                        "Marked properties array has been over-run (i.e. %d>=%d)", SID_ERROR_LOGIC, i_mark_properties, render->n_mark_properties);
                 properties = &(render->mark_properties[i_mark_properties++]);
             }
 
@@ -662,9 +662,9 @@ void perform_marking(render_info *render) {
         // Sanity checks
         if(i_mark_properties != render->n_mark_properties)
             SID_trap_error(
-                "Marked properties array has not been properly populated (i.e. %d!=%d)", ERROR_LOGIC, i_mark_properties, render->n_mark_properties);
+                "Marked properties array has not been properly populated (i.e. %d!=%d)", SID_ERROR_LOGIC, i_mark_properties, render->n_mark_properties);
         if(i_arg != render->n_mark_args)
-            SID_trap_error("Marked properties array has not been properly populated (i.e. %d!=%d)", ERROR_LOGIC, i_arg, render->n_mark_properties);
+            SID_trap_error("Marked properties array has not been properly populated (i.e. %d!=%d)", SID_ERROR_LOGIC, i_arg, render->n_mark_properties);
 
         SID_log("Done.", SID_LOG_CLOSE);
     }

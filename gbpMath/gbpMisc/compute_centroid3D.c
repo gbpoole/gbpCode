@@ -31,15 +31,15 @@ int compute_centroid3D(double *W,
     int flag_centroid_inplace;
     int flag_return_indices;
     if(check_mode_for_flag(mode, CENTROID3D_MODE_STEP)) {
-        flag_centroid_step = TRUE;
+        flag_centroid_step = GBP_TRUE;
         if(step <= 0.)
-            SID_trap_error("Invalid step size selected (%le) for mode %d in compute_centroid3D().", ERROR_LOGIC, step, mode);
+            SID_trap_error("Invalid step size selected (%le) for mode %d in compute_centroid3D().", SID_ERROR_LOGIC, step, mode);
     } else if(check_mode_for_flag(mode, CENTROID3D_MODE_FACTOR)) {
-        flag_centroid_step = FALSE;
+        flag_centroid_step = GBP_FALSE;
         if(step >= 1. || step <= 0.)
-            SID_trap_error("Invalid step size selected (%le) for mode %d in compute_centroid3D().", ERROR_LOGIC, step, mode);
+            SID_trap_error("Invalid step size selected (%le) for mode %d in compute_centroid3D().", SID_ERROR_LOGIC, step, mode);
     } else
-        SID_trap_error("Invalid mode (%d) specified in compute_3dcentroid().", ERROR_LOGIC, mode);
+        SID_trap_error("Invalid mode (%d) specified in compute_3dcentroid().", SID_ERROR_LOGIC, mode);
     flag_centroid_inplace = check_mode_for_flag(mode, CENTROID3D_MODE_INPLACE);
     flag_return_indices   = check_mode_for_flag(mode, CENTROID3D_MODE_RETURN_INDICES);
 
@@ -95,7 +95,7 @@ int compute_centroid3D(double *W,
         }
 
         // Sort initial radii
-        merge_sort(R, (size_t)n, &R_index, SID_DOUBLE, SORT_COMPUTE_INDEX, FALSE);
+        merge_sort(R, (size_t)n, &R_index, SID_DOUBLE, SORT_COMPUTE_INDEX, GBP_FALSE);
         R_max = R[R_index[n - 1]];
 
         // Initialize convergence criteria and some working variables
@@ -112,9 +112,9 @@ int compute_centroid3D(double *W,
         // Loop until convergence
         int continue_flag;
         if(N > convergence_N && R_ap > R_min)
-            continue_flag = TRUE;
+            continue_flag = GBP_TRUE;
         else
-            continue_flag = FALSE;
+            continue_flag = GBP_FALSE;
         while(continue_flag) {
             // Recentre particles and recompute radii
             if(n_iterations > 0) {
@@ -127,7 +127,7 @@ int compute_centroid3D(double *W,
 
                 // Sort radii
                 SID_free(SID_FARG R_index);
-                merge_sort(R, (size_t)n, &R_index, SID_DOUBLE, SORT_COMPUTE_INDEX, FALSE);
+                merge_sort(R, (size_t)n, &R_index, SID_DOUBLE, SORT_COMPUTE_INDEX, GBP_FALSE);
             }
 
             // Test for a new centre
@@ -160,7 +160,7 @@ int compute_centroid3D(double *W,
                 else
                     R_ap *= step;
             } else
-                continue_flag = FALSE;
+                continue_flag = GBP_FALSE;
             n_iterations++;
         }
 

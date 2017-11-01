@@ -20,7 +20,7 @@ void add_MCMC_DS(MCMC_info *MCMC, const char *name, int n_D, int *D, double *DS,
 
 #if USE_CFITSIO == 0
     if(n_D > 1)
-        SID_trap_error("You can only use 2D datasets if you compile with USE_CFITSIO=1 at the moment.", ERROR_LOGIC);
+        SID_trap_error("You can only use 2D datasets if you compile with USE_CFITSIO=1 at the moment.", SID_ERROR_LOGIC);
 #endif
 
     // Initialize new dataset

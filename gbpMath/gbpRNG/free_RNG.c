@@ -7,5 +7,5 @@ void free_RNG(RNG_info *RNG) {
     free_sprng(RNG->stream);
 #endif
 #endif
-    RNG->initialized = FALSE;
+    RNG->initialized = GBP_FALSE;
 }

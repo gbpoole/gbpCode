@@ -80,8 +80,8 @@ void precompute_treenode_markers_recursive(tree_info *         trees,
         }
         // Process halos that are not leaves
         else {
-            int                flag_is_a_merger        = FALSE;
-            int                flag_has_a_primary      = FALSE;
+            int                flag_is_a_merger        = GBP_FALSE;
+            int                flag_has_a_primary      = GBP_FALSE;
             tree_node_info *   halo_main_progenitor    = NULL; // Main progenitor
             tree_node_info *   halo_secondary          = NULL; // Secondary halo of a merger
             tree_node_info *   halo_primary            = NULL; // Primary   halo of a merger
@@ -108,7 +108,7 @@ void precompute_treenode_markers_recursive(tree_info *         trees,
                 if(check_mode_for_flag(current_progenitor->tree_case, TREE_CASE_MERGER_PRIMARY)) {
                     halo_primary       = current_progenitor;
                     n_p_peak_primary   = current_progenitor->n_particles_peak;
-                    flag_has_a_primary = TRUE;
+                    flag_has_a_primary = GBP_TRUE;
                 }
 
                 // Find the most massive secondary if this is a merger
@@ -118,7 +118,7 @@ void precompute_treenode_markers_recursive(tree_info *         trees,
                         halo_secondary     = current_progenitor;
                         n_p_peak_secondary = n_p_peak_current;
                     }
-                    flag_is_a_merger = TRUE;
+                    flag_is_a_merger = GBP_TRUE;
                 }
 
                 // Move to the next progenitor
@@ -127,7 +127,7 @@ void precompute_treenode_markers_recursive(tree_info *         trees,
 
             // Sanity check
             if(flag_is_a_merger && !flag_has_a_primary)
-                SID_trap_error("A halo has been found to have a merger but a primary has not been marked.", ERROR_LOGIC);
+                SID_trap_error("A halo has been found to have a merger but a primary has not been marked.", SID_ERROR_LOGIC);
 
             // Set formation pointers
             find_treenode_formation(trees, halo, 0.5, &(markers_halo->half_peak_mass));

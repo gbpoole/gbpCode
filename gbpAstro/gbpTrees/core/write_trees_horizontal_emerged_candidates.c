@@ -14,10 +14,10 @@ void write_trees_horizontal_emerged_candidates(int                   i_read,
                                                char *                group_text_prefix,
                                                char *                filename_output_dir,
                                                int                   flag_start_new_file) {
-    char  filename_output_dir_horizontal[MAX_FILENAME_LENGTH];
-    char  filename_output_dir_horizontal_cases[MAX_FILENAME_LENGTH];
-    char  filename_output_file_root[MAX_FILENAME_LENGTH];
-    char  filename_matching_out[MAX_FILENAME_LENGTH];
+    char  filename_output_dir_horizontal[SID_MAX_FILENAME_LENGTH];
+    char  filename_output_dir_horizontal_cases[SID_MAX_FILENAME_LENGTH];
+    char  filename_output_file_root[SID_MAX_FILENAME_LENGTH];
+    char  filename_matching_out[SID_MAX_FILENAME_LENGTH];
     FILE *fp_matching_out;
 
     SID_log("Writing candidate emerged halo information...", SID_LOG_OPEN | SID_LOG_TIMER);

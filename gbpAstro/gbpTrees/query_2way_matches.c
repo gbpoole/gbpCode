@@ -10,8 +10,8 @@
 int main(int argc, char *argv[]) {
     int    n_search;
     int    i_halo;
-    char   filename_SSimPL_root[MAX_FILENAME_LENGTH];
-    char   filename_in[MAX_FILENAME_LENGTH];
+    char   filename_SSimPL_root[SID_MAX_FILENAME_LENGTH];
+    char   filename_in[SID_MAX_FILENAME_LENGTH];
     char   group_text_prefix[4];
     int    n_files;
     int    k_read;
@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
         mode = MATCH_SUBGROUPS;
     else {
         SID_log("Invalid mode selection {%s}.  Should be 'group' or 'subgroup'.", SID_LOG_COMMENT, argv[2]);
-        SID_exit(ERROR_SYNTAX);
+        SID_exit(SID_ERROR_SYNTAX);
     }
     i_read = atoi(argv[3]);
     j_read = atoi(argv[4]);
@@ -56,12 +56,12 @@ int main(int argc, char *argv[]) {
     }
 
     // Set the standard SSiMPL match file path
-    char filename_root_in[MAX_FILENAME_LENGTH];
+    char filename_root_in[SID_MAX_FILENAME_LENGTH];
     sprintf(filename_root_in, "%s/trees/matches/", filename_SSimPL_root);
 
     // Set the output file
-    char filename_base[MAX_FILENAME_LENGTH];
-    char filename_out[MAX_FILENAME_LENGTH];
+    char filename_base[SID_MAX_FILENAME_LENGTH];
+    char filename_out[SID_MAX_FILENAME_LENGTH];
     strcpy(filename_base, filename_SSimPL_root);
     if(!strcmp(&(filename_base[strlen(filename_base) - 1]), "/"))
         strcpy(&(filename_base[strlen(filename_base) - 1]), "\0");
@@ -86,7 +86,7 @@ int main(int argc, char *argv[]) {
         SID_fseek(&fp_in, sizeof(int), n_groups, SID_SEEK_CUR);
         if(mode == MATCH_GROUPS)
             SID_fseek(&fp_in, sizeof(int), n_groups, SID_SEEK_CUR);
-        max_n_groups = MAX(max_n_groups, n_groups);
+        max_n_groups = GBP_MAX(max_n_groups, n_groups);
     }
     SID_log("Max # groups=%d", SID_LOG_COMMENT, max_n_groups);
     SID_fclose(&fp_in);
@@ -124,7 +124,7 @@ int main(int argc, char *argv[]) {
                  NULL,
                  match_forward_2way,
                  F_MATCH_MOMENT_DIFF_MIN_DEFAULT,
-                 FALSE);
+                 GBP_FALSE);
     SID_log("Done.", SID_LOG_CLOSE);
     SID_log("Processing backwards matches...", SID_LOG_OPEN | SID_LOG_TIMER);
     read_matches(filename_root_in,
@@ -144,7 +144,7 @@ int main(int argc, char *argv[]) {
                  NULL,
                  match_backward_2way,
                  F_MATCH_MOMENT_DIFF_MIN_DEFAULT,
-                 FALSE);
+                 GBP_FALSE);
     SID_log("Done.", SID_LOG_CLOSE);
 
     // Open output file
@@ -166,7 +166,7 @@ int main(int argc, char *argv[]) {
         if(match_forward_2way[i_halo]) {
             if(j_halo < 0 || j_halo > n_groups_j)
                 SID_trap_error(
-                    "There's an invalid match id (ie. %d<0 || %d>%d)  attached to a 2-way match!", ERROR_LOGIC, j_halo, j_halo, n_groups_j);
+                    "There's an invalid match id (ie. %d<0 || %d>%d)  attached to a 2-way match!", SID_ERROR_LOGIC, j_halo, j_halo, n_groups_j);
             fprintf(fp_out,
                     "%7d %7d %6d %6d %10.3le %7d %10.3le %10.3le %7d %10.3le\n",
                     i_halo,
@@ -196,5 +196,5 @@ int main(int argc, char *argv[]) {
     SID_free(SID_FARG match_backward_2way);
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

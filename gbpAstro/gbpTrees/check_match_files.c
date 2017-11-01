@@ -10,7 +10,7 @@
 int main(int argc, char *argv[]) {
     int    n_search;
     int    i_halo;
-    char   filename_in[MAX_FILENAME_LENGTH];
+    char   filename_in[SID_MAX_FILENAME_LENGTH];
     char   group_text_prefix[4];
     int    n_files;
     int    k_read;
@@ -28,7 +28,7 @@ int main(int argc, char *argv[]) {
     SID_init(&argc, &argv, NULL, NULL);
 
     // Fetch user inputs
-    char filename_SSimPL_root[MAX_FILENAME_LENGTH];
+    char filename_SSimPL_root[SID_MAX_FILENAME_LENGTH];
     strcpy(filename_SSimPL_root, argv[1]);
     SID_log("Checking the integrity of the match files for {%s}...", SID_LOG_OPEN | SID_LOG_TIMER, filename_SSimPL_root);
     int *n_groups    = NULL;
@@ -48,7 +48,7 @@ int main(int argc, char *argv[]) {
         SID_log("Processing %sgroups...", SID_LOG_OPEN | SID_LOG_TIMER, group_text_prefix);
 
         // Set the standard SSiMPL match file path
-        char filename_root_in[MAX_FILENAME_LENGTH];
+        char filename_root_in[SID_MAX_FILENAME_LENGTH];
         sprintf(filename_root_in, "%s/trees/matches/", filename_SSimPL_root);
 
         // Read halo sizes from header file
@@ -101,7 +101,7 @@ int main(int argc, char *argv[]) {
 
         SID_log("Processing match files...", SID_LOG_OPEN | SID_LOG_TIMER);
         for(int i_read = i_read_start; i_read < i_read_stop; i_read++) {
-            for(int j_read = MAX(0, i_read - n_search); j_read < MIN(i_read_stop, i_read + n_search); j_read++) {
+            for(int j_read = GBP_MAX(0, i_read - n_search); j_read < GBP_MIN(i_read_stop, i_read + n_search); j_read++) {
                 if(i_read != j_read) {
                     sprintf(filename_in, "%s/%03d/%sgroup_matches_%03d_%03d.dat", filename_root_in, i_read, group_text_prefix, i_read, j_read);
                     SID_log("Processing {%s}...", SID_LOG_OPEN, filename_in);
@@ -158,5 +158,5 @@ int main(int argc, char *argv[]) {
     SID_free(SID_FARG n_subgroups);
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

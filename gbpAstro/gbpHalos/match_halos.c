@@ -122,29 +122,29 @@ void match_halos(plist_info *plist_1_in,
 
     // Right now, moment preselection is just fixed to 'on'.
     //    Functionality to turn this on/off could be added later.
-    int flag_moment_preselection = TRUE;
+    int flag_moment_preselection = GBP_TRUE;
 
     // Determine if we are matching groups or subgroups (default is subgroups)
     if(check_mode_for_flag(mode, MATCH_GROUPS) && check_mode_for_flag(mode, MATCH_SUBGROUPS))
-        SID_trap_error("match_groups can't match both groups and subgroups (yet).", ERROR_LOGIC);
+        SID_trap_error("match_groups can't match both groups and subgroups (yet).", SID_ERROR_LOGIC);
     else if(check_mode_for_flag(mode, MATCH_GROUPS))
-        flag_match_subgroups = FALSE;
+        flag_match_subgroups = GBP_FALSE;
     else if(check_mode_for_flag(mode, MATCH_SUBGROUPS))
-        flag_match_subgroups = TRUE;
+        flag_match_subgroups = GBP_TRUE;
     else
-        flag_match_subgroups = TRUE;
+        flag_match_subgroups = GBP_TRUE;
 
     // Are we matching substructure (we will ignore self matches and
     //   select the largest of multiple matches if so)
     if(check_mode_for_flag(mode, MATCH_SUBSTRUCTURE)) {
-        flag_match_subgroups    = FALSE;
-        flag_match_substructure = TRUE;
+        flag_match_subgroups    = GBP_FALSE;
+        flag_match_substructure = GBP_TRUE;
     } else
-        flag_match_substructure = FALSE;
+        flag_match_substructure = GBP_FALSE;
 
     // matching of substructure is broken right now.
     if(flag_match_substructure)
-        SID_trap_error("Matching of substructure is broken in match_halos() right now.", ERROR_LOGIC);
+        SID_trap_error("Matching of substructure is broken in match_halos() right now.", SID_ERROR_LOGIC);
 
     // Check if we are using Peano-Hilbert Key (PHK) decomposition
     int n_groups_boundary_1;
@@ -154,9 +154,9 @@ void match_halos(plist_info *plist_1_in,
     int n_bits_PHK_1;
     int n_bits_PHK_2;
     if(ADaPS_exist(plist_1->data, "n_bits_PHK_%s", catalog_1)) {
-        flag_PHK_decomp = TRUE;
+        flag_PHK_decomp = GBP_TRUE;
         if(!ADaPS_exist(plist_2->data, "n_bits_PHK_%s", catalog_2))
-            SID_trap_error("Both catalogs must be loaded with PHK decompositions.", ERROR_LOGIC);
+            SID_trap_error("Both catalogs must be loaded with PHK decompositions.", SID_ERROR_LOGIC);
         n_bits_PHK_1                 = ((int *)ADaPS_fetch(plist_1->data, "n_bits_PHK_%s", catalog_1))[0];
         n_bits_PHK_2                 = ((int *)ADaPS_fetch(plist_2->data, "n_bits_PHK_%s", catalog_2))[0];
         n_particles_boundary_1       = ((int *)ADaPS_fetch(plist_1->data, "n_particles_boundary_%s", catalog_1))[0];
@@ -169,9 +169,9 @@ void match_halos(plist_info *plist_1_in,
             n_groups_boundary_2_local = ((int *)ADaPS_fetch(plist_2->data, "n_groups_boundary_%s", catalog_2))[0];
         }
         if(n_bits_PHK_1 != n_bits_PHK_2 && (n_bits_PHK_1 != 0 && n_bits_PHK_2 != 0)) // n_bits=0 if there are no groups
-            SID_trap_error("PHK decomposition of the two catalogs is incompatible (ie. %d!=%d).", ERROR_LOGIC, n_bits_PHK_1, n_bits_PHK_2);
+            SID_trap_error("PHK decomposition of the two catalogs is incompatible (ie. %d!=%d).", SID_ERROR_LOGIC, n_bits_PHK_1, n_bits_PHK_2);
     } else
-        flag_PHK_decomp = FALSE;
+        flag_PHK_decomp = GBP_FALSE;
 
     // Fetch some info and print log message
     if(flag_match_subgroups) {
@@ -226,20 +226,20 @@ void match_halos(plist_info *plist_1_in,
     //   only interested in certain objects
     calc_sum_global(&n_mark_1_local, &n_mark_1_all, 1, SID_INT, CALC_MODE_DEFAULT, SID.COMM_WORLD);
     if(n_mark_1_all > 0) {
-        flag_read_marked = TRUE;
+        flag_read_marked = GBP_TRUE;
         n_match_1        = n_mark_1_local;
         n_match_1_all    = n_mark_1_all;
     } else {
-        flag_read_marked = FALSE;
+        flag_read_marked = GBP_FALSE;
         n_match_1        = n_groups_1;
         n_match_1_all    = n_groups_1_all;
     }
 
     // Check if we are storing the match score.
     if(check_mode_for_flag(mode, MATCH_STORE_SCORE))
-        flag_store_score = TRUE;
+        flag_store_score = GBP_TRUE;
     else
-        flag_store_score = FALSE;
+        flag_store_score = GBP_FALSE;
 
     // Create the array that will hold the results and set values to a
     //   default of -1 for groups that don't get matched (for substructure
@@ -313,7 +313,7 @@ void match_halos(plist_info *plist_1_in,
         if(mark_list_1 == NULL)
             mark_list_index_1 = NULL;
         else
-            merge_sort((void *)mark_list_1, (size_t)n_mark_1_local, &mark_list_index_1, SID_INT, SORT_COMPUTE_INDEX, FALSE);
+            merge_sort((void *)mark_list_1, (size_t)n_mark_1_local, &mark_list_index_1, SID_INT, SORT_COMPUTE_INDEX, GBP_FALSE);
 
         // We need group ids of the 1st catalog if matching substructure
         group_index_1 = (int *)SID_malloc(sizeof(int) * n_particles_1);
@@ -356,7 +356,7 @@ void match_halos(plist_info *plist_1_in,
                     group_index_2_local[group_offset_2_local[i_group] + i_particle] = i_group;
             }
         } else {
-            merge_sort((void *)mark_list_2_local, (size_t)n_mark_2_local, &mark_list_index_2_local, SID_INT, SORT_COMPUTE_INDEX, FALSE);
+            merge_sort((void *)mark_list_2_local, (size_t)n_mark_2_local, &mark_list_index_2_local, SID_INT, SORT_COMPUTE_INDEX, GBP_FALSE);
             for(i_group = 0, i_mark = 0; i_group < n_groups_2_local && i_mark < n_mark_2_local; i_group++) {
                 if(mark_list_2_local[mark_list_index_2_local[i_mark]] == i_group) {
                     for(i_particle = 0; i_particle < n_particles_group_2_local[i_group]; i_particle++)
@@ -396,18 +396,18 @@ void match_halos(plist_info *plist_1_in,
             if(flag_read_marked) {
                 if(mark_list_index_1 != NULL) {
                     if(mark_list_1[mark_list_index_1[i_mark]] == i_group) {
-                        flag_match_this = TRUE;
+                        flag_match_this = GBP_TRUE;
                     } else {
-                        flag_match_this = FALSE;
+                        flag_match_this = GBP_FALSE;
                     }
                 } else {
                     if(mark_list_1[i_mark] == i_group)
-                        flag_match_this = TRUE;
+                        flag_match_this = GBP_TRUE;
                     else
-                        flag_match_this = FALSE;
+                        flag_match_this = GBP_FALSE;
                 }
             } else
-                flag_match_this = TRUE;
+                flag_match_this = GBP_TRUE;
             n_hist_array[i_group] = 0;
             if(flag_match_this) {
                 hist_size_array[i_group]  = 4;
@@ -441,8 +441,8 @@ void match_halos(plist_info *plist_1_in,
                 SID_log("Sorting all IDs...", SID_LOG_OPEN | SID_LOG_TIMER);
                 index_1       = NULL;
                 index_2_local = NULL;
-                merge_sort(id_1, (size_t)(n_particles_1), &index_1, SID_SIZE_T, SORT_COMPUTE_INDEX, FALSE);
-                merge_sort(id_2_local, (size_t)(n_particles_2_local), &index_2_local, SID_SIZE_T, SORT_COMPUTE_INDEX, FALSE);
+                merge_sort(id_1, (size_t)(n_particles_1), &index_1, SID_SIZE_T, SORT_COMPUTE_INDEX, GBP_FALSE);
+                merge_sort(id_2_local, (size_t)(n_particles_2_local), &index_2_local, SID_SIZE_T, SORT_COMPUTE_INDEX, GBP_FALSE);
                 SID_log("Done.", SID_LOG_CLOSE);
             }
             // We just need to sort the boundary particles once
@@ -450,8 +450,8 @@ void match_halos(plist_info *plist_1_in,
                 SID_log("Sorting boundary IDs...", SID_LOG_OPEN | SID_LOG_TIMER);
                 SID_free(SID_FARG index_1);
                 SID_free(SID_FARG index_2_local);
-                merge_sort(id_1, (size_t)(n_particles_exchange_1), &index_1, SID_SIZE_T, SORT_COMPUTE_INDEX, FALSE);
-                merge_sort(id_2_local, (size_t)(n_particles_exchange_2), &index_2_local, SID_SIZE_T, SORT_COMPUTE_INDEX, FALSE);
+                merge_sort(id_1, (size_t)(n_particles_exchange_1), &index_1, SID_SIZE_T, SORT_COMPUTE_INDEX, GBP_FALSE);
+                merge_sort(id_2_local, (size_t)(n_particles_exchange_2), &index_2_local, SID_SIZE_T, SORT_COMPUTE_INDEX, GBP_FALSE);
                 SID_log("Done.", SID_LOG_CLOSE);
             }
 
@@ -510,14 +510,14 @@ void match_halos(plist_info *plist_1_in,
 
             // Perform matching
             int    max_id_gap      = 100;  // If two consecuative IDs are more than this appart, use bisection to find next index
-            int    flag_use_bisect = TRUE; // This will skip all the zeros at the beginning of the list due to unused particles and jump big id gaps
+            int    flag_use_bisect = GBP_TRUE; // This will skip all the zeros at the beginning of the list due to unused particles and jump big id gaps
             size_t id_1_last       = 0;
             short int hist_size;
             size_t    idx_1;
             size_t    idx_2;
             int       rank_1;
             SID_log("Performing matching...", SID_LOG_OPEN);
-            for(i_particle = 0, j_particle = 0; i_particle < n_particles_1 && j_particle < n_particles_2; i_particle++, flag_use_bisect = FALSE) {
+            for(i_particle = 0, j_particle = 0; i_particle < n_particles_1 && j_particle < n_particles_2; i_particle++, flag_use_bisect = GBP_FALSE) {
                 idx_1   = index_1[i_particle];
                 i_group = group_index_1[idx_1];
                 rank_1  = particle_rank_1[idx_1];
@@ -531,7 +531,7 @@ void match_halos(plist_info *plist_1_in,
                     // Set the ID we are looking for and decide how we're going to find it
                     id_1_i = id_1[idx_1];
                     if((id_1_i - id_1_last) > max_id_gap)
-                        flag_use_bisect = TRUE;
+                        flag_use_bisect = GBP_TRUE;
                     id_1_last = id_1_i;
 
                     // Look for the current particle in the second catalog ...
@@ -557,17 +557,17 @@ void match_halos(plist_info *plist_1_in,
                         short int i_hist;
                         short int j_hist;
                         switch(flag_match_substructure) {
-                            case TRUE:
-                                for(i_hist = 0, flag = TRUE; i_hist < n_hist_array[i_group] && flag; i_hist++) {
+                            case GBP_TRUE:
+                                for(i_hist = 0, flag = GBP_TRUE; i_hist < n_hist_array[i_group] && flag; i_hist++) {
                                     if(hist_list[i_hist] == file_index_2_j) {
                                         hist_score[i_hist] += 1.;
                                         hist_count[i_hist]++;
                                     }
-                                    flag = FALSE;
+                                    flag = GBP_FALSE;
                                 }
                                 break;
                             default:
-                                flag = TRUE;
+                                flag = GBP_TRUE;
                                 for(i_hist = 0; i_hist < n_hist_array[i_group] && flag; i_hist++) {
                                     if(hist_list[i_hist] == file_index_2_j) {
                                         if(rank_1 < n_score_lookup_table)
@@ -575,7 +575,7 @@ void match_halos(plist_info *plist_1_in,
                                         else
                                             hist_score[i_hist] += (float)pow((double)(rank_1), match_weight_rank_index);
                                         hist_count[i_hist]++;
-                                        flag = FALSE;
+                                        flag = GBP_FALSE;
                                     }
                                 }
                                 break;
@@ -604,7 +604,7 @@ void match_halos(plist_info *plist_1_in,
                                 hist_count = hist_count_array[i_group];
                             }
                             switch(flag_match_substructure) {
-                                case TRUE:
+                                case GBP_TRUE:
                                     if(n_particles_group_1[i_group] < n_particles_group_2[j_group]) {
                                         hist_list[0]          = file_index_2_j;
                                         hist_score[0]         = 1.;
@@ -646,7 +646,7 @@ void match_halos(plist_info *plist_1_in,
                     hist_count = hist_count_array[i_group];
                     switch(flag_match_substructure) {
                         // Keep the smallest system if we are matching substructure
-                        case TRUE:
+                        case GBP_TRUE:
                             for(i_hist = 1; i_hist < n_hist_array[i_group]; i_hist++) {
                                 if(n_particles_group_2[hist_list[i_hist]] < n_particles_group_2[hist_list[j_hist]])
                                     j_hist = i_hist;
@@ -685,7 +685,7 @@ void match_halos(plist_info *plist_1_in,
                     if(match[i_mark] < (-1) || match[i_mark] >= n_groups_2_all) {
                         SID_log_warning(
                             "Invalid match_id (%d) for i_mark/i_group=%d/%d.  There are %d objects in the target catalog. n_hist/j_hist=%d/%d",
-                            ERROR_LOGIC,
+                            SID_ERROR_LOGIC,
                             match[i_mark],
                             i_mark,
                             i_group,
@@ -693,7 +693,7 @@ void match_halos(plist_info *plist_1_in,
                             n_hist_array[i_group],
                             j_hist);
                         SID_trap_error("Invalid match_id (%d) for i_mark/i_group=%d/%d.  There are %d objects in the target catalog.",
-                                       ERROR_LOGIC,
+                                       SID_ERROR_LOGIC,
                                        match[i_mark],
                                        i_mark,
                                        i_group,

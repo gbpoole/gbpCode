@@ -71,16 +71,16 @@ void analyze_halos_and_N_subhalos(tree_info * trees,
     // Write properties and tracks for selected z_select groups and subgroups
     char catalog_name[32];
     sprintf(catalog_name, "%s_groups", catalog_root);
-    write_tree_branches(trees, list_groups, n_list_groups, TRUE, filename_out_root, catalog_name);
+    write_tree_branches(trees, list_groups, n_list_groups, GBP_TRUE, filename_out_root, catalog_name);
     average_tree_branches(catalog_name);
     for(int i_track = 0; i_track < n_subgroups_track_max; i_track++) {
         if(i_track == 0) {
             sprintf(catalog_name, "%s_subgroups_all", catalog_root);
-            write_tree_branches(trees, list_subgroups_all, n_list_subgroups_all, FALSE, filename_out_root, catalog_name);
+            write_tree_branches(trees, list_subgroups_all, n_list_subgroups_all, GBP_FALSE, filename_out_root, catalog_name);
             average_tree_branches(catalog_name);
         }
         sprintf(catalog_name, "%s_subgroups_%02d", catalog_root, i_track);
-        write_tree_branches(trees, list_subgroups[i_track], n_list_subgroups[i_track], FALSE, filename_out_root, catalog_name);
+        write_tree_branches(trees, list_subgroups[i_track], n_list_subgroups[i_track], GBP_FALSE, filename_out_root, catalog_name);
         average_tree_branches(catalog_name);
     }
 

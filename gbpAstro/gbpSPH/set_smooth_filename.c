@@ -4,8 +4,8 @@
 #include <string.h>
 
 void set_smooth_filename(char *filename_root_in, int snapshot_number, int multifile_number, int flag_multifile, int flag_file_type, char *filename) {
-    char filename_root[MAX_FILENAME_LENGTH];
-    char filename_path[MAX_FILENAME_LENGTH];
+    char filename_root[SID_MAX_FILENAME_LENGTH];
+    char filename_path[SID_MAX_FILENAME_LENGTH];
 
     // Determine/set the filename root and path
     strcpy(filename_root, filename_root_in);

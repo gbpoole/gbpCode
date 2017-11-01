@@ -72,7 +72,7 @@ int main(int argc, char *argv[]) {
             fread_catalog_file(&fp_catalog, NULL, NULL, properties, NULL, i_halo);
 
             // Store needed quantities
-            if(TRUE) {
+            if(GBP_TRUE) {
                 M_vir[n_keep]  = (double)(properties->M_vir);
                 x_halo[n_keep] = (double)(properties->position_COM[0]);
                 y_halo[n_keep] = (double)(properties->position_COM[1]);
@@ -149,5 +149,5 @@ int main(int argc, char *argv[]) {
         SID_log("Done.", SID_LOG_CLOSE);
     }
 
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

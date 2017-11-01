@@ -11,7 +11,7 @@
 
 void compute_trees_stats(tree_info *trees) {
     // Make sure the output directory exists
-    char filename_out_root[MAX_FILENAME_LENGTH];
+    char filename_out_root[SID_MAX_FILENAME_LENGTH];
     sprintf(filename_out_root, "%s/treenode", trees->filename_root_analysis);
     mkdir(trees->filename_root_analysis, 02755);
 

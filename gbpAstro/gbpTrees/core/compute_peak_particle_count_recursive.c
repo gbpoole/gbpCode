@@ -34,8 +34,8 @@ void compute_peak_particle_count_recursive(tree_info *     trees,
             trees, current_progenitor, &flag_fragmented_prog, &n_particles_peak_prog, &n_particles_inclusive_peak_prog);
         // Don't propagate peak particle counts if this is a merging fragment
         if(flag_fragmented == flag_fragmented_prog) {
-            this_halo->n_particles_peak           = MAX(this_halo->n_particles_peak, n_particles_peak_prog);
-            this_halo->n_particles_inclusive_peak = MAX(this_halo->n_particles_inclusive_peak, n_particles_inclusive_peak_prog);
+            this_halo->n_particles_peak           = GBP_MAX(this_halo->n_particles_peak, n_particles_peak_prog);
+            this_halo->n_particles_inclusive_peak = GBP_MAX(this_halo->n_particles_inclusive_peak, n_particles_inclusive_peak_prog);
         }
         current_progenitor = current_progenitor->progenitor_next;
     }
@@ -47,8 +47,8 @@ void compute_peak_particle_count_recursive(tree_info *     trees,
     }
     // ... else, apply dominant halo logic
     else if(this_halo->parent_top == NULL || flag_most_massive == flag_dominant) {
-        this_halo->n_particles_peak           = MAX(this_halo->n_particles_peak, this_halo->n_particles);
-        this_halo->n_particles_inclusive_peak = MAX(this_halo->n_particles_inclusive_peak, this_halo->n_particles_inclusive);
+        this_halo->n_particles_peak           = GBP_MAX(this_halo->n_particles_peak, this_halo->n_particles);
+        this_halo->n_particles_inclusive_peak = GBP_MAX(this_halo->n_particles_inclusive_peak, this_halo->n_particles_inclusive);
     }
 
     // Pass results up the tree

@@ -22,7 +22,7 @@ double bisect_array(interp_info *interp, double value, double threshold) {
     double                       x_hi;
     double                       r_val;
     int                          i;
-    int                          alloc_flag = FALSE;
+    int                          alloc_flag = GBP_FALSE;
     int                          iter       = 0;
     int                          max_iter   = 500;
     int                          status     = GSL_CONTINUE;

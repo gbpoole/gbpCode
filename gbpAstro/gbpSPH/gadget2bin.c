@@ -27,7 +27,7 @@ int main(int argc, char *argv[]) {
     if(argc != 5) {
         fprintf(stderr, "\n syntax: %s filename_root_in snapshot_start snapshot_stop snapshot_step\n", argv[0]);
         fprintf(stderr, " ------\n\n");
-        return (ERROR_SYNTAX);
+        return (SID_ERROR_SYNTAX);
     } else {
         strcpy(filename_root_in, argv[1]);
         snapshot_start = atoi(argv[2]);
@@ -55,5 +55,5 @@ int main(int argc, char *argv[]) {
         SID_log("Done.", SID_LOG_CLOSE);
     }
 
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

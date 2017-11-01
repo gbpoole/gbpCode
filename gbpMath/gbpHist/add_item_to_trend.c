@@ -13,7 +13,7 @@ int add_item_to_trend(trend_info *trend, int mode, void *item_ordinate, ...) {
     else if(check_mode_for_flag(mode, GBP_ADD_ITEM_TO_TREND_ORDINATE))
         item_coordinate = (void *)va_arg(vargs, void *);
     else
-        SID_trap_error("Invalid mode (%d) passed to add_item_to_trend.", ERROR_LOGIC, mode);
+        SID_trap_error("Invalid mode (%d) passed to add_item_to_trend.", SID_ERROR_LOGIC, mode);
 
     int i_ordinate = trend->ordinate->calc_function(trend->ordinate, &(trend->ordinate->hist[0]), item_ordinate);
     if(is_histogram_index_in_range(&(trend->ordinate->hist[0]), i_ordinate)) {

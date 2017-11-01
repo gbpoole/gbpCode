@@ -34,7 +34,7 @@ void read_trees_final_totals(char *filename_output_dir_horizontal_trees,
 
     // Determining iso-tree id mappings (onto tree structures, ranks and files).  Read header info
     //    from the i_read_start'th file since that is where the final tree tally gets written.
-    char   filename_in[MAX_FILENAME_LENGTH];
+    char   filename_in[SID_MAX_FILENAME_LENGTH];
     SID_fp fp_in;
     int    n_step_in;
     int    n_search_in;
@@ -51,9 +51,9 @@ void read_trees_final_totals(char *filename_output_dir_horizontal_trees,
     SID_fread_all(n_trees_subgroup, sizeof(int), 1, &fp_in);
     SID_fread_all(n_trees_group, sizeof(int), 1, &fp_in);
     SID_fclose(&fp_in);
-    (*n_progenitors_max) = MAX((*n_groups_max_in), (*n_subgroups_max_in));
+    (*n_progenitors_max) = GBP_MAX((*n_groups_max_in), (*n_subgroups_max_in));
     if(n_step_in != i_read_step)
-        SID_trap_error("Snapshot step sizes don't match (ie. %d!=%d)", ERROR_LOGIC, n_step_in, i_read_step);
+        SID_trap_error("Snapshot step sizes don't match (ie. %d!=%d)", SID_ERROR_LOGIC, n_step_in, i_read_step);
     SID_log("No. of    group trees (total)=%d", SID_LOG_COMMENT, n_trees_group);
     SID_log("No. of subgroup trees (total)=%d", SID_LOG_COMMENT, n_trees_subgroup);
     SID_log("tree_node structure size     =%zd bytes", SID_LOG_COMMENT, sizeof(tree_node_info));

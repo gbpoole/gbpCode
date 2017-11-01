@@ -11,17 +11,17 @@
 int main(int argc, char *argv[]) {
     SID_init(&argc, &argv, NULL, NULL);
 
-    char filename_root[MAX_FILENAME_LENGTH];
-    char filename_catalog_root[MAX_FILENAME_LENGTH];
-    char filename_out_root[MAX_FILENAME_LENGTH];
-    char filename_out_groups[MAX_FILENAME_LENGTH];
-    char filename_out_subgroups[MAX_FILENAME_LENGTH];
-    char filename_out_list[MAX_FILENAME_LENGTH];
+    char filename_root[SID_MAX_FILENAME_LENGTH];
+    char filename_catalog_root[SID_MAX_FILENAME_LENGTH];
+    char filename_out_root[SID_MAX_FILENAME_LENGTH];
+    char filename_out_groups[SID_MAX_FILENAME_LENGTH];
+    char filename_out_subgroups[SID_MAX_FILENAME_LENGTH];
+    char filename_out_list[SID_MAX_FILENAME_LENGTH];
     int  snap_start, snap_stop, snap_step;
     int  tree_type;
 
     if(argc != 6)
-        SID_trap_error("Invalid syntax.", ERROR_SYNTAX);
+        SID_trap_error("Invalid syntax.", SID_ERROR_SYNTAX);
     int i_tree_extract_group    = -1;
     int i_tree_extract_subgroup = -1;
     strcpy(filename_root, argv[1]);
@@ -40,15 +40,15 @@ int main(int argc, char *argv[]) {
         sprintf(filename_out_list, "%s_subgroup_forest.ascii", filename_out_root);
         fp_out_subgroups = fopen(filename_out_subgroups, "w");
     } else
-        SID_trap_error("Invalid tree type specified {%s}.", ERROR_SYNTAX, argv[2]);
+        SID_trap_error("Invalid tree type specified {%s}.", SID_ERROR_SYNTAX, argv[2]);
 
     SID_log("Extracting horizontal tree...", SID_LOG_OPEN | SID_LOG_TIMER);
-    char   filename_file_root[MAX_FILENAME_LENGTH];
-    char   filename_dir_horizontal[MAX_FILENAME_LENGTH];
-    char   filename_dir_horizontal_trees[MAX_FILENAME_LENGTH];
-    char   filename_dir_horizontal_groups[MAX_FILENAME_LENGTH];
-    char   filename_dir_horizontal_subgroups[MAX_FILENAME_LENGTH];
-    char   filename_in[MAX_FILENAME_LENGTH];
+    char   filename_file_root[SID_MAX_FILENAME_LENGTH];
+    char   filename_dir_horizontal[SID_MAX_FILENAME_LENGTH];
+    char   filename_dir_horizontal_trees[SID_MAX_FILENAME_LENGTH];
+    char   filename_dir_horizontal_groups[SID_MAX_FILENAME_LENGTH];
+    char   filename_dir_horizontal_subgroups[SID_MAX_FILENAME_LENGTH];
+    char   filename_in[SID_MAX_FILENAME_LENGTH];
     SID_fp fp_in;
     strcpy(filename_file_root, filename_root);
     strip_path(filename_file_root);
@@ -183,13 +183,13 @@ int main(int argc, char *argv[]) {
                     i_forest_subgroups_start[subgroup_tree_id] = i_read;
                     i_forest_subgroups[subgroup_tree_id]       = group_tree_id;
                 }
-                subgroup_tree_id_min = MIN(subgroup_tree_id_min, i_forest_subgroups[subgroup_tree_id]);
-                subgroup_tree_id_max = MAX(subgroup_tree_id_min, i_forest_subgroups[subgroup_tree_id]);
+                subgroup_tree_id_min = GBP_MIN(subgroup_tree_id_min, i_forest_subgroups[subgroup_tree_id]);
+                subgroup_tree_id_max = GBP_MAX(subgroup_tree_id_min, i_forest_subgroups[subgroup_tree_id]);
                 if(i_tree_extract_group == group_tree_id) {
-                    int flag_found = FALSE;
+                    int flag_found = GBP_FALSE;
                     for(i_tree = 0; i_tree < n_forest_list && !flag_found; i_tree++) {
                         if(i_forest_list[i_tree] == i_forest_subgroups[subgroup_tree_id])
-                            flag_found = TRUE;
+                            flag_found = GBP_TRUE;
                     }
                     // if(!flag_found && i_forest_subgroups_start[subgroup_tree_id]<(i_read+max_link_length)){
                     if(!flag_found) {
@@ -247,5 +247,5 @@ int main(int argc, char *argv[]) {
     if(fp_out_subgroups != NULL)
         fclose(fp_out_subgroups);
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

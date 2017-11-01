@@ -95,7 +95,7 @@ int main(int argc, char *argv[]) {
     strcpy(filename_out_root, argv[7]);
     sprintf(filename_in_root, "%s/catalogs/%s", filename_SSimPL_root, filename_halos_root);
 
-    int flag_use_profiles = FALSE;
+    int flag_use_profiles = GBP_FALSE;
 
     // Create histograms
     hist_info   hist_logM_vir_group;
@@ -119,7 +119,7 @@ int main(int argc, char *argv[]) {
 
         // Open the halo file (needed to get n_substructure)
         int  n_groups_all, n_bytes_groups;
-        char filename_groups[MAX_FILENAME_LENGTH];
+        char filename_groups[SID_MAX_FILENAME_LENGTH];
         sprintf(filename_groups, "%s/halos/%s_%03d.catalog_groups", filename_SSimPL_root, filename_halos_root, snap_number);
         FILE *fp_groups = fopen(filename_groups, "r");
         fread_verify(&n_groups_all, sizeof(int), 1, fp_groups);
@@ -127,7 +127,7 @@ int main(int argc, char *argv[]) {
 
         // Sanity checks
         if(n_bytes_groups != 4 && n_bytes_groups != 8)
-            SID_trap_error("Invalid group offset byte length (%d).", ERROR_LOGIC, n_bytes_groups);
+            SID_trap_error("Invalid group offset byte length (%d).", SID_ERROR_LOGIC, n_bytes_groups);
 
         // Skip to the number of subgroups
         fseeko(fp_groups, sizeof(int) * n_groups_all, SEEK_CUR);
@@ -178,10 +178,10 @@ int main(int argc, char *argv[]) {
         finalize_trend(trend_M_group);
 
         // Write results
-        char filename_logM_vir_group[MAX_FILENAME_LENGTH];
-        char filename_logM_vir_subgroup[MAX_FILENAME_LENGTH];
-        char filename_f_cen[MAX_FILENAME_LENGTH];
-        char filename_f_sub[MAX_FILENAME_LENGTH];
+        char filename_logM_vir_group[SID_MAX_FILENAME_LENGTH];
+        char filename_logM_vir_subgroup[SID_MAX_FILENAME_LENGTH];
+        char filename_f_cen[SID_MAX_FILENAME_LENGTH];
+        char filename_f_sub[SID_MAX_FILENAME_LENGTH];
         sprintf(filename_logM_vir_group, "%03d_logM_vir_group.txt", snap_number);
         sprintf(filename_logM_vir_subgroup, "%03d_logM_vir_subgroup.txt", snap_number);
         sprintf(filename_f_cen, "%s_%03d", filename_out_root, snap_number);
@@ -204,5 +204,5 @@ int main(int argc, char *argv[]) {
 
     SID_log("Done.", SID_LOG_CLOSE);
 
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

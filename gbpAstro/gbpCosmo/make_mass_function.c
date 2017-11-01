@@ -10,8 +10,8 @@
 int main(int argc, char *argv[]) {
     SID_init(&argc, &argv, NULL, NULL);
 
-    char   filename_cosmology[MAX_FILENAME_LENGTH];
-    char   paramterization[MAX_FILENAME_LENGTH];
+    char   filename_cosmology[SID_MAX_FILENAME_LENGTH];
+    char   paramterization[SID_MAX_FILENAME_LENGTH];
     double log_M_min = atof(argv[1]);
     double log_M_max = atof(argv[2]);
     int    n_M_bins  = atoi(argv[3]);
@@ -54,10 +54,10 @@ int main(int argc, char *argv[]) {
         sprintf(mfn_text, "Poole et al (2015)");
         select_flag = MF_TIAMAT;
     } else
-        SID_trap_error("Invalid parameterization selected {%s}.  Should be {JENKINS,PS or ST}.", ERROR_SYNTAX, paramterization);
+        SID_trap_error("Invalid parameterization selected {%s}.  Should be {JENKINS,PS or ST}.", SID_ERROR_SYNTAX, paramterization);
 
     // Create output filename
-    char  filename_out[MAX_FILENAME_LENGTH];
+    char  filename_out[SID_MAX_FILENAME_LENGTH];
     char  redshift_text[64];
     char *cosmology_name = (char *)ADaPS_fetch(cosmo, "name");
     float_to_text(redshift, 2, redshift_text);
@@ -110,5 +110,5 @@ int main(int argc, char *argv[]) {
     free_cosmo(&cosmo);
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

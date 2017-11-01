@@ -23,13 +23,13 @@ void calc_sum(void *data, void *result, size_t n_data, SID_Datatype type, int mo
         else if(type == SID_LONG_LONG)
             ((long long *)result)[0] = 0;
         else
-            SID_trap_error("Unknown variable type in calc_sum", ERROR_LOGIC);
+            SID_trap_error("Unknown variable type in calc_sum", SID_ERROR_LOGIC);
     }
     if(type == SID_DOUBLE) {
         d_temp = 0.;
         if(check_mode_for_flag(mode, CALC_MODE_ABS))
             for(i_data = 0; i_data < n_data; i_data++)
-                d_temp += IABS(((double *)data)[i_data]);
+                d_temp += GBP_IABS(((double *)data)[i_data]);
         else
             for(i_data = 0; i_data < n_data; i_data++)
                 d_temp += ((double *)data)[i_data];
@@ -37,7 +37,7 @@ void calc_sum(void *data, void *result, size_t n_data, SID_Datatype type, int mo
         f_temp = 0.;
         if(check_mode_for_flag(mode, CALC_MODE_ABS))
             for(i_data = 0; i_data < n_data; i_data++)
-                f_temp += IABS(((float *)data)[i_data]);
+                f_temp += GBP_IABS(((float *)data)[i_data]);
         else
             for(i_data = 0; i_data < n_data; i_data++)
                 f_temp += ((float *)data)[i_data];
@@ -45,7 +45,7 @@ void calc_sum(void *data, void *result, size_t n_data, SID_Datatype type, int mo
         i_temp = 0;
         if(check_mode_for_flag(mode, CALC_MODE_ABS))
             for(i_data = 0; i_data < n_data; i_data++)
-                i_temp += IABS(((int *)data)[i_data]);
+                i_temp += GBP_IABS(((int *)data)[i_data]);
         else
             for(i_data = 0; i_data < n_data; i_data++)
                 i_temp += ((int *)data)[i_data];
@@ -74,7 +74,7 @@ void calc_sum(void *data, void *result, size_t n_data, SID_Datatype type, int mo
             for(i_data = 0; i_data < n_data; i_data++)
                 l_temp += ((long long *)data)[i_data];
     } else
-        SID_trap_error("Unknown variable type in calc_sum", ERROR_LOGIC);
+        SID_trap_error("Unknown variable type in calc_sum", SID_ERROR_LOGIC);
 
     if(type == SID_DOUBLE || check_mode_for_flag(mode, CALC_MODE_RETURN_DOUBLE))
         ((double *)result)[0] = d_temp;
@@ -89,5 +89,5 @@ void calc_sum(void *data, void *result, size_t n_data, SID_Datatype type, int mo
     else if(type == SID_LONG_LONG)
         ((long long *)result)[0] = l_temp;
     else
-        SID_trap_error("Unknown variable type in calc_sum", ERROR_LOGIC);
+        SID_trap_error("Unknown variable type in calc_sum", SID_ERROR_LOGIC);
 }

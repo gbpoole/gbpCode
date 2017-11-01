@@ -40,8 +40,8 @@ endif()
 link_libraries(${FFTW_LIBRARIES})
 list(APPEND FFTW_LIBRARIES ${FFTW_LIBRARY} )
 
-# handle the QUIETLY and REQUIRED arguments and set FFTW_FOUND to TRUE if
-# all listed variables are TRUE
+# handle the QUIETLY and REQUIRED arguments and set FFTW_FOUND to GBP_TRUE if
+# all listed variables are GBP_TRUE
 include (FindPackageHandleStandardArgs)
 find_package_handle_standard_args (FFTW DEFAULT_MSG FFTW_LIBRARIES FFTW_INCLUDES)
 

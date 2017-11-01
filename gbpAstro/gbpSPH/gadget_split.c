@@ -12,13 +12,13 @@ int main(int argc, char *argv[]) {
 
     // Parse command line
     int  snapshot;
-    char filename_in_root[MAX_FILENAME_LENGTH];
-    char filename_out_root[MAX_FILENAME_LENGTH];
+    char filename_in_root[SID_MAX_FILENAME_LENGTH];
+    char filename_out_root[SID_MAX_FILENAME_LENGTH];
     int  n_split;
     if(argc != 5) {
         fprintf(stderr, "\n syntax: %s filename_in snapshot filename_out n_files\n", argv[0]);
         fprintf(stderr, " ------\n\n");
-        return (ERROR_SYNTAX);
+        return (SID_ERROR_SYNTAX);
     } else {
         strcpy(filename_in_root, argv[1]);
         snapshot = atoi(argv[2]);
@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
     int                flag_file_type = fp_gadget.flag_file_type;
     gadget_header_info header         = fp_gadget.header;
     if(!flag_filefound)
-        SID_trap_error("File not found.", ERROR_LOGIC);
+        SID_trap_error("File not found.", SID_ERROR_LOGIC);
 
     // Loop over the number of files in the snapshot
     int n_files;
@@ -49,26 +49,26 @@ int main(int argc, char *argv[]) {
         n_files = 0;
     if(n_files < SID.n_proc)
         SID_log("You are processing %d files with %d cores.  %d cores will go unused.", SID_LOG_COMMENT, n_files, SID.n_proc, SID.n_proc - n_files);
-    char  filename_in[MAX_FILENAME_LENGTH];
-    char  filename_out[MAX_FILENAME_LENGTH];
+    char  filename_in[SID_MAX_FILENAME_LENGTH];
+    char  filename_out[SID_MAX_FILENAME_LENGTH];
     int   n_alloc;
     char *buffer;
     n_alloc = 32 * 1024 * 1024;
     buffer  = (char *)SID_malloc(3 * sizeof(GBPREAL) * n_alloc);
     for(int i_file = 0; i_file < n_files; i_file++) {
         if(n_files > 1)
-            SID_log("Processing file(s) %d->%d...", SID_LOG_OPEN, i_file, MIN(i_file + SID.n_proc - 1, n_files - 1));
+            SID_log("Processing file(s) %d->%d...", SID_LOG_OPEN, i_file, GBP_MIN(i_file + SID.n_proc - 1, n_files - 1));
 
         // Create the directory needed for the snapshot
         gadget_read_info fp_gadget_temp;
         memcpy(&fp_gadget_temp, &fp_gadget, sizeof(gadget_read_info));
-        fp_gadget_temp.flag_multifile = TRUE;
+        fp_gadget_temp.flag_multifile = GBP_TRUE;
         fp_gadget_temp.flag_file_type = 0;
         sprintf(fp_gadget_temp.filename_root, "%s", filename_out_root);
         set_gadget_filename(&fp_gadget_temp, 0, filename_out);
         if(i_file == 0) {
             FILE *fp_test;
-            char  filename_out_directory[MAX_FILENAME_LENGTH];
+            char  filename_out_directory[SID_MAX_FILENAME_LENGTH];
             strcpy(filename_out_directory, filename_out);
             strip_file_root(filename_out_directory);
             if((fp_test = fopen(filename_out_directory, "r")) == NULL)
@@ -89,7 +89,7 @@ int main(int argc, char *argv[]) {
         int   i_type;
         set_gadget_filename(&fp_gadget, i_file, filename_in);
         if((fp_in = fopen(filename_in, "r")) == NULL)
-            SID_trap_error("Could not open {%s}.", ERROR_IO_OPEN, filename_in);
+            SID_trap_error("Could not open {%s}.", SID_ERROR_IO_OPEN, filename_in);
         fread_verify(&record_length_in, sizeof(int), 1, fp_in);
         fread_verify(&header, sizeof(gadget_header_info), 1, fp_in);
         fread_verify(&record_length_out, sizeof(int), 1, fp_in);
@@ -110,10 +110,10 @@ int main(int argc, char *argv[]) {
             fseeko(fp_in, 4 + sizeof(gadget_header_info) + 4, SEEK_SET);
 
             // Open new file for writing
-            char             filename_in[MAX_FILENAME_LENGTH];
+            char             filename_in[SID_MAX_FILENAME_LENGTH];
             gadget_read_info fp_gadget_temp;
             memcpy(&fp_gadget_temp, &fp_gadget, sizeof(gadget_read_info));
-            fp_gadget_temp.flag_multifile = TRUE;
+            fp_gadget_temp.flag_multifile = GBP_TRUE;
             fp_gadget_temp.flag_file_type = 0;
             sprintf(fp_gadget_temp.filename_root, "%s", filename_out_root);
             set_gadget_filename(&fp_gadget_temp, i_split, filename_out);
@@ -128,7 +128,7 @@ int main(int argc, char *argv[]) {
                 else
                     header.n_file[i_type] = n_in[i_type] / n_split;
                 n_particles_i += header.n_file[i_type];
-                n_buffer_max = MAX(n_buffer_max, header.n_file[i_type]);
+                n_buffer_max = GBP_MAX(n_buffer_max, header.n_file[i_type]);
             }
 
             // Create read buffer (this is long enough for all blocks, even if IDs are long)
@@ -176,7 +176,7 @@ int main(int argc, char *argv[]) {
             else if(record_length_in / sizeof(long long) == n_in_total)
                 id_byte_size = sizeof(long long);
             else
-                SID_trap_error("Invalid input IDs block size (%d).", ERROR_LOGIC, record_length_in);
+                SID_trap_error("Invalid input IDs block size (%d).", SID_ERROR_LOGIC, record_length_in);
 
             // Read/Write IDs
             record_length_write = n_particles_i * id_byte_size;
@@ -205,5 +205,5 @@ int main(int argc, char *argv[]) {
     free_plist(&plist);
     SID_log("Done.", SID_LOG_CLOSE);
 
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

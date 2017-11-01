@@ -9,7 +9,7 @@
 void write_a_list(const char *filename_snap_list_in, const char *filename_root_out, int i_read_start, int i_read_stop, int i_read_step) {
     // Create snapshot expansion factor list
     if(SID.I_am_Master) {
-        char filename_snap_list_out[MAX_FILENAME_LENGTH];
+        char filename_snap_list_out[SID_MAX_FILENAME_LENGTH];
         sprintf(filename_snap_list_out, "%s/a_list.txt", filename_root_out);
         SID_log("Creating snapshot list...", SID_LOG_OPEN);
 

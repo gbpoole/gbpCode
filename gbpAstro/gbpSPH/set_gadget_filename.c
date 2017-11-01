@@ -5,8 +5,8 @@
 
 void set_gadget_filename(gadget_read_info *fp_gadget, int multifile_number, char *filename) {
     // Determine/set the filename root and path
-    char filename_root[MAX_FILENAME_LENGTH];
-    char filename_path[MAX_FILENAME_LENGTH];
+    char filename_root[SID_MAX_FILENAME_LENGTH];
+    char filename_path[SID_MAX_FILENAME_LENGTH];
     strcpy(filename_root, fp_gadget->filename_root);
     strip_path(filename_root);
     if(strlen(filename_root) == 0)

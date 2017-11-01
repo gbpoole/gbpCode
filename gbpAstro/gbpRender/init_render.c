@@ -35,11 +35,11 @@ void init_render(render_info **render) {
     (*render)->h_Hubble            = 1.;
     (*render)->box_size            = 0.;
     (*render)->f_absorption        = -1.;
-    (*render)->flag_read_marked    = FALSE;
-    (*render)->flag_comoving       = TRUE;
-    (*render)->flag_fade           = FALSE;
-    (*render)->flag_force_periodic = TRUE;
-    (*render)->flag_add_absorption = FALSE;
+    (*render)->flag_read_marked    = GBP_FALSE;
+    (*render)->flag_comoving       = GBP_TRUE;
+    (*render)->flag_fade           = GBP_FALSE;
+    (*render)->flag_force_periodic = GBP_TRUE;
+    (*render)->flag_add_absorption = GBP_FALSE;
     (*render)->alpha_fade          = 2.;
     (*render)->v_mode              = MAKE_MAP_DEFAULT;
     (*render)->w_mode              = MAKE_MAP_DEFAULT;
@@ -79,7 +79,7 @@ void init_render(render_info **render) {
     sprintf((*render)->snap_a_list_filename, "none");
 
     // Indicates that we haven't finalized this structure yet
-    (*render)->sealed = FALSE;
+    (*render)->sealed = GBP_FALSE;
 
     SID_log("Done.", SID_LOG_CLOSE);
 }

@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
     if(argc != 3) {
         fprintf(stderr, "\n syntax: %s filename_in_root snapshot\n", argv[0]);
         fprintf(stderr, " ------\n\n");
-        SID_exit(ERROR_SYNTAX);
+        SID_exit(SID_ERROR_SYNTAX);
     }
     strcpy(filename_in, argv[1]);
     snapshot = atoi(argv[2]);
@@ -30,5 +30,5 @@ int main(int argc, char *argv[]) {
     // Clean-up
     free_plist(&plist);
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

@@ -70,9 +70,9 @@ void init_make_map_noabs(render_info *render,
     // Plane parallel projection?
     int flag_plane_parallel;
     if(check_mode_for_flag(camera_mode, CAMERA_PLANE_PARALLEL))
-        flag_plane_parallel = TRUE;
+        flag_plane_parallel = GBP_TRUE;
     else
-        flag_plane_parallel = FALSE;
+        flag_plane_parallel = GBP_FALSE;
 
     // Report the state of some flags
     if(flag_plane_parallel)
@@ -124,12 +124,12 @@ void init_make_map_noabs(render_info *render,
     double d_image_plane = d_o * f_image_plane;
 
     // Set mark arrays
-    int    flag_mark_on = FALSE;
+    int    flag_mark_on = GBP_FALSE;
     char **mark         = (char **)SID_malloc(sizeof(char *) * N_GADGET_TYPE);
     for(i_type = 0; i_type < N_GADGET_TYPE; i_type++) {
         if(ADaPS_exist(render->plist_list[0]->data, "mark_%s", render->plist_list[0]->species[i_type])) {
             mark[i_type] = (char *)ADaPS_fetch(render->plist_list[0]->data, "mark_%s", render->plist_list[0]->species[i_type]);
-            flag_mark_on = TRUE;
+            flag_mark_on = GBP_TRUE;
         } else
             mark[i_type] = NULL;
     }
@@ -167,8 +167,8 @@ void init_make_map_noabs(render_info *render,
                 for(i_particle = i_rank, k_particle = j_particle + i_rank; i_particle < n_particles_species;
                     i_particle += SID.n_proc, k_particle += SID.n_proc) {
                     if(check_if_particle_marked(mark, i_type, i_particle, &c_i)) {
-                        // Set the preoperties of the particle to be mapped (mode is FALSE because we DON'T need the angular size of the particle)
-                        set_particle_map_quantities(render, &mq, FALSE, k_particle, box_size_float, half_box, &x_i, &y_i, &z_i, &h_i, &v_i, &w_i);
+                        // Set the preoperties of the particle to be mapped (mode is GBP_FALSE because we DON'T need the angular size of the particle)
+                        set_particle_map_quantities(render, &mq, GBP_FALSE, k_particle, box_size_float, half_box, &x_i, &y_i, &z_i, &h_i, &v_i, &w_i);
                         // Transform particle to render-coordinates
                         transform_particle(&x_i,
                                            &y_i,
@@ -264,7 +264,7 @@ void init_make_map_noabs(render_info *render,
                     i_particle += SID.n_proc, k_particle += SID.n_proc) {
                     if(check_if_particle_marked(mark, i_type, i_particle, &c_i)) {
                         // Set the properties of the particle to be mapped
-                        set_particle_map_quantities(render, &mq, TRUE, k_particle, box_size_float, half_box, &x_i, &y_i, &z_i, &h_i, &v_i, &w_i);
+                        set_particle_map_quantities(render, &mq, GBP_TRUE, k_particle, box_size_float, half_box, &x_i, &y_i, &z_i, &h_i, &v_i, &w_i);
 
                         // Transform particle to render-coordinates
                         transform_particle(&x_i,
@@ -307,7 +307,7 @@ void init_make_map_noabs(render_info *render,
         } // loop over particles
         if(particle_index != n_rank_local[rank_to])
             SID_trap_error(
-                "Buffer particle count does not equal desired exchange count (ie. %zd!=%zd)", ERROR_LOGIC, particle_index, n_rank_local[rank_to]);
+                "Buffer particle count does not equal desired exchange count (ie. %zd!=%zd)", SID_ERROR_LOGIC, particle_index, n_rank_local[rank_to]);
 
         // Perform exchanges
         size_t n_exchange;
@@ -326,12 +326,12 @@ void init_make_map_noabs(render_info *render,
     // Sanity checks
     if(j_particle_rank != n_particles_local)
         SID_trap_error(
-            "The wrong number of particles were received (ie. %zd!=%zd) on rank %d.", ERROR_LOGIC, j_particle_rank, n_particles_local, SID.My_rank);
+            "The wrong number of particles were received (ie. %zd!=%zd) on rank %d.", SID_ERROR_LOGIC, j_particle_rank, n_particles_local, SID.My_rank);
 
     SID_log("Done.", SID_LOG_CLOSE);
 
     // Sort the local particles by position
-    merge_sort((*z), (size_t)(*n_particles), z_index, SID_FLOAT, SORT_COMPUTE_INDEX, FALSE);
+    merge_sort((*z), (size_t)(*n_particles), z_index, SID_FLOAT, SORT_COMPUTE_INDEX, GBP_FALSE);
 
     // Clean-up
     SID_free(SID_FARG n_rank);

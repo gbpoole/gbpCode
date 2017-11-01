@@ -27,6 +27,6 @@ float maximum_match_score(double n_particles) {
     else
         SID_trap_error(
             "Invalid MATCH_SCORE_RANK_INDEX passed to maximum_match_score().  Please update the code to accomodate MATCH_SCORE_RANK_INDEX=%lf.",
-            ERROR_LOGIC,
+            SID_ERROR_LOGIC,
             MATCH_SCORE_RANK_INDEX);
 }

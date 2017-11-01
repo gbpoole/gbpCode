@@ -13,7 +13,7 @@ void check_integrity_grids(const char *filename_in) {
     // Open input files
     FILE *fp_in = NULL;
     if((fp_in = fopen(filename_in, "r")) == NULL)
-        SID_trap_error("Could not open {%s} for reading.", ERROR_IO_OPEN, filename_in);
+        SID_trap_error("Could not open {%s} for reading.", SID_ERROR_IO_OPEN, filename_in);
 
     // Read the needed header information and rewind
     int    n[3];
@@ -54,7 +54,7 @@ void check_integrity_grids(const char *filename_in) {
     char test;
     fread(&test, 1, 1, fp_in);
     if(!feof(fp_in))
-        SID_trap_error("There are stray bytes at the end of {%s} (%lld bytes read).", ERROR_LOGIC, filename_in, n_bytes);
+        SID_trap_error("There are stray bytes at the end of {%s} (%lld bytes read).", SID_ERROR_LOGIC, filename_in, n_bytes);
 
     // Free the read buffer
     SID_free(SID_FARG buffer);

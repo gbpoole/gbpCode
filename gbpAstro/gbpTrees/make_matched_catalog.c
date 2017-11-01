@@ -11,12 +11,12 @@ int main(int argc, char *argv[]) {
     SID_init(&argc, &argv, NULL, NULL);
 
     // Fetch user inputs
-    char filename_SSimPL_dir[MAX_FILENAME_LENGTH];
-    char filename_halo_version_root[MAX_FILENAME_LENGTH];
-    char filename_trees_root[MAX_FILENAME_LENGTH];
-    char filename_trees_name[MAX_FILENAME_LENGTH];
-    char filename_halos_root[MAX_FILENAME_LENGTH];
-    char filename_out_root[MAX_FILENAME_LENGTH];
+    char filename_SSimPL_dir[SID_MAX_FILENAME_LENGTH];
+    char filename_halo_version_root[SID_MAX_FILENAME_LENGTH];
+    char filename_trees_root[SID_MAX_FILENAME_LENGTH];
+    char filename_trees_name[SID_MAX_FILENAME_LENGTH];
+    char filename_halos_root[SID_MAX_FILENAME_LENGTH];
+    char filename_out_root[SID_MAX_FILENAME_LENGTH];
     strcpy(filename_SSimPL_dir, argv[1]);
     strcpy(filename_halo_version_root, argv[2]);
     strcpy(filename_trees_name, argv[3]);
@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
     // Generate two catalogs
     SID_log("Compiling catalogs...", SID_LOG_OPEN | SID_LOG_TIMER);
     for(int i_cat = 0; i_cat < 2; i_cat++) {
-        char filename_out[MAX_FILENAME_LENGTH];
+        char filename_out[SID_MAX_FILENAME_LENGTH];
         switch(i_cat) {
             case 0:
                 SID_log("Processing group catalog...", SID_LOG_OPEN);
@@ -275,5 +275,5 @@ int main(int argc, char *argv[]) {
     free_trees(&trees);
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

@@ -58,7 +58,7 @@ void autotune_MCMC_covariance(MCMC_info *MCMC) {
     n_covariance         = 0;
 
     // Start from the initial conditions for each iteration
-    MCMC->flag_init_chain = TRUE;
+    MCMC->flag_init_chain = GBP_TRUE;
 
     // Integrate the covariance matrix until it convergence
     while(difference > covariance_threshold) {
@@ -93,7 +93,7 @@ void autotune_MCMC_covariance(MCMC_info *MCMC) {
         for(i_P = 0, k_P = 0; i_P < n_P; i_P++) {
             for(j_P = 0; j_P < n_P; j_P++, k_P++) {
                 difference_i = 1e2 * (double)fabs(V_compute_last[k_P] - V_compute[k_P]) / V_compute_last[k_P];
-                difference   = MAX(difference, difference_i);
+                difference   = GBP_MAX(difference, difference_i);
             }
         }
         memcpy(V_compute_last, V_compute, (size_t)(n_P_squared) * sizeof(double));

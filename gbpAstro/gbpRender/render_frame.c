@@ -9,7 +9,7 @@
 
 void render_frame(render_info *render) {
     // Check that the camera is sealed
-    check_camera_sealed(render->camera, TRUE);
+    check_camera_sealed(render->camera, GBP_TRUE);
 
     // Fetch some needed simulation stuff
     double box_size         = ((double *)ADaPS_fetch(render->plist_list[0]->data,
@@ -61,7 +61,7 @@ void render_frame(render_info *render) {
     double taper_width = d_taper_field - d_near_field;
     if(taper_width < 0.)
         SID_trap_error("The near-field distance (%le [%s]) must be less than the taper distance (%le [%s]) if non-zero.",
-                       ERROR_LOGIC,
+                       SID_ERROR_LOGIC,
                        d_near_field * unit_factor,
                        unit_text,
                        d_taper_field * unit_factor,
@@ -126,7 +126,7 @@ void render_frame(render_info *render) {
                 break;
             // Shouldn't make it here
             default:
-                SID_trap_error("Invalid value for i_image (%d).", ERROR_LOGIC, i_image);
+                SID_trap_error("Invalid value for i_image (%d).", SID_ERROR_LOGIC, i_image);
                 break;
         }
 
@@ -286,7 +286,7 @@ void render_frame(render_info *render) {
         // Cast depth array into the units of the render
         double *depth_array = (double *)SID_malloc(sizeof(double) * n_depth);
         for(int i_depth = 0; i_depth < n_depth; i_depth++)
-            depth_array[i_depth] = MAX(0., unit_factor * render->camera->depth_array[i_depth]);
+            depth_array[i_depth] = GBP_MAX(0., unit_factor * render->camera->depth_array[i_depth]);
 
         // Set physical image-plane domain
         double xmin = -0.5 * FOV_x_image_plane; // Things will be centred on (x_o,y_o,z_o) later
@@ -307,8 +307,8 @@ void render_frame(render_info *render) {
         int     i_x_min_local      = 0;
         int     i_x_max_local      = 0;
         size_t  n_particles        = 0;
-        int     flag_line_integral = TRUE;
-        int     flag_weigh         = TRUE;
+        int     flag_line_integral = GBP_TRUE;
+        int     flag_weigh         = GBP_TRUE;
 
         // If we are including absorption, then the particles
         //   will need to be distributed differently, rendered
@@ -412,7 +412,7 @@ void render_frame(render_info *render) {
         // Allocate and clear a mask array
         char *mask = (char *)SID_malloc(sizeof(char) * n_pixels);
         for(int i_pixel = 0; i_pixel < n_pixels; i_pixel++)
-            mask[i_pixel] = FALSE;
+            mask[i_pixel] = GBP_FALSE;
 
         // Initialize a progress counter
         size_t        n_particles_used_local = 0;
@@ -475,14 +475,14 @@ void render_frame(render_info *render) {
 
                     // Determine which image depth(s)
                     //    to add this particle to
-                    int flag_particle_used     = FALSE;
-                    int flag_particle_in_depth = FALSE;
+                    int flag_particle_used     = GBP_FALSE;
+                    int flag_particle_in_depth = GBP_FALSE;
                     for(int i_depth = 0; i_depth < n_depth; i_depth++) {
                         if(z_i >= depth_array[i_depth]) {
-                            depth_flags[i_depth]   = TRUE;
-                            flag_particle_in_depth = TRUE;
+                            depth_flags[i_depth]   = GBP_TRUE;
+                            flag_particle_in_depth = GBP_TRUE;
                         } else
-                            depth_flags[i_depth] = FALSE;
+                            depth_flags[i_depth] = GBP_FALSE;
                     }
 
                     // Loop over the kernal
@@ -508,7 +508,7 @@ void render_frame(render_info *render) {
                                         //   is in so that the depths accumulate.  This way, absorption
                                         //   works the way it is coded and the first image represents the
                                         //   final sum.
-                                        flag_particle_used = TRUE; // depth has already been checked for
+                                        flag_particle_used = GBP_TRUE; // depth has already been checked for
                                         if(Y_image != NULL) {
                                             for(int i_depth = 0; i_depth < n_depth; i_depth++) {
                                                 if(depth_flags[i_depth])
@@ -535,7 +535,7 @@ void render_frame(render_info *render) {
                                                 if(depth_flags[i_depth])
                                                     BY_image[i_depth][pos] += (f_dim * B_i - f_absorption * BY_image[i_depth][pos]) * w_k;
                                         }
-                                        mask[pos] = TRUE;
+                                        mask[pos] = GBP_TRUE;
                                     }
                                 }
                             } // loop over kernel
@@ -586,7 +586,7 @@ void render_frame(render_info *render) {
             SID_Allreduce(SID_IN_PLACE, mask_buffer, nx, SID_INT, SID_MAX, SID.COMM_WORLD);
             for(int i_x = 0, i_pixel = i_y * nx; i_x < nx; i_x++, i_pixel++) {
                 if(mask_buffer[i_x])
-                    mask[i_pixel] = TRUE;
+                    mask[i_pixel] = GBP_TRUE;
             }
         }
         SID_free(SID_FARG mask_buffer);

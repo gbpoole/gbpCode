@@ -41,7 +41,7 @@ void check_for_tree_matches_local(char *filename_root_out,
     if((*flag_go_array) == NULL)
         (*flag_go_array) = (int *)SID_malloc(sizeof(int) * n_search_total);
     for(k_read = 0; k_read < n_search_total; k_read++)
-        (*flag_go_array)[k_read] = FALSE;
+        (*flag_go_array)[k_read] = GBP_FALSE;
 
     if(SID.I_am_Master) {
         strcpy(filename_out_dir, filename_root_out);
@@ -86,16 +86,16 @@ void check_for_tree_matches_local(char *filename_root_out,
                         if((fp_test = fopen(filename_out, "r")) != NULL)
                             fclose(fp_test);
                         else {
-                            (*flag_go)               = TRUE;
-                            (*flag_go_array)[k_read] = TRUE;
+                            (*flag_go)               = GBP_TRUE;
+                            (*flag_go_array)[k_read] = GBP_TRUE;
                         }
                     }
                 }
             }
         }
     }
-    SID_Bcast(flag_go, 1, SID_INT, SID.COMM_WORLD, MASTER_RANK);
-    SID_Bcast((*flag_go_array), n_search_total, SID_INT, SID.COMM_WORLD, MASTER_RANK);
+    SID_Bcast(flag_go, 1, SID_INT, SID.COMM_WORLD, SID_MASTER_RANK);
+    SID_Bcast((*flag_go_array), n_search_total, SID_INT, SID.COMM_WORLD, SID_MASTER_RANK);
 }
 
 int compute_trees_matches(char *filename_root_in,
@@ -162,7 +162,7 @@ int compute_trees_matches(char *filename_root_in,
     int        flag_compute_header_subgroups;
     int        flag_compute_header_groups;
     int        flag_compute_header;
-    int        flag_sucessful_completion = TRUE;
+    int        flag_sucessful_completion = GBP_TRUE;
 
     if(check_mode_for_flag(mode, WRITE_MATCHES_PERFORM_CHECK))
         SID_log("Validating merger tree matches...", SID_LOG_OPEN | SID_LOG_TIMER);
@@ -177,7 +177,7 @@ int compute_trees_matches(char *filename_root_in,
     strip_path(filename_out_name);
 
     // Check if all the needed files are present
-    int flag_all_inputs_present = TRUE;
+    int flag_all_inputs_present = GBP_TRUE;
     for(i_read = i_read_stop; i_read >= i_read_start && flag_all_inputs_present; i_read--)
         flag_all_inputs_present &= check_for_matching_input_files(filename_root_in, i_read);
 
@@ -186,8 +186,8 @@ int compute_trees_matches(char *filename_root_in,
     if(flag_all_inputs_present)
         flag_create_headers = check_mode_for_flag(mode, WRITE_MATCHES_CHECK_HEADER) || check_mode_for_flag(mode, WRITE_MATCHES_PERFORM_CHECK);
     else {
-        flag_create_headers       = FALSE;
-        flag_sucessful_completion = FALSE;
+        flag_create_headers       = GBP_FALSE;
+        flag_sucessful_completion = GBP_FALSE;
     }
     if(flag_create_headers) {
         SID_log("Checking if header files exist and are adequate...", SID_LOG_OPEN | SID_LOG_TIMER);
@@ -206,7 +206,7 @@ int compute_trees_matches(char *filename_root_in,
 
             // Set filenames
             sprintf(filename_out, "%s/%sgroup_matches_header.dat", filename_out_dir, group_text_prefix);
-            flag_go = TRUE;
+            flag_go = GBP_TRUE;
             if((fp_test = fopen(filename_out, "r")) != NULL) {
                 fclose(fp_test);
                 SID_fopen(filename_out, "r", &fp_in);
@@ -217,22 +217,22 @@ int compute_trees_matches(char *filename_root_in,
                 SID_fclose(&fp_in);
                 if(i_read_stop_file < i_read_stop || i_read_start_file > i_read_start || n_search_file < n_search_total) {
                     if(k_match == 0)
-                        flag_compute_header_subgroups = TRUE;
+                        flag_compute_header_subgroups = GBP_TRUE;
                     else
-                        flag_compute_header_groups = TRUE;
+                        flag_compute_header_groups = GBP_TRUE;
                     SID_log("Header file for %sgroups needs to be computed.", SID_LOG_COMMENT, group_text_prefix);
                 } else {
                     if(k_match == 0)
-                        flag_compute_header_subgroups = FALSE;
+                        flag_compute_header_subgroups = GBP_FALSE;
                     else
-                        flag_compute_header_groups = FALSE;
+                        flag_compute_header_groups = GBP_FALSE;
                     SID_log("Header file for %sgroups is fine.", SID_LOG_COMMENT, group_text_prefix);
                 }
             } else {
                 if(k_match == 0)
-                    flag_compute_header_subgroups = TRUE;
+                    flag_compute_header_subgroups = GBP_TRUE;
                 else
-                    flag_compute_header_groups = TRUE;
+                    flag_compute_header_groups = GBP_TRUE;
             }
         }
         SID_log("Done.", SID_LOG_CLOSE);
@@ -349,8 +349,8 @@ int compute_trees_matches(char *filename_root_in,
 
     // Check to see if there are any matches needing to be completed
     i_read = i_read_stop;
-    // flag_go=TRUE; // Uncomment this to force recalulation of header files
-    flag_go            = FALSE;
+    // flag_go=GBP_TRUE; // Uncomment this to force recalulation of header files
+    flag_go            = GBP_FALSE;
     int *flag_go_array = NULL;
     SID_log("Checking for matching files...", SID_LOG_OPEN);
     SID_set_verbosity(SID_SET_VERBOSITY_RELATIVE, 0);
@@ -375,7 +375,7 @@ int compute_trees_matches(char *filename_root_in,
         SID_set_verbosity(SID_SET_VERBOSITY_RELATIVE, 1);
         // i_read gets initialized by the previous loop
         for(; i_read > i_read_start; i_read--) {
-            flag_go = FALSE;
+            flag_go = GBP_FALSE;
             check_for_tree_matches_local(filename_out_dir, i_read_start, i_read_stop, i_read, n_search_total, &flag_go, &flag_go_array);
             if(flag_go) {
                 if(check_for_matching_input_files(filename_root_in, i_read)) {
@@ -410,7 +410,7 @@ int compute_trees_matches(char *filename_root_in,
                                 sprintf(filename_cat2, "%03d", j_read);
 
                                 // If this snapshot combination is missing at least one file, proceed.
-                                flag_read = TRUE;
+                                flag_read = GBP_TRUE;
                                 if(flag_go_array[k_read]) {
                                     for(k_order = 0; k_order < 2; k_order++) {
                                         if(k_order == 0) {
@@ -443,7 +443,7 @@ int compute_trees_matches(char *filename_root_in,
                                                         PHK_min_local,
                                                         PHK_max_local);
                                             SID_set_verbosity(SID_SET_VERBOSITY_DEFAULT);
-                                            flag_read = FALSE;
+                                            flag_read = GBP_FALSE;
                                         }
 
                                         // Perform matching
@@ -498,7 +498,7 @@ int compute_trees_matches(char *filename_root_in,
                                 SID_log("Done.", SID_LOG_CLOSE);
                             } else {
                                 SID_log("Input for snapshot #%d {%s} absent...Skipping.", SID_LOG_COMMENT, j_read, filename_root_in);
-                                flag_sucessful_completion = FALSE;
+                                flag_sucessful_completion = GBP_FALSE;
                             }
                         } // If this is a valid pair
                     }     // Second loop over snapshots
@@ -506,7 +506,7 @@ int compute_trees_matches(char *filename_root_in,
                     SID_log("Done.", SID_LOG_CLOSE);
                 } else {
                     SID_log("Input for snapshot #%d {%s} absent...Skipping.", SID_LOG_COMMENT, i_read, filename_root_in);
-                    flag_sucessful_completion = FALSE;
+                    flag_sucessful_completion = GBP_FALSE;
                 }
             } // If this snapshot needs to be processed
             else if(!check_mode_for_flag(mode, WRITE_MATCHES_PERFORM_CHECK))

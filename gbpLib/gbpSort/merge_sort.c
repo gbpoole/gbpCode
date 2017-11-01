@@ -29,7 +29,7 @@ void merge_sort(void *data_in, size_t n_data, size_t **index, SID_Datatype data_
     else if(data_type == SID_LONG_LONG)
         data_size = sizeof(long long);
     else
-        SID_trap_error("Unsupported data type {%d}", ERROR_LOGIC, data_type);
+        SID_trap_error("Unsupported data type {%d}", SID_ERROR_LOGIC, data_type);
 
     // Allocate scratch space and sort indices (if needed)
     scratch_d = SID_malloc(data_size * n_data);
@@ -41,9 +41,9 @@ void merge_sort(void *data_in, size_t n_data, size_t **index, SID_Datatype data_
     } else {
         fprintf(stderr, "ERROR (merge_sort): flag_in_place {%d} must be SORT_COMPUTE_INPLACE||SORT_COMPUTE_NOT_INPLACE\n", flag_in_place);
     }
-    flag_compute_index_sort = FALSE;
+    flag_compute_index_sort = GBP_FALSE;
     if(flag_compute_index == SORT_COMPUTE_INDEX || flag_compute_index == SORT_COMPUTE_RANK) {
-        flag_compute_index_sort = TRUE;
+        flag_compute_index_sort = GBP_TRUE;
         scratch_i               = (size_t *)SID_malloc(sizeof(size_t) * n_data);
         idx_sort                = (size_t *)SID_malloc(sizeof(size_t) * n_data);
         for(i = 0; i < n_data; i++)

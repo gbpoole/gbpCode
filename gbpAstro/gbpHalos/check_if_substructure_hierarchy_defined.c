@@ -7,9 +7,9 @@
 
 int check_if_substructure_hierarchy_defined(const char *filename_SSimPL_root, const char *filename_halos_version, int i_snap) {
     // Perform check
-    int flag_read_sub_pointers = FALSE;
+    int flag_read_sub_pointers = GBP_FALSE;
     if(SID.I_am_Master) {
-        char filename_in[MAX_FILENAME_LENGTH];
+        char filename_in[SID_MAX_FILENAME_LENGTH];
         sprintf(filename_in, "%s/halos/%s_%03d.catalog_subgroups", filename_SSimPL_root, filename_halos_version, i_snap);
         FILE *fp_test = fopen(filename_in, "r");
         int   n_subgroups_in;
@@ -22,7 +22,7 @@ int check_if_substructure_hierarchy_defined(const char *filename_SSimPL_root, co
         flag_read_sub_pointers = !feof(fp_test);
         fclose(fp_test);
     }
-    SID_Bcast(&flag_read_sub_pointers, 1, SID_INT, SID.COMM_WORLD, MASTER_RANK);
+    SID_Bcast(&flag_read_sub_pointers, 1, SID_INT, SID.COMM_WORLD, SID_MASTER_RANK);
     if(flag_read_sub_pointers)
         SID_log("Substructure hierarchy pointers present and will be used.", SID_LOG_COMMENT);
     else

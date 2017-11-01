@@ -16,7 +16,7 @@ void check_for_fragmented_halos(int k_match, tree_horizontal_info **halos, int n
         // Perform some sanity checks on the match_type flag
         int type = halos[i_write % n_wrap][i_halo].type;
         if(check_mode_for_flag(type, TREE_CASE_UNPROCESSED) || check_mode_for_flag(type, TREE_CASE_INVALID))
-            SID_trap_error("Invalid halo match_type flag (%d) for i_halo=%d", ERROR_LOGIC, halos[i_write % n_wrap][i_halo].type, i_halo);
+            SID_trap_error("Invalid halo match_type flag (%d) for i_halo=%d", SID_ERROR_LOGIC, halos[i_write % n_wrap][i_halo].type, i_halo);
         // Perform checks for fragmented halos here
         match_info *back_match = &(halos[i_write % n_wrap][i_halo].bridge_backmatch);
         if(check_mode_for_flag(type, TREE_CASE_NO_PROGENITORS) && check_mode_for_flag(type, TREE_CASE_EMERGED_CANDIDATE)) {

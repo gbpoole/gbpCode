@@ -22,7 +22,7 @@ void parse_set_scene_quantity(camera_info *camera, scene_info *scene, const char
                 i_word++;
                 int n_params = count_words(line) - i_word + 1;
                 if(n_params < 2)
-                    SID_trap_error("Too-few evolution parameters passed in line {%s}.", ERROR_LOGIC, line);
+                    SID_trap_error("Too-few evolution parameters passed in line {%s}.", SID_ERROR_LOGIC, line);
                 if(n_params == 2) {
                     double val_min, val_max, dval;
                     grab_double(line, i_word++, &val_min);
@@ -37,16 +37,16 @@ void parse_set_scene_quantity(camera_info *camera, scene_info *scene, const char
                             scene->perspectives[i_frame]->time = val_min + dval * (double)i_frame;
                     }
                 } else
-                    SID_trap_error("Invalid evolution parameters passed in line {%s}.", ERROR_LOGIC, line);
+                    SID_trap_error("Invalid evolution parameters passed in line {%s}.", SID_ERROR_LOGIC, line);
             } else
-                SID_trap_error("Invalid evolution parameters passed in line {%s}.", ERROR_LOGIC, line);
+                SID_trap_error("Invalid evolution parameters passed in line {%s}.", SID_ERROR_LOGIC, line);
         } // if evolve
         else {
             grab_double(line, i_word++, &time_in);
             for(int i_frame = 0; i_frame < scene->n_frames; i_frame++)
                 scene->perspectives[i_frame]->time = time_in;
         }
-        scene->flag_time_set = TRUE;
+        scene->flag_time_set = GBP_TRUE;
     } else if(!strcmp(quantity, "p_o")) {
         grab_word(line, i_word, parameter);
         if(!strcmp(parameter, "evolve")) {
@@ -56,7 +56,7 @@ void parse_set_scene_quantity(camera_info *camera, scene_info *scene, const char
                 i_word++;
                 int n_params = count_words(line) - i_word + 1;
                 if(n_params < 6)
-                    SID_trap_error("Too-few evolution parameters (%d) passed in line {%s}.", ERROR_LOGIC, n_params, line);
+                    SID_trap_error("Too-few evolution parameters (%d) passed in line {%s}.", SID_ERROR_LOGIC, n_params, line);
                 if(n_params == 6) {
                     double p_o_start[3];
                     double p_o_stop[3];
@@ -85,7 +85,7 @@ void parse_set_scene_quantity(camera_info *camera, scene_info *scene, const char
                             scene->perspectives[i_frame]->p_o[2] = p_o_start[2] + dp_o[2] * (double)i_frame;
                         }
                     }
-                    scene->flag_p_o_set = TRUE;
+                    scene->flag_p_o_set = GBP_TRUE;
                     SID_log("p_o set to evolve from [%le,%le,%le] to [%le,%le,%le] for current scene.",
                             SID_LOG_COMMENT,
                             p_o_start[0],
@@ -95,9 +95,9 @@ void parse_set_scene_quantity(camera_info *camera, scene_info *scene, const char
                             p_o_stop[1],
                             p_o_stop[2]);
                 } else
-                    SID_trap_error("Invalid evolution parameters passed in line {%s}.", ERROR_LOGIC, line);
+                    SID_trap_error("Invalid evolution parameters passed in line {%s}.", SID_ERROR_LOGIC, line);
             } else
-                SID_trap_error("Invalid evolution parameters passed in line {%s}.", ERROR_LOGIC, line);
+                SID_trap_error("Invalid evolution parameters passed in line {%s}.", SID_ERROR_LOGIC, line);
         } else {
             double p_o_in[3];
             grab_double(line, i_word++, &(p_o_in[0]));
@@ -108,7 +108,7 @@ void parse_set_scene_quantity(camera_info *camera, scene_info *scene, const char
                 scene->perspectives[i_frame]->p_o[1] = p_o_in[1];
                 scene->perspectives[i_frame]->p_o[2] = p_o_in[2];
             }
-            scene->flag_p_o_set = TRUE;
+            scene->flag_p_o_set = GBP_TRUE;
             SID_log("p_o set to [%le,%le,%le] for all frames in scene.", SID_LOG_COMMENT, p_o_in[0], p_o_in[1], p_o_in[2]);
         }
     } else if(!strcmp(quantity, "radius")) {
@@ -119,7 +119,7 @@ void parse_set_scene_quantity(camera_info *camera, scene_info *scene, const char
         grab_double(line, i_word++, &radius_in);
         for(int i_frame = 0; i_frame < scene->n_frames; i_frame++)
             scene->perspectives[i_frame]->radius = radius_in;
-        scene->flag_radius_set = TRUE;
+        scene->flag_radius_set = GBP_TRUE;
         // Set p_c values
         for(int i_frame = 0; i_frame < scene->n_frames; i_frame++) {
             perspective_info *perspective_i = scene->perspectives[i_frame];
@@ -150,7 +150,7 @@ void parse_set_scene_quantity(camera_info *camera, scene_info *scene, const char
                 i_word++;
                 int n_params = count_words(line) - i_word + 1;
                 if(n_params <= 1)
-                    SID_trap_error("Too-few evolution parameters passed in line {%s}.", ERROR_LOGIC, line);
+                    SID_trap_error("Too-few evolution parameters passed in line {%s}.", SID_ERROR_LOGIC, line);
                 if(n_params == 2) {
                     double val_min, val_max, dval;
                     grab_double(line, i_word++, &val_min);
@@ -165,9 +165,9 @@ void parse_set_scene_quantity(camera_info *camera, scene_info *scene, const char
                             scene->perspectives[i_frame]->theta = val_min + dval * (double)i_frame;
                     }
                 } else
-                    SID_trap_error("Invalid evolution parameters passed in line {%s}.", ERROR_LOGIC, line);
+                    SID_trap_error("Invalid evolution parameters passed in line {%s}.", SID_ERROR_LOGIC, line);
             } else
-                SID_trap_error("Invalid evolution parameters passed in line {%s}.", ERROR_LOGIC, line);
+                SID_trap_error("Invalid evolution parameters passed in line {%s}.", SID_ERROR_LOGIC, line);
         } else {
             double theta_in = 0.;
             grab_double(line, i_word++, &theta_in);
@@ -182,5 +182,5 @@ void parse_set_scene_quantity(camera_info *camera, scene_info *scene, const char
             perspective_i->p_c[2]           = perspective_i->p_o[2] + perspective_i->radius * sin(perspective_i->zeta);
         }
     } else
-        SID_trap_error("Invalid quantity {%s} being added to scene in line {%s}.", ERROR_LOGIC, quantity, line);
+        SID_trap_error("Invalid quantity {%s} being added to scene in line {%s}.", SID_ERROR_LOGIC, quantity, line);
 }

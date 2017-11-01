@@ -36,15 +36,15 @@ void init_MCMC(MCMC_info * MCMC,
     MCMC->n_iterations          = 8;
     MCMC->n_thin                = 1;
     MCMC->coverage_size         = 100;
-    MCMC->flag_autocor_on       = FALSE;
-    MCMC->flag_integrate_on     = FALSE;
-    MCMC->flag_analysis_on      = TRUE;
-    MCMC->first_map_call        = TRUE;
-    MCMC->first_link_call       = TRUE;
-    MCMC->flag_init_chain       = TRUE;
-    MCMC->first_chain_call      = TRUE;
-    MCMC->first_parameter_call  = TRUE;
-    MCMC->first_likelihood_call = TRUE;
+    MCMC->flag_autocor_on       = GBP_FALSE;
+    MCMC->flag_integrate_on     = GBP_FALSE;
+    MCMC->flag_analysis_on      = GBP_TRUE;
+    MCMC->first_map_call        = GBP_TRUE;
+    MCMC->first_link_call       = GBP_TRUE;
+    MCMC->flag_init_chain       = GBP_TRUE;
+    MCMC->first_chain_call      = GBP_TRUE;
+    MCMC->first_parameter_call  = GBP_TRUE;
+    MCMC->first_likelihood_call = GBP_TRUE;
     MCMC->ln_likelihood_last    = 0.;
     MCMC->ln_likelihood_new     = 0.;
     MCMC->ln_likelihood_chain   = 0.;
@@ -93,7 +93,7 @@ void init_MCMC(MCMC_info * MCMC,
     for(i_P = 0; i_P < n_P; i_P++) {
         MCMC->P_names[i_P] = (char *)SID_malloc(sizeof(char) * MCMC_NAME_SIZE);
         sprintf(MCMC->P_names[i_P], "%s", P_names[i_P]);
-        MCMC->P_name_length = MAX(MCMC->P_name_length, strlen(MCMC->P_names[i_P]));
+        MCMC->P_name_length = GBP_MAX(MCMC->P_name_length, strlen(MCMC->P_names[i_P]));
     }
     sprintf(MCMC->P_name_format, "%%-%ds", MCMC->P_name_length);
 
@@ -160,9 +160,9 @@ void init_MCMC(MCMC_info * MCMC,
         strcpy(MCMC->filename_output_root, test_dir);
         int i_char;
         int flag_continue;
-        for(i_char = strlen(MCMC->filename_output_root) - 1, flag_continue = TRUE; i_char >= 0 && flag_continue; i_char--) {
+        for(i_char = strlen(MCMC->filename_output_root) - 1, flag_continue = GBP_TRUE; i_char >= 0 && flag_continue; i_char--) {
             if(MCMC->filename_output_root[i_char] != '/')
-                flag_continue = FALSE;
+                flag_continue = GBP_FALSE;
             else
                 MCMC->filename_output_root[i_char] = '\0';
         }
@@ -195,12 +195,12 @@ void init_MCMC(MCMC_info * MCMC,
         SID_log("ouput_dir set to: %s", SID_LOG_COMMENT, MCMC->filename_output_dir);
     }
     // Broadcast the output directory to all the other cores.
-    SID_Bcast(MCMC->filename_output_dir, MAX_FILENAME_LENGTH, SID_CHAR, MCMC->comm, MCMC->my_chain);
+    SID_Bcast(MCMC->filename_output_dir, SID_MAX_FILENAME_LENGTH, SID_CHAR, MCMC->comm, MCMC->my_chain);
 
     // Initilize the random number generator
     MCMC->RNG = (RNG_info *)SID_malloc(sizeof(RNG_info));
     init_seed_from_clock(&(MCMC->seed));
-    SID_Bcast(&(MCMC->seed), 1, SID_INT, MCMC->comm, MASTER_RANK);
+    SID_Bcast(&(MCMC->seed), 1, SID_INT, MCMC->comm, SID_MASTER_RANK);
     init_RNG(&(MCMC->seed), MCMC->RNG, RNG_DEFAULT);
 
     SID_log("Done.", SID_LOG_CLOSE);

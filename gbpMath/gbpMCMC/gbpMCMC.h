@@ -61,8 +61,8 @@ struct MCMC_DS_info {
 typedef struct MCMC_info MCMC_info;
 struct MCMC_info {
     SID_Comm *comm;
-    char      filename_output_root[MAX_FILENAME_LENGTH];
-    char      filename_output_dir[MAX_FILENAME_LENGTH];
+    char      filename_output_root[SID_MAX_FILENAME_LENGTH];
+    char      filename_output_dir[SID_MAX_FILENAME_LENGTH];
     char      problem_name[MCMC_NAME_SIZE];
     int (*map_P_to_M)(double *, MCMC_info *, double **);
     void (*compute_MCMC_ln_likelihood)(MCMC_info *MCMC,

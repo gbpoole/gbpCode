@@ -13,9 +13,9 @@ int main(int argc, char *argv[]) {
     SID_init(&argc, &argv, NULL, NULL);
 
     // Fetch user inputs
-    char filename_SSimPL_dir[MAX_FILENAME_LENGTH];
-    char filename_halo_version_root[MAX_FILENAME_LENGTH];
-    char filename_trees_name[MAX_FILENAME_LENGTH];
+    char filename_SSimPL_dir[SID_MAX_FILENAME_LENGTH];
+    char filename_halo_version_root[SID_MAX_FILENAME_LENGTH];
+    char filename_trees_name[SID_MAX_FILENAME_LENGTH];
     strcpy(filename_SSimPL_dir, argv[1]);
     strcpy(filename_halo_version_root, argv[2]);
     strcpy(filename_trees_name, argv[3]);
@@ -25,5 +25,5 @@ int main(int argc, char *argv[]) {
     compute_trees_vertical(filename_SSimPL_dir, filename_halo_version_root, filename_trees_name, n_dim_files);
     SID_log("Done.", SID_LOG_CLOSE);
 
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

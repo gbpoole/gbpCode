@@ -5,11 +5,11 @@
 #include <string.h>
 
 int init_smooth_read(char *filename_root_in, int snapshot_number, int *flag_multifile, int *flag_file_type, smooth_header_info *header) {
-    char  filename[MAX_FILENAME_LENGTH];
-    char  filename_root[MAX_FILENAME_LENGTH];
-    char  filename_path[MAX_FILENAME_LENGTH];
+    char  filename[SID_MAX_FILENAME_LENGTH];
+    char  filename_root[SID_MAX_FILENAME_LENGTH];
+    char  filename_path[SID_MAX_FILENAME_LENGTH];
     int   i_file;
-    int   flag_filefound = FALSE;
+    int   flag_filefound = GBP_FALSE;
     int   record_length_in;
     FILE *fp;
 
@@ -35,8 +35,8 @@ int init_smooth_read(char *filename_root_in, int snapshot_number, int *flag_mult
             sprintf(filename, "%s", filename_root_in);
         fp = fopen(filename, "r");
         if(fp != NULL) {
-            flag_filefound    = TRUE;
-            (*flag_multifile) = FALSE;
+            flag_filefound    = GBP_TRUE;
+            (*flag_multifile) = GBP_FALSE;
             (*flag_file_type) = i_file;
         }
         // ... if that doesn't work, check for multi-file
@@ -44,8 +44,8 @@ int init_smooth_read(char *filename_root_in, int snapshot_number, int *flag_mult
             strcat(filename, ".0");
             fp = fopen(filename, "r");
             if(fp != NULL) {
-                flag_filefound    = TRUE;
-                (*flag_multifile) = TRUE;
+                flag_filefound    = GBP_TRUE;
+                (*flag_multifile) = GBP_TRUE;
                 (*flag_file_type) = i_file;
             }
         }

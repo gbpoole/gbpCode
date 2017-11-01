@@ -96,8 +96,8 @@ int main(int argc, char *argv[]) {
     char   filename_profiles[256];
     char   filename_out_root[256];
     char   filename_out[256];
-    char   filename_SSimPL[MAX_FILENAME_LENGTH];
-    char   filename_halo_type[MAX_FILENAME_LENGTH];
+    char   filename_SSimPL[SID_MAX_FILENAME_LENGTH];
+    char   filename_halo_type[SID_MAX_FILENAME_LENGTH];
     FILE * fp_out[2];
     int    snap_number;
     int    snap_number_start;
@@ -115,7 +115,7 @@ int main(int argc, char *argv[]) {
     snap_number_step  = atoi(argv[6]);
     strcpy(filename_out_root, argv[7]);
 
-    int flag_use_profiles = FALSE;
+    int flag_use_profiles = GBP_FALSE;
 
     if(SID.I_am_Master) {
         int i_type;
@@ -127,7 +127,7 @@ int main(int argc, char *argv[]) {
             sprintf(filename_halos, "%s/halos/%s_%03d.catalog_groups", filename_SSimPL, filename_halo_type, snap_number);
             FILE *fp_halos = NULL;
             if((fp_halos = fopen(filename_halos, "r")) == NULL)
-                SID_trap_error("Could not open halo file {%s} for reading.", ERROR_IO_OPEN, filename_halos);
+                SID_trap_error("Could not open halo file {%s} for reading.", SID_ERROR_IO_OPEN, filename_halos);
             int n_groups_halos, group_offset_byte_size;
             fread_verify(&n_groups_halos, sizeof(int), 1, fp_halos);
             fread_verify(&group_offset_byte_size, sizeof(int), 1, fp_halos);
@@ -157,7 +157,7 @@ int main(int argc, char *argv[]) {
             // Sanity check
             if(n_groups_halos != fp_catalog_groups.n_halos_total)
                 SID_trap_error(
-                    "Group counts in halo and catalog files don't match (ie. %d!=%d).", ERROR_LOGIC, n_groups_halos, fp_catalog_groups.n_halos_total);
+                    "Group counts in halo and catalog files don't match (ie. %d!=%d).", SID_ERROR_LOGIC, n_groups_halos, fp_catalog_groups.n_halos_total);
 
             // Process halos
             SID_log("Writing snap #%03d...", SID_LOG_OPEN, snap_number);
@@ -283,5 +283,5 @@ int main(int argc, char *argv[]) {
         SID_log("Done.", SID_LOG_CLOSE);
     }
 
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

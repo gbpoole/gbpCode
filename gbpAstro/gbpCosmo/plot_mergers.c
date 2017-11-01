@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
     if(argc < 3 || argc > 4) {
         fprintf(stderr, "\n Syntax: %s z [gbpCosmo_file.txt]\n", argv[0]);
         fprintf(stderr, " ------\n\n");
-        return (ERROR_SYNTAX);
+        return (SID_ERROR_SYNTAX);
     }
     double z = (double)atof(argv[1]);
     double M = (double)atof(argv[2]);
@@ -64,5 +64,5 @@ int main(int argc, char *argv[]) {
     free_cosmo(&cosmo);
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

@@ -18,7 +18,7 @@ double calc_pdf_local(double x, double mu, double sigma) {
 GBPREAL random_lognormal(RNG_info *RNG, double mu, double sigma) {
     double range1, range2;
     double rand1, rand2;
-    int    flag_continue = TRUE;
+    int    flag_continue = GBP_TRUE;
 
     // Loop until we have sucessfully generated a random number
     range1 = 10. * mu * fabs(exp(sigma)); // Generate values out to 10-sigma
@@ -27,7 +27,7 @@ GBPREAL random_lognormal(RNG_info *RNG, double mu, double sigma) {
         rand1 = range1 * (double)random_number(RNG); // Generate random x-value
         rand2 = range2 * (double)random_number(RNG); // Generate random y-value
         if(rand2 < calc_pdf_local(rand1, mu, sigma))
-            flag_continue = FALSE;
+            flag_continue = GBP_FALSE;
     }
     return ((GBPREAL)rand1);
 }

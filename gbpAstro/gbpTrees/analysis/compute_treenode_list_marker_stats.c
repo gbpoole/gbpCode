@@ -69,7 +69,7 @@ void compute_treenode_list_marker_stats(tree_info *              trees,
                 else if(i_hist == 2)
                     marker = markers->merger_10pc_remnant;
                 else
-                    SID_trap_error("Behaviour undefined in compute_treenode_list_marker_stats()", ERROR_LOGIC);
+                    SID_trap_error("Behaviour undefined in compute_treenode_list_marker_stats()", SID_ERROR_LOGIC);
                 if(marker != NULL)
                     i_bin = marker->snap_tree;
                 else
@@ -81,7 +81,7 @@ void compute_treenode_list_marker_stats(tree_info *              trees,
                 } else if(i_hist == (n_stats + 1))
                     i_bin = (take_log10(markers->M_peak) - logM_min) / dlogM;
                 else
-                    SID_trap_error("Behaviour undefined in compute_treenode_list_marker_stats()", ERROR_LOGIC);
+                    SID_trap_error("Behaviour undefined in compute_treenode_list_marker_stats()", SID_ERROR_LOGIC);
             }
             if(i_bin >= 0 && i_bin < n_bins[i_hist]) {
                 hist[i_hist][i_bin]++;
@@ -102,7 +102,7 @@ void compute_treenode_list_marker_stats(tree_info *              trees,
         for(int i_bin = 0; i_bin < n_bins[i_hist]; i_bin++)
             sum += hist[i_hist][i_bin];
         size_t *hist_index = NULL;
-        merge_sort(hist[i_hist], (size_t)(n_bins[i_hist]), &hist_index, SID_INT, SORT_COMPUTE_INDEX, FALSE);
+        merge_sort(hist[i_hist], (size_t)(n_bins[i_hist]), &hist_index, SID_INT, SORT_COMPUTE_INDEX, GBP_FALSE);
         int i_peak  = hist_index[n_bins[i_hist] - 1];
         int i_68_lo = hist_index[n_bins[i_hist] - 1];
         int i_68_hi = hist_index[n_bins[i_hist] - 1];
@@ -163,7 +163,7 @@ void compute_treenode_list_marker_stats(tree_info *              trees,
             stats->M_vir_ranges[1][1] = logM_min + (double)(i_95_hi)*dlogM;
             stats->M_vir_peak         = logM_min + (double)(i_peak)*dlogM;
         } else
-            SID_trap_error("Behaviour undefined in compute_treenode_list_marker_stats()", ERROR_LOGIC);
+            SID_trap_error("Behaviour undefined in compute_treenode_list_marker_stats()", SID_ERROR_LOGIC);
     }
 
     // Clean-up

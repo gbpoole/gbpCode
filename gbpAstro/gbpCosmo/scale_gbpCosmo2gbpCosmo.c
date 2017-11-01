@@ -11,8 +11,8 @@ int main(int argc, char *argv[]) {
     SID_init(&argc, &argv, NULL, NULL);
 
     // Parse arguments and initialize
-    char   filename_gbpCosmo_source[MAX_FILENAME_LENGTH];
-    char   filename_gbpCosmo_target[MAX_FILENAME_LENGTH];
+    char   filename_gbpCosmo_source[SID_MAX_FILENAME_LENGTH];
+    char   filename_gbpCosmo_target[SID_MAX_FILENAME_LENGTH];
     double M_min;
     double M_max;
     double z_min;
@@ -20,7 +20,7 @@ int main(int argc, char *argv[]) {
     if(argc != 7) {
         fprintf(stderr, "\n Syntax: %s gbpCosmo_file_source.txt gbpCosmo_file_target.txt z_min M_min M_max z\n", argv[0]);
         fprintf(stderr, " ------\n\n");
-        return (ERROR_SYNTAX);
+        return (SID_ERROR_SYNTAX);
     } else {
         strcpy(filename_gbpCosmo_source, argv[1]);
         strcpy(filename_gbpCosmo_target, argv[2]);
@@ -56,5 +56,5 @@ int main(int argc, char *argv[]) {
     // Clean-up
     free_cosmo(&cosmo_1);
     free_cosmo(&cosmo_2);
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

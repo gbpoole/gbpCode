@@ -106,5 +106,5 @@ int main(int argc, char *argv[]) {
     // Clean-up
     free_plist(&plist);
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

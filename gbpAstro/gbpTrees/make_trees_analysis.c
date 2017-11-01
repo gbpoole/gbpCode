@@ -11,13 +11,13 @@ int main(int argc, char *argv[]) {
     SID_init(&argc, &argv, NULL, NULL);
 
     // Fetch user inputs
-    char filename_SSimPL_dir[MAX_FILENAME_LENGTH];
-    char filename_halo_version_root[MAX_FILENAME_LENGTH];
-    char filename_trees_root[MAX_FILENAME_LENGTH];
-    char filename_trees_reference_root[MAX_FILENAME_LENGTH];
-    char filename_trees_name[MAX_FILENAME_LENGTH];
-    char filename_trees_reference_name[MAX_FILENAME_LENGTH];
-    char filename_halos_root[MAX_FILENAME_LENGTH];
+    char filename_SSimPL_dir[SID_MAX_FILENAME_LENGTH];
+    char filename_halo_version_root[SID_MAX_FILENAME_LENGTH];
+    char filename_trees_root[SID_MAX_FILENAME_LENGTH];
+    char filename_trees_reference_root[SID_MAX_FILENAME_LENGTH];
+    char filename_trees_name[SID_MAX_FILENAME_LENGTH];
+    char filename_trees_reference_name[SID_MAX_FILENAME_LENGTH];
+    char filename_halos_root[SID_MAX_FILENAME_LENGTH];
     int  i_arg = 1;
     strcpy(filename_SSimPL_dir, argv[i_arg++]);
     strcpy(filename_halo_version_root, argv[i_arg++]);
@@ -65,5 +65,5 @@ int main(int argc, char *argv[]) {
     free_trees(&trees);
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

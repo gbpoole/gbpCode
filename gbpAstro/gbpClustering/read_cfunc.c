@@ -13,17 +13,17 @@ void read_cfunc(cfunc_info *cfunc, const char *filename_in_root, int j_run) {
     SID_log("Reading correlation functions {%s;run=%d}...", SID_LOG_OPEN | SID_LOG_TIMER, filename_in_root, j_run);
 
     if(j_run < 0 || j_run > 3)
-        SID_trap_error("Invalid run iteration specified (%d).", ERROR_LOGIC, j_run);
+        SID_trap_error("Invalid run iteration specified (%d).", SID_ERROR_LOGIC, j_run);
 
     // Set output filenames
-    char filename_in_1D[MAX_FILENAME_LENGTH];
-    char filename_in_2D[MAX_FILENAME_LENGTH];
+    char filename_in_1D[SID_MAX_FILENAME_LENGTH];
+    char filename_in_2D[SID_MAX_FILENAME_LENGTH];
     sprintf(filename_in_1D, "%s_1D_cfunc.dat", filename_in_root);
     sprintf(filename_in_2D, "%s_2D_cfunc.dat", filename_in_root);
 
     // Read 1-D Results to an ascii file
     FILE *fp_in;
-    char  grouping_name[MAX_FILENAME_LENGTH];
+    char  grouping_name[SID_MAX_FILENAME_LENGTH];
     strcpy(grouping_name, filename_in_root);
     strip_path(grouping_name);
 
@@ -31,7 +31,7 @@ void read_cfunc(cfunc_info *cfunc, const char *filename_in_root, int j_run) {
     int i_jack;
     int i_run;
     if((fp_in = fopen(filename_in_1D, "r")) == NULL)
-        SID_trap_error("Error opening {%s}.", ERROR_IO_OPEN, filename_in_1D);
+        SID_trap_error("Error opening {%s}.", SID_ERROR_IO_OPEN, filename_in_1D);
     for(i_run = 0; i_run <= j_run; i_run++) {
         if(i_run == 0) {
             fread_verify(&(cfunc->n_1D), sizeof(int), 1, fp_in);
@@ -81,7 +81,7 @@ void read_cfunc(cfunc_info *cfunc, const char *filename_in_root, int j_run) {
 
     // Read 2D correlation functions to a binary file
     if((fp_in = fopen(filename_in_2D, "r")) == NULL)
-        SID_trap_error("Error opening {%s}.", ERROR_IO_OPEN, filename_in_2D);
+        SID_trap_error("Error opening {%s}.", SID_ERROR_IO_OPEN, filename_in_2D);
     for(i_run = 0; i_run <= j_run; i_run++) {
         if(i_run == 0) {
             fread_verify(&(cfunc->n_2D), sizeof(int), 1, fp_in);

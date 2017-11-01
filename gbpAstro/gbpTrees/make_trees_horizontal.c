@@ -27,7 +27,7 @@ int main(int argc, char *argv[]) {
     int         n_search;
     int         n_files_subgroups;
     int         n_k_match               = 2;
-    int         flag_clean              = FALSE;
+    int         flag_clean              = GBP_FALSE;
     double      f_match_moment_diff_min = F_MATCH_MOMENT_DIFF_MIN_DEFAULT;
     FILE *      fp_in;
     FILE *      fp_out;
@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
     int         n_snaps, i_read, i_next, i_write, n_keep;
     double *    a_list_in;
     cosmo_info *cosmo;
-    int         flag_fix_bridges = TRUE;
+    int         flag_fix_bridges = GBP_TRUE;
 
     SID_init(&argc, &argv, NULL, NULL);
 
@@ -72,7 +72,7 @@ int main(int argc, char *argv[]) {
     sprintf(filename_root_out, "%s/trees/%s", filename_SSimPL_dir, filename_trees_name);
 
     // Initialize cosmology
-    char filename_cosmology[MAX_FILENAME_LENGTH];
+    char filename_cosmology[SID_MAX_FILENAME_LENGTH];
     sprintf(filename_cosmology, "%s/run", filename_SSimPL_dir);
     read_gbpCosmo_file(&cosmo, filename_cosmology);
 
@@ -96,5 +96,5 @@ int main(int argc, char *argv[]) {
     SID_free(SID_FARG line);
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

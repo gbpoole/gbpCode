@@ -140,7 +140,7 @@ double calc_sep_periodic(double x_1, double y_1, double z_1, double x_2, double 
                 z_p = z_1 + box_size;
                 break;
         }
-        r_val = MIN(r_val, (x_2 - x_p) * (x_2 - x_p) + (y_2 - y_p) * (y_2 - y_p) + (z_2 - z_p) * (z_2 - z_p));
+        r_val = GBP_MIN(r_val, (x_2 - x_p) * (x_2 - x_p) + (y_2 - y_p) * (y_2 - y_p) + (z_2 - z_p) * (z_2 - z_p));
     }
 
     return (sqrt(r_val));

@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
     if(argc != 2) {
         fprintf(stderr, "\n syntax: %s gadget_file\n", argv[0]);
         fprintf(stderr, " ------\n\n");
-        return (ERROR_SYNTAX);
+        return (SID_ERROR_SYNTAX);
     } else {
         strcpy(filename_in, argv[1]);
         snapshot = atoi(argv[2]);
@@ -51,5 +51,5 @@ int main(int argc, char *argv[]) {
 
     SID_log("Done.", SID_LOG_CLOSE);
 
-    return (ERROR_NONE);
+    return (SID_ERROR_NONE);
 }

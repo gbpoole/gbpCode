@@ -3,7 +3,7 @@
 
 int is_a_member(void *candidate, void *list, int n_list, SID_Datatype type) {
     int i_list;
-    int result = FALSE;
+    int result = GBP_FALSE;
     if(type == SID_DOUBLE) {
         double  candidate_double;
         double *list_double;
@@ -11,7 +11,7 @@ int is_a_member(void *candidate, void *list, int n_list, SID_Datatype type) {
         list_double      = (double *)list;
         for(i_list = 0; i_list < n_list && !result; i_list++) {
             if(candidate_double == list_double[i_list])
-                result = TRUE;
+                result = GBP_TRUE;
         }
     } else if(type == SID_INT) {
         int  candidate_int;
@@ -20,7 +20,7 @@ int is_a_member(void *candidate, void *list, int n_list, SID_Datatype type) {
         list_int      = (int *)list;
         for(i_list = 0; i_list < n_list && !result; i_list++) {
             if(candidate_int == list_int[i_list])
-                result = TRUE;
+                result = GBP_TRUE;
         }
     } else if(type == SID_SIZE_T) {
         size_t  candidate_size_t;
@@ -29,9 +29,9 @@ int is_a_member(void *candidate, void *list, int n_list, SID_Datatype type) {
         list_size_t      = (size_t *)list;
         for(i_list = 0; i_list < n_list && !result; i_list++) {
             if(candidate_size_t == list_size_t[i_list])
-                result = TRUE;
+                result = GBP_TRUE;
         }
     } else
-        SID_trap_error("Unknown variable type in is_a_member.", ERROR_LOGIC);
+        SID_trap_error("Unknown variable type in is_a_member.", SID_ERROR_LOGIC);
     return (result);
 }

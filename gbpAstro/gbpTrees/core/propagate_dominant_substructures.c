@@ -21,7 +21,7 @@ void propagate_dominant_substructures(tree_horizontal_extended_info **groups,
         int                            n_subgroups_group_i = n_subgroups_group[i_read % n_wrap][i_group];
         // Set some defaults
         tree_horizontal_extended_info *dominant_desc        = NULL;
-        int                            flag_none_propagated = TRUE;
+        int                            flag_none_propagated = GBP_TRUE;
         int                            dominant_file_offset = 0;
         // Don't bother searching this group if it has no substructures
         //   or if its dominant is dropped for this snapshot
@@ -57,7 +57,7 @@ void propagate_dominant_substructures(tree_horizontal_extended_info **groups,
         tree_horizontal_extended_info *this_group_desc = set_extended_descendant(groups, this_group, i_read, n_wrap);
         if(dominant_desc != NULL) {
             dominant_desc->type |= TREE_CASE_DOMINANT;
-            flag_none_propagated = FALSE;
+            flag_none_propagated = GBP_FALSE;
             // If the dominant skips any snapshots, we have to flag the group as such
             //    so we know not to call for reinitialization in the next snap.
             if(dominant_file_offset > 1 && this_group_desc != NULL)

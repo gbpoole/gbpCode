@@ -14,7 +14,7 @@ void init_power_spectrum_variance(cosmo_info **cosmo, int mode, int component) {
         if(mode == PSPEC_LINEAR_TF)
             init_power_spectrum_TF(cosmo);
         else
-            SID_trap_error("Given mode (%d) not supported in init_power_spectrum_variance().", ERROR_LOGIC, mode);
+            SID_trap_error("Given mode (%d) not supported in init_power_spectrum_variance().", SID_ERROR_LOGIC, mode);
     }
 
     // Fetch the k array and its size
@@ -94,7 +94,7 @@ void init_power_spectrum_variance(cosmo_info **cosmo, int mode, int component) {
                 //    and adjust limits accordingly
                 i_order++;
                 if(i_order >= n_order_max)
-                    SID_trap_error("Variance integral is not converging for scale R=%le [Mpc]", ERROR_LOGIC, params.R / M_PER_MPC);
+                    SID_trap_error("Variance integral is not converging for scale R=%le [Mpc]", SID_ERROR_LOGIC, params.R / M_PER_MPC);
                 limit_lo = limit_hi;
                 limit_hi = (double)i_order * k_period;
             }
@@ -105,7 +105,7 @@ void init_power_spectrum_variance(cosmo_info **cosmo, int mode, int component) {
 
         // Find the smallest non-zero value
         if(sigma2[i] > 0.)
-            sigma2_min = MIN(sigma2_min, sigma2[i]);
+            sigma2_min = GBP_MIN(sigma2_min, sigma2[i]);
     }
 
     // Because we may need 1/sigma in various places, we
@@ -113,7 +113,7 @@ void init_power_spectrum_variance(cosmo_info **cosmo, int mode, int component) {
     //    to the the minimum value.  Zeros can come
     //    about principly due to finite box size effects.
     for(int i = 0; i < n_k; i++)
-        sigma2[i] = MAX(sigma2[i], sigma2_min);
+        sigma2[i] = GBP_MAX(sigma2[i], sigma2_min);
 
     // Initialize interpolation
     interp_info *interp;

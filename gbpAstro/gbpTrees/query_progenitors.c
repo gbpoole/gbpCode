@@ -48,7 +48,7 @@ void write_halo_local(tree_info *trees,
     // Read properties
     fp_catalog_info      fp_properties;
     halo_properties_info properties;
-    char                 filename_catalog_root[MAX_FILENAME_LENGTH];
+    char                 filename_catalog_root[SID_MAX_FILENAME_LENGTH];
     int                  read_props_mode;
     sprintf(filename_catalog_root, "%s/catalogs/%s", filename_SSimPL_root, filename_halos_root);
     if(mode == MATCH_GROUPS)
@@ -79,7 +79,7 @@ void write_halo_local(tree_info *trees,
         fprintf(fp_out, "#        (%02d): Bridge backmatch index\n", i_column++);
         fprintf(fp_out, "#        (%02d): Halo type\n", i_column++);
         fprintf(fp_out, "#        (%02d): Halo type string\n", i_column++);
-        (*flag_write_header) = FALSE;
+        (*flag_write_header) = GBP_FALSE;
     }
     int descendant_snap;
     int bridge_forematch_snap;
@@ -143,10 +143,10 @@ int main(int argc, char *argv[]) {
 
     // Fetch user inputs
     if(argc != 7)
-        SID_trap_error("Invalid Syntax.", ERROR_SYNTAX);
-    char filename_SSimPL_root[MAX_FILENAME_LENGTH];
-    char filename_halos_root[MAX_FILENAME_LENGTH];
-    char filename_trees_root[MAX_FILENAME_LENGTH];
+        SID_trap_error("Invalid Syntax.", SID_ERROR_SYNTAX);
+    char filename_SSimPL_root[SID_MAX_FILENAME_LENGTH];
+    char filename_halos_root[SID_MAX_FILENAME_LENGTH];
+    char filename_trees_root[SID_MAX_FILENAME_LENGTH];
     strcpy(filename_SSimPL_root, argv[1]);
     strcpy(filename_halos_root, argv[2]);
     strcpy(filename_trees_root, argv[3]);
@@ -156,10 +156,10 @@ int main(int argc, char *argv[]) {
         mode = MATCH_SUBGROUPS;
     else {
         SID_log("Invalid mode selection {%s}.  Should be 'group' or 'subgroup'.", SID_LOG_COMMENT, argv[4]);
-        SID_exit(ERROR_SYNTAX);
+        SID_exit(SID_ERROR_SYNTAX);
     }
     int  i_read_in;
-    char filename_out[MAX_FILENAME_LENGTH];
+    char filename_out[SID_MAX_FILENAME_LENGTH];
     i_read_in = atoi(argv[5]);
     i_halo    = atoi(argv[6]);
     SID_log("Querying trees for progenitors of halo #%d in file #%d from {%s}...", SID_LOG_OPEN, i_halo, i_read_in, filename_trees_root);
@@ -167,7 +167,7 @@ int main(int argc, char *argv[]) {
 
     // Read tree header information
     tree_info *trees;
-    char       filename_file_root[MAX_FILENAME_LENGTH];
+    char       filename_file_root[SID_MAX_FILENAME_LENGTH];
     sprintf(filename_file_root, "%s/trees/%s", filename_SSimPL_root, filename_trees_root);
     SID_set_verbosity(SID_SET_VERBOSITY_RELATIVE, 0);
     init_trees_read(filename_SSimPL_root, filename_halos_root, filename_trees_root, TREE_READ_HEADER_ONLY, &trees);
@@ -181,14 +181,14 @@ int main(int argc, char *argv[]) {
         j_read = trees->snap_list[i_file];
     }
     if(i_read_in != trees->snap_list[i_file])
-        SID_trap_error("Invalid snapshot specified {%d}.", ERROR_LOGIC, i_read_in);
+        SID_trap_error("Invalid snapshot specified {%d}.", SID_ERROR_LOGIC, i_read_in);
 
     // Open output file
     FILE *fp_out = fopen(filename_out, "w");
 
     int halo_file_offset  = 1;
-    int flag_write_header = TRUE;
-    for(i_read = i_read_in; i_read >= MAX(trees->i_read_start, i_read_in - trees->n_search * trees->i_read_step);
+    int flag_write_header = GBP_TRUE;
+    for(i_read = i_read_in; i_read >= GBP_MAX(trees->i_read_start, i_read_in - trees->n_search * trees->i_read_step);
         i_read -= trees->i_read_step, i_file -= 1) {
         SID_log("Processing snapshot %03d (%03d of %03d)...", SID_LOG_OPEN | SID_LOG_TIMER, i_read, i_file + 1, trees->n_snaps);
         int halo_id                = 0;
@@ -205,7 +205,7 @@ int main(int argc, char *argv[]) {
         int bridge_backmatch_index = 0;
 
         // Read tree entry
-        char   filename_in[MAX_FILENAME_LENGTH];
+        char   filename_in[SID_MAX_FILENAME_LENGTH];
         SID_fp fp_in_trees;
         SID_fp fp_in_bridge_forematch;
         SID_fp fp_in_bridge_backmatch;
@@ -241,13 +241,13 @@ int main(int argc, char *argv[]) {
         SID_fread_all(&n_trees_group_in, sizeof(int), 1, &fp_in_trees);
         if(i_read == i_read_in) {
             if(mode == MATCH_GROUPS && i_halo >= n_groups)
-                SID_trap_error("Invalid group halo index (ie. %d>=%d).", ERROR_LOGIC, i_halo, n_groups);
+                SID_trap_error("Invalid group halo index (ie. %d>=%d).", SID_ERROR_LOGIC, i_halo, n_groups);
             else if(mode == MATCH_SUBGROUPS && i_halo >= n_subgroups)
-                SID_trap_error("Invalid subgroup halo index (ie. %d>=%d).", ERROR_LOGIC, i_halo, n_subgroups);
+                SID_trap_error("Invalid subgroup halo index (ie. %d>=%d).", SID_ERROR_LOGIC, i_halo, n_subgroups);
         }
         SID_fskip(sizeof(int), 8, &fp_in_bridge_forematch);
         SID_fskip(sizeof(int), 8, &fp_in_bridge_backmatch);
-        int flag_done = FALSE;
+        int flag_done = GBP_FALSE;
         int i_group;
         int i_subgroup;
         for(i_group = 0, i_subgroup = 0; i_group < n_groups && !flag_done; i_group++) {
@@ -289,7 +289,7 @@ int main(int argc, char *argv[]) {
                                          bridge_backmatch_index,
                                          halo_type);
 
-                        flag_done = TRUE;
+                        flag_done = GBP_TRUE;
                     }
                 } else {
                     if(trees->snap_list[i_file + halo_file_offset] == i_read_in && halo_index == i_halo)
@@ -357,7 +357,7 @@ int main(int argc, char *argv[]) {
                                              bridge_backmatch_file,
                                              bridge_backmatch_index,
                                              halo_type);
-                            flag_done = TRUE;
+                            flag_done = GBP_TRUE;
                         }
                     } else {
                         if(trees->snap_list[i_file + halo_file_offset] == i_read_in && halo_index == i_halo)
@@ -403,5 +403,5 @@ int main(int argc, char *argv[]) {
     free_trees(&trees);
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

@@ -38,13 +38,13 @@ void read_smooth(plist_info *plist, char *filename_root_in, int snapshot_number,
     char *     read_array;
     double     expansion_factor;
     double     h_Hubble;
-    int        flag_filefound = FALSE;
-    int        flag_multifile = FALSE;
+    int        flag_filefound = GBP_FALSE;
+    int        flag_multifile = GBP_FALSE;
     int        flag_file_type;
     int        flag_LONGIDs;
-    int        read_rank      = MASTER_RANK;
-    int        flag_log_sigma = FALSE;
-    int        flag_log_rho   = FALSE;
+    int        read_rank      = SID_MASTER_RANK;
+    int        flag_log_sigma = GBP_FALSE;
+    int        flag_log_rho   = GBP_FALSE;
     FILE *     fp;
 
     SID_log("Reading smooth file {%s}...", SID_LOG_OPEN | SID_LOG_TIMER, filename_root_in);
@@ -58,18 +58,18 @@ void read_smooth(plist_info *plist, char *filename_root_in, int snapshot_number,
     SID_log("Done.", SID_LOG_CLOSE);
 
     // Interpret the mode passed to this function
-    int flag_logs_used    = FALSE;
-    int flag_log_quantity = FALSE;
+    int flag_logs_used    = GBP_FALSE;
+    int flag_log_quantity = GBP_FALSE;
     if(check_mode_for_flag(mode, READ_SMOOTH_LOG_SIGMA)) {
-        flag_log_sigma = TRUE;
-        flag_logs_used = TRUE;
+        flag_log_sigma = GBP_TRUE;
+        flag_logs_used = GBP_TRUE;
     } else
-        flag_log_sigma = FALSE;
+        flag_log_sigma = GBP_FALSE;
     if(check_mode_for_flag(mode, READ_SMOOTH_LOG_RHO)) {
-        flag_log_rho   = TRUE;
-        flag_logs_used = TRUE;
+        flag_log_rho   = GBP_TRUE;
+        flag_logs_used = GBP_TRUE;
     } else
-        flag_log_rho = FALSE;
+        flag_log_rho = GBP_FALSE;
 
     // A file was found ...
     if(flag_filefound) {
@@ -77,7 +77,7 @@ void read_smooth(plist_info *plist, char *filename_root_in, int snapshot_number,
         n_particles_file  = header.n_particles_file;
         offset            = header.offset;
         n_particles_total = header.n_particles_total;
-        n_files           = MAX(1, header.n_files);
+        n_files           = GBP_MAX(1, header.n_files);
         SID_Bcast(&n_particles_file, 1, SID_INT, SID.COMM_WORLD, read_rank);
         SID_Bcast(&offset, 1, SID_INT, SID.COMM_WORLD, read_rank);
         SID_Bcast(&n_particles_total, 1, SID_LONG_LONG, SID.COMM_WORLD, read_rank);
@@ -93,13 +93,13 @@ void read_smooth(plist_info *plist, char *filename_root_in, int snapshot_number,
 
         // Check if we are dealing with LONG IDs or not
         if(ADaPS_exist(plist->data, "flag_LONGIDs"))
-            flag_LONGIDs = TRUE;
+            flag_LONGIDs = GBP_TRUE;
         else
-            flag_LONGIDs = FALSE;
+            flag_LONGIDs = GBP_FALSE;
 
         // Sort particle IDs
         SID_log("Sorting particle IDs...", SID_LOG_OPEN | SID_LOG_TIMER);
-        merge_sort(ids, (size_t)n_particles_local, &ids_index, SID_SIZE_T, SORT_COMPUTE_INDEX, FALSE);
+        merge_sort(ids, (size_t)n_particles_local, &ids_index, SID_SIZE_T, SORT_COMPUTE_INDEX, GBP_FALSE);
         SID_log("Done.", SID_LOG_CLOSE);
 
         // Allocate arrays
@@ -137,16 +137,16 @@ void read_smooth(plist_info *plist, char *filename_root_in, int snapshot_number,
                 fread_verify(&(header.offset), sizeof(int), 1, fp);
                 fread_verify(&(header.n_particles_total), sizeof(long long), 1, fp);
                 fread_verify(&(header.n_files), sizeof(int), 1, fp);
-                flag_file_not_found = FALSE;
+                flag_file_not_found = GBP_FALSE;
             } else {
-                flag_file_not_found = TRUE;
+                flag_file_not_found = GBP_TRUE;
                 n_files_not_found++;
             }
             if(!flag_file_not_found) {
                 n_particles_file  = header.n_particles_file;
                 offset            = header.offset;
                 n_particles_total = header.n_particles_total;
-                n_files           = MAX(1, header.n_files);
+                n_files           = GBP_MAX(1, header.n_files);
                 SID_Bcast(&n_particles_file, 1, SID_INT, SID.COMM_WORLD, read_rank);
                 SID_Bcast(&offset, 1, SID_INT, SID.COMM_WORLD, read_rank);
                 SID_Bcast(&n_particles_total, 1, SID_LONG_LONG, SID.COMM_WORLD, read_rank);
@@ -164,7 +164,7 @@ void read_smooth(plist_info *plist, char *filename_root_in, int snapshot_number,
                     }
                     SID_Barrier(SID.COMM_WORLD);
                     SID_Bcast(id_buf_L, (int)n_particles_file, SID_LONG_LONG, SID.COMM_WORLD, read_rank);
-                    merge_sort(id_buf_L, (size_t)n_particles_file, &id_buf_index, SID_SIZE_T, SORT_COMPUTE_INDEX, FALSE);
+                    merge_sort(id_buf_L, (size_t)n_particles_file, &id_buf_index, SID_SIZE_T, SORT_COMPUTE_INDEX, GBP_FALSE);
                 } else {
                     if(i_file == 0)
                         SID_log("(int) IDs...", SID_LOG_CONTINUE);
@@ -176,7 +176,7 @@ void read_smooth(plist_info *plist, char *filename_root_in, int snapshot_number,
                     }
                     SID_Barrier(SID.COMM_WORLD);
                     SID_Bcast(id_buf_i, (int)n_particles_file, SID_INT, SID.COMM_WORLD, read_rank);
-                    merge_sort(id_buf_i, (size_t)n_particles_file, &id_buf_index, SID_INT, SORT_COMPUTE_INDEX, FALSE);
+                    merge_sort(id_buf_i, (size_t)n_particles_file, &id_buf_index, SID_INT, SORT_COMPUTE_INDEX, GBP_FALSE);
                 }
 
                 // Create local particle mapping
@@ -215,7 +215,7 @@ void read_smooth(plist_info *plist, char *filename_root_in, int snapshot_number,
                     fread_verify(&offset, sizeof(int), 1, fp);
                     fread_verify(&n_particles_total, sizeof(long long), 1, fp);
                     fread_verify(&n_files, sizeof(int), 1, fp);
-                    n_files = MAX(1, n_files);
+                    n_files = GBP_MAX(1, n_files);
                 }
                 SID_Bcast(&n_particles_file, 1, SID_INT, SID.COMM_WORLD, read_rank);
                 SID_Bcast(&offset, 1, SID_INT, SID.COMM_WORLD, read_rank);
@@ -256,7 +256,7 @@ void read_smooth(plist_info *plist, char *filename_root_in, int snapshot_number,
                         if(i_quantity == 0) {
                             for(i_particle = 0; i_particle < n_particles_file; i_particle++)
                                 if(mark[i_particle] >= 0)
-                                    read_array[mark[i_particle]] = TRUE;
+                                    read_array[mark[i_particle]] = GBP_TRUE;
                         }
                         for(i_particle = 0; i_particle < n_particles_file; i_particle++)
                             if(mark[i_particle] >= 0)
@@ -284,7 +284,7 @@ void read_smooth(plist_info *plist, char *filename_root_in, int snapshot_number,
             sum_check += (size_t)read_array[i_particle];
         SID_Allreduce(SID_IN_PLACE, &sum_check, 1, SID_SIZE_T, SID_SUM, SID.COMM_WORLD);
         if(sum_check != n_particles_all_mem)
-            SID_trap_error("Only %lld of %lld particles were set.", ERROR_LOGIC, sum_check, n_particles_all_mem);
+            SID_trap_error("Only %lld of %lld particles were set.", SID_ERROR_LOGIC, sum_check, n_particles_all_mem);
         SID_free(SID_FARG read_array);
 
         SID_log("Summary...", SID_LOG_OPEN);
@@ -353,7 +353,7 @@ void read_smooth(plist_info *plist, char *filename_root_in, int snapshot_number,
                     case 0:
                         unit_factor       = 1. / M_PER_MPC;
                         local_array       = r_smooth_array;
-                        flag_log_quantity = FALSE;
+                        flag_log_quantity = GBP_FALSE;
                         break;
                     case 1:
                         unit_factor       = M_PER_MPC * M_PER_MPC * M_PER_MPC / M_SOL;
@@ -376,5 +376,5 @@ void read_smooth(plist_info *plist, char *filename_root_in, int snapshot_number,
         SID_Barrier(SID.COMM_WORLD);
         SID_log("Done.", SID_LOG_CLOSE);
     } else
-        SID_trap_error("Could not find file with root {%s}", ERROR_IO_OPEN, filename_root_in);
+        SID_trap_error("Could not find file with root {%s}", SID_ERROR_IO_OPEN, filename_root_in);
 }

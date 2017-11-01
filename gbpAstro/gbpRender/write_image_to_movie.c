@@ -45,12 +45,12 @@ void write_image_to_movie(image_info *image, movie_info *movie) {
     if(SID.I_am_Master) {
         c = movie->video_stream->codec;
 
-        flag_silent = FALSE;
+        flag_silent = GBP_FALSE;
         if(movie->frame_count >= movie->n_frames) {
             // no more frames to compress. The codec has a latency of a few
             //   frames if using B frames, so we get the last frames by
             //   passing the same picture again
-            flag_silent = TRUE;
+            flag_silent = GBP_TRUE;
         } else {
             SID_log("Writing frame %d of %d to movie...", SID_LOG_OPEN, movie->frame_count + 1, movie->n_frames);
             if(c->pix_fmt != PIX_FMT_YUV420P) {
@@ -59,7 +59,7 @@ void write_image_to_movie(image_info *image, movie_info *movie) {
                     img_convert_ctx =
                         sws_getContext(c->width, c->height, PIX_FMT_YUV420P, c->width, c->height, c->pix_fmt, GBPGFX_SWS_FLAGS, NULL, NULL, NULL);
                     if(img_convert_ctx == NULL)
-                        SID_trap_error("Cannot initialize the conversion context", ERROR_LOGIC);
+                        SID_trap_error("Cannot initialize the conversion context", SID_ERROR_LOGIC);
                 }
                 fill_yuv_image(movie->temp_picture, image, c);
                 sws_scale(img_convert_ctx,
@@ -103,12 +103,12 @@ void write_image_to_movie(image_info *image, movie_info *movie) {
                 ret = 0;
         }
         if(ret != 0)
-            SID_trap_error("Error while writing video frame", ERROR_LOGIC);
+            SID_trap_error("Error while writing video frame", SID_ERROR_LOGIC);
         movie->frame_count++;
         if(!flag_silent)
             SID_log("Done.", SID_LOG_CLOSE);
     }
 #else
-    SID_trap_error("Routine not supported.  FFMPEG not installed.", ERROR_LOGIC);
+    SID_trap_error("Routine not supported.  FFMPEG not installed.", SID_ERROR_LOGIC);
 #endif
 }

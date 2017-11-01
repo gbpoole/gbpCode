@@ -14,7 +14,7 @@ static AVStream *add_video_stream(AVFormatContext *oc, enum CodecID codec_id, in
 
     st = av_new_stream(oc, 0);
     if(!st)
-        SID_trap_error("Could not alloc stream", ERROR_LOGIC);
+        SID_trap_error("Could not alloc stream", SID_ERROR_LOGIC);
     c             = st->codec;
     c->codec_id   = codec_id;
     c->codec_type = CODEC_TYPE_VIDEO;
@@ -22,7 +22,7 @@ static AVStream *add_video_stream(AVFormatContext *oc, enum CodecID codec_id, in
     c->height     = height + height % 2;
     c->bit_rate   = 16 * 1024 * 1024;
     /*
-      c->qscale       =MAX(1,MIN(31,GBPGFX_QSCALE));
+      c->qscale       =GBP_MAX(1,GBP_MIN(31,GBPGFX_QSCALE));
       c->chroma_qscale=c->chroma_qscale_table[c->qscale];
       c->y_dc_scale   =c->y_dc_scale_table[c->qscale];
       c->c_dc_scale   =c->c_dc_scale_table[c->chroma_qscale];
@@ -88,11 +88,11 @@ static void open_video(movie_info *movie) {
     // Find the video encoder
     codec = avcodec_find_encoder(c->codec_id);
     if(!codec)
-        SID_trap_error("Codec not found", ERROR_LOGIC);
+        SID_trap_error("Codec not found", SID_ERROR_LOGIC);
 
     // Open the codec
     if(avcodec_open(c, codec) < 0)
-        SID_trap_error("Could not open codec", ERROR_LOGIC);
+        SID_trap_error("Could not open codec", SID_ERROR_LOGIC);
 
     movie->video_outbuf      = NULL;
     movie->video_outbuf_size = 0;
@@ -103,14 +103,14 @@ static void open_video(movie_info *movie) {
         //   as long as they're aligned enough for the architecture, and
         //   they're freed appropriately (such as using av_free for buffers
         //   allocated with av_malloc)
-        movie->video_outbuf_size = 256 * SIZE_OF_KILOBYTE;
+        movie->video_outbuf_size = 256 * SID_SIZE_OF_KILOBYTE;
         movie->video_outbuf      = (uint8_t *)av_malloc(movie->video_outbuf_size);
     }
 
     // Allocate the encoded raw picture
     movie->picture = alloc_picture(c->pix_fmt, c->width, c->height);
     if(!movie->picture)
-        SID_trap_error("Could not allocate picture", ERROR_LOGIC);
+        SID_trap_error("Could not allocate picture", SID_ERROR_LOGIC);
 
     // if the output format is not YUV420P, then a temporary YUV420P
     //   picture is needed too. It is then converted to the required
@@ -119,7 +119,7 @@ static void open_video(movie_info *movie) {
     if(c->pix_fmt != PIX_FMT_YUV420P) {
         movie->temp_picture = alloc_picture(PIX_FMT_YUV420P, c->width, c->height);
         if(!movie->temp_picture)
-            SID_trap_error("Could not allocate temporary picture", ERROR_LOGIC);
+            SID_trap_error("Could not allocate temporary picture", SID_ERROR_LOGIC);
     }
 }
 #endif
@@ -150,15 +150,15 @@ void open_movie(char *filename, int width, int height, int n_frames, int frame_r
             SID_log("file extension unknown; using default=%s...", SID_LOG_CONTINUE, GBPGFX_FORMAT_DEFAULT);
             fmt = guess_format(GBPGFX_FORMAT_DEFAULT, NULL, NULL);
             if(!fmt)
-                SID_trap_error("Default format is invalid", ERROR_LOGIC);
+                SID_trap_error("Default format is invalid", SID_ERROR_LOGIC);
         }
         if(!fmt)
-            SID_trap_error("Could not find suitable output format", ERROR_LOGIC);
+            SID_trap_error("Could not find suitable output format", SID_ERROR_LOGIC);
 
         // Allocate the output media context
         movie->video_context = avformat_alloc_context();
         if(!movie->video_context)
-            SID_trap_error("Movie context allocation error", ERROR_MEMORY);
+            SID_trap_error("Movie context allocation error", SID_ERROR_MEMORY);
         movie->video_context->oformat = fmt;
         snprintf(movie->video_context->filename, sizeof(movie->video_context->filename), "%s", filename);
 
@@ -169,7 +169,7 @@ void open_movie(char *filename, int width, int height, int n_frames, int frame_r
 
         // Set the output parameters (must be done even if no parameters)
         if(av_set_parameters(movie->video_context, NULL) < 0)
-            SID_trap_error("Invalid format parameters", ERROR_LOGIC);
+            SID_trap_error("Invalid format parameters", SID_ERROR_LOGIC);
         dump_format(movie->video_context, 0, filename, 1);
 
         // Open the video codec and allocate the necessary encode buffers
@@ -179,7 +179,7 @@ void open_movie(char *filename, int width, int height, int n_frames, int frame_r
         // Open the output file, if needed
         if(!(fmt->flags & AVFMT_NOFILE)) {
             if(url_fopen(&movie->video_context->pb, filename, URL_WRONLY) < 0)
-                SID_trap_error("Could not open file {%s}", ERROR_IO_OPEN, filename);
+                SID_trap_error("Could not open file {%s}", SID_ERROR_IO_OPEN, filename);
         }
 
         // Write the stream header, if any
@@ -188,6 +188,6 @@ void open_movie(char *filename, int width, int height, int n_frames, int frame_r
         SID_log("Done.", SID_LOG_CLOSE);
     }
 #else
-    SID_trap_error("Function not supported.  FFMPEG is not installed.", ERROR_LOGIC);
+    SID_trap_error("Function not supported.  FFMPEG is not installed.", SID_ERROR_LOGIC);
 #endif
 }

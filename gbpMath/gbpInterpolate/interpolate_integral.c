@@ -18,7 +18,7 @@ double interpolate_integral(interp_info *interp, double x_lo, double x_hi) {
     double y_x_max;
     double r_val;
     double alpha;
-    int    flag_error = FALSE;
+    int    flag_error = GBP_FALSE;
 
     x_min   = ((interp_info *)interp)->x[0];
     x_max   = ((interp_info *)interp)->x[((interp_info *)interp)->n - 1];
@@ -33,11 +33,11 @@ double interpolate_integral(interp_info *interp, double x_lo, double x_hi) {
         // Extrapolate integral to low-x assuming dI prop. to x^alpha
         if(x_lo < x_min) {
             x_lo_tmp = x_lo;
-            x_hi_tmp = MIN(x_hi, x_min);
+            x_hi_tmp = GBP_MIN(x_hi, x_min);
             alpha    = interpolate_derivative(interp, ((interp_info *)interp)->x[0]);
             if(alpha < -1. && x_lo_tmp * x_hi_tmp == 0.) {
                 fprintf(stderr, "ERROR: integration extrapolation to low-x is divergent! (alpha=%lf)\n", alpha);
-                flag_error = TRUE;
+                flag_error = GBP_TRUE;
             } else
                 r_val += (y_x_min / (alpha + 1.)) * (pow(x_hi_tmp / x_min, alpha + 1.) - pow(x_lo_tmp / x_min, alpha + 1.));
             x_lo_interp = x_min;
@@ -45,12 +45,12 @@ double interpolate_integral(interp_info *interp, double x_lo, double x_hi) {
 
         // Extrapolate integral to high-x assuming dI prop. to x^alpha
         if(x_hi > x_max) {
-            x_lo_tmp = MAX(x_max, x_lo);
+            x_lo_tmp = GBP_MAX(x_max, x_lo);
             x_hi_tmp = x_hi;
             alpha    = interpolate_derivative(interp, ((interp_info *)interp)->x[((interp_info *)interp)->n - 1]);
             if(alpha < 0. && x_lo_tmp * x_hi_tmp == 0.) {
                 fprintf(stderr, "ERROR: integration extrapolation to high-x is divergent! (alpha=%lf)\n", alpha);
-                flag_error = TRUE;
+                flag_error = GBP_TRUE;
             } else
                 r_val += (y_x_min / (alpha + 1.)) * (pow(x_hi_tmp / x_min, alpha + 1.) - pow(x_lo_tmp / x_min, alpha + 1.));
             x_hi_interp = x_max;

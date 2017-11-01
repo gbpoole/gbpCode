@@ -65,11 +65,11 @@ int main(int argc, char *argv[]) {
     snap_index       = (int *)SID_malloc(sizeof(int) * n_halos_max);
     group_halo_first = (int *)SID_malloc(sizeof(int) * n_halos_max);
     flag_done        = (char *)SID_malloc(sizeof(char) * n_halos_max);
-    for(i_tree = 0; i_tree < MIN(n_trees, tree_select); i_tree++) {
+    for(i_tree = 0; i_tree < GBP_MIN(n_trees, tree_select); i_tree++) {
         fread_verify(halos, sizeof(halo_properties_SAGE_info), n_halos[i_tree], fp);
         // if(i_tree==tree_select){
         for(i_halo = 0; i_halo < n_halos[i_tree]; i_halo++)
-            flag_done[i_halo] = FALSE;
+            flag_done[i_halo] = GBP_FALSE;
         for(i_halo = 0; i_halo < n_halos[i_tree]; i_halo++) {
             if(!flag_done[i_halo]) {
                 current    = halos[i_halo].group_halo_first;
@@ -82,7 +82,7 @@ int main(int argc, char *argv[]) {
                 while(current >= 0) {
                     if(group_size > 1)
                         printf("%d ", halos[current].n_particles);
-                    flag_done[current] = TRUE;
+                    flag_done[current] = GBP_TRUE;
                     current            = halos[current].group_halo_next;
                 }
                 if(group_size > 1)

@@ -10,11 +10,11 @@ void init_trend_coordinate(trend_info *trend,
                            void (*free_function)(trend_property_info *property, void *params_init, int i_hist, int *mode, gbp_va_list *vargs_gbp),
                            int (*calc_function)(trend_property_info *property, hist_info *hist, void *params_calc)) {
     if(trend->ordinate == NULL)
-        SID_trap_error("A trend coordinate is being set before its ordinate has been defined.", ERROR_LOGIC);
+        SID_trap_error("A trend coordinate is being set before its ordinate has been defined.", SID_ERROR_LOGIC);
 
     // Create new coordinate
     trend_property_info *coordinate_new;
-    init_trend_property(&coordinate_new, name, FALSE, trend->ordinate->hist->n_bins, params, init_function, free_function, calc_function);
+    init_trend_property(&coordinate_new, name, GBP_FALSE, trend->ordinate->hist->n_bins, params, init_function, free_function, calc_function);
 
     // Add it to the linked list
     if(trend->coordinate_first != NULL)

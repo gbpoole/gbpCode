@@ -19,10 +19,10 @@ void read_gbpCosmo_file(cosmo_info **cosmo, const char *filename_in) {
 
     // In some cases we may want to tell a code not to
     //   execute this routine.  This gives us a way to do that.
-    int flag_skip = FALSE;
+    int flag_skip = GBP_FALSE;
     if(filename_in != NULL) {
         if(!strcmp(filename_in, "skip"))
-            flag_skip = TRUE;
+            flag_skip = GBP_TRUE;
     }
 
     // If we are not skipping this routine ...
@@ -41,8 +41,8 @@ void read_gbpCosmo_file(cosmo_info **cosmo, const char *filename_in) {
         add_parameter_to_list(parameter_list, "f_gas", SID_DOUBLE, PARAMETER_MODE_OPTIONAL);
 
         // Read the cosmology from file
-        char filename_cosmo[MAX_FILENAME_LENGTH];
-        char filename_TF[MAX_FILENAME_LENGTH];
+        char filename_cosmo[SID_MAX_FILENAME_LENGTH];
+        char filename_TF[SID_MAX_FILENAME_LENGTH];
         if(filename_in == NULL) {
             sprintf(filename_cosmo, "%s/cosmology_%s.txt", GBP_DATA_DIR, GBP_COSMOLOGY_DEFAULT);
             sprintf(filename_TF, "%s/transfer_function_%s.txt", GBP_DATA_DIR, GBP_COSMOLOGY_DEFAULT);
@@ -64,7 +64,7 @@ void read_gbpCosmo_file(cosmo_info **cosmo, const char *filename_in) {
         ADaPS_init(cosmo);
 
         // Store the transfer function filename
-        ADaPS_store(cosmo, filename_TF, "filename_transfer_function", ADaPS_COPY, MAX_FILENAME_LENGTH);
+        ADaPS_store(cosmo, filename_TF, "filename_transfer_function", ADaPS_COPY, SID_MAX_FILENAME_LENGTH);
 
         // Initialize the cosmology file description
         read_gbpParam_file(filename_cosmo, parameter_list);

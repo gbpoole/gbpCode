@@ -51,7 +51,7 @@ int main(int argc, char *argv[]) {
     for(i_tree = 0; i_tree < select_tree; i_tree++) {
         for(i_halo = 0; i_halo < n_halos[i_tree]; i_halo++) {
             fread_verify(&halo, sizeof(halo_properties_SAGE_info), 1, fp);
-            max_snap = MAX(max_snap, halo.snap_num);
+            max_snap = GBP_MAX(max_snap, halo.snap_num);
         }
     }
     halos            = (halo_properties_SAGE_info *)SID_malloc(sizeof(halo_properties_SAGE_info) * n_halos[i_tree]);
@@ -77,35 +77,35 @@ int main(int argc, char *argv[]) {
         snap_num[i_halo] = halos[i_halo].snap_num;
 
         if(halos[i_halo].descendant >= 0)
-            descendant_min = MIN(descendant_min, halos[i_halo].descendant);
+            descendant_min = GBP_MIN(descendant_min, halos[i_halo].descendant);
         if(halos[i_halo].progenitor_first >= 0)
-            progenitor_first_min = MIN(progenitor_first_min, halos[i_halo].progenitor_first);
+            progenitor_first_min = GBP_MIN(progenitor_first_min, halos[i_halo].progenitor_first);
         if(halos[i_halo].progenitor_next >= 0)
-            progenitor_next_min = MIN(progenitor_next_min, halos[i_halo].progenitor_next);
+            progenitor_next_min = GBP_MIN(progenitor_next_min, halos[i_halo].progenitor_next);
         if(halos[i_halo].group_halo_first >= 0)
-            group_halo_first_min = MIN(group_halo_first_min, halos[i_halo].group_halo_first);
+            group_halo_first_min = GBP_MIN(group_halo_first_min, halos[i_halo].group_halo_first);
         if(halos[i_halo].group_halo_next >= 0)
-            group_halo_next_min = MIN(group_halo_next_min, halos[i_halo].group_halo_next);
+            group_halo_next_min = GBP_MIN(group_halo_next_min, halos[i_halo].group_halo_next);
         if(halo.snap_num >= 0)
-            snap_num_min = MIN(snap_num_min, halos[i_halo].snap_num);
+            snap_num_min = GBP_MIN(snap_num_min, halos[i_halo].snap_num);
         if(halos[i_halo].halo_index >= 0)
-            halo_index_min = MIN(halo_index_min, halos[i_halo].halo_index);
+            halo_index_min = GBP_MIN(halo_index_min, halos[i_halo].halo_index);
 
-        descendant_max       = MAX(descendant_max, halos[i_halo].descendant);
-        progenitor_first_max = MAX(progenitor_first_max, halos[i_halo].progenitor_first);
-        progenitor_next_max  = MAX(progenitor_next_max, halos[i_halo].progenitor_next);
-        group_halo_first_max = MAX(group_halo_first_max, halos[i_halo].group_halo_first);
-        group_halo_next_max  = MAX(group_halo_next_max, halos[i_halo].group_halo_next);
-        snap_num_max         = MAX(snap_num_max, halos[i_halo].snap_num);
-        halo_index_max       = MAX(halo_index_max, halos[i_halo].halo_index);
-        max_snap             = MAX(max_snap, halos[i_halo].snap_num);
+        descendant_max       = GBP_MAX(descendant_max, halos[i_halo].descendant);
+        progenitor_first_max = GBP_MAX(progenitor_first_max, halos[i_halo].progenitor_first);
+        progenitor_next_max  = GBP_MAX(progenitor_next_max, halos[i_halo].progenitor_next);
+        group_halo_first_max = GBP_MAX(group_halo_first_max, halos[i_halo].group_halo_first);
+        group_halo_next_max  = GBP_MAX(group_halo_next_max, halos[i_halo].group_halo_next);
+        snap_num_max         = GBP_MAX(snap_num_max, halos[i_halo].snap_num);
+        halo_index_max       = GBP_MAX(halo_index_max, halos[i_halo].halo_index);
+        max_snap             = GBP_MAX(max_snap, halos[i_halo].snap_num);
     }
 
     i_tree++;
     for(; i_tree < n_trees; i_tree++) {
         for(i_halo = 0; i_halo < n_halos[i_tree]; i_halo++) {
             fread_verify(&halo, sizeof(halo_properties_SAGE_info), 1, fp);
-            max_snap = MAX(max_snap, halo.snap_num);
+            max_snap = GBP_MAX(max_snap, halo.snap_num);
         }
     }
 
@@ -131,7 +131,7 @@ int main(int argc, char *argv[]) {
     SID_log("Snap_num         =%d->%d", SID_LOG_COMMENT, snap_num_min, snap_num_max);
     SID_log("Halo_index       =%d->%d", SID_LOG_COMMENT, halo_index_min, halo_index_max);
 
-    merge_sort((void *)snap_num, (size_t)n_halos[i_tree], &snap_num_index, SID_INT, SORT_COMPUTE_INDEX, FALSE);
+    merge_sort((void *)snap_num, (size_t)n_halos[i_tree], &snap_num_index, SID_INT, SORT_COMPUTE_INDEX, GBP_FALSE);
     for(i_snap = snap_num_max, i_halo = n_halos[i_tree] - 1; i_snap >= snap_num_min && i_halo >= 0; i_snap--) {
         n_halos_snap = 0;
         while(snap_num[snap_num_index[i_halo]] == i_snap && i_halo > 0) {
@@ -146,7 +146,7 @@ int main(int argc, char *argv[]) {
             group_halo_first[j_halo] = halos[snap_num_index[i_halo + j_halo + 1]].group_halo_first;
             snap_index[j_halo]       = snap_num_index[i_halo + j_halo + 1];
         }
-        merge_sort((void *)group_halo_first, (size_t)n_halos_snap, &group_halo_first_index, SID_INT, SORT_COMPUTE_INDEX, FALSE);
+        merge_sort((void *)group_halo_first, (size_t)n_halos_snap, &group_halo_first_index, SID_INT, SORT_COMPUTE_INDEX, GBP_FALSE);
         group_halo_last = -99;
         if(n_halos_snap > 0)
             printf("Snap #%3d: ", i_snap);

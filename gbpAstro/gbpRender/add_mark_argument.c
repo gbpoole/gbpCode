@@ -18,7 +18,7 @@ void add_mark_argument(render_info *render, const char *species, int value, cons
     create_mark_argument(render, &new_arg);
     strcpy(new_arg->species, species);
     new_arg->value                = (char)value;
-    new_arg->flag_keep_properties = FALSE;
+    new_arg->flag_keep_properties = GBP_FALSE;
     strcpy(new_arg->type, type);
 
     // Parse the passed parameters
@@ -29,7 +29,7 @@ void add_mark_argument(render_info *render, const char *species, int value, cons
               !strcmp(new_arg->type, "subgroup_id")) {
         for(int i_val = 0; i_val < 1; i_val++)
             new_arg->ival[i_val] = va_arg(vargs, int);
-        new_arg->flag_keep_properties = TRUE;
+        new_arg->flag_keep_properties = GBP_TRUE;
     } else if(!strcmp(new_arg->type, "group_tree_id") || !strcmp(new_arg->type, "subgroup_tree_id")) {
         for(int i_val = 0; i_val < 1; i_val++)
             new_arg->ival[i_val] = va_arg(vargs, int);
@@ -41,7 +41,7 @@ void add_mark_argument(render_info *render, const char *species, int value, cons
 
     // These things don't take argument values
     else if(strcmp(new_arg->type, "group_fragmented") && strcmp(new_arg->type, "subgroup_fragmented"))
-        SID_trap_error("Invalid mark type {%s} in add_mark_argument().", ERROR_LOGIC, new_arg->type);
+        SID_trap_error("Invalid mark type {%s} in add_mark_argument().", SID_ERROR_LOGIC, new_arg->type);
 
     // Set first/last/last->next pointers and increment counter
     if(render->mark_arg_first == NULL)

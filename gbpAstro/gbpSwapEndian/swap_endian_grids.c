@@ -12,7 +12,7 @@ void swap_endian_grids(const char *filename_in, const char *filename_out, int mo
 
     // Sanity check
     if(check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE) && check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE))
-        SID_trap_error("Invalid mode flag (%d) in swap_endian_grids().", ERROR_LOGIC, mode);
+        SID_trap_error("Invalid mode flag (%d) in swap_endian_grids().", SID_ERROR_LOGIC, mode);
 
     // Open input and output files
     FILE *fp_in  = NULL;
@@ -21,7 +21,7 @@ void swap_endian_grids(const char *filename_in, const char *filename_out, int mo
         SID_log("not present.", SID_LOG_CLOSE, filename_in);
     else {
         if((fp_out = fopen(filename_out, "w")) == NULL)
-            SID_trap_error("Could not open {%s} for writing.", ERROR_IO_OPEN, filename_out);
+            SID_trap_error("Could not open {%s} for writing.", SID_ERROR_IO_OPEN, filename_out);
 
         // Read the needed header information and rewind
         int    n[3];

@@ -26,11 +26,11 @@ int main(int argc, char *argv[]) {
     int    i_grouping;
     int    i_grouping_start;
     int    i_grouping_stop;
-    char   filename_in[MAX_FILENAME_LENGTH];
-    char   filename_cosmology[MAX_FILENAME_LENGTH];
-    char   filename_in_root[MAX_FILENAME_LENGTH];
-    char   filename_in_model[MAX_FILENAME_LENGTH];
-    char   filename_out_root[MAX_FILENAME_LENGTH];
+    char   filename_in[SID_MAX_FILENAME_LENGTH];
+    char   filename_cosmology[SID_MAX_FILENAME_LENGTH];
+    char   filename_in_root[SID_MAX_FILENAME_LENGTH];
+    char   filename_in_model[SID_MAX_FILENAME_LENGTH];
+    char   filename_out_root[SID_MAX_FILENAME_LENGTH];
     char   grouping_name[6];
     char   filename_TF[256];
     char   n_string[64];
@@ -58,7 +58,7 @@ int main(int argc, char *argv[]) {
     // Initialization -- MPI etc.
     SID_init(&argc, &argv, NULL, NULL);
     if(argc != 8)
-        SID_trap_error("Incorrect syntax.", ERROR_SYNTAX);
+        SID_trap_error("Incorrect syntax.", SID_ERROR_SYNTAX);
 
     // Parse arguments
     strcpy(filename_in_root, argv[1]);
@@ -74,7 +74,7 @@ int main(int argc, char *argv[]) {
     int n_groupings;
     n_groupings = i_grouping_stop - i_grouping_start + 1;
     if(n_groupings < 1)
-        SID_trap_error("No groupings have been selected (you chose start=%d, stop=%d).", ERROR_LOGIC, i_grouping_start, i_grouping_stop);
+        SID_trap_error("No groupings have been selected (you chose start=%d, stop=%d).", SID_ERROR_LOGIC, i_grouping_start, i_grouping_stop);
 
     SID_log("Producing power spectra for halo grouping(s)...", SID_LOG_OPEN | SID_LOG_TIMER);
 
@@ -152,7 +152,7 @@ int main(int argc, char *argv[]) {
         } // Loop over 4 P(k)'s
 
         // Now that all 4 runs are done, let's write the results
-        char filename_out_root_grouping[MAX_FILENAME_LENGTH];
+        char filename_out_root_grouping[SID_MAX_FILENAME_LENGTH];
         sprintf(filename_out_root_grouping, "%s_grouping_%03d", filename_out_root, i_grouping);
         write_pspec(&pspec, filename_out_root_grouping, &plist, "halos");
 
@@ -163,5 +163,5 @@ int main(int argc, char *argv[]) {
     free_pspec(&pspec);
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

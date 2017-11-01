@@ -11,7 +11,7 @@
 void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plist_info *plist, int mode) {
     char **  pname;
     char *   name_initpositions;
-    char     filename[MAX_FILENAME_LENGTH];
+    char     filename[SID_MAX_FILENAME_LENGTH];
     char *   read_catalog;
     size_t   i, j, k, l, jj;
     size_t   k_offset[N_GADGET_TYPE];
@@ -66,14 +66,14 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
     size_t   s_load;
     char *   keep;
     int      n_keep[N_GADGET_TYPE];
-    int      flag_keep_IDs      = TRUE;
-    int      flag_filefound     = FALSE;
-    int      flag_gas           = FALSE;
-    int      flag_initpositions = FALSE;
-    int      flag_no_velocities = FALSE;
-    int      flag_LONGIDs       = FALSE;
-    int      flag_read_catalog  = FALSE;
-    int      flag_all_read_all  = FALSE;
+    int      flag_keep_IDs      = GBP_TRUE;
+    int      flag_filefound     = GBP_FALSE;
+    int      flag_gas           = GBP_FALSE;
+    int      flag_initpositions = GBP_FALSE;
+    int      flag_no_velocities = GBP_FALSE;
+    int      flag_LONGIDs       = GBP_FALSE;
+    int      flag_read_catalog  = GBP_FALSE;
+    int      flag_all_read_all  = GBP_FALSE;
     int      i_file;
     int      i_rank;
     int      n_files;
@@ -126,7 +126,7 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
     gadget_read_info read_info;
     flag_filefound = init_gadget_read(filename_root_in, snapshot_number, &read_info);
     if(!flag_filefound)
-        SID_trap_error("Could not find snapshot w/ root={%s;snap=%d}.", ERROR_IO_OPEN, filename_root_in, snapshot_number);
+        SID_trap_error("Could not find snapshot w/ root={%s;snap=%d}.", SID_ERROR_IO_OPEN, filename_root_in, snapshot_number);
 
     // A file was found ...
     if(flag_filefound) {
@@ -219,23 +219,23 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
         }
 
         // Is this a multimass snapshot?
-        int flag_multimass = FALSE;
+        int flag_multimass = GBP_FALSE;
         for(i = 0; i < N_GADGET_TYPE; i++)
             if(n_all[i] > 0 && mass_array[i] == 0.)
-                flag_multimass = TRUE;
+                flag_multimass = GBP_TRUE;
 
         // Is sph being used?
         if(n_all[GADGET_TYPE_GAS] > 0)
-            flag_gas = TRUE;
+            flag_gas = GBP_TRUE;
         else
-            flag_gas = FALSE;
+            flag_gas = GBP_FALSE;
 
         long long n_of_type_rank[N_GADGET_TYPE];
         for(i = 0; i < N_GADGET_TYPE; i++)
             n_of_type_rank[i] = 0;
 
         // These variables are used if we are storing things in ID-order
-        int        flag_alloc_keep = FALSE;
+        int        flag_alloc_keep = GBP_FALSE;
         size_t     id_local_min;
         size_t     id_local_max;
         long long *ids_long;
@@ -256,7 +256,7 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                 set_gadget_filename(&read_info, i_file, filename);
 
                 // Open file and read header
-                int                flag_file_missing = FALSE;
+                int                flag_file_missing = GBP_FALSE;
                 gadget_header_info header;
                 if(SID.My_rank == read_rank) {
                     fp = fopen(filename, "r");
@@ -265,10 +265,10 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                         fread_verify(&header, sizeof(gadget_header_info), 1, fp);
                         fread_verify(&record_length_close, 4, 1, fp);
                         if(record_length_open != record_length_close)
-                            SID_log_warning("Problem with GADGET record size (close of header)", ERROR_LOGIC);
+                            SID_log_warning("Problem with GADGET record size (close of header)", SID_ERROR_LOGIC);
                         fclose(fp);
                     } else {
-                        flag_file_missing = TRUE;
+                        flag_file_missing = GBP_TRUE;
                         n_file_missing++;
                     }
                 }
@@ -301,7 +301,7 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
         else if(check_mode_for_flag(mode, READ_GADGET_RENDER_ID_ORDERED)) {
             // WARNING: This mode (as it is now) only works if n_non_zero==1
             if(n_non_zero != 1)
-                SID_trap_error("mode READ_GADGET_RENDER_ID_ORDERED does not work for multiple particle species (n=%d).", ERROR_LOGIC, n_non_zero);
+                SID_trap_error("mode READ_GADGET_RENDER_ID_ORDERED does not work for multiple particle species (n=%d).", SID_ERROR_LOGIC, n_non_zero);
 
             // Decide on the ID range for each rank
             int    i_rank;
@@ -314,7 +314,7 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                 size_t id_local_max_i;
                 if(n_particles_left > 0) {
                     n_particles_step = n_particles_left / (size_t)(SID.n_proc - i_rank);
-                    n_particles_step = MIN(n_particles_step, n_particles_left);
+                    n_particles_step = GBP_MIN(n_particles_step, n_particles_left);
                     if(i_rank == 0)
                         id_local_min_i = 0;
                     else
@@ -332,12 +332,12 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                 n_particles_left -= n_particles_step;
             }
             if(n_particles_left != 0)
-                SID_trap_error("The full IDs range has not been properly rank-allocated (ie. %zd!=%zd).", ERROR_LOGIC, n_particles_left, 0);
+                SID_trap_error("The full IDs range has not been properly rank-allocated (ie. %zd!=%zd).", SID_ERROR_LOGIC, n_particles_left, 0);
             n_particles_local = id_local_max - id_local_min + 1;
             SID_Allreduce(&n_particles_local, &n_particles_test, 1, SID_SIZE_T, SID_SUM, SID.COMM_WORLD);
             if(n_particles_test != n_particles_all)
                 SID_trap_error(
-                    "Not all particles were allocated during domain decompositioni (%zd!=%zd).", ERROR_LOGIC, n_particles_test, n_particles_all);
+                    "Not all particles were allocated during domain decompositioni (%zd!=%zd).", SID_ERROR_LOGIC, n_particles_test, n_particles_all);
 
             // Set n_of_type_rank[i]
             for(i = 0, jj = 0; i < N_GADGET_TYPE; i++) {
@@ -345,7 +345,7 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                     n_of_type_rank[i] = id_local_max - id_local_min + 1;
             }
         } else
-            SID_trap_error("Valid read_gadget mode not specified.", ERROR_LOGIC);
+            SID_trap_error("Valid read_gadget mode not specified.", SID_ERROR_LOGIC);
 
         long long n_particles_rank = 0;
         for(i = 0; i < N_GADGET_TYPE; i++)
@@ -355,11 +355,11 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
         long long n_particles_check = 0;
         SID_Allreduce(&n_particles_rank, &n_particles_check, 1, SID_LONG_LONG, SID_SUM, SID.COMM_WORLD);
         if(n_particles_check != n_particles_all)
-            SID_trap_error("Rank-allocated particle counts don't sum to the total (ie. %zd!=%zd).", ERROR_LOGIC, n_particles_check, n_particles_all);
+            SID_trap_error("Rank-allocated particle counts don't sum to the total (ie. %zd!=%zd).", SID_ERROR_LOGIC, n_particles_check, n_particles_all);
 
         // Allocate data arrays
-        int flag_read_positions  = TRUE;
-        int flag_read_velocities = TRUE;
+        int flag_read_positions  = GBP_TRUE;
+        int flag_read_velocities = GBP_TRUE;
         SID_log("Allocating arrays...", SID_LOG_OPEN);
         for(i = 0; i < N_GADGET_TYPE; i++) {
             if(n_of_type_rank[i] > 0) {
@@ -402,8 +402,8 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
 
             // Open file and read header
             size_t             n_particles_file        = 0;
-            int                flag_file_empty         = FALSE;
-            int                flag_file_missing       = FALSE;
+            int                flag_file_empty         = GBP_FALSE;
+            int                flag_file_missing       = GBP_FALSE;
             int                record_length_positions = 0;
             gadget_header_info header;
             if(SID.My_rank == read_rank) {
@@ -418,16 +418,16 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                     for(i = 0; i < N_GADGET_TYPE; i++)
                         n_particles_file += (size_t)header.n_file[i];
                     if(n_particles_file <= 0)
-                        flag_file_empty = TRUE;
+                        flag_file_empty = GBP_TRUE;
                     if(!flag_file_empty) {
                         if(record_length_open != record_length_close)
-                            SID_log_warning("Problem with GADGET record size (close of header)", ERROR_LOGIC);
+                            SID_log_warning("Problem with GADGET record size (close of header)", SID_ERROR_LOGIC);
                         fread_verify(&record_length_open, 4, 1, fp);
                         record_length_positions = record_length_open;
                     }
                     fseeko(fp, (off_t)(2 * sizeof(int) + sizeof(gadget_header_info)), SEEK_SET);
                 } else {
-                    flag_file_missing = TRUE;
+                    flag_file_missing = GBP_TRUE;
                     n_file_missing++;
                 }
             }
@@ -441,7 +441,7 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                 // Initialize buffer
                 buffer = SID_malloc((size_t)record_length_positions); // This is large enough to hold any of the blocks
                 if(check_mode_for_flag(mode, READ_GADGET_RENDER_SCATTER)) {
-                    flag_alloc_keep = TRUE;
+                    flag_alloc_keep = GBP_TRUE;
                     keep            = (char *)SID_malloc(sizeof(char) * (n_particles_file));
                     for(i = 0, jj = 0; i < N_GADGET_TYPE; i++) {
                         n_keep[i] = 0;
@@ -454,9 +454,9 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                             if(scatter_rank == SID.My_rank) {
                                 n_keep[i]++;
                                 n_particles_kept++;
-                                keep[jj] = TRUE;
+                                keep[jj] = GBP_TRUE;
                             } else
-                                keep[jj] = FALSE;
+                                keep[jj] = GBP_FALSE;
                         }
                     }
                 }
@@ -468,28 +468,28 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                         fseeko(fp, (off_t)record_length_open, SEEK_CUR);
                         fread_verify(&record_length_close, 4, 1, fp);
                         if(record_length_open != record_length_close)
-                            SID_trap_error("Position record lengths don't match (ie. %d!=%d)", ERROR_LOGIC, record_length_open, record_length_close);
+                            SID_trap_error("Position record lengths don't match (ie. %d!=%d)", SID_ERROR_LOGIC, record_length_open, record_length_close);
                         // Skip velocities
                         fread_verify(&record_length_open, 4, 1, fp);
                         fseeko(fp, (off_t)record_length_open, SEEK_CUR);
                         fread_verify(&record_length_close, 4, 1, fp);
                         if(record_length_open != record_length_close)
-                            SID_trap_error("Velocity record lengths don't match (ie. %d!=%d)", ERROR_LOGIC, record_length_open, record_length_close);
+                            SID_trap_error("Velocity record lengths don't match (ie. %d!=%d)", SID_ERROR_LOGIC, record_length_open, record_length_close);
                         // Read IDs
                         fread_verify(&record_length_open, 4, 1, fp);
                         fread_verify(buffer, record_length_open, 1, fp);
                         fread_verify(&record_length_close, 4, 1, fp);
                         if(record_length_open != record_length_close)
-                            SID_trap_error("IDs record lengths don't match (ie. %d!=%d)", ERROR_LOGIC, record_length_open, record_length_close);
+                            SID_trap_error("IDs record lengths don't match (ie. %d!=%d)", SID_ERROR_LOGIC, record_length_open, record_length_close);
                     }
                     SID_Barrier(SID.COMM_WORLD);
                     SID_Bcast(&record_length_open, 4, SID_CHAR, SID.COMM_WORLD, read_rank);
                     SID_Bcast(buffer, record_length_open, SID_CHAR, SID.COMM_WORLD, read_rank);
                     if(record_length_open / (int)(n_particles_file) == sizeof(long long)) {
-                        flag_LONGIDs = TRUE;
+                        flag_LONGIDs = GBP_TRUE;
                         ids_long     = (long long *)buffer;
                     } else {
-                        flag_LONGIDs = FALSE;
+                        flag_LONGIDs = GBP_FALSE;
                         ids_int      = (int *)buffer;
                     }
 
@@ -500,7 +500,7 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                         fseeko(fp, (off_t)record_length_open, SEEK_CUR);
                         fread_verify(&record_length_close, 4, 1, fp);
                         if(record_length_open != record_length_close)
-                            SID_trap_error("Header record lengths don't match (ie. %d!=%d)", ERROR_LOGIC, record_length_open, record_length_close);
+                            SID_trap_error("Header record lengths don't match (ie. %d!=%d)", SID_ERROR_LOGIC, record_length_open, record_length_close);
                     }
 
                     // Determine which particles from this file will be kept on this rank
@@ -525,17 +525,17 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                         }
                     }
                 } else
-                    SID_trap_error("Valid read_gadget mode not specified.", ERROR_LOGIC);
+                    SID_trap_error("Valid read_gadget mode not specified.", SID_ERROR_LOGIC);
 
                 // Some modes need to hold-on to the IDs so we need to use a second buffer
                 int   flag_alloc_buffer2;
                 void *buffer2 = NULL;
                 if(check_mode_for_flag(mode, READ_GADGET_RENDER_SCATTER)) {
                     buffer2            = buffer;
-                    flag_alloc_buffer2 = FALSE;
+                    flag_alloc_buffer2 = GBP_FALSE;
                 } else {
                     buffer2            = SID_malloc(record_length_positions);
-                    flag_alloc_buffer2 = TRUE;
+                    flag_alloc_buffer2 = GBP_TRUE;
                 }
 
                 // Read positions
@@ -545,7 +545,7 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                         fread_verify(buffer2, (size_t)record_length_open, 1, fp);
                         fread_verify(&record_length_close, 4, 1, fp);
                         if(record_length_open != record_length_close)
-                            SID_log_warning("Problem with GADGET record size (close of positions)", ERROR_LOGIC);
+                            SID_log_warning("Problem with GADGET record size (close of positions)", SID_ERROR_LOGIC);
                     }
                     SID_Bcast(&record_length_open, 1, SID_INT, SID.COMM_WORLD, read_rank);
                     SID_Bcast(buffer2, (int)record_length_open, SID_CHAR, SID.COMM_WORLD, read_rank);
@@ -563,7 +563,7 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                                 }
                             }
                             if(k != n_keep[i])
-                                SID_trap_error("Particle count mismatch (ie. %d!=%d) during positions read", ERROR_LOGIC, k, n_keep[i]);
+                                SID_trap_error("Particle count mismatch (ie. %d!=%d) during positions read", SID_ERROR_LOGIC, k, n_keep[i]);
                         }
                     } else if(check_mode_for_flag(mode, READ_GADGET_RENDER_ID_ORDERED)) {
                         if(flag_LONGIDs) {
@@ -598,7 +598,7 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                             }
                         }
                     } else
-                        SID_trap_error("Valid read_gadget mode not specified.", ERROR_LOGIC);
+                        SID_trap_error("Valid read_gadget mode not specified.", SID_ERROR_LOGIC);
                 } else {
                     if(i_file == 0)
                         SID_log("Skipping positions.", SID_LOG_COMMENT);
@@ -608,7 +608,7 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                         fseeko(fp, (size_t)record_length_open, SEEK_CUR);
                         fread_verify(&record_length_close, 4, 1, fp);
                         if(record_length_open != record_length_close)
-                            SID_log_warning("Problem with GADGET record size (close of positions)", ERROR_LOGIC);
+                            SID_log_warning("Problem with GADGET record size (close of positions)", SID_ERROR_LOGIC);
                     }
                 }
 
@@ -619,7 +619,7 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                         fread_verify(buffer2, record_length_open, 1, fp);
                         fread_verify(&record_length_close, 4, 1, fp);
                         if(record_length_open != record_length_close)
-                            SID_log_warning("Problem with GADGET record size (close of velocities)", ERROR_LOGIC);
+                            SID_log_warning("Problem with GADGET record size (close of velocities)", SID_ERROR_LOGIC);
                     }
                     SID_Bcast(&record_length_open, 1, SID_INT, SID.COMM_WORLD, read_rank);
                     SID_Bcast(buffer2, record_length_open, SID_CHAR, SID.COMM_WORLD, read_rank);
@@ -637,7 +637,7 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                                 }
                             }
                             if(k != n_keep[i])
-                                SID_trap_error("Particle count mismatch during velocity read", ERROR_LOGIC);
+                                SID_trap_error("Particle count mismatch during velocity read", SID_ERROR_LOGIC);
                         }
                     } else if(check_mode_for_flag(mode, READ_GADGET_RENDER_ID_ORDERED)) {
                         if(flag_LONGIDs) {
@@ -672,7 +672,7 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                             }
                         }
                     } else
-                        SID_trap_error("Valid read_gadget mode not specified.", ERROR_LOGIC);
+                        SID_trap_error("Valid read_gadget mode not specified.", SID_ERROR_LOGIC);
                 } else {
                     if(i_file == 0)
                         SID_log("Skipping velocities.", SID_LOG_COMMENT);
@@ -682,7 +682,7 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                         fseeko(fp, (size_t)record_length_open, SEEK_CUR);
                         fread_verify(&record_length_close, 4, 1, fp);
                         if(record_length_open != record_length_close)
-                            SID_log_warning("Problem with GADGET record size (close of velocities)", ERROR_LOGIC);
+                            SID_log_warning("Problem with GADGET record size (close of velocities)", SID_ERROR_LOGIC);
                     }
                 }
 
@@ -693,7 +693,7 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                         fread_verify(buffer2, (size_t)record_length_open, 1, fp);
                         fread_verify(&record_length_close, 4, 1, fp);
                         if(record_length_open != record_length_close)
-                            SID_log_warning("Problem with GADGET record size (close of IDs)", ERROR_LOGIC);
+                            SID_log_warning("Problem with GADGET record size (close of IDs)", SID_ERROR_LOGIC);
                     }
                     SID_Barrier(SID.COMM_WORLD);
                     SID_Bcast(&record_length_open, 1, SID_INT, SID.COMM_WORLD, read_rank);
@@ -703,11 +703,11 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                     if(record_length_open / (int)(n_particles_file) == sizeof(long long)) {
                         if(i_file == 0)
                             SID_log("(long long) IDs...", SID_LOG_CONTINUE);
-                        flag_LONGIDs = TRUE;
+                        flag_LONGIDs = GBP_TRUE;
                     } else {
                         if(i_file == 0)
                             SID_log("(int) IDs...", SID_LOG_CONTINUE);
-                        flag_LONGIDs = FALSE;
+                        flag_LONGIDs = GBP_FALSE;
                     }
 
                     // Process IDs
@@ -715,10 +715,10 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                         for(j = 0, k = 0; j < header.n_file[i]; j++, jj++) {
                             if(keep[jj]) {
                                 switch(flag_LONGIDs) {
-                                    case TRUE:
+                                    case GBP_TRUE:
                                         id_test = (size_t)((long long *)buffer2)[jj];
                                         break;
-                                    case FALSE:
+                                    case GBP_FALSE:
                                         id_test = (size_t)((int *)buffer2)[jj];
                                         break;
                                 }
@@ -727,7 +727,7 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                             }
                         }
                         if(k != n_keep[i])
-                            SID_trap_error("Particle count mismatch (ie. %d!=%d) during IDs read", ERROR_LOGIC, k, n_keep[i]);
+                            SID_trap_error("Particle count mismatch (ie. %d!=%d) during IDs read", SID_ERROR_LOGIC, k, n_keep[i]);
                     }
                 } else if(check_mode_for_flag(mode, READ_GADGET_RENDER_ID_ORDERED)) {
                     if(flag_LONGIDs) {
@@ -752,7 +752,7 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                         }
                     }
                 } else
-                    SID_trap_error("Valid read_gadget mode not specified.", ERROR_LOGIC);
+                    SID_trap_error("Valid read_gadget mode not specified.", SID_ERROR_LOGIC);
 
                 // Update offsets
                 for(i = 0; i < N_GADGET_TYPE; i++)
@@ -781,7 +781,7 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
             for(i = 0, jj = 0; i < N_GADGET_TYPE; i++) {
                 for(j = 0, k = 0; j < n_of_type_rank[i]; j++, jj++) {
                     if(id_array[i][j] > n_particles_all)
-                        SID_trap_error("An uninitialized particle has been identified.", ERROR_LOGIC);
+                        SID_trap_error("An uninitialized particle has been identified.", SID_ERROR_LOGIC);
                 }
             }
         }
@@ -803,9 +803,9 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
 
         // Check that the right number of particles have been read
         if(n_particles_kept != n_particles_rank)
-            SID_log_warning("Rank %d did not receive the right number of particles (ie. %d!=%d)", ERROR_LOGIC, n_particles_kept, n_particles_rank);
+            SID_log_warning("Rank %d did not receive the right number of particles (ie. %d!=%d)", SID_ERROR_LOGIC, n_particles_kept, n_particles_rank);
         if(n_particles_kept_all != n_particles_all)
-            SID_log_warning("The right number of particles were not read (ie. %d!=%d)", ERROR_LOGIC, n_particles_kept_all, n_particles_all);
+            SID_log_warning("The right number of particles were not read (ie. %d!=%d)", SID_ERROR_LOGIC, n_particles_kept_all, n_particles_all);
 
         //   ... positions ...
         if(flag_read_velocities) {
@@ -839,5 +839,5 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
 
         SID_log("Done.", SID_LOG_CLOSE);
     } else
-        SID_trap_error("Could not find file with root {%s}", ERROR_IO_OPEN, filename_root_in);
+        SID_trap_error("Could not find file with root {%s}", SID_ERROR_IO_OPEN, filename_root_in);
 }

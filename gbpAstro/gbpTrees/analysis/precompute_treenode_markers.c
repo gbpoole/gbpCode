@@ -12,7 +12,7 @@
 void precompute_treenode_markers(tree_info *trees, int mode) {
     // Sanity check
     if(check_mode_for_flag(mode, PRECOMPUTE_TREENODE_MARKER_GROUPS) && check_mode_for_flag(mode, PRECOMPUTE_TREENODE_MARKER_SUBGROUPS))
-        SID_trap_error("Both group and subgroup mode flags are set when only one is allowed in precompute_treenode_markers().", ERROR_LOGIC);
+        SID_trap_error("Both group and subgroup mode flags are set when only one is allowed in precompute_treenode_markers().", SID_ERROR_LOGIC);
 
     // Initialize the marker array
     init_precompute_treenode_markers(trees, mode);
@@ -31,15 +31,15 @@ void precompute_treenode_markers(tree_info *trees, int mode) {
         n_halos_snap_local  = trees->n_groups_snap_local;
         first_neighbours    = trees->first_neighbour_groups;
         markers             = trees->group_markers;
-        flag_process_groups = TRUE;
+        flag_process_groups = GBP_TRUE;
     } else if(check_mode_for_flag(mode, PRECOMPUTE_TREENODE_MARKER_SUBGROUPS)) {
         sprintf(group_text, "subgroups");
         n_halos_snap_local  = trees->n_subgroups_snap_local;
         first_neighbours    = trees->first_neighbour_subgroups;
         markers             = trees->subgroup_markers;
-        flag_process_groups = FALSE;
+        flag_process_groups = GBP_FALSE;
     } else
-        SID_trap_error("Neither group nor subgroup mode flags are set when only one is allowed in precompute_treenode_markers().", ERROR_LOGIC);
+        SID_trap_error("Neither group nor subgroup mode flags are set when only one is allowed in precompute_treenode_markers().", SID_ERROR_LOGIC);
 
     // Generate the markers starting recursively from each tree root
     SID_log("Generating %s markers...(%zd byte structue size)...", SID_LOG_OPEN | SID_LOG_TIMER, group_text, sizeof(tree_markers_info));
@@ -49,7 +49,7 @@ void precompute_treenode_markers(tree_info *trees, int mode) {
         while(halo_current != NULL) {
             if(halo_current->descendant == NULL) {
                 // We don't use peak inclusive size - just peak size - because peak inclusive sizes are biased by bridging events
-                precompute_treenode_markers_peak_mass_recursive(trees, FALSE, markers, halo_current, NULL, NULL, NULL);
+                precompute_treenode_markers_peak_mass_recursive(trees, GBP_FALSE, markers, halo_current, NULL, NULL, NULL);
                 precompute_treenode_markers_recursive(trees, markers, halo_current, NULL);
             }
             halo_current = halo_current->next_neighbour;

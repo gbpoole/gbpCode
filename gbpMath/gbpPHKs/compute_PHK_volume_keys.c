@@ -22,11 +22,11 @@ void compute_PHK_volume_keys(int PHK_bit_size, PHK_t key_in, int shell_min, int 
 
     // Sanity checks
     if(shell_min < 0)
-        SID_trap_error("shell_min<0 (ie %d<0) in compute_PHK_volume_keys", ERROR_LOGIC, shell_min);
+        SID_trap_error("shell_min<0 (ie %d<0) in compute_PHK_volume_keys", SID_ERROR_LOGIC, shell_min);
     if(shell_max > num1dim)
-        SID_trap_error("shell_max>num1dim (ie %d>%d) in compute_PHK_volume_keys", ERROR_LOGIC, shell_max, num1dim);
+        SID_trap_error("shell_max>num1dim (ie %d>%d) in compute_PHK_volume_keys", SID_ERROR_LOGIC, shell_max, num1dim);
     if(shell_max < shell_min)
-        SID_trap_error("shell_max<shell_min (ie %d<%d) in compute_PHK_volume_keys", ERROR_LOGIC, shell_max, shell_min);
+        SID_trap_error("shell_max<shell_min (ie %d<%d) in compute_PHK_volume_keys", SID_ERROR_LOGIC, shell_max, shell_min);
 
     // Compute the number of keys to be returned
     (*n_keys_return) = (2 * shell_max + 1) * (2 * shell_max + 1) * (2 * shell_max + 1);
@@ -59,5 +59,5 @@ void compute_PHK_volume_keys(int PHK_bit_size, PHK_t key_in, int shell_min, int 
 
     // Sanity check
     if(count != (*n_keys_return))
-        SID_trap_error("Resulting key count in compute_PHK_from_Cartesian does not make sense (ie %d!=%d)", ERROR_LOGIC, count, (*n_keys_return));
+        SID_trap_error("Resulting key count in compute_PHK_from_Cartesian does not make sense (ie %d!=%d)", SID_ERROR_LOGIC, count, (*n_keys_return));
 }

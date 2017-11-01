@@ -12,8 +12,8 @@ int main(int argc, char *argv[]) {
     char filename_profiles[256];
     char filename_out_root[256];
     char filename_out[256];
-    char filename_SSimPL[MAX_FILENAME_LENGTH];
-    char filename_halo_type[MAX_FILENAME_LENGTH];
+    char filename_SSimPL[SID_MAX_FILENAME_LENGTH];
+    char filename_halo_type[SID_MAX_FILENAME_LENGTH];
     int  snap_number;
     int  snap_number_start;
     int  snap_number_stop;
@@ -28,7 +28,7 @@ int main(int argc, char *argv[]) {
     snap_number_step  = atoi(argv[5]);
     strcpy(filename_out_root, argv[6]);
 
-    int flag_use_profiles = FALSE;
+    int flag_use_profiles = GBP_FALSE;
 
     if(SID.I_am_Master) {
         SID_log("Processing catalogs for snaps %d->%d...", SID_LOG_OPEN | SID_LOG_TIMER, snap_number_start, snap_number_stop);
@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
             sprintf(filename_halos, "%s/halos/%s_%03d.catalog_groups", filename_SSimPL, filename_halo_type, snap_number);
             FILE *fp_halos = NULL;
             if((fp_halos = fopen(filename_halos, "r")) == NULL)
-                SID_trap_error("Could not open halo file {%s} for reading.", ERROR_IO_OPEN, filename_halos);
+                SID_trap_error("Could not open halo file {%s} for reading.", SID_ERROR_IO_OPEN, filename_halos);
             int n_groups_halos, group_offset_byte_size;
             fread_verify(&n_groups_halos, sizeof(int), 1, fp_halos);
             fread_verify(&group_offset_byte_size, sizeof(int), 1, fp_halos);
@@ -66,7 +66,7 @@ int main(int argc, char *argv[]) {
             // Sanity check
             if(n_groups_halos != fp_catalog_groups.n_halos_total)
                 SID_trap_error(
-                    "Group counts in halo and catalog files don't match (ie. %d!=%d).", ERROR_LOGIC, n_groups_halos, fp_catalog_groups.n_halos_total);
+                    "Group counts in halo and catalog files don't match (ie. %d!=%d).", SID_ERROR_LOGIC, n_groups_halos, fp_catalog_groups.n_halos_total);
 
             // Process halos
             SID_log("Processing snapshot #%03d...", SID_LOG_OPEN, snap_number);
@@ -74,7 +74,7 @@ int main(int argc, char *argv[]) {
 
             // Initialzie halo trend data structure
             halo_trend_info halo_trend_data;
-            char            filename_run[MAX_FILENAME_LENGTH];
+            char            filename_run[SID_MAX_FILENAME_LENGTH];
             sprintf(filename_run, "%s/run/run.txt", filename_SSimPL);
             parameter_list_info *parameter_list = NULL;
             init_parameter_list(&parameter_list);
@@ -85,7 +85,7 @@ int main(int argc, char *argv[]) {
             fetch_parameter_data(parameter_list, "box_size", &(halo_trend_data.box_size));
             fetch_parameter_data(parameter_list, "m_dark", &(halo_trend_data.m_p));
             free_parameter_list(&parameter_list);
-            char filename_snaps[MAX_FILENAME_LENGTH];
+            char filename_snaps[SID_MAX_FILENAME_LENGTH];
             sprintf(filename_snaps, "%s/run/a_list.txt", filename_SSimPL);
             FILE * fp_snaps         = fopen(filename_snaps, "r");
             size_t line_length      = 0;
@@ -149,7 +149,7 @@ int main(int argc, char *argv[]) {
             }
 
             // Write results
-            char filename_out[MAX_FILENAME_LENGTH];
+            char filename_out[SID_MAX_FILENAME_LENGTH];
             sprintf(filename_out, "%s_%03d", filename_out_root, snap_number);
             write_trend_ascii(trend_M_FoF, filename_out);
             free_trend(&trend_M_FoF);
@@ -169,5 +169,5 @@ int main(int argc, char *argv[]) {
         SID_log("Done.", SID_LOG_CLOSE);
     }
 
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

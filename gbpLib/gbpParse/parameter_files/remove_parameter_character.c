@@ -6,7 +6,7 @@
 
 int remove_parameter_character(char *line) {
     char temp_char[2];
-    int  j, flag = TRUE, rval = FALSE;
+    int  j, flag = GBP_TRUE, rval = GBP_FALSE;
     for(j = 0; j < strlen(line) && flag; j++) {
         sprintf(temp_char, "%c", line[j]);
         if(strcmp(temp_char, " ")) {
@@ -14,8 +14,8 @@ int remove_parameter_character(char *line) {
                 char replace[2];
                 sprintf(replace, " ");
                 strncpy(&(line[j]), replace, 1);
-                rval = TRUE;
-                flag = FALSE;
+                rval = GBP_TRUE;
+                flag = GBP_FALSE;
             }
         }
     }

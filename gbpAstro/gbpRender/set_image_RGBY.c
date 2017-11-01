@@ -36,7 +36,7 @@ void set_image_RGBY(image_info *image_RGBY_in,
             if(flag_log_RGB)
                 image_RGB_i = take_log10(image_RGB_i);
             int pixel_value = (int)(n_colours * (image_RGB_i - RGB_min) / RGB_range);
-            pixel_value     = MAX(0, MIN(pixel_value, n_colours));
+            pixel_value     = GBP_MAX(0, GBP_MIN(pixel_value, n_colours));
             int red         = (int)image_RGB_in->colour_table[0][pixel_value];
             int green       = (int)image_RGB_in->colour_table[1][pixel_value];
             int blue        = (int)image_RGB_in->colour_table[2][pixel_value];
@@ -47,7 +47,7 @@ void set_image_RGBY(image_info *image_RGBY_in,
             if(flag_log_Y)
                 image_Y_i = take_log10(image_Y_i);
             double brightness = (image_Y_i - Y_min) / Y_range;
-            brightness        = MAX(0., MIN(brightness, 1.));
+            brightness        = GBP_MAX(0., GBP_MIN(brightness, 1.));
 
             // Scale the pixel colours by the brightness
             red   = (int)(brightness * (double)red);

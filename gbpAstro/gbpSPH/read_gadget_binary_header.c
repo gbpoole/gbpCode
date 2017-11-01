@@ -43,8 +43,8 @@ void read_gadget_binary_header(char *filename_root_in, int snapshot_number, plis
     int          s_load;
     int          flag_alloc_d1_array;
     int          i_file;
-    int          flag_filefound = FALSE;
-    int          flag_multifile = FALSE;
+    int          flag_filefound = GBP_FALSE;
+    int          flag_multifile = GBP_FALSE;
     int          flag_file_type = 0;
 
     gadget_read_info fp_gadget;

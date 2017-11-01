@@ -4,7 +4,7 @@
 #include <gbpLib.h>
 #include <gbpSPH.h>
 
-#define MAX_MARK_BUFFER_SIZE SIZE_OF_MEGABYTE
+#define MAX_MARK_BUFFER_SIZE SID_SIZE_OF_MEGABYTE
 
 void read_mark_file(plist_info *plist, const char *mark_name, const char *filename_in, int mode) {
     int                  i_species;
@@ -53,7 +53,7 @@ void read_mark_file(plist_info *plist, const char *mark_name, const char *filena
     // Open mark list and read header
     SID_fopen_chunked(filename_in, "r", &fp_mark_file, &header);
     if(header.n_type != N_GADGET_TYPE)
-        SID_trap_error("Inconsistant number of species in mark file (ie. %d!=%d)!", ERROR_LOGIC, header.n_type, N_GADGET_TYPE);
+        SID_trap_error("Inconsistant number of species in mark file (ie. %d!=%d)!", SID_ERROR_LOGIC, header.n_type, N_GADGET_TYPE);
 
     // List numbers of particles in the log output
     size_t n_particles_all;
@@ -118,7 +118,7 @@ void read_mark_file(plist_info *plist, const char *mark_name, const char *filena
     // Sanity check
     SID_Allreduce(&n_mark_local, &n_mark_total, 1, SID_SIZE_T, SID_SUM, SID.COMM_WORLD);
     if(n_mark_total != n_mark_total_check)
-        SID_trap_error("Particle numbers don't add-up right in read_mark_file!", ERROR_LOGIC);
+        SID_trap_error("Particle numbers don't add-up right in read_mark_file!", SID_ERROR_LOGIC);
 
     // Read file and create/store mark arrays
     switch(flag_mark_mode) {
@@ -151,17 +151,17 @@ void read_mark_file(plist_info *plist, const char *mark_name, const char *filena
                     ids_local = (size_t *)ADaPS_fetch(plist->data, "id_%s", plist->species[i_species]);
                     if(ADaPS_exist(plist->data, "%s_%s", mark_name, plist->species[i_species])) {
                         mark_list     = (int *)ADaPS_fetch(plist->data, "%s_%s", mark_name, plist->species[i_species]);
-                        flag_allocate = FALSE;
+                        flag_allocate = GBP_FALSE;
                     } else {
                         mark_list = (int *)SID_malloc(sizeof(int) * n_particles_local);
                         for(i_particle = 0; i_particle < n_particles_local; i_particle++)
-                            mark_list[i_particle] = FALSE;
-                        flag_allocate = TRUE;
+                            mark_list[i_particle] = GBP_FALSE;
+                        flag_allocate = GBP_TRUE;
                     }
                     merge_sort(ids_local, n_particles_local, &ids_local_index, SID_SIZE_T, SORT_COMPUTE_INDEX, SORT_COMPUTE_NOT_INPLACE);
                     // Use a buffer to increase speed
                     for(i_particle = 0; i_particle < header.n_mark_species[i_species];) {
-                        n_buffer = MIN(header.n_mark_species[i_species] - i_particle, MAX_MARK_BUFFER_SIZE);
+                        n_buffer = GBP_MIN(header.n_mark_species[i_species] - i_particle, MAX_MARK_BUFFER_SIZE);
                         SID_fread_chunked_all(mark_list_local, n_buffer, &fp_mark_file);
                         merge_sort(mark_list_local, n_buffer, NULL, SID_SIZE_T, SORT_INPLACE_ONLY, SORT_COMPUTE_INPLACE);
                         for(j_particle = 0, k_particle = find_index(ids_local, mark_list_buffer[0], n_particles_local, ids_local_index);
@@ -174,7 +174,7 @@ void read_mark_file(plist_info *plist, const char *mark_name, const char *filena
                                     case MARK_INIT:
                                     case MARK_AND:
                                     case MARK_OR:
-                                        mark_list[i_particle] = TRUE;
+                                        mark_list[i_particle] = GBP_TRUE;
                                         break;
                                 }
                             }

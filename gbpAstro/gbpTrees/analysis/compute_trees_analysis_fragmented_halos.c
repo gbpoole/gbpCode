@@ -21,7 +21,7 @@ void compute_trees_analysis_fragmented_halos(tree_info *trees, char *filename_ou
         neighbour_list_start = trees->first_neighbour_subgroups;
     }
 
-    char filename_out_root[MAX_FILENAME_LENGTH];
+    char filename_out_root[SID_MAX_FILENAME_LENGTH];
     sprintf(filename_out_root, "%s_%sgroup", filename_out_root_in, group_prefix);
 
     SID_log("Performing fragmented %sgroup analysis...", SID_LOG_OPEN | SID_LOG_TIMER, group_prefix);
@@ -45,8 +45,8 @@ void compute_trees_analysis_fragmented_halos(tree_info *trees, char *filename_ou
     SID_log("Done.", SID_LOG_CLOSE);
 
     // Set filename roots
-    char filename_root_halos[MAX_FILENAME_LENGTH];
-    char filename_root_new[MAX_FILENAME_LENGTH];
+    char filename_root_halos[SID_MAX_FILENAME_LENGTH];
+    char filename_root_new[SID_MAX_FILENAME_LENGTH];
     sprintf(filename_root_halos, "%s_fragmented_halos", filename_out_root);
     sprintf(filename_root_new, "%s_fragmented_new_halos", filename_out_root);
 
@@ -95,9 +95,9 @@ void compute_trees_analysis_fragmented_halos(tree_info *trees, char *filename_ou
             // Process each new branch
             if(check_treenode_if_fragmented(current_halo)) {
                 tree_markers_info *markers  = fetch_treenode_precomputed_markers(trees, current_halo);
-                int                flag_new = FALSE;
+                int                flag_new = GBP_FALSE;
                 if(current_halo->n_progenitors == 0)
-                    flag_new = TRUE;
+                    flag_new = GBP_TRUE;
                 int flag_central_i   = check_treenode_if_central(current_halo);
                 int flag_satellite_i = check_treenode_if_satellite(current_halo);
                 if(flag_new) {

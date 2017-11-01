@@ -15,12 +15,12 @@ float fetch_treenode_descendant_score(tree_info *trees, tree_node_info *halo) {
             if(trees->group_descendant_score != NULL)
                 return (trees->group_descendant_score[halo->snap_tree][halo->neighbour_index]);
             else
-                SID_trap_error("Group descendant scores are not defined.  They probably have not been read.", ERROR_LOGIC);
+                SID_trap_error("Group descendant scores are not defined.  They probably have not been read.", SID_ERROR_LOGIC);
         } else {
             if(trees->subgroup_descendant_score != NULL)
                 return (trees->subgroup_descendant_score[halo->snap_tree][halo->neighbour_index]);
             else
-                SID_trap_error("Subgroup descendant scores are not defined.  They probably have not been read.", ERROR_LOGIC);
+                SID_trap_error("Subgroup descendant scores are not defined.  They probably have not been read.", SID_ERROR_LOGIC);
         }
     }
     return (-1.);

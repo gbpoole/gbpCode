@@ -3,7 +3,7 @@
 #include <gbpTrees_build.h>
 
 int check_if_halo_is_descendant(tree_horizontal_info *possible_progenitor, tree_horizontal_info *possible_descendant, int n_search) {
-    int                   flag_is_progenitor = FALSE;
+    int                   flag_is_progenitor = GBP_FALSE;
     int                   k_file;
     int                   l_file;
     tree_horizontal_info *current;
@@ -17,7 +17,7 @@ int check_if_halo_is_descendant(tree_horizontal_info *possible_progenitor, tree_
           !flag_is_progenitor) {
         // ... if we come to the halo we have been asked to match to, invalidate the match.
         if(current == possible_descendant)
-            flag_is_progenitor = TRUE;
+            flag_is_progenitor = GBP_TRUE;
         // ... if not, keep moving ...
         current = current->descendant.halo;
         l_file  = k_file;

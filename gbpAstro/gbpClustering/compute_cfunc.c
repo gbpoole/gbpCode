@@ -38,7 +38,7 @@ int add_pair_CFUNC_local(double      x_i,
                          int         zone_j,
                          int         mode,
                          cfunc_info *cfunc) {
-    int    flag_used = FALSE;
+    int    flag_used = GBP_FALSE;
     double dx, dy, dz;
     dx = x_i - x_j;
     dy = y_i - y_j;
@@ -77,7 +77,7 @@ int add_pair_CFUNC_local(double      x_i,
                     if(zone_i != i_jack && zone_j != i_jack)
                         array[i_jack][bin_1D]++; // Add to all but one jack-knife region
                 }
-                flag_used = TRUE;
+                flag_used = GBP_TRUE;
             }
 
             // Add to the logarythmic array if we are within bounds
@@ -90,7 +90,7 @@ int add_pair_CFUNC_local(double      x_i,
                     if(zone_i != i_jack && zone_j != i_jack)
                         larray[i_jack][bin_l1D]++; // Add to all but one jack-knife region;
                 }
-                flag_used = TRUE;
+                flag_used = GBP_TRUE;
             }
         }
     }
@@ -136,7 +136,7 @@ int add_pair_CFUNC_local(double      x_i,
                             array[i_jack][bin_2D]++;
                     }
                 }
-                flag_used = TRUE;
+                flag_used = GBP_TRUE;
             }
         }
     }
@@ -160,21 +160,21 @@ void calc_pairs_local(const char *species_name1, const char *species_name2, int 
     int flag_self_match;
     int flag_pair_type = -1;
     if(check_mode_for_flag(mode, CFUNC_SELF_MATCH))
-        flag_self_match = TRUE;
+        flag_self_match = GBP_TRUE;
     else
-        flag_self_match = FALSE;
+        flag_self_match = GBP_FALSE;
     if(check_mode_for_flag(mode, CFUNC_ADD_PAIR_DD)) {
         flag_pair_type = CFUNC_ADD_PAIR_DD;
     } else if(check_mode_for_flag(mode, CFUNC_ADD_PAIR_DR)) {
         if(flag_pair_type >= 0)
-            SID_trap_error("Multiple pair types specified.", ERROR_LOGIC);
+            SID_trap_error("Multiple pair types specified.", SID_ERROR_LOGIC);
         flag_pair_type = CFUNC_ADD_PAIR_DR;
     } else if(check_mode_for_flag(mode, CFUNC_ADD_PAIR_RR)) {
         if(flag_pair_type >= 0)
-            SID_trap_error("Multiple pair types specified.", ERROR_LOGIC);
+            SID_trap_error("Multiple pair types specified.", SID_ERROR_LOGIC);
         flag_pair_type = CFUNC_ADD_PAIR_RR;
     } else
-        SID_trap_error("Unsupported pair type specified.", ERROR_LOGIC);
+        SID_trap_error("Unsupported pair type specified.", SID_ERROR_LOGIC);
 
     // Fetch some stuff we need
     GBPREAL *x_data1_local;
@@ -885,7 +885,7 @@ void compute_cfunc(plist_info *plist, const char *species_name, const char *rand
     SID_log("Done.", SID_LOG_CLOSE);
 
     // Don't recompute the RR's unless otherwise instructed
-    cfunc->flag_compute_RR = FALSE;
+    cfunc->flag_compute_RR = GBP_FALSE;
 
     SID_set_verbosity(SID_SET_VERBOSITY_DEFAULT);
     SID_log("Done.", SID_LOG_CLOSE);

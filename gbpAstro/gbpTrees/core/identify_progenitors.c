@@ -63,7 +63,7 @@ void identify_progenitors(tree_horizontal_info **halos,
                      match_index,
                      match_flag_two_way,
                      f_match_moment_diff_min,
-                     TRUE);
+                     GBP_TRUE);
 
         // Determine the back match which would work best as a descendant
         if(i_search == 0) {
@@ -115,7 +115,7 @@ void identify_progenitors(tree_horizontal_info **halos,
                     //    matches past the current default match
                     if(j_file_2 > forematch_i->file) {
                         // Walk the descendant line of the default match until a change happens (or we reach the extent of the search interval)
-                        int flag_unchecked = FALSE;
+                        int flag_unchecked = GBP_FALSE;
                         while(forematch_i != NULL) {
                             int n_back_matches = forematch_i->n_back_matches;
                             if(n_back_matches > 0) {
@@ -134,15 +134,15 @@ void identify_progenitors(tree_horizontal_info **halos,
                                                 halo_i->forematch_default.halo            = current_back_match;
                                                 halo_i->forematch_default.score           = match_score[i_halo];
                                                 halo_i->forematch_default.flag_two_way    = match_flag_two_way[i_halo];
-                                                halo_i->forematch_default.flag_back_match = FALSE;
-                                                flag_unchecked = TRUE; // we want to make sure we check the back matches of the new match
+                                                halo_i->forematch_default.flag_back_match = GBP_FALSE;
+                                                flag_unchecked = GBP_TRUE; // we want to make sure we check the back matches of the new match
                                             }
                                         }
                                     }
                                     // Determine if there are back matches still to be checked in later snapshots
                                     //    This check works because the back matches have been sorted by their file number
                                     else if(current_back_match->file > j_file_2)
-                                        flag_unchecked = TRUE;
+                                        flag_unchecked = GBP_TRUE;
                                 }
                             }
                             forematch_i = forematch_i->descendant.halo;
@@ -203,7 +203,7 @@ void identify_progenitors(tree_horizontal_info **halos,
                         halo_i->forematch_first.halo            = halo_j;
                         halo_i->forematch_first.score           = match_score[i_halo];
                         halo_i->forematch_first.flag_two_way    = match_flag_two_way[i_halo];
-                        halo_i->forematch_first.flag_back_match = FALSE;
+                        halo_i->forematch_first.flag_back_match = GBP_FALSE;
                         // Initialize the default pointer to the best back match pointer (this is what is used for building descendant pointers)
                         memcpy(&(halo_i->forematch_default), &(halo_i->forematch_first), sizeof(match_info));
                     }

@@ -39,11 +39,11 @@ int main(int argc, char *argv[]) {
     i_group_selected = atoi(argv[3]);
 
     if(i_group_selected < 0) {
-        flag_process_group = TRUE;
+        flag_process_group = GBP_TRUE;
         i_group_selected *= -1;
         sprintf(prefix_text, "");
     } else {
-        flag_process_group = FALSE;
+        flag_process_group = GBP_FALSE;
         sprintf(prefix_text, "sub");
     }
 
@@ -124,5 +124,5 @@ int main(int argc, char *argv[]) {
         SID_log("Done.", SID_LOG_CLOSE);
     }
 
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

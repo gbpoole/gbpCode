@@ -20,8 +20,8 @@ double delta_n_dyn(double a_1, double a_2, cosmo_info **cosmo) {
     double                     abs_accuracy = 0.;
     double                     rel_accuracy = 1e-4;
     double                     abs_error;
-    double                     a_lo = MIN(a_1, a_2);
-    double                     a_hi = MAX(a_1, a_2);
+    double                     a_lo = GBP_MIN(a_1, a_2);
+    double                     a_hi = GBP_MAX(a_1, a_2);
     gsl_integration_workspace *wspace;
     gsl_function               integrand;
     integrand.function = dn_dyn_dt;
@@ -36,13 +36,13 @@ int main(int argc, char *argv[]) {
     SID_init(&argc, &argv, NULL, NULL);
 
     // Parse arguments
-    char filename_cosmo[MAX_FILENAME_LENGTH];
+    char filename_cosmo[SID_MAX_FILENAME_LENGTH];
     strcpy(filename_cosmo, argv[1]);
     double z_1  = (double)atof(argv[2]);
     double z_2  = (double)atof(argv[3]);
     int    n_z  = (int)atoi(argv[4]);
-    double z_lo = MIN(z_1, z_2);
-    double z_hi = MAX(z_1, z_2);
+    double z_lo = GBP_MIN(z_1, z_2);
+    double z_hi = GBP_MAX(z_1, z_2);
 
     SID_log("Creating snapshot list...", SID_LOG_OPEN);
 
@@ -123,5 +123,5 @@ int main(int argc, char *argv[]) {
     free_cosmo(&cosmo);
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

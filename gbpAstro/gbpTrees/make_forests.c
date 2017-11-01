@@ -34,5 +34,5 @@ int main(int argc, char *argv[]) {
     // Generate mapping
     compute_forests(filename_root_out, n_search_forests);
 
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

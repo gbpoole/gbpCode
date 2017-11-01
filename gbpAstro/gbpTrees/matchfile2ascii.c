@@ -10,7 +10,7 @@
 int main(int argc, char *argv[]) {
     int    n_search;
     int    i_halo;
-    char   filename_in[MAX_FILENAME_LENGTH];
+    char   filename_in[SID_MAX_FILENAME_LENGTH];
     char   group_text_prefix[4];
     int    n_files;
     int    k_read;
@@ -32,9 +32,9 @@ int main(int argc, char *argv[]) {
     SID_init(&argc, &argv, NULL, NULL);
 
     // Fetch user inputs
-    char filename_root_in[MAX_FILENAME_LENGTH];
-    char filename_catalog_root[MAX_FILENAME_LENGTH];
-    char filename_halo_version[MAX_FILENAME_LENGTH];
+    char filename_root_in[SID_MAX_FILENAME_LENGTH];
+    char filename_catalog_root[SID_MAX_FILENAME_LENGTH];
+    char filename_halo_version[SID_MAX_FILENAME_LENGTH];
     strcpy(filename_root_in, argv[1]);
     strcpy(filename_halo_version, argv[2]);
     if(!strcmp(argv[3], "groups") || !strcmp(argv[3], "group"))
@@ -43,13 +43,13 @@ int main(int argc, char *argv[]) {
         mode = MATCH_SUBGROUPS;
     else {
         SID_log("Invalid mode selection {%s}.  Should be 'group' or 'subgroup'.", SID_LOG_COMMENT, argv[3]);
-        SID_exit(ERROR_SYNTAX);
+        SID_exit(SID_ERROR_SYNTAX);
     }
     i_read               = atoi(argv[4]);
     j_read               = atoi(argv[5]);
-    int flag_SSimPL_base = TRUE;
+    int flag_SSimPL_base = GBP_TRUE;
     if(argc == 7) {
-        flag_SSimPL_base = FALSE;
+        flag_SSimPL_base = GBP_FALSE;
         strcpy(filename_catalog_root, argv[6]);
         sprintf(filename_catalog_root, "%s/halos/%s", argv[6], filename_halo_version);
     } else
@@ -67,7 +67,7 @@ int main(int argc, char *argv[]) {
     }
 
     // Set the standard SSiMPL match file path
-    char filename_root[MAX_FILENAME_LENGTH];
+    char filename_root[SID_MAX_FILENAME_LENGTH];
     if(flag_SSimPL_base)
         sprintf(filename_root, "%s/trees/matches/%03d/", filename_root_in, i_read);
     else
@@ -115,7 +115,7 @@ int main(int argc, char *argv[]) {
     SID_fread(&n_cat_i, sizeof(int), 1, &fp_in);
     SID_fread(&offset_size_i, sizeof(int), 1, &fp_in);
     if(n_cat_i != n_groups_i)
-        SID_trap_error("Catalog 'i' halo counts don't match (ie %d!=%d)", ERROR_LOGIC, n_cat_i, n_groups_i);
+        SID_trap_error("Catalog 'i' halo counts don't match (ie %d!=%d)", SID_ERROR_LOGIC, n_cat_i, n_groups_i);
     SID_fread(n_p_i, sizeof(int), n_cat_i, &fp_in);
     SID_fclose(&fp_in);
 
@@ -127,7 +127,7 @@ int main(int argc, char *argv[]) {
     SID_fread(&n_cat_j, sizeof(int), 1, &fp_in);
     SID_fread(&offset_size_j, sizeof(int), 1, &fp_in);
     if(n_cat_j != n_groups_j)
-        SID_trap_error("Catalog 'i' halo counts don't match (ie %d!=%d)", ERROR_LOGIC, n_cat_j, n_groups_j);
+        SID_trap_error("Catalog 'i' halo counts don't match (ie %d!=%d)", SID_ERROR_LOGIC, n_cat_j, n_groups_j);
     SID_fread(n_p_j, sizeof(int), n_cat_j, &fp_in);
     SID_fclose(&fp_in);
     SID_log("Done.", SID_LOG_CLOSE);
@@ -154,5 +154,5 @@ int main(int argc, char *argv[]) {
     SID_free(SID_FARG n_p_j);
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

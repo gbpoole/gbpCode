@@ -16,7 +16,7 @@ void write_treenode_list_properties(tree_info *trees, const char *filename_out_r
     char *           catalog_name     = list->catalog_name;
 
     // Open file
-    char filename_out[MAX_FILENAME_LENGTH];
+    char filename_out[SID_MAX_FILENAME_LENGTH];
     sprintf(filename_out, "%s_%s_properties.txt", filename_out_root, list->catalog_name);
     FILE *fp_props_out = fopen(filename_out, "w");
 
@@ -41,7 +41,7 @@ void write_treenode_list_properties(tree_info *trees, const char *filename_out_r
             if(i_rank == 0)
                 n_list_i = n_list_in;
             else
-                SID_Sendrecv(&n_list_in, 1, SID_INT, MASTER_RANK, 1918270, &n_list_i, 1, SID_INT, i_rank, 1918270, SID.COMM_WORLD);
+                SID_Sendrecv(&n_list_in, 1, SID_INT, SID_MASTER_RANK, 1918270, &n_list_i, 1, SID_INT, i_rank, 1918270, SID.COMM_WORLD);
             // Write properties
             for(int i_list = 0; i_list < n_list_i; i_list++, j_list++) {
                 // Point to the halo to be processed
@@ -59,13 +59,13 @@ void write_treenode_list_properties(tree_info *trees, const char *filename_out_r
                     double       data_d;
                     if(i_rank == SID.My_rank)
                         write_treenode_list_properties_set_ith(trees, i_write, current_halo, NULL, &data_type, &data_i, &data_d);
-                    if(i_rank != MASTER_RANK) {
+                    if(i_rank != SID_MASTER_RANK) {
                         if(data_type == SID_INT)
-                            SID_Sendrecv(&data_i, 1, data_type, MASTER_RANK, 2178271, &data_i, 1, data_type, i_rank, 2178271, SID.COMM_WORLD);
+                            SID_Sendrecv(&data_i, 1, data_type, SID_MASTER_RANK, 2178271, &data_i, 1, data_type, i_rank, 2178271, SID.COMM_WORLD);
                         else if(data_type == SID_DOUBLE)
-                            SID_Sendrecv(&data_d, 1, data_type, MASTER_RANK, 2178272, &data_d, 1, data_type, i_rank, 2178272, SID.COMM_WORLD);
+                            SID_Sendrecv(&data_d, 1, data_type, SID_MASTER_RANK, 2178272, &data_d, 1, data_type, i_rank, 2178272, SID.COMM_WORLD);
                         else
-                            SID_trap_error("Unsupported data type in write_treenode_list_data() (2).", ERROR_LOGIC);
+                            SID_trap_error("Unsupported data type in write_treenode_list_data() (2).", SID_ERROR_LOGIC);
                     }
 
                     // Write the data with the master rank
@@ -75,7 +75,7 @@ void write_treenode_list_properties(tree_info *trees, const char *filename_out_r
                         else if(data_type == SID_DOUBLE)
                             fprintf(fp_props_out, " %11.4le", data_d);
                         else
-                            SID_trap_error("Unsupported data type in write_treenode_list_data() (2).", ERROR_LOGIC);
+                            SID_trap_error("Unsupported data type in write_treenode_list_data() (2).", SID_ERROR_LOGIC);
                     }
                 } // i_write
                 if(SID.I_am_Master)
@@ -85,5 +85,5 @@ void write_treenode_list_properties(tree_info *trees, const char *filename_out_r
         SID_Barrier(SID.COMM_WORLD);
     } // for i_rank
     fclose(fp_props_out);
-    SID_log("Done.", ERROR_LOGIC);
+    SID_log("Done.", SID_ERROR_LOGIC);
 }

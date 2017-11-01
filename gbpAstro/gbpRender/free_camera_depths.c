@@ -9,7 +9,7 @@
 #include <gbpRender.h>
 
 int free_camera_depths(camera_info *camera) {
-    int r_val = TRUE;
+    int r_val = GBP_TRUE;
 
     SID_free(SID_FARG camera->depth_array_f_stretch);
     SID_free(SID_FARG camera->depth_array_FOV_x);

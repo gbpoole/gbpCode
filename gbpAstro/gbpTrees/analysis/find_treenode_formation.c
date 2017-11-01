@@ -38,7 +38,7 @@ int find_treenode_formation(tree_info *trees, tree_node_info *halo, double fract
             }
             current_halo = most_massive_progenitor;
         }
-        return (TRUE);
+        return (GBP_TRUE);
     }
-    return (FALSE);
+    return (GBP_FALSE);
 }

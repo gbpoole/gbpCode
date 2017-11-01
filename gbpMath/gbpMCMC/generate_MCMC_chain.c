@@ -14,7 +14,7 @@ int generate_MCMC_chain(MCMC_info *MCMC) {
     int              i_P, i_DS;
     static char      format_string[256];
     FILE *           fp_report_props;
-    static char      filename_report_props[MAX_FILENAME_LENGTH];
+    static char      filename_report_props[SID_MAX_FILENAME_LENGTH];
     static int       n_P;
     static double *  P_new;
     static double ** M_new;
@@ -31,7 +31,7 @@ int generate_MCMC_chain(MCMC_info *MCMC) {
 
     // Initialize a few things on the first call
     switch(MCMC->first_chain_call) {
-        case TRUE:
+        case GBP_TRUE:
             n_P                    = MCMC->n_P;
             P_new                  = MCMC->P_new;
             M_new                  = MCMC->M_new;
@@ -45,7 +45,7 @@ int generate_MCMC_chain(MCMC_info *MCMC) {
             n_DS                   = MCMC->n_DS;
             n_M                    = MCMC->n_M;
             flag_report_props      = check_mode_for_flag(MCMC->mode, MCMC_MODE_REPORT_PROPS);
-            MCMC->first_chain_call = FALSE;
+            MCMC->first_chain_call = GBP_FALSE;
             sprintf(filename_report_props, "%s/chains/report_props_%06d.dat", MCMC->filename_output_dir, MCMC->my_chain);
             break;
     }
@@ -53,7 +53,7 @@ int generate_MCMC_chain(MCMC_info *MCMC) {
     // We need to compute the likelihood of the initial conditions
     //   if we are just starting a chain
     if(MCMC->flag_init_chain)
-        generate_MCMC_proposition(MCMC, TRUE);
+        generate_MCMC_proposition(MCMC, GBP_TRUE);
 
     // Set the last new state to the new last state
     MCMC->ln_likelihood_last = MCMC->ln_likelihood_new;
@@ -63,22 +63,22 @@ int generate_MCMC_chain(MCMC_info *MCMC) {
         memcpy(M_last[i_DS], M_new[i_DS], n_M[i_DS] * sizeof(double));
 
     // Keep generating parameter sets until the mapping function is satisfied
-    generate_MCMC_proposition(MCMC, FALSE);
+    generate_MCMC_proposition(MCMC, GBP_FALSE);
 
     // Decide if this is a successful proposition or not...
     if(MCMC->ln_likelihood_new > MCMC->ln_likelihood_chain) {
         MCMC->ln_Pr_new = 0.;
-        flag_success    = TRUE;
+        flag_success    = GBP_TRUE;
     } else if(MCMC->my_chain == SID.My_rank) {
         MCMC->ln_Pr_new = MCMC->ln_likelihood_new - MCMC->ln_likelihood_chain;
         if((double)random_number(RNG) <= exp(MCMC->ln_Pr_new))
-            flag_success = TRUE;
+            flag_success = GBP_TRUE;
         else
-            flag_success = FALSE;
+            flag_success = GBP_FALSE;
     }
     // fprintf(stderr,"%d %le %d\n",flag_success,MCMC->ln_Pr_new,check_mode_for_flag(MCMC->mode,MCMC_MODE_PARALLEL));
     // if(!check_mode_for_flag(MCMC->mode,MCMC_MODE_PARALLEL))
-    SID_Bcast(&flag_success, 1, SID_INT, MCMC->comm, MASTER_RANK);
+    SID_Bcast(&flag_success, 1, SID_INT, MCMC->comm, SID_MASTER_RANK);
 
     // ... if it is, then update the chain ...
     if(flag_success) {

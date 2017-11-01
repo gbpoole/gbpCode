@@ -245,13 +245,13 @@ int write_treenode_list_properties_set_ith(tree_info *     trees,
             *data_i = current_halo->tree_case;
     }
     // 'else' is structured as it is so that you can iteratively call this function (with all pointers==NULL)
-    //    until it returns FALSE, to get a count of how many entries it supports.  This allows for easy changes
+    //    until it returns GBP_FALSE, to get a count of how many entries it supports.  This allows for easy changes
     //    to the output format of this file.
     else {
         if(data_d != NULL || data_i != NULL || data_name != NULL)
-            SID_trap_error("Invalid counter given in write_treenode_list_properties_set_ith()", ERROR_LOGIC);
+            SID_trap_error("Invalid counter given in write_treenode_list_properties_set_ith()", SID_ERROR_LOGIC);
         else
-            return (FALSE);
+            return (GBP_FALSE);
     }
-    return (TRUE);
+    return (GBP_TRUE);
 }

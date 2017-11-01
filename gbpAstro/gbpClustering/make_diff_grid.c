@@ -43,19 +43,19 @@ int main(int argc, char *argv[]) {
     fread_verify(&as2, sizeof(int), 1, fp2);
 
     if(nx1 != nx2)
-        SID_trap_error("nx's don't match (ie. %d!=%d)", ERROR_LOGIC, nx1, nx2);
+        SID_trap_error("nx's don't match (ie. %d!=%d)", SID_ERROR_LOGIC, nx1, nx2);
     if(ny1 != ny2)
-        SID_trap_error("ny's don't match (ie. %d!=%d)", ERROR_LOGIC, ny1, ny2);
+        SID_trap_error("ny's don't match (ie. %d!=%d)", SID_ERROR_LOGIC, ny1, ny2);
     if(nz1 != nz2)
-        SID_trap_error("nz's don't match (ie. %d!=%d)", ERROR_LOGIC, nz1, nz2);
+        SID_trap_error("nz's don't match (ie. %d!=%d)", SID_ERROR_LOGIC, nz1, nz2);
     if(Lx1 != Lx2)
-        SID_trap_error("Lx's don't match (ie. %le!=%le)", ERROR_LOGIC, Lx1, Lx2);
+        SID_trap_error("Lx's don't match (ie. %le!=%le)", SID_ERROR_LOGIC, Lx1, Lx2);
     if(Ly1 != Ly2)
-        SID_trap_error("Ly's don't match (ie. %le!=%le)", ERROR_LOGIC, Ly1, Ly2);
+        SID_trap_error("Ly's don't match (ie. %le!=%le)", SID_ERROR_LOGIC, Ly1, Ly2);
     if(Lz1 != Lz2)
-        SID_trap_error("Lz's don't match (ie. %le!=%le)", ERROR_LOGIC, Lz1, Lz2);
+        SID_trap_error("Lz's don't match (ie. %le!=%le)", SID_ERROR_LOGIC, Lz1, Lz2);
     if(ng1 != ng2)
-        SID_trap_error("The number of grids don't match (ie. %d!=%d)", ERROR_LOGIC, ng1, ng2);
+        SID_trap_error("The number of grids don't match (ie. %d!=%d)", SID_ERROR_LOGIC, ng1, ng2);
 
     int     i_x, i_y, i_z;
     GBPREAL d1, d2;
@@ -68,7 +68,7 @@ int main(int argc, char *argv[]) {
         fread_verify(grid_identifier_1, sizeof(char), GRID_IDENTIFIER_SIZE, fp1);
         fread_verify(grid_identifier_2, sizeof(char), GRID_IDENTIFIER_SIZE, fp2);
         if(strcmp(grid_identifier_1, grid_identifier_2))
-            SID_log_warning("grid identifiers don't match (ie. {%s}!={%s})", ERROR_LOGIC, grid_identifier_1, grid_identifier_2);
+            SID_log_warning("grid identifiers don't match (ie. {%s}!={%s})", SID_ERROR_LOGIC, grid_identifier_1, grid_identifier_2);
         SID_log("Processing {%s} ...", SID_LOG_OPEN, grid_identifier_1);
         for(i_x = 0; i_x < nx1; i_x++) {
             for(i_y = 0; i_y < ny1; i_y++) {
@@ -89,5 +89,5 @@ int main(int argc, char *argv[]) {
 
     SID_log("Done.", SID_LOG_CLOSE);
 
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

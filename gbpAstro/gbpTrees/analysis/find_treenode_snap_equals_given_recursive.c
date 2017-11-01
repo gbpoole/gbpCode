@@ -21,7 +21,7 @@ float set_halo_score_local(tree_info *trees, tree_node_info *current_progenitor,
         else if(progenitor_mode == TREE_PROGENITOR_ORDER_N_PARTICLES_INCLUSIVE_PEAK)
             return ((float)(current_progenitor->n_particles_inclusive_peak));
         else
-            SID_trap_error("Invalid progenitor_mode (%d) in find_treenode_snap_equals_given_recursive().", ERROR_LOGIC, progenitor_mode);
+            SID_trap_error("Invalid progenitor_mode (%d) in find_treenode_snap_equals_given_recursive().", SID_ERROR_LOGIC, progenitor_mode);
     }
     return (-1.);
 }

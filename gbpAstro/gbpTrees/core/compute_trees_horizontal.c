@@ -115,7 +115,7 @@ void compute_trees_horizontal(char *       filename_halo_root_in,
     char *   match_flag_two_way  = NULL;
     int *    bridge_keep         = NULL;
     int      flag_match_subgroups;
-    int      flag_keep_strays = FALSE;
+    int      flag_keep_strays = GBP_FALSE;
     int      n_k_match        = 2;
     int      n_snap;
 
@@ -150,10 +150,10 @@ void compute_trees_horizontal(char *       filename_halo_root_in,
     int n_wrap;
     int i_file_start;
 
-    char  filename_output_dir_horizontal[MAX_FILENAME_LENGTH];
-    char  filename_output_dir_horizontal_cases[MAX_FILENAME_LENGTH];
-    char  filename_output_file_root[MAX_FILENAME_LENGTH];
-    char  filename_matching_out[MAX_FILENAME_LENGTH];
+    char  filename_output_dir_horizontal[SID_MAX_FILENAME_LENGTH];
+    char  filename_output_dir_horizontal_cases[SID_MAX_FILENAME_LENGTH];
+    char  filename_output_file_root[SID_MAX_FILENAME_LENGTH];
+    char  filename_matching_out[SID_MAX_FILENAME_LENGTH];
     FILE *fp_matching_out;
     int   i_column;
 
@@ -164,10 +164,10 @@ void compute_trees_horizontal(char *       filename_halo_root_in,
             i_read_step);
 
     if(n_search < 1)
-        SID_trap_error("n_search=%d but must be at least 1", ERROR_LOGIC, n_search);
+        SID_trap_error("n_search=%d but must be at least 1", SID_ERROR_LOGIC, n_search);
 
-    int flag_compute_fragmented = TRUE;
-    int flag_compute_ghosts     = FALSE;
+    int flag_compute_fragmented = GBP_TRUE;
+    int flag_compute_ghosts     = GBP_FALSE;
 
     if(!flag_fix_bridges)
         SID_log("Bridge-fixing is turned off.", SID_LOG_COMMENT);
@@ -203,7 +203,7 @@ void compute_trees_horizontal(char *       filename_halo_root_in,
     //                          i_read_step,
     //                          n_search,
     //                          WRITE_MATCHES_MODE_TREES|WRITE_MATCHES_PERFORM_CHECK))
-    //   SID_trap_error("Matching could not be completed.  Terminating.",ERROR_LOGIC);
+    //   SID_trap_error("Matching could not be completed.  Terminating.",SID_ERROR_LOGIC);
     read_matches_header(filename_root_matches,
                         i_read_start,
                         i_read_stop,
@@ -218,7 +218,7 @@ void compute_trees_horizontal(char *       filename_halo_root_in,
     // We need these for allocating arrays
     calc_max(n_subgroups, &n_subgroups_max, n_files, SID_INT, CALC_MODE_DEFAULT);
     calc_max(n_groups, &n_groups_max, n_files, SID_INT, CALC_MODE_DEFAULT);
-    n_halos_max = MAX(n_subgroups_max, n_groups_max);
+    n_halos_max = GBP_MAX(n_subgroups_max, n_groups_max);
 
     // We need enough indices to allow us to hold-on to descendants until outputing
     //   and for the current and last i_file as well
@@ -297,7 +297,7 @@ void compute_trees_horizontal(char *       filename_halo_root_in,
             switch(k_match) {
                 case 0:
                     sprintf(group_text_prefix, "");
-                    flag_match_subgroups = FALSE;
+                    flag_match_subgroups = GBP_FALSE;
                     halos                = groups;
                     back_matches         = back_matches_groups;
                     n_halos              = n_groups;
@@ -308,7 +308,7 @@ void compute_trees_horizontal(char *       filename_halo_root_in,
                     break;
                 case 1:
                     sprintf(group_text_prefix, "sub");
-                    flag_match_subgroups = TRUE;
+                    flag_match_subgroups = GBP_TRUE;
                     halos                = subgroups;
                     back_matches         = back_matches_subgroups;
                     n_halos              = n_subgroups;
@@ -556,9 +556,9 @@ void compute_trees_horizontal(char *       filename_halo_root_in,
     if(flag_compute_ghosts || flag_compute_fragmented) {
         SID_log("Removing temporary tree files...", SID_LOG_OPEN);
         for(j_write = i_read_stop; j_write >= i_read_start; j_write -= i_read_step) {
-            char filename_output_dir_horizontal[MAX_FILENAME_LENGTH];
-            char filename_output_dir_horizontal_trees[MAX_FILENAME_LENGTH];
-            char filename_remove[MAX_FILENAME_LENGTH];
+            char filename_output_dir_horizontal[SID_MAX_FILENAME_LENGTH];
+            char filename_output_dir_horizontal_trees[SID_MAX_FILENAME_LENGTH];
+            char filename_remove[SID_MAX_FILENAME_LENGTH];
             sprintf(filename_output_dir_horizontal, "%s/horizontal", filename_output_dir);
             sprintf(filename_output_dir_horizontal_trees, "%s/trees", filename_output_dir_horizontal);
             sprintf(filename_remove, "%s/horizontal_trees_tmp_%03d.dat", filename_output_dir_horizontal_trees, j_write);

@@ -31,6 +31,7 @@ endif()
 # Add header files
 # eg. list(APPEND INCFILES "filename.ext")
 list(APPEND INCFILES "gbpLib.h")
+list(APPEND INCFILES "gbpConstants.h")
 
 # Add source files
 # eg. list(APPEND SRCFILES "filename.ext")

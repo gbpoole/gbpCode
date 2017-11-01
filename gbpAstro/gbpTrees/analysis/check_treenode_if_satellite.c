@@ -14,7 +14,7 @@ int check_treenode_if_satellite(tree_node_info *halo) {
         if(halo->parent_top != NULL)
             return (halo->parent_top->substructure_first != halo);
         else
-            return (FALSE);
+            return (GBP_FALSE);
     }
-    return (FALSE);
+    return (GBP_FALSE);
 }

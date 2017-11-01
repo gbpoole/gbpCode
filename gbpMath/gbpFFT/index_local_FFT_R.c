@@ -11,7 +11,7 @@ size_t index_local_FFT_R(field_info *FFT, int *i_R) {
             index *= FFT->n_R_local[i_d];
         if(i_R[i_d] < 0 || i_R[i_d] > FFT->i_R_stop_local[i_d])
             SID_trap_error("Index (%d;i_d=%d) out of local slab's range (%d->%d).",
-                           ERROR_LOGIC,
+                           SID_ERROR_LOGIC,
                            i_R[i_d],
                            i_d,
                            FFT->i_R_start_local[i_d],

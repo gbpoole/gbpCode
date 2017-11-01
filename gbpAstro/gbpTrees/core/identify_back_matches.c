@@ -71,7 +71,7 @@ void identify_back_matches(tree_horizontal_info **halos,
                      match_index,
                      NULL,
                      f_match_moment_diff_min,
-                     TRUE);
+                     GBP_TRUE);
 
         // Store halo sizes for the current snapshot's halos
         if(i_search == 0) {
@@ -132,7 +132,7 @@ void identify_back_matches(tree_horizontal_info **halos,
                      match_index,
                      match_flag_two_way,
                      f_match_moment_diff_min,
-                     TRUE);
+                     GBP_TRUE);
 
         if(n_halos_1_matches > 0 && n_halos_2_matches > 0) {
             // Assemble first fore matches for each halo
@@ -145,7 +145,7 @@ void identify_back_matches(tree_horizontal_info **halos,
                         halo_i->forematch_first.halo            = halo_j;
                         halo_i->forematch_first.score           = match_score[i_halo];
                         halo_i->forematch_first.flag_two_way    = match_flag_two_way[i_halo];
-                        halo_i->forematch_first.flag_back_match = FALSE;
+                        halo_i->forematch_first.flag_back_match = GBP_FALSE;
                     }
                 }
             }
@@ -168,7 +168,7 @@ void identify_back_matches(tree_horizontal_info **halos,
                          match_index,
                          match_flag_two_way,
                          f_match_moment_diff_min,
-                         TRUE);
+                         GBP_TRUE);
 
             // Scan over all the current snapshot's halos ...
             for(j_halo = 0; j_halo < n_halos_1_matches; j_halo++) {
@@ -191,11 +191,11 @@ void identify_back_matches(tree_horizontal_info **halos,
                     int                   n_back_matches = halo_i->n_back_matches;
                     // Check to see if this halo's ID has already been added
                     int halo_j_id = halo_j->id;
-                    int flag_add  = TRUE;
+                    int flag_add  = GBP_TRUE;
                     if(halo_j_id >= 0) {
                         for(k_halo = 0; k_halo < n_back_matches && flag_add; k_halo++) {
                             if(back_matches[k_halo].halo->id == halo_j_id)
-                                flag_add = FALSE;
+                                flag_add = GBP_FALSE;
                         }
                     }
                     // Add this halo to the preliminary list if it passed the above test(s)
@@ -203,7 +203,7 @@ void identify_back_matches(tree_horizontal_info **halos,
                         back_matches[n_back_matches].halo            = halo_j;
                         back_matches[n_back_matches].score           = match_score[j_halo];
                         back_matches[n_back_matches].flag_two_way    = match_flag_two_way[j_halo];
-                        back_matches[n_back_matches].flag_back_match = TRUE;
+                        back_matches[n_back_matches].flag_back_match = GBP_TRUE;
                         halo_i->n_back_matches++;
                     }
                 }
@@ -240,7 +240,7 @@ void identify_back_matches(tree_horizontal_info **halos,
     //    be used for allocating a couple of temporary arrays.
     int n_allocate_max = 0;
     for(i_halo = 0; i_halo < n_halos_2_matches; i_halo++)
-        n_allocate_max = MAX(n_allocate_max, halos_i[i_halo].n_back_matches);
+        n_allocate_max = GBP_MAX(n_allocate_max, halos_i[i_halo].n_back_matches);
 
     // ... lastly, finalize the list, keeping only the most immediate descendants.
     SID_log("Finalizing list...", SID_LOG_OPEN | SID_LOG_TIMER);
@@ -250,7 +250,7 @@ void identify_back_matches(tree_horizontal_info **halos,
     for(i_halo = 0; i_halo < n_halos_2_matches; i_halo++) {
         // Zero temporary arrays
         for(j_halo = 0; j_halo < halos_i[i_halo].n_back_matches; j_halo++) {
-            backmatch_keep[j_halo] = FALSE;
+            backmatch_keep[j_halo] = GBP_FALSE;
             back_matches[j_halo]   = empty_match[0];
         }
 
@@ -262,7 +262,7 @@ void identify_back_matches(tree_horizontal_info **halos,
             memcpy(&(back_matches[j_halo]), back_match, sizeof(match_info));
             // Set the criteria by which the halos will be sorted here
             match_score[j_halo]    = (float)(back_match->halo->file);
-            backmatch_keep[j_halo] = TRUE;
+            backmatch_keep[j_halo] = GBP_TRUE;
         }
         merge_sort((void *)match_score,
                    (size_t)(halos_i[i_halo].n_back_matches),
@@ -287,7 +287,7 @@ void identify_back_matches(tree_horizontal_info **halos,
                 k_file = current->file;
             l_file = k_file;
             // ... walk the tree upwards for each back matched halo...
-            while(current != NULL && k_file >= l_file && k_file < MIN(n_files, i_file + (n_search + 1))) {
+            while(current != NULL && k_file >= l_file && k_file < GBP_MIN(n_files, i_file + (n_search + 1))) {
                 // ... loop over the other back matches ...
                 for(k_halo = 0; k_halo < halos_i[i_halo].n_back_matches; k_halo++) {
                     // ... don't waste time checking a halo against itself or against one already removed
@@ -296,7 +296,7 @@ void identify_back_matches(tree_horizontal_info **halos,
                         //     ensures that we are removing the least immediate instances.
                         back_match = &(back_matches[k_halo]);
                         if(back_match->halo == current)
-                            backmatch_keep[k_halo] = FALSE;
+                            backmatch_keep[k_halo] = GBP_FALSE;
                     }
                 }
                 current = current->descendant.halo;

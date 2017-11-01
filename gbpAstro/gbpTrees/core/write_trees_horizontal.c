@@ -31,21 +31,21 @@ void write_trees_horizontal(void **      groups_in,
                             int          n_k_match,
                             int          flag_init_write,
                             int          mode) {
-    char   filename_output_dir_horizontal[MAX_FILENAME_LENGTH];
-    char   filename_output_dir_horizontal_trees[MAX_FILENAME_LENGTH];
-    char   filename_output_dir_horizontal_cases[MAX_FILENAME_LENGTH];
-    char   filename_output_file_root[MAX_FILENAME_LENGTH];
-    char   filename_matches_out[MAX_FILENAME_LENGTH];
-    char   filename_pointers_out[MAX_FILENAME_LENGTH];
-    char   filename_groups[MAX_FILENAME_LENGTH];
-    char   filename_subgroups[MAX_FILENAME_LENGTH];
-    char   filename_log[MAX_FILENAME_LENGTH];
-    char   filename_matching_out[MAX_FILENAME_LENGTH];
-    char   filename_mergers_out[MAX_FILENAME_LENGTH];
-    char   filename_strayed_out[MAX_FILENAME_LENGTH];
-    char   filename_dropped_out[MAX_FILENAME_LENGTH];
-    char   filename_bridged_out[MAX_FILENAME_LENGTH];
-    char   filename_emerged_out[MAX_FILENAME_LENGTH];
+    char   filename_output_dir_horizontal[SID_MAX_FILENAME_LENGTH];
+    char   filename_output_dir_horizontal_trees[SID_MAX_FILENAME_LENGTH];
+    char   filename_output_dir_horizontal_cases[SID_MAX_FILENAME_LENGTH];
+    char   filename_output_file_root[SID_MAX_FILENAME_LENGTH];
+    char   filename_matches_out[SID_MAX_FILENAME_LENGTH];
+    char   filename_pointers_out[SID_MAX_FILENAME_LENGTH];
+    char   filename_groups[SID_MAX_FILENAME_LENGTH];
+    char   filename_subgroups[SID_MAX_FILENAME_LENGTH];
+    char   filename_log[SID_MAX_FILENAME_LENGTH];
+    char   filename_matching_out[SID_MAX_FILENAME_LENGTH];
+    char   filename_mergers_out[SID_MAX_FILENAME_LENGTH];
+    char   filename_strayed_out[SID_MAX_FILENAME_LENGTH];
+    char   filename_dropped_out[SID_MAX_FILENAME_LENGTH];
+    char   filename_bridged_out[SID_MAX_FILENAME_LENGTH];
+    char   filename_emerged_out[SID_MAX_FILENAME_LENGTH];
     FILE * fp_matching_out;
     FILE * fp_mergers_out;
     FILE * fp_strayed_out;
@@ -94,11 +94,11 @@ void write_trees_horizontal(void **      groups_in,
     int flag_write_extended   = check_mode_for_flag(mode, TREE_HORIZONTAL_WRITE_EXTENDED);
     int flag_write_ghosts     = check_mode_for_flag(mode, TREE_HORIZONTAL_WRITE_GHOSTS);
     if(flag_write_extended && flag_write_ghosts)
-        SID_trap_error("Incompatible mode flags set in write_trees_horizontal.", ERROR_LOGIC);
+        SID_trap_error("Incompatible mode flags set in write_trees_horizontal.", SID_ERROR_LOGIC);
     if(flag_write_ghosts) {
-        flag_write_nocases  = TRUE;
-        flag_write_allcases = FALSE;
-        SID_trap_error("Ghost processing not supported in write_trees_horizontal().", ERROR_LOGIC);
+        flag_write_nocases  = GBP_TRUE;
+        flag_write_allcases = GBP_FALSE;
+        SID_trap_error("Ghost processing not supported in write_trees_horizontal().", SID_ERROR_LOGIC);
     }
 
     // Check for fragemented halos
@@ -108,7 +108,7 @@ void write_trees_horizontal(void **      groups_in,
     }
 
     // Set filenames and open files for writing
-    int flag_write_pointers = FALSE;
+    int flag_write_pointers = GBP_FALSE;
     sprintf(filename_output_dir_horizontal, "%s/horizontal", filename_output_dir);
     sprintf(filename_output_dir_horizontal_trees, "%s/trees", filename_output_dir_horizontal);
     mkdir(filename_output_dir, 02755);
@@ -117,7 +117,7 @@ void write_trees_horizontal(void **      groups_in,
     strcpy(filename_output_file_root, filename_output_dir);
     strip_path(filename_output_file_root);
     if(flag_write_extended) {
-        flag_write_pointers = TRUE;
+        flag_write_pointers = GBP_TRUE;
         sprintf(filename_matches_out, "%s/horizontal_trees_tmp_%03d.dat", filename_output_dir_horizontal_trees, j_write);
     } else if(flag_write_ghosts)
         sprintf(filename_matches_out, "%s/horizontal_trees_ghosts_%03d.dat", filename_output_dir_horizontal_trees, j_write);
@@ -135,7 +135,7 @@ void write_trees_horizontal(void **      groups_in,
     // Write the header information for the horizontal trees files
     SID_log("Writing tree files...", SID_LOG_OPEN);
     int n_halos_max_header;
-    n_halos_max_header = MAX(n_subgroups_max, n_groups_max);
+    n_halos_max_header = GBP_MAX(n_subgroups_max, n_groups_max);
     SID_fwrite(&n_step, sizeof(int), 1, &fp_trees_out);
     SID_fwrite(&n_search, sizeof(int), 1, &fp_trees_out);
     SID_fwrite(&n_groups, sizeof(int), 1, &fp_trees_out);
@@ -514,9 +514,9 @@ void write_trees_horizontal(void **      groups_in,
             else
                 sprintf(filename_log, "%s/log.txt", filename_output_dir_horizontal);
             if(flag_init_write && i_k_match == 0)
-                write_trees_horizontal_log_file(filename_log, i_write, j_write, i_k_match, n_k_match, &stats, a_list, cosmo, TRUE);
+                write_trees_horizontal_log_file(filename_log, i_write, j_write, i_k_match, n_k_match, &stats, a_list, cosmo, GBP_TRUE);
             else
-                write_trees_horizontal_log_file(filename_log, i_write, j_write, i_k_match, n_k_match, &stats, a_list, cosmo, FALSE);
+                write_trees_horizontal_log_file(filename_log, i_write, j_write, i_k_match, n_k_match, &stats, a_list, cosmo, GBP_FALSE);
         }
     }
     SID_log("Done.", SID_LOG_CLOSE);

@@ -5,19 +5,19 @@
 #include <gbpRender.h>
 
 void create_colour_table(const char *colourmapselect_in, int *n_colours_in, int ***rgb) {
-    char  filename_in[MAX_FILENAME_LENGTH];
-    char  colourmapselect[MAX_FILENAME_LENGTH];
+    char  filename_in[SID_MAX_FILENAME_LENGTH];
+    char  colourmapselect[SID_MAX_FILENAME_LENGTH];
     FILE *fp_in       = NULL;
     int   cmap_len    = strlen(colourmapselect_in);
-    int   flag_invert = FALSE;
+    int   flag_invert = GBP_FALSE;
     strcpy(colourmapselect, colourmapselect_in);
     if(!strcmp(&(colourmapselect[cmap_len - 2]), "_r")) {
-        flag_invert                   = TRUE;
+        flag_invert                   = GBP_TRUE;
         colourmapselect[cmap_len - 2] = '\0';
     }
     sprintf(filename_in, "%s/gbpCode_cmap_%s.txt", GBP_DATA_DIR, colourmapselect);
     if((fp_in = fopen(filename_in, "r")) == NULL) {
-        SID_trap_error("Could not open colour table {%s}.", ERROR_LOGIC, colourmapselect);
+        SID_trap_error("Could not open colour table {%s}.", SID_ERROR_LOGIC, colourmapselect);
     }
     int n_colours      = count_lines_data(fp_in);
     (*n_colours_in)    = n_colours;
@@ -35,9 +35,9 @@ void create_colour_table(const char *colourmapselect_in, int *n_colours_in, int 
         grab_double(line, 2, &r_i);
         grab_double(line, 3, &g_i);
         grab_double(line, 4, &b_i);
-        (*rgb)[0][i_read] = MAX(0, MIN(255, (int)(255. * r_i)));
-        (*rgb)[1][i_read] = MAX(0, MIN(255, (int)(255. * g_i)));
-        (*rgb)[2][i_read] = MAX(0, MIN(255, (int)(255. * b_i)));
+        (*rgb)[0][i_read] = GBP_MAX(0, GBP_MIN(255, (int)(255. * r_i)));
+        (*rgb)[1][i_read] = GBP_MAX(0, GBP_MIN(255, (int)(255. * g_i)));
+        (*rgb)[2][i_read] = GBP_MAX(0, GBP_MIN(255, (int)(255. * b_i)));
     }
     SID_free(SID_FARG line);
     fclose(fp_in);

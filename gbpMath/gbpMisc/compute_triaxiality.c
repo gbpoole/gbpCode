@@ -60,9 +60,9 @@ void compute_triaxiality(double *x_in,
     return_vectors[2][2] = 1.;
 
     if(n_particles > 0)
-        continue_flag = TRUE;
+        continue_flag = GBP_TRUE;
     else
-        continue_flag = FALSE;
+        continue_flag = GBP_FALSE;
     eigen_vector = gsl_vector_alloc(3);
     eigen_matrix = gsl_matrix_alloc(3, 3);
     w            = gsl_eigen_symmv_alloc(3);
@@ -136,9 +136,9 @@ void compute_triaxiality(double *x_in,
         // Check for convergence
         n_iterations++;
         if(n_iterations >= n_iterations_max)
-            continue_flag = FALSE;
+            continue_flag = GBP_FALSE;
         if((double)fabs((float)((q_new - q) / q)) < convergence && (double)fabs((float)((s_new - s) / s)) < convergence)
-            continue_flag = FALSE;
+            continue_flag = GBP_FALSE;
     }
 
     // Clean-up

@@ -17,14 +17,14 @@ float fetch_treenode_descendant_f_goodness(tree_info *trees, tree_node_info *hal
                 int   n_p   = halo->n_particles;
                 return (match_score_f_goodness(score, n_p));
             } else
-                SID_trap_error("Group descendant scores are not defined.  They probably have not been read.", ERROR_LOGIC);
+                SID_trap_error("Group descendant scores are not defined.  They probably have not been read.", SID_ERROR_LOGIC);
         } else {
             if(trees->subgroup_descendant_score != NULL) {
                 float score = trees->subgroup_descendant_score[halo->snap_tree][halo->neighbour_index];
                 int   n_p   = halo->n_particles;
                 return (match_score_f_goodness(score, n_p));
             } else
-                SID_trap_error("Subgroup descendant scores are not defined.  They probably have not been read.", ERROR_LOGIC);
+                SID_trap_error("Subgroup descendant scores are not defined.  They probably have not been read.", SID_ERROR_LOGIC);
         }
     }
     return (-1.);

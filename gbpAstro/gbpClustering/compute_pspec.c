@@ -317,7 +317,7 @@ void compute_pspec(plist_info *plist, const char *species_name, pspec_info *pspe
     SID_free(SID_FARG n_modes_2D_local);
 
     // Tell the datastructure that the calculation is done
-    pspec->flag_processed[i_run] = TRUE;
+    pspec->flag_processed[i_run] = GBP_TRUE;
 
     SID_log("Done.", SID_LOG_CLOSE);
 }

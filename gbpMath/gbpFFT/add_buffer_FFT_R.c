@@ -2,7 +2,7 @@
 #include <gbpFFT.h>
 
 int add_buffer_FFT_R(field_info *FFT) {
-    int r_val = FALSE;
+    int r_val = GBP_FALSE;
     if(!(FFT->flag_padded)) {
         SID_log("Adding FFTW padding...", SID_LOG_OPEN);
         size_t i_FFT; // n.b.: Don't run this to the zero'th element,
@@ -16,7 +16,7 @@ int add_buffer_FFT_R(field_info *FFT) {
                 FFT->field_local[index_pad] = FFT->field_local[i_FFT];
             }
         }
-        r_val = TRUE;
+        r_val = GBP_TRUE;
         SID_log("Done.", SID_LOG_CLOSE);
     }
     return (r_val);

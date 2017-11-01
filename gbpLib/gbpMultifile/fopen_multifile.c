@@ -5,14 +5,14 @@
 int fopen_multifile(const char *filename_root, size_t data_size, fp_multifile_info *fp_out, ...) {
     va_list vargs;
     va_start(vargs, fp_out);
-    int r_val          = TRUE;
-    int flag_filefound = FALSE;
+    int r_val          = GBP_TRUE;
+    int flag_filefound = GBP_FALSE;
 
     // Sort out what file format we're working with
     fp_out->fp_multifile = NULL;
     if(SID.I_am_Master) {
         int  i_file;
-        char filename_multifile[MAX_FILENAME_LENGTH];
+        char filename_multifile[SID_MAX_FILENAME_LENGTH];
 
         // Set some filename information
         vsprintf(fp_out->filename_root, filename_root, vargs);
@@ -27,17 +27,17 @@ int fopen_multifile(const char *filename_root, size_t data_size, fp_multifile_in
             // ... if we didn't find a multi-file, try reading a single file ...
             fp_out->fp_multifile = fopen(filename_multifile, "r");
             if(fp_out->fp_multifile == NULL) {
-                r_val = FALSE;
+                r_val = GBP_FALSE;
                 // Don't report error here so that we can use this routine to check if datasets exist without termination
-                // SID_trap_error("Could not open multifile {%s}",ERROR_LOGIC,filename_root);
+                // SID_trap_error("Could not open multifile {%s}",SID_ERROR_LOGIC,filename_root);
             }
             // ... we found a single file.  Set flags.
             else
-                fp_out->flag_multifile = FALSE;
+                fp_out->flag_multifile = GBP_FALSE;
         }
         // ... we found a multi-file.  Set flags.
         else
-            fp_out->flag_multifile = TRUE;
+            fp_out->flag_multifile = GBP_TRUE;
 
         // Load/set header information
         if(fp_out->fp_multifile != NULL) {
@@ -49,7 +49,7 @@ int fopen_multifile(const char *filename_root, size_t data_size, fp_multifile_in
             fp_out->fp_multifile = NULL;
         }
     }
-    SID_Bcast(fp_out, sizeof(fp_multifile_info), SID_CHAR, SID.COMM_WORLD, MASTER_RANK);
+    SID_Bcast(fp_out, sizeof(fp_multifile_info), SID_CHAR, SID.COMM_WORLD, SID_MASTER_RANK);
 
     // Set the data size
     fp_out->data_size = data_size;
@@ -62,7 +62,7 @@ int fopen_multifile(const char *filename_root, size_t data_size, fp_multifile_in
         fp_out->i_file       = 0;
         fp_out->i_item       = 0;
         if(!(r_val = fopen_multifile_nth_file(fp_out, 0)))
-            SID_trap_error("Error opening multifile file.", ERROR_IO_OPEN);
+            SID_trap_error("Error opening multifile file.", SID_ERROR_IO_OPEN);
     }
 
     va_end(vargs);

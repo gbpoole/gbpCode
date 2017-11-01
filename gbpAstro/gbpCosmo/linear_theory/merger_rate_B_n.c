@@ -7,11 +7,11 @@
 
 double merger_rate_B_n(cosmo_info **cosmo, int mode_model, double z, double M_0, double xi) {
     double B_n       = -1.;
-    int    flag_done = FALSE;
+    int    flag_done = GBP_FALSE;
 
     // Fakhouri & Ma 2008, eqn 10
     if(mode_model == 0 || mode_model == 1) {
-        flag_done        = TRUE;
+        flag_done        = GBP_TRUE;
         int    mode      = PSPEC_LINEAR_TF;
         int    component = PSPEC_ALL_MATTER;
         double M_prime;
@@ -38,7 +38,7 @@ double merger_rate_B_n(cosmo_info **cosmo, int mode_model, double z, double M_0,
     }
     // Fakhouri+ 2010
     if(mode_model == 2) {
-        flag_done      = TRUE;
+        flag_done      = GBP_TRUE;
         double A       = 0.0104;
         double xi_tild = 9.72e-3;
         double alpha   = 0.133;
@@ -49,7 +49,7 @@ double merger_rate_B_n(cosmo_info **cosmo, int mode_model, double z, double M_0,
     }
     // Poole+ 2017
     if(mode_model == 3) {
-        flag_done      = TRUE;
+        flag_done      = GBP_TRUE;
         double A       = 0.107;
         double xi_tild = 0.475;
         double alpha   = 0.121;
@@ -60,7 +60,7 @@ double merger_rate_B_n(cosmo_info **cosmo, int mode_model, double z, double M_0,
     }
     // Fakhouri & Ma 2008, eqn 10
     if(mode_model == 4) {
-        flag_done      = TRUE;
+        flag_done      = GBP_TRUE;
         double A       = 0.0289;
         double xi_tild = 0.098;
         double alpha   = 0.083;
@@ -70,6 +70,6 @@ double merger_rate_B_n(cosmo_info **cosmo, int mode_model, double z, double M_0,
         B_n            = A * pow(M_0 / (1e12 * M_SOL), alpha) * pow(xi, beta) * exp(pow(xi / xi_tild, gamma)) * pow(1 + z, eta);
     }
     if(!flag_done)
-        SID_trap_error("Mode flag (%d) is invalid in merger_rate_B_n().  No model definition.", ERROR_LOGIC, mode_model);
+        SID_trap_error("Mode flag (%d) is invalid in merger_rate_B_n().  No model definition.", SID_ERROR_LOGIC, mode_model);
     return (B_n);
 }

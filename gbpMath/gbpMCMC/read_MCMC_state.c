@@ -10,20 +10,20 @@
 #include <gsl/gsl_interp.h>
 
 void read_MCMC_state(MCMC_info *MCMC) {
-    char          filename_output_dir[MAX_FILENAME_LENGTH];
-    char          filename_chain_dir[MAX_FILENAME_LENGTH];
-    char          filename_results_dir[MAX_FILENAME_LENGTH];
-    char          filename_plots_dir[MAX_FILENAME_LENGTH];
-    char          filename_run[MAX_FILENAME_LENGTH];
-    char          filename_chain[MAX_FILENAME_LENGTH];
-    char          filename_chain_config[MAX_FILENAME_LENGTH];
-    char          filename_stats[MAX_FILENAME_LENGTH];
-    char          filename_coverage[MAX_FILENAME_LENGTH];
-    char          filename_chain_covariance[MAX_FILENAME_LENGTH];
-    char          filename_covariance[MAX_FILENAME_LENGTH];
-    char          filename_histograms[MAX_FILENAME_LENGTH];
-    char          filename_results[MAX_FILENAME_LENGTH];
-    char          filename_stop[MAX_FILENAME_LENGTH];
+    char          filename_output_dir[SID_MAX_FILENAME_LENGTH];
+    char          filename_chain_dir[SID_MAX_FILENAME_LENGTH];
+    char          filename_results_dir[SID_MAX_FILENAME_LENGTH];
+    char          filename_plots_dir[SID_MAX_FILENAME_LENGTH];
+    char          filename_run[SID_MAX_FILENAME_LENGTH];
+    char          filename_chain[SID_MAX_FILENAME_LENGTH];
+    char          filename_chain_config[SID_MAX_FILENAME_LENGTH];
+    char          filename_stats[SID_MAX_FILENAME_LENGTH];
+    char          filename_coverage[SID_MAX_FILENAME_LENGTH];
+    char          filename_chain_covariance[SID_MAX_FILENAME_LENGTH];
+    char          filename_covariance[SID_MAX_FILENAME_LENGTH];
+    char          filename_histograms[SID_MAX_FILENAME_LENGTH];
+    char          filename_results[SID_MAX_FILENAME_LENGTH];
+    char          filename_stop[SID_MAX_FILENAME_LENGTH];
     char          format_string[32];
     int           my_chain;
     int           i_P, i_DS, i_M, i_array;
@@ -75,9 +75,9 @@ void read_MCMC_state(MCMC_info *MCMC) {
     MCMC->m                          = NULL;
     MCMC->b                          = NULL;
     MCMC->RNG                        = NULL;
-    MCMC->flag_integrate_on          = TRUE;
-    MCMC->flag_analysis_on           = TRUE;
-    MCMC->first_map_call             = TRUE;
+    MCMC->flag_integrate_on          = GBP_TRUE;
+    MCMC->flag_analysis_on           = GBP_TRUE;
+    MCMC->first_map_call             = GBP_TRUE;
     MCMC->mode                       = MCMC_MODE_DEFAULT;
     MCMC->DS                         = NULL;
     MCMC->last                       = NULL;
@@ -114,7 +114,7 @@ void read_MCMC_state(MCMC_info *MCMC) {
             fread_verify(&(MCMC->P_init[i_P]), sizeof(double), 1, fp_run);
             fread_verify(&(MCMC->P_limit_min[i_P]), sizeof(double), 1, fp_run);
             fread_verify(&(MCMC->P_limit_max[i_P]), sizeof(double), 1, fp_run);
-            MCMC->P_name_length = MAX(MCMC->P_name_length, strlen(MCMC->P_names[i_P]));
+            MCMC->P_name_length = GBP_MAX(MCMC->P_name_length, strlen(MCMC->P_names[i_P]));
         }
         sprintf(MCMC->P_name_format, "%%-%ds", MCMC->P_name_length);
         sprintf(format_string, "%s %%13.6le %%13.6le %%13.6le", MCMC->P_name_format);

@@ -10,8 +10,8 @@
 int main(int argc, char *argv[]) {
     int    n_search;
     int    i_halo;
-    char   filename_SSimPL_root[MAX_FILENAME_LENGTH];
-    char   filename_in[MAX_FILENAME_LENGTH];
+    char   filename_SSimPL_root[SID_MAX_FILENAME_LENGTH];
+    char   filename_in[SID_MAX_FILENAME_LENGTH];
     char   group_text_prefix[4];
     int    n_files;
     int    k_read;
@@ -70,5 +70,5 @@ int main(int argc, char *argv[]) {
         fclose(fp);
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

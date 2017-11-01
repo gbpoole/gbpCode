@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
     int         n_search;
     int         n_dim_files;
     int         n_k_match               = 2;
-    int         flag_clean              = FALSE;
+    int         flag_clean              = GBP_FALSE;
     double      f_match_moment_diff_min = F_MATCH_MOMENT_DIFF_MIN_DEFAULT;
     FILE *      fp_in;
     FILE *      fp_out;
@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
     // Fetch user inputs
     double box_size;
     if(argc != 11)
-        SID_trap_error("Incorrect syntax", ERROR_SYNTAX);
+        SID_trap_error("Incorrect syntax", SID_ERROR_SYNTAX);
     strcpy(filename_SSimPL_dir, argv[1]);
     strcpy(filename_halo_version_root, argv[2]);
     strcpy(filename_trees_name, argv[3]);
@@ -62,7 +62,7 @@ int main(int argc, char *argv[]) {
         f_match_moment_diff_min = atof(argv[11]);
 
     // Initialize cosmology
-    char filename_cosmology[MAX_FILENAME_LENGTH];
+    char filename_cosmology[SID_MAX_FILENAME_LENGTH];
     sprintf(filename_cosmology, "%s/run", filename_SSimPL_dir);
     read_gbpCosmo_file(&cosmo, filename_cosmology);
 
@@ -98,5 +98,5 @@ int main(int argc, char *argv[]) {
     // Clean-up
     ADaPS_free(SID_FARG cosmo);
 
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

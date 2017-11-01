@@ -12,10 +12,10 @@ int main(int argc, char *argv[]) {
 
     // Fetch user inputs
     if(argc != 7 && argc != 11)
-        SID_trap_error("Invalid syntax.", ERROR_SYNTAX);
-    char filename_SSimPL_in[MAX_FILENAME_LENGTH];
-    char filename_SSimPL_out[MAX_FILENAME_LENGTH];
-    char filename_halo_type[MAX_FILENAME_LENGTH];
+        SID_trap_error("Invalid syntax.", SID_ERROR_SYNTAX);
+    char filename_SSimPL_in[SID_MAX_FILENAME_LENGTH];
+    char filename_SSimPL_out[SID_MAX_FILENAME_LENGTH];
+    char filename_halo_type[SID_MAX_FILENAME_LENGTH];
     strcpy(filename_SSimPL_in, argv[1]);
     strcpy(filename_SSimPL_out, argv[2]);
     strcpy(filename_halo_type, argv[3]);
@@ -24,10 +24,10 @@ int main(int argc, char *argv[]) {
     int mode_in   = atoi(argv[6]);
 
     // Set which files will be processed
-    int flag_process_halos     = TRUE;
-    int flag_process_catalogs  = TRUE;
-    int flag_process_grids     = TRUE;
-    int flag_process_snapshots = TRUE;
+    int flag_process_halos     = GBP_TRUE;
+    int flag_process_catalogs  = GBP_TRUE;
+    int flag_process_grids     = GBP_TRUE;
+    int flag_process_snapshots = GBP_TRUE;
     if(argc == 11) {
         flag_process_halos     = atoi(argv[7]);
         flag_process_catalogs  = atoi(argv[8]);
@@ -41,11 +41,11 @@ int main(int argc, char *argv[]) {
         mode = SWAP_SSIMPL_ENDIAN_FROM_NATIVE;
 
     // Create output directories
-    char dir_snapshots[MAX_FILENAME_LENGTH];
-    char dir_smooth[MAX_FILENAME_LENGTH];
-    char dir_grids[MAX_FILENAME_LENGTH];
-    char dir_halos[MAX_FILENAME_LENGTH];
-    char dir_catalogs[MAX_FILENAME_LENGTH];
+    char dir_snapshots[SID_MAX_FILENAME_LENGTH];
+    char dir_smooth[SID_MAX_FILENAME_LENGTH];
+    char dir_grids[SID_MAX_FILENAME_LENGTH];
+    char dir_halos[SID_MAX_FILENAME_LENGTH];
+    char dir_catalogs[SID_MAX_FILENAME_LENGTH];
     sprintf(dir_snapshots, "%s/snapshots", filename_SSimPL_out);
     sprintf(dir_smooth, "%s/smooth", filename_SSimPL_out);
     sprintf(dir_grids, "%s/grids", filename_SSimPL_out);
@@ -61,8 +61,8 @@ int main(int argc, char *argv[]) {
     // Loop over the given snapshot range
     SID_log("Processing group/subgroup statistics for files #%d->#%d...", SID_LOG_OPEN | SID_LOG_TIMER, i_snap_lo, i_snap_hi);
     for(int i_snap = i_snap_lo; i_snap <= i_snap_hi; i_snap++) {
-        char filename_in[MAX_FILENAME_LENGTH];
-        char filename_out[MAX_FILENAME_LENGTH];
+        char filename_in[SID_MAX_FILENAME_LENGTH];
+        char filename_out[SID_MAX_FILENAME_LENGTH];
         SID_log("Processing snapshot #%03d...", SID_LOG_OPEN | SID_LOG_TIMER, i_snap);
         // Process halos
         if(flag_process_halos) {
@@ -98,5 +98,5 @@ int main(int argc, char *argv[]) {
     }
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

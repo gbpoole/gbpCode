@@ -16,7 +16,7 @@ int check_treenode_if_main_progenitor(tree_node_info *halo) {
             tree_node_info *main_progenitor = descendant->progenitor_first;
             return (halo == main_progenitor);
         } else
-            return (FALSE);
+            return (GBP_FALSE);
     }
-    return (FALSE);
+    return (GBP_FALSE);
 }

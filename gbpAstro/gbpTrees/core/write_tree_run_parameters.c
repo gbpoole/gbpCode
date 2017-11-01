@@ -18,11 +18,11 @@ void write_tree_run_parameters(char * filename_root_out,
                                int    flag_compute_ghosts) {
     // Open file
     FILE *fp_out;
-    char  filename_out[MAX_FILENAME_LENGTH];
+    char  filename_out[SID_MAX_FILENAME_LENGTH];
     mkdir(filename_root_out, 02755);
     sprintf(filename_out, "%s/run_parameters.txt", filename_root_out);
     if((fp_out = fopen(filename_out, "w")) == NULL)
-        SID_trap_error("Could not open file {%s}", ERROR_IO_OPEN, filename_root_out);
+        SID_trap_error("Could not open file {%s}", SID_ERROR_IO_OPEN, filename_root_out);
 
     // Write file
     fprintf(fp_out, "#snapshot_start          %d\n", i_read_start);

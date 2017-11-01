@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
     if(argc < 2 || argc > 3) {
         fprintf(stderr, "\n Syntax: %s z [gbpCosmo_file.txt]\n", argv[0]);
         fprintf(stderr, " ------\n\n");
-        return (ERROR_SYNTAX);
+        return (SID_ERROR_SYNTAX);
     } else
         z = (double)atof(argv[1]);
     SID_log("Computing cosmology information for z=%.2lf...", SID_LOG_OPEN, z);
@@ -47,5 +47,5 @@ int main(int argc, char *argv[]) {
 
     // Clean-up
     free_cosmo(&cosmo);
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

@@ -12,5 +12,5 @@
 int check_treenode_if_snap_equals_given(tree_node_info *halo, int snap_tree_given) {
     if(halo != NULL)
         return (halo->snap_tree == snap_tree_given);
-    return (FALSE);
+    return (GBP_FALSE);
 }

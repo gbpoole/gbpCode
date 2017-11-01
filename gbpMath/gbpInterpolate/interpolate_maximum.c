@@ -34,7 +34,7 @@ void interpolate_maximum(interp_info *interp,
     x_lo       = x_lo_in;
     x_guess    = x_guess_in;
     x_hi       = x_hi_in;
-    max_iter   = MAX(100, interp->n);
+    max_iter   = GBP_MAX(100, interp->n);
     F.function = interpolate_maximum_function;
     F.params   = (void *)interp;
     T          = gsl_min_fminimizer_brent;

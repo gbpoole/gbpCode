@@ -63,7 +63,7 @@ void process_local(tree_info *           trees,
                    double                x_cen,
                    double                y_cen,
                    double                z_cen) {
-    int flag_found = FALSE;
+    int flag_found = GBP_FALSE;
     int i_type     = !(properties_group == NULL);
     // Perform search
     if(i_pass < 2) {
@@ -72,14 +72,14 @@ void process_local(tree_info *           trees,
         double dz_i = d_periodic(((double)properties->position_MBP[2] - z_cen), trees->box_size);
         double r2_i = dx_i * dx_i + dy_i * dy_i + dz_i * dz_i;
         if(r2_i < radius2 && properties->M_vir >= M_min) {
-            flag_found = TRUE;
+            flag_found = GBP_TRUE;
             if(i_pass == 0)
                 (*n_list)++;
             else {
                 // Check if we have added this halo ID yet
                 for(int i_scan = 0; i_scan < (*n_list) && flag_found; i_scan++) {
                     if(halo_list[i_scan] == halo_id)
-                        flag_found = FALSE;
+                        flag_found = GBP_FALSE;
                 }
                 // Add halo ID if it isn't in the list
                 if(flag_found)
@@ -89,12 +89,12 @@ void process_local(tree_info *           trees,
     }
     // Perform write
     else if(i_pass == 2) {
-        int flag_keep = FALSE;
+        int flag_keep = GBP_FALSE;
         for(int j_list = 0; j_list < (*n_list) && !flag_keep; j_list++)
             if(halo_id == halo_list[j_list])
-                flag_keep = TRUE;
+                flag_keep = GBP_TRUE;
         if(flag_keep) {
-            char filename_out[MAX_FILENAME_LENGTH];
+            char filename_out[SID_MAX_FILENAME_LENGTH];
             if(i_type == 0)
                 sprintf(filename_out, "%s_group_%09d.txt", filename_out_root, halo_id);
             else
@@ -157,7 +157,7 @@ void process_local(tree_info *           trees,
     }
     // Sanity check
     else
-        SID_trap_error("Invalid mode passed to process_local.", ERROR_LOGIC);
+        SID_trap_error("Invalid mode passed to process_local.", SID_ERROR_LOGIC);
 }
 
 int main(int argc, char *argv[]) {
@@ -184,11 +184,11 @@ int main(int argc, char *argv[]) {
 
     // Fetch user inputs
     if(argc != 12)
-        SID_trap_error("Invalid Syntax.", ERROR_SYNTAX);
-    char filename_SSimPL_root[MAX_FILENAME_LENGTH];
-    char filename_halos_root[MAX_FILENAME_LENGTH];
-    char filename_trees_root[MAX_FILENAME_LENGTH];
-    char filename_out_root[MAX_FILENAME_LENGTH];
+        SID_trap_error("Invalid Syntax.", SID_ERROR_SYNTAX);
+    char filename_SSimPL_root[SID_MAX_FILENAME_LENGTH];
+    char filename_halos_root[SID_MAX_FILENAME_LENGTH];
+    char filename_trees_root[SID_MAX_FILENAME_LENGTH];
+    char filename_out_root[SID_MAX_FILENAME_LENGTH];
     strcpy(filename_SSimPL_root, argv[1]);
     strcpy(filename_halos_root, argv[2]);
     strcpy(filename_trees_root, argv[3]);
@@ -211,12 +211,12 @@ int main(int argc, char *argv[]) {
             z_min_in,
             z_max_in);
 
-    char filename_catalog_root[MAX_FILENAME_LENGTH];
+    char filename_catalog_root[SID_MAX_FILENAME_LENGTH];
     sprintf(filename_catalog_root, "%s/catalogs/%s", filename_SSimPL_root, filename_halos_root);
 
     // Read tree header information
     tree_info *trees;
-    char       filename_file_root[MAX_FILENAME_LENGTH];
+    char       filename_file_root[SID_MAX_FILENAME_LENGTH];
     sprintf(filename_file_root, "%s/trees/%s", filename_SSimPL_root, filename_trees_root);
     SID_set_verbosity(SID_SET_VERBOSITY_RELATIVE, 0);
     init_trees_read(filename_SSimPL_root, filename_halos_root, filename_trees_root, TREE_READ_HEADER_ONLY, &trees);
@@ -254,7 +254,7 @@ int main(int argc, char *argv[]) {
                 }
                 for(int i_list = 0; i_list < n_list; i_list++) {
                     int  i_column = 1;
-                    char filename_out[MAX_FILENAME_LENGTH];
+                    char filename_out[SID_MAX_FILENAME_LENGTH];
                     if(i_type == 0)
                         sprintf(filename_out, "%s_group_%09d.txt", filename_out_root, halo_list[i_list]);
                     else
@@ -327,7 +327,7 @@ int main(int argc, char *argv[]) {
             SID_fp fp_in_trees;
             SID_fp fp_in_bridge_forematch;
             SID_fp fp_in_bridge_backmatch;
-            char   filename_in[MAX_FILENAME_LENGTH];
+            char   filename_in[SID_MAX_FILENAME_LENGTH];
             sprintf(filename_in, "%s/trees/%s/horizontal/trees/horizontal_trees_%03d.dat", filename_SSimPL_root, filename_trees_root, snapshot);
             SID_fopen(filename_in, "r", &fp_in_trees);
             sprintf(filename_in,
@@ -547,7 +547,7 @@ int main(int argc, char *argv[]) {
             SID_log("(%d groups and %d subgroups found)...", SID_LOG_CONTINUE, n_groups_list, n_subgroups_list);
             // Write list files
             for(int i_type = 0; i_type < 2; i_type++) {
-                char filename_out[MAX_FILENAME_LENGTH];
+                char filename_out[SID_MAX_FILENAME_LENGTH];
                 int  n_list    = 0;
                 int *halo_list = NULL;
                 if(i_type == 0) {
@@ -575,5 +575,5 @@ int main(int argc, char *argv[]) {
     free_trees(&trees);
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

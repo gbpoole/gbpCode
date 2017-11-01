@@ -25,9 +25,9 @@ void set_image_RGBY_MARKED(image_info *image_RGBY_in,
     for(int i_x = 0, i_pixel = 0; i_x < image_RGBY_in->width; i_x++) {
         for(int i_y = 0; i_y < image_RGBY_in->height; i_y++, i_pixel++) {
             // Draw colours from the RY, GY and BY images
-            int red   = MAX(0, MIN((int)(((double)n_colours) * image_RY[i_pixel]), n_colours));
-            int green = MAX(0, MIN((int)(((double)n_colours) * image_GY[i_pixel]), n_colours));
-            int blue  = MAX(0, MIN((int)(((double)n_colours) * image_BY[i_pixel]), n_colours));
+            int red   = GBP_MAX(0, GBP_MIN((int)(((double)n_colours) * image_RY[i_pixel]), n_colours));
+            int green = GBP_MAX(0, GBP_MIN((int)(((double)n_colours) * image_GY[i_pixel]), n_colours));
+            int blue  = GBP_MAX(0, GBP_MIN((int)(((double)n_colours) * image_BY[i_pixel]), n_colours));
             int alpha = gdAlphaOpaque;
 
             // Compute the brightness of the pixel [0.->1.]
@@ -36,7 +36,7 @@ void set_image_RGBY_MARKED(image_info *image_RGBY_in,
                 image_Y_i = take_log10(image_Y_i);
             double brightness;
             brightness = (image_Y_i - Y_min) / Y_range;
-            brightness = MAX(0., MIN(brightness, 1.));
+            brightness = GBP_MAX(0., GBP_MIN(brightness, 1.));
 
             // Scale the pixel colours by the brightness
             red   = (int)(brightness * (double)red);

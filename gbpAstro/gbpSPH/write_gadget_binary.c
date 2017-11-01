@@ -102,9 +102,9 @@ void write_gadget_binary(char *filename_in, plist_info *plist) {
     else
         n_files = 1;
     if(n_files > 1)
-        flag_multifile = TRUE;
+        flag_multifile = GBP_TRUE;
     else
-        flag_multifile = FALSE;
+        flag_multifile = GBP_FALSE;
 
     // Set various particle counts
     n_particles      = 0;
@@ -132,17 +132,17 @@ void write_gadget_binary(char *filename_in, plist_info *plist) {
     }
 
     // Determine multimass info
-    flag_multimass = FALSE;
+    flag_multimass = GBP_FALSE;
     for(i = 0; i < N_GADGET_TYPE; i++) {
-        flag_multimass_species[i] = FALSE;
+        flag_multimass_species[i] = GBP_FALSE;
         if(n_of_type[i] > 0) {
             if(ADaPS_exist(plist->data, "mass_array_%s", pname[i]))
                 mass_array[i] = (((double *)ADaPS_fetch(plist->data, "mass_array_%s", pname[i]))[0]) / (plist->mass_unit / h_Hubble);
             else
                 mass_array[i] = 0.;
             if(mass_array[i] == 0.) {
-                flag_multimass_species[i] = TRUE;
-                flag_multimass            = TRUE;
+                flag_multimass_species[i] = GBP_TRUE;
+                flag_multimass            = GBP_TRUE;
             }
         } else
             mass_array[i] = 0.;
@@ -314,7 +314,7 @@ void write_gadget_binary(char *filename_in, plist_info *plist) {
                         box_size = 0.;
                     box_size_offset = box_size;
                     if((GBPREAL)box_size <= 0.)
-                        SID_trap_error("Box size is <=0 in write_gadget_binary.\n", ERROR_LOGIC);
+                        SID_trap_error("Box size is <=0 in write_gadget_binary.\n", SID_ERROR_LOGIC);
                     if(n_x_replicate != n_y_replicate || n_x_replicate != n_z_replicate)
                         SID_log("WARNING: replication is not cubical ... using n_x_replicate to scale box size!", SID_LOG_OPEN);
                     if(n_x_replicate != 1)
@@ -359,11 +359,11 @@ void write_gadget_binary(char *filename_in, plist_info *plist) {
                     s_load += n_return * sizeof(int);
 
                     // High words for VERY LARGE total particle numbers
-                    flag_LONGIDS = FALSE;
+                    flag_LONGIDS = GBP_FALSE;
                     for(i = 0; i < N_GADGET_TYPE; i++) {
                         n_temp_uint[i] = (unsigned int)((size_t)(n_replicate * n_of_type[i]) >> 32);
                         if(n_temp_uint[i] > 0)
-                            flag_LONGIDS = TRUE;
+                            flag_LONGIDS = GBP_TRUE;
                     }
                     n_return = fwrite(n_temp_uint, sizeof(unsigned int), N_GADGET_TYPE, fp);
                     s_load += n_return * sizeof(unsigned int);
@@ -385,15 +385,15 @@ void write_gadget_binary(char *filename_in, plist_info *plist) {
                     SID_log("Error writing headers!", SID_LOG_COMMENT);
             }
         }
-        SID_Bcast(&flag_LONGIDS, 1, SID_INT, SID.COMM_WORLD, MASTER_RANK);
-        SID_Bcast(&box_size, 1, SID_DOUBLE, SID.COMM_WORLD, MASTER_RANK);
-        SID_Bcast(&box_size_offset, 1, SID_DOUBLE, SID.COMM_WORLD, MASTER_RANK);
+        SID_Bcast(&flag_LONGIDS, 1, SID_INT, SID.COMM_WORLD, SID_MASTER_RANK);
+        SID_Bcast(&box_size, 1, SID_DOUBLE, SID.COMM_WORLD, SID_MASTER_RANK);
+        SID_Bcast(&box_size_offset, 1, SID_DOUBLE, SID.COMM_WORLD, SID_MASTER_RANK);
         if(flag_LONGIDS)
             SID_log("(using LONG IDS)...", SID_LOG_CONTINUE);
         SID_log("Done.", SID_LOG_CLOSE);
 
         // Allocate a buffer to make writes faster
-        buffer = (void *)SID_malloc(MAX(MAX(3 * sizeof(float), sizeof(long long)), sizeof(double)) * GADGET_BUFFER_SIZE);
+        buffer = (void *)SID_malloc(GBP_MAX(GBP_MAX(3 * sizeof(float), sizeof(long long)), sizeof(double)) * GADGET_BUFFER_SIZE);
 
         // Write positions
         SID_log("Writing positions...", SID_LOG_OPEN);
@@ -403,13 +403,13 @@ void write_gadget_binary(char *filename_in, plist_info *plist) {
             else
                 sprintf(filename, "%s", filename_in);
             record_length = 3 * n_replicate * n_particles_file[i_file] * sizeof(float);
-            for(i = 0, flag_recordlength_written = FALSE; i < N_GADGET_TYPE; i++) {
+            for(i = 0, flag_recordlength_written = GBP_FALSE; i < N_GADGET_TYPE; i++) {
                 for(i_rank = 0; i_rank < SID.n_proc; i_rank++) {
                     if(SID.My_rank == i_rank) {
                         fp = fopen(filename, "a");
                         if(SID.I_am_Master && !flag_recordlength_written) {
                             fwrite(&record_length, 4, 1, fp);
-                            flag_recordlength_written = TRUE;
+                            flag_recordlength_written = GBP_TRUE;
                         }
                         if(n_of_type_file_rank[i_file][i] > 0) {
                             R1_array = (GBPREAL *)ADaPS_fetch(plist->data, "x_%s", pname[i]);
@@ -423,7 +423,7 @@ void write_gadget_binary(char *filename_in, plist_info *plist) {
                         for(k = 0, j_file = 0; j_file < i_file; j_file++)
                             k += n_of_type_file_rank[j_file][i];
                         for(j = 0; j < n_of_type_file_rank[i_file][i]; j += n_buffer, k += n_buffer) {
-                            n_buffer = MIN(GADGET_BUFFER_SIZE, n_of_type_file_rank[i_file][i] - j);
+                            n_buffer = GBP_MIN(GADGET_BUFFER_SIZE, n_of_type_file_rank[i_file][i] - j);
                             if(n_buffer > 0) {
                                 for(i_x_replicate = 0; i_x_replicate < n_x_replicate; i_x_replicate++) {
                                     x_offset = ((GBPREAL)i_x_replicate) * (GBPREAL)box_size_offset;
@@ -468,13 +468,13 @@ void write_gadget_binary(char *filename_in, plist_info *plist) {
             else
                 sprintf(filename, "%s", filename_in);
             record_length = n_replicate * 3 * n_particles_file[i_file] * sizeof(float);
-            for(i = 0, flag_recordlength_written = FALSE; i < N_GADGET_TYPE; i++) {
+            for(i = 0, flag_recordlength_written = GBP_FALSE; i < N_GADGET_TYPE; i++) {
                 for(i_rank = 0; i_rank < SID.n_proc; i_rank++) {
                     if(SID.My_rank == i_rank) {
                         fp = fopen(filename, "a");
                         if(SID.I_am_Master && !flag_recordlength_written) {
                             fwrite(&record_length, 4, 1, fp);
-                            flag_recordlength_written = TRUE;
+                            flag_recordlength_written = GBP_TRUE;
                         }
                         if(n_of_type_file_rank[i_file][i] > 0) {
                             R1_array = (GBPREAL *)ADaPS_fetch(plist->data, "vx_%s", pname[i]);
@@ -488,7 +488,7 @@ void write_gadget_binary(char *filename_in, plist_info *plist) {
                         for(k = 0, j_file = 0; j_file < i_file; j_file++)
                             k += n_of_type_file_rank[j_file][i];
                         for(j = 0; j < n_of_type_file_rank[i_file][i]; j += n_buffer, k += n_buffer) {
-                            n_buffer = MIN(GADGET_BUFFER_SIZE, n_of_type_file_rank[i_file][i] - j);
+                            n_buffer = GBP_MIN(GADGET_BUFFER_SIZE, n_of_type_file_rank[i_file][i] - j);
                             for(jj = 0; jj < n_buffer; jj++) {
                                 ((float *)buffer)[3 * jj + 0] = ((float)(R1_array[k + jj])) / ((GBPREAL)(plist->velocity_unit));
                                 ((float *)buffer)[3 * jj + 1] = ((float)(R2_array[k + jj])) / ((GBPREAL)(plist->velocity_unit));
@@ -527,13 +527,13 @@ void write_gadget_binary(char *filename_in, plist_info *plist) {
                 record_length = n_replicate * n_particles_file[i_file] * sizeof(long long);
             else
                 record_length = n_replicate * n_particles_file[i_file] * sizeof(int);
-            for(i = 0, flag_recordlength_written = FALSE; i < N_GADGET_TYPE; i++) {
+            for(i = 0, flag_recordlength_written = GBP_FALSE; i < N_GADGET_TYPE; i++) {
                 for(i_rank = 0; i_rank < SID.n_proc; i_rank++) {
                     if(SID.My_rank == i_rank) {
                         fp = fopen(filename, "a");
                         if(SID.I_am_Master && !flag_recordlength_written) {
                             fwrite(&record_length, 4, 1, fp);
-                            flag_recordlength_written = TRUE;
+                            flag_recordlength_written = GBP_TRUE;
                         }
                         // If ids are defined, then write them ...
                         if(ADaPS_exist(plist->data, "id_%s", pname[i])) {
@@ -544,7 +544,7 @@ void write_gadget_binary(char *filename_in, plist_info *plist) {
                             for(k = 0, j_file = 0; j_file < i_file; j_file++)
                                 k += n_of_type_file_rank[j_file][i];
                             for(j = 0; j < n_of_type_file_rank[i_file][i]; j += n_buffer, k += n_buffer) {
-                                n_buffer = MIN(GADGET_BUFFER_SIZE, n_of_type_file_rank[i_file][i] - j);
+                                n_buffer = GBP_MIN(GADGET_BUFFER_SIZE, n_of_type_file_rank[i_file][i] - j);
                                 for(i_x_replicate = 0, i_replicate = 0; i_x_replicate < n_x_replicate; i_x_replicate++) {
                                     for(i_y_replicate = 0; i_y_replicate < n_y_replicate; i_y_replicate++) {
                                         for(i_z_replicate = 0; i_z_replicate < n_z_replicate; i_z_replicate++, i_replicate++) {
@@ -565,7 +565,7 @@ void write_gadget_binary(char *filename_in, plist_info *plist) {
                         // ... else generate them now
                         else {
                             for(j = 0; j < n_of_type_file_rank[i_file][i]; j += n_buffer, k += n_buffer) {
-                                n_buffer = MIN(GADGET_BUFFER_SIZE, n_of_type_file_rank[i_file][i] - j);
+                                n_buffer = GBP_MIN(GADGET_BUFFER_SIZE, n_of_type_file_rank[i_file][i] - j);
                                 for(i_x_replicate = 0, i_replicate = 0; i_x_replicate < n_x_replicate; i_x_replicate++) {
                                     for(i_y_replicate = 0; i_y_replicate < n_y_replicate; i_y_replicate++) {
                                         for(i_z_replicate = 0; i_z_replicate < n_z_replicate; i_z_replicate++, i_replicate++) {
@@ -605,20 +605,20 @@ void write_gadget_binary(char *filename_in, plist_info *plist) {
                 else
                     sprintf(filename, "%s", filename_in);
                 record_length = n_replicate * n_particles_file[i_file] * sizeof(float);
-                for(i = 0, flag_recordlength_written = FALSE; i < N_GADGET_TYPE; i++) {
+                for(i = 0, flag_recordlength_written = GBP_FALSE; i < N_GADGET_TYPE; i++) {
                     if(flag_multimass_species[i]) {
                         for(i_rank = 0; i_rank < SID.n_proc; i_rank++) {
                             if(SID.My_rank == i_rank) {
                                 fp = fopen(filename, "a");
                                 if(SID.I_am_Master && !flag_recordlength_written) {
                                     fwrite(&record_length, 4, 1, fp);
-                                    flag_recordlength_written = TRUE;
+                                    flag_recordlength_written = GBP_TRUE;
                                 }
                                 d1_array = (double *)ADaPS_fetch(plist->data, "M_%s", pname[i]);
                                 for(k = 0, j_file = 0; j_file < i_file; j_file++)
                                     k += n_of_type_file_rank[j_file][i];
                                 for(j = 0; j < n_of_type_file_rank[i_file][i]; j += n_buffer, k += n_buffer) {
-                                    n_buffer = MIN(GADGET_BUFFER_SIZE, n_of_type_file_rank[i_file][i] - j);
+                                    n_buffer = GBP_MIN(GADGET_BUFFER_SIZE, n_of_type_file_rank[i_file][i] - j);
                                     for(jj = 0; jj < n_buffer; jj++)
                                         ((float *)buffer)[jj] = (float)(d1_array[k + jj] / (plist->mass_unit / h_Hubble));
                                     for(i_x_replicate = 0; i_x_replicate < n_x_replicate; i_x_replicate++) {
@@ -657,12 +657,12 @@ void write_gadget_binary(char *filename_in, plist_info *plist) {
                 else
                     sprintf(filename, "%s", filename_in);
                 record_length = n_replicate * n_particles_file[i_file] * sizeof(float);
-                for(i_rank = 0, flag_recordlength_written = FALSE; i_rank < SID.n_proc; i_rank++) {
+                for(i_rank = 0, flag_recordlength_written = GBP_FALSE; i_rank < SID.n_proc; i_rank++) {
                     if(SID.My_rank == i_rank) {
                         fp = fopen(filename, "a");
                         if(SID.I_am_Master && !flag_recordlength_written) {
                             fwrite(&record_length, 4, 1, fp);
-                            flag_recordlength_written = TRUE;
+                            flag_recordlength_written = GBP_TRUE;
                         }
                         // If internal energies are defined, then write them ...
                         if(ADaPS_exist(plist->data, "u_%s", pname[i])) {
@@ -670,7 +670,7 @@ void write_gadget_binary(char *filename_in, plist_info *plist) {
                             for(k = 0, j_file = 0; j_file < i_file; j_file++)
                                 k += n_of_type_file_rank[j_file][i];
                             for(j = 0; j < n_of_type_file_rank[i_file][i]; j += n_buffer, k += n_buffer) {
-                                n_buffer = MIN(GADGET_BUFFER_SIZE, n_of_type_file_rank[i_file][i] - j);
+                                n_buffer = GBP_MIN(GADGET_BUFFER_SIZE, n_of_type_file_rank[i_file][i] - j);
                                 for(jj = 0; jj < n_buffer; jj++)
                                     ((float *)buffer)[jj] = (float)(R1_array[k + jj]) / ((GBPREAL)(plist->velocity_unit * plist->velocity_unit));
                                 for(i_x_replicate = 0; i_x_replicate < n_x_replicate; i_x_replicate++) {
@@ -686,14 +686,14 @@ void write_gadget_binary(char *filename_in, plist_info *plist) {
                         // ... else use temperatures (else write zeros)
                         else {
                             if(ADaPS_exist(plist->data, "T_%s", pname[i])) {
-                                flag_noTemps = FALSE;
+                                flag_noTemps = GBP_FALSE;
                                 R1_array     = (GBPREAL *)ADaPS_fetch(plist->data, "T_%s", pname[i]);
                             } else
-                                flag_noTemps = TRUE;
+                                flag_noTemps = GBP_TRUE;
                             for(k = 0, j_file = 0; j_file < i_file; j_file++)
                                 k += n_of_type_file_rank[j_file][i];
                             for(j = 0; j < n_of_type_file_rank[i_file][i]; j += n_buffer, k += n_buffer) {
-                                n_buffer = MIN(GADGET_BUFFER_SIZE, n_of_type_file_rank[i_file][i] - j);
+                                n_buffer = GBP_MIN(GADGET_BUFFER_SIZE, n_of_type_file_rank[i_file][i] - j);
                                 if(flag_noTemps) {
                                     for(jj = 0; jj < n_buffer; jj++)
                                         ((float *)buffer)[jj] = 0.;
@@ -730,12 +730,12 @@ void write_gadget_binary(char *filename_in, plist_info *plist) {
                 else
                     sprintf(filename, "%s", filename_in);
                 record_length = n_replicate * n_particles_file[i_file] * sizeof(float);
-                for(i_rank = 0, flag_recordlength_written = FALSE; i_rank < SID.n_proc; i_rank++) {
+                for(i_rank = 0, flag_recordlength_written = GBP_FALSE; i_rank < SID.n_proc; i_rank++) {
                     if(SID.My_rank == i_rank) {
                         fp = fopen(filename, "a");
                         if(SID.I_am_Master && !flag_recordlength_written) {
                             fwrite(&record_length, 4, 1, fp);
-                            flag_recordlength_written = TRUE;
+                            flag_recordlength_written = GBP_TRUE;
                         }
                         // If densities are defined, then write them ...
                         if(ADaPS_exist(plist->data, "rho_%s", pname[i])) {
@@ -743,7 +743,7 @@ void write_gadget_binary(char *filename_in, plist_info *plist) {
                             for(k = 0, j_file = 0; j_file < i_file; j_file++)
                                 k += n_of_type_file_rank[j_file][i];
                             for(j = 0; j < n_of_type_file_rank[i_file][i]; j += n_buffer, k += n_buffer) {
-                                n_buffer = MIN(GADGET_BUFFER_SIZE, n_of_type_file_rank[i_file][i] - j);
+                                n_buffer = GBP_MIN(GADGET_BUFFER_SIZE, n_of_type_file_rank[i_file][i] - j);
                                 for(jj = 0; jj < n_buffer; jj++)
                                     ((float *)buffer)[jj] =
                                         (float)(R1_array[k + jj]) / (float)(h_Hubble * h_Hubble * plist->mass_unit / pow(plist->length_unit, 3.));
@@ -760,7 +760,7 @@ void write_gadget_binary(char *filename_in, plist_info *plist) {
                         // ... else write zeros
                         else {
                             for(j = 0; j < n_of_type_file_rank[i_file][i]; j += n_buffer) {
-                                n_buffer = MIN(GADGET_BUFFER_SIZE, n_of_type_file_rank[i_file][i] - j);
+                                n_buffer = GBP_MIN(GADGET_BUFFER_SIZE, n_of_type_file_rank[i_file][i] - j);
                                 for(jj = 0; jj < n_buffer; jj++)
                                     ((float *)buffer)[jj] = 0.;
                                 for(i_x_replicate = 0; i_x_replicate < n_x_replicate; i_x_replicate++) {
@@ -791,12 +791,12 @@ void write_gadget_binary(char *filename_in, plist_info *plist) {
                 else
                     sprintf(filename, "%s", filename_in);
                 record_length = n_replicate * n_particles_file[i_file] * sizeof(float);
-                for(i_rank = 0, flag_recordlength_written = FALSE; i_rank < SID.n_proc; i_rank++) {
+                for(i_rank = 0, flag_recordlength_written = GBP_FALSE; i_rank < SID.n_proc; i_rank++) {
                     if(SID.My_rank == i_rank) {
                         fp = fopen(filename, "a");
                         if(SID.I_am_Master && !flag_recordlength_written) {
                             fwrite(&record_length, 4, 1, fp);
-                            flag_recordlength_written = TRUE;
+                            flag_recordlength_written = GBP_TRUE;
                         }
                         // If smoothing lengths are defined, then write them ...
                         if(ADaPS_exist(plist->data, "r_smooth_%s", pname[i])) {
@@ -804,7 +804,7 @@ void write_gadget_binary(char *filename_in, plist_info *plist) {
                             for(k = 0, j_file = 0; j_file < i_file; j_file++)
                                 k += n_of_type_file_rank[j_file][i];
                             for(j = 0; j < n_of_type_file_rank[i_file][i]; j += n_buffer, k += n_buffer) {
-                                n_buffer = MIN(GADGET_BUFFER_SIZE, n_of_type_file_rank[i_file][i] - j);
+                                n_buffer = GBP_MIN(GADGET_BUFFER_SIZE, n_of_type_file_rank[i_file][i] - j);
                                 for(jj = 0; jj < n_buffer; jj++)
                                     ((float *)buffer)[jj] =
                                         (float)(R1_array[k + jj]) / (float)(h_Hubble * h_Hubble * plist->mass_unit / pow(plist->length_unit, 3.));
@@ -821,7 +821,7 @@ void write_gadget_binary(char *filename_in, plist_info *plist) {
                         // ... else write zeros
                         else {
                             for(j = 0; j < n_of_type_file_rank[i_file][i]; j += n_buffer) {
-                                n_buffer = MIN(GADGET_BUFFER_SIZE, n_of_type_file_rank[i_file][i] - j);
+                                n_buffer = GBP_MIN(GADGET_BUFFER_SIZE, n_of_type_file_rank[i_file][i] - j);
                                 for(jj = 0; jj < n_buffer; jj++)
                                     ((float *)buffer)[jj] = 0.;
                                 for(i_x_replicate = 0; i_x_replicate < n_x_replicate; i_x_replicate++) {

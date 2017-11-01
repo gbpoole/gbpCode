@@ -34,5 +34,5 @@ int main(int argc, char *argv[]) {
     compute_cross_catalog_matches(filename_halo_root_in_1, filename_halo_root_in_2, filename_root_matches, i_read, i_read, match_weight_rank_index);
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

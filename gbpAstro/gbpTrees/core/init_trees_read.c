@@ -17,7 +17,7 @@ void init_trees_read(const char *filename_SSimPL_dir,
     SID_log("Initializing trees...", SID_LOG_OPEN | SID_LOG_TIMER);
 
     // Set the tree filename root
-    char filename_trees_root[MAX_FILENAME_LENGTH];
+    char filename_trees_root[SID_MAX_FILENAME_LENGTH];
     sprintf(filename_trees_root, "%s/trees/%s", filename_SSimPL_dir, filename_trees_version);
 
     // Allocate the data structure
@@ -42,7 +42,7 @@ void init_trees_read(const char *filename_SSimPL_dir,
     (*tree)->tree2forest_mapping_subgroup = NULL;
 
     // Initialize filename paths
-    char tree_name[MAX_FILENAME_LENGTH];
+    char tree_name[SID_MAX_FILENAME_LENGTH];
     strcpy(tree_name, filename_trees_root);
     strip_path(tree_name);
     sprintf((*tree)->filename_root, "%s", filename_trees_root);
@@ -79,12 +79,12 @@ void init_trees_read(const char *filename_SSimPL_dir,
     (*tree)->n_wrap = (*tree)->n_search + 1;
 
     // Read box size
-    char   filename_run_in[MAX_FILENAME_LENGTH];
+    char   filename_run_in[SID_MAX_FILENAME_LENGTH];
     FILE * fp_run_in;
     int    n_run_in;
     char * line          = NULL;
     size_t line_length   = 0;
-    int    flag_continue = TRUE;
+    int    flag_continue = GBP_TRUE;
     sprintf(filename_run_in, "%s/run/run.txt", filename_SSimPL_dir);
     fp_run_in = fopen(filename_run_in, "r");
     n_run_in  = count_lines_data(fp_run_in);
@@ -94,12 +94,12 @@ void init_trees_read(const char *filename_SSimPL_dir,
         grab_word(line, 2, name);
         if(!strcmp(name, "box_size")) {
             grab_double(line, 3, &((*tree)->box_size));
-            flag_continue = FALSE;
+            flag_continue = GBP_FALSE;
         }
     }
     fclose(fp_run_in);
     if(flag_continue)
-        SID_trap_error("Could not find 'box_size' in the SSimPL run.txt file.", ERROR_LOGIC);
+        SID_trap_error("Could not find 'box_size' in the SSimPL run.txt file.", SID_ERROR_LOGIC);
     SID_log("Box size = %.1lf [Mpc/h]", SID_LOG_COMMENT, (*tree)->box_size);
 
     // Create an array which maps the file numbers in the trees
@@ -122,12 +122,12 @@ void init_trees_read(const char *filename_SSimPL_dir,
     }
 
     // Initialize the cosmology
-    char filename_cosmology[MAX_FILENAME_LENGTH];
+    char filename_cosmology[SID_MAX_FILENAME_LENGTH];
     sprintf(filename_cosmology, "%s/run", filename_SSimPL_dir);
     read_gbpCosmo_file(&((*tree)->cosmo), filename_cosmology);
 
     // Read snapshot expansion factor list
-    char   filename_alist_in[MAX_FILENAME_LENGTH];
+    char   filename_alist_in[SID_MAX_FILENAME_LENGTH];
     FILE * fp_alist_in;
     int    n_alist_in;
     int    i_alist;
@@ -136,7 +136,7 @@ void init_trees_read(const char *filename_SSimPL_dir,
     fp_alist_in = fopen(filename_alist_in, "r");
     n_alist_in  = count_lines_data(fp_alist_in);
     if(n_alist_in != (*tree)->n_snaps)
-        SID_trap_error("The number of entries in the a_list.txt file does not make sense (ie. %d!=%d)", ERROR_LOGIC, n_alist_in, (*tree)->n_snaps);
+        SID_trap_error("The number of entries in the a_list.txt file does not make sense (ie. %d!=%d)", SID_ERROR_LOGIC, n_alist_in, (*tree)->n_snaps);
     for(i_alist = 0; i_alist < (*tree)->n_snaps; i_alist++) {
         grab_next_line_data(fp_alist_in, &line, &line_length);
         grab_double(line, 1, &a_in);

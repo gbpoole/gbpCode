@@ -13,7 +13,7 @@ void init_parameter_item(parameter_item_info **param_item, const char *name, SID
     if(data_type == SID_CHAR)
         (*param_item)->data_size *= PARAMETER_STRING_LENGTH;
     (*param_item)->n_read   = 0;
-    (*param_item)->flag_set = FALSE;
+    (*param_item)->flag_set = GBP_FALSE;
     (*param_item)->mode     = mode;
     (*param_item)->data     = SID_calloc((*param_item)->data_size);
     (*param_item)->next     = NULL;

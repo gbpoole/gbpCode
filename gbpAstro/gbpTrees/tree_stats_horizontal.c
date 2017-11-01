@@ -11,19 +11,19 @@
 int main(int argc, char *argv[]) {
     SID_init(&argc, &argv, NULL, NULL);
 
-    char filename_root[MAX_FILENAME_LENGTH];
+    char filename_root[SID_MAX_FILENAME_LENGTH];
     int  snap_start, snap_stop, snap_step;
     int  tree_type;
 
     strcpy(filename_root, argv[1]);
 
     SID_log("Computing horizontal tree stats...", SID_LOG_OPEN | SID_LOG_TIMER);
-    char   filename_file_root[MAX_FILENAME_LENGTH];
-    char   filename_dir_horizontal[MAX_FILENAME_LENGTH];
-    char   filename_dir_horizontal_trees[MAX_FILENAME_LENGTH];
-    char   filename_dir_horizontal_groups[MAX_FILENAME_LENGTH];
-    char   filename_dir_horizontal_subgroups[MAX_FILENAME_LENGTH];
-    char   filename_in[MAX_FILENAME_LENGTH];
+    char   filename_file_root[SID_MAX_FILENAME_LENGTH];
+    char   filename_dir_horizontal[SID_MAX_FILENAME_LENGTH];
+    char   filename_dir_horizontal_trees[SID_MAX_FILENAME_LENGTH];
+    char   filename_dir_horizontal_groups[SID_MAX_FILENAME_LENGTH];
+    char   filename_dir_horizontal_subgroups[SID_MAX_FILENAME_LENGTH];
+    char   filename_in[SID_MAX_FILENAME_LENGTH];
     SID_fp fp_in;
     strcpy(filename_file_root, filename_root);
     strip_path(filename_file_root);
@@ -160,5 +160,5 @@ int main(int argc, char *argv[]) {
     // Clean-up
     SID_free(SID_FARG n_halos_tree_groups);
     SID_free(SID_FARG n_halos_tree_subgroups);
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

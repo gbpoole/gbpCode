@@ -12,5 +12,5 @@
 int check_treenode_if_matched_to_emerged(tree_node_info *halo) {
     if(halo != NULL)
         return (check_mode_for_flag(halo->tree_case, TREE_CASE_MATCHED_TO_EMERGED));
-    return (FALSE);
+    return (GBP_FALSE);
 }

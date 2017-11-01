@@ -89,7 +89,7 @@ void write_gadget_csv(char *filename_out, plist_info *plist) {
             /*************/
             /* Open file */
             /*************/
-            if(i_rank == MASTER_RANK)
+            if(i_rank == SID_MASTER_RANK)
                 fp = fopen(filename_out, "w");
             else
                 fp = fopen(filename_out, "a");
@@ -142,64 +142,64 @@ void write_gadget_csv(char *filename_out, plist_info *plist) {
             /***********************/
             if(ADaPS_exist(plist->data, "M_gas")) {
                 M_gas      = (GBPREAL *)ADaPS_fetch(plist->data, "M_gas");
-                M_gas_flag = TRUE;
+                M_gas_flag = GBP_TRUE;
             } else
-                M_gas_flag = FALSE;
+                M_gas_flag = GBP_FALSE;
             if(ADaPS_exist(plist->data, "x_gas")) {
                 x_gas      = (GBPREAL *)ADaPS_fetch(plist->data, "x_gas");
-                x_gas_flag = TRUE;
+                x_gas_flag = GBP_TRUE;
             } else
-                x_gas_flag = FALSE;
+                x_gas_flag = GBP_FALSE;
             if(ADaPS_exist(plist->data, "y_gas")) {
                 y_gas      = (GBPREAL *)ADaPS_fetch(plist->data, "y_gas");
-                y_gas_flag = TRUE;
+                y_gas_flag = GBP_TRUE;
             } else
-                y_gas_flag = FALSE;
+                y_gas_flag = GBP_FALSE;
             if(ADaPS_exist(plist->data, "z_gas")) {
                 z_gas      = (GBPREAL *)ADaPS_fetch(plist->data, "z_gas");
-                z_gas_flag = TRUE;
+                z_gas_flag = GBP_TRUE;
             } else
-                z_gas_flag = FALSE;
+                z_gas_flag = GBP_FALSE;
             if(ADaPS_exist(plist->data, "vx_gas")) {
                 vx_gas      = (GBPREAL *)ADaPS_fetch(plist->data, "vx_gas");
-                vx_gas_flag = TRUE;
+                vx_gas_flag = GBP_TRUE;
             } else
-                vx_gas_flag = FALSE;
+                vx_gas_flag = GBP_FALSE;
             if(ADaPS_exist(plist->data, "vy_gas")) {
                 vy_gas      = (GBPREAL *)ADaPS_fetch(plist->data, "vy_gas");
-                vy_gas_flag = TRUE;
+                vy_gas_flag = GBP_TRUE;
             } else
-                vy_gas_flag = FALSE;
+                vy_gas_flag = GBP_FALSE;
             if(ADaPS_exist(plist->data, "vz_gas")) {
                 vz_gas      = (GBPREAL *)ADaPS_fetch(plist->data, "vz_gas");
-                vz_gas_flag = TRUE;
+                vz_gas_flag = GBP_TRUE;
             } else
-                vz_gas_flag = FALSE;
+                vz_gas_flag = GBP_FALSE;
             if(ADaPS_exist(plist->data, "rho_gas")) {
                 rho_gas      = (GBPREAL *)ADaPS_fetch(plist->data, "rho_gas");
-                rho_gas_flag = TRUE;
+                rho_gas_flag = GBP_TRUE;
             } else
-                rho_gas_flag = FALSE;
+                rho_gas_flag = GBP_FALSE;
             if(ADaPS_exist(plist->data, "T_gas")) {
                 T_gas      = (GBPREAL *)ADaPS_fetch(plist->data, "T_gas");
-                T_gas_flag = TRUE;
+                T_gas_flag = GBP_TRUE;
             } else
-                T_gas_flag = FALSE;
+                T_gas_flag = GBP_FALSE;
             if(ADaPS_exist(plist->data, "s_gas")) {
                 s_gas      = (GBPREAL *)ADaPS_fetch(plist->data, "s_gas");
-                s_gas_flag = TRUE;
+                s_gas_flag = GBP_TRUE;
             } else
-                s_gas_flag = FALSE;
+                s_gas_flag = GBP_FALSE;
             if(ADaPS_exist(plist->data, "Z_gas")) {
                 Z_gas      = (GBPREAL *)ADaPS_fetch(plist->data, "Z_gas");
-                Z_gas_flag = TRUE;
+                Z_gas_flag = GBP_TRUE;
             } else
-                Z_gas_flag = FALSE;
+                Z_gas_flag = GBP_FALSE;
             if(ADaPS_exist(plist->data, "phi_gas")) {
                 phi_gas      = (GBPREAL *)ADaPS_fetch(plist->data, "phi_gas");
-                phi_gas_flag = TRUE;
+                phi_gas_flag = GBP_TRUE;
             } else
-                phi_gas_flag = FALSE;
+                phi_gas_flag = GBP_FALSE;
             for(i = 0; i < n_gas; i++) {
                 if(n_species > 1)
                     fprintf(fp, "0");
@@ -257,49 +257,49 @@ void write_gadget_csv(char *filename_out, plist_info *plist) {
             /***********************/
             if(ADaPS_exist(plist->data, "M_dark")) {
                 M_dark      = (GBPREAL *)ADaPS_fetch(plist->data, "M_dark");
-                M_dark_flag = TRUE;
+                M_dark_flag = GBP_TRUE;
             } else
-                M_dark_flag = FALSE;
+                M_dark_flag = GBP_FALSE;
             if(ADaPS_exist(plist->data, "x_dark")) {
                 x_dark      = (GBPREAL *)ADaPS_fetch(plist->data, "x_dark");
-                x_dark_flag = TRUE;
+                x_dark_flag = GBP_TRUE;
             } else
-                x_dark_flag = FALSE;
+                x_dark_flag = GBP_FALSE;
             if(ADaPS_exist(plist->data, "y_dark")) {
                 y_dark      = (GBPREAL *)ADaPS_fetch(plist->data, "y_dark");
-                y_dark_flag = TRUE;
+                y_dark_flag = GBP_TRUE;
             } else
-                y_dark_flag = FALSE;
+                y_dark_flag = GBP_FALSE;
             if(ADaPS_exist(plist->data, "z_dark")) {
                 z_dark      = (GBPREAL *)ADaPS_fetch(plist->data, "z_dark");
-                z_dark_flag = TRUE;
+                z_dark_flag = GBP_TRUE;
             } else
-                z_dark_flag = FALSE;
+                z_dark_flag = GBP_FALSE;
             if(ADaPS_exist(plist->data, "vx_dark")) {
                 vx_dark      = (GBPREAL *)ADaPS_fetch(plist->data, "vx_dark");
-                vx_dark_flag = TRUE;
+                vx_dark_flag = GBP_TRUE;
             } else
-                vx_dark_flag = FALSE;
+                vx_dark_flag = GBP_FALSE;
             if(ADaPS_exist(plist->data, "vy_dark")) {
                 vy_dark      = (GBPREAL *)ADaPS_fetch(plist->data, "vy_dark");
-                vy_dark_flag = TRUE;
+                vy_dark_flag = GBP_TRUE;
             } else
-                vy_dark_flag = FALSE;
+                vy_dark_flag = GBP_FALSE;
             if(ADaPS_exist(plist->data, "vz_dark")) {
                 vz_dark      = (GBPREAL *)ADaPS_fetch(plist->data, "vz_dark");
-                vz_dark_flag = TRUE;
+                vz_dark_flag = GBP_TRUE;
             } else
-                vz_dark_flag = FALSE;
+                vz_dark_flag = GBP_FALSE;
             if(ADaPS_exist(plist->data, "rho_dark")) {
                 rho_dark      = (GBPREAL *)ADaPS_fetch(plist->data, "s_dark");
-                rho_dark_flag = TRUE;
+                rho_dark_flag = GBP_TRUE;
             } else
-                rho_dark_flag = FALSE;
+                rho_dark_flag = GBP_FALSE;
             if(ADaPS_exist(plist->data, "phi_dark")) {
                 phi_dark      = (GBPREAL *)ADaPS_fetch(plist->data, "phi_dark");
-                phi_dark_flag = TRUE;
+                phi_dark_flag = GBP_TRUE;
             } else
-                phi_dark_flag = FALSE;
+                phi_dark_flag = GBP_FALSE;
             for(i = 0; i < n_dark; i++) {
                 if(n_species > 1)
                     fprintf(fp, "1");
@@ -363,54 +363,54 @@ void write_gadget_csv(char *filename_out, plist_info *plist) {
             /***********************/
             if(ADaPS_exist(plist->data, "M_star")) {
                 M_star      = (GBPREAL *)ADaPS_fetch(plist->data, "M_star");
-                M_star_flag = TRUE;
+                M_star_flag = GBP_TRUE;
             } else
-                M_star_flag = FALSE;
+                M_star_flag = GBP_FALSE;
             if(ADaPS_exist(plist->data, "x_star")) {
                 x_star      = (GBPREAL *)ADaPS_fetch(plist->data, "x_star");
-                x_star_flag = TRUE;
+                x_star_flag = GBP_TRUE;
             } else
-                x_star_flag = FALSE;
+                x_star_flag = GBP_FALSE;
             if(ADaPS_exist(plist->data, "y_star")) {
                 y_star      = (GBPREAL *)ADaPS_fetch(plist->data, "y_star");
-                y_star_flag = TRUE;
+                y_star_flag = GBP_TRUE;
             } else
-                y_star_flag = FALSE;
+                y_star_flag = GBP_FALSE;
             if(ADaPS_exist(plist->data, "z_star")) {
                 z_star      = (GBPREAL *)ADaPS_fetch(plist->data, "z_star");
-                z_star_flag = TRUE;
+                z_star_flag = GBP_TRUE;
             } else
-                z_star_flag = FALSE;
+                z_star_flag = GBP_FALSE;
             if(ADaPS_exist(plist->data, "vx_star")) {
                 vx_star      = (GBPREAL *)ADaPS_fetch(plist->data, "vx_star");
-                vx_star_flag = TRUE;
+                vx_star_flag = GBP_TRUE;
             } else
-                vx_star_flag = FALSE;
+                vx_star_flag = GBP_FALSE;
             if(ADaPS_exist(plist->data, "vy_star")) {
                 vy_star      = (GBPREAL *)ADaPS_fetch(plist->data, "vy_star");
-                vy_star_flag = TRUE;
+                vy_star_flag = GBP_TRUE;
             } else
-                vy_star_flag = FALSE;
+                vy_star_flag = GBP_FALSE;
             if(ADaPS_exist(plist->data, "vz_star")) {
                 vz_star      = (GBPREAL *)ADaPS_fetch(plist->data, "vz_star");
-                vz_star_flag = TRUE;
+                vz_star_flag = GBP_TRUE;
             } else
-                vz_star_flag = FALSE;
+                vz_star_flag = GBP_FALSE;
             if(ADaPS_exist(plist->data, "Z_star")) {
                 Z_star      = (GBPREAL *)ADaPS_fetch(plist->data, "Z_star");
-                Z_star_flag = TRUE;
+                Z_star_flag = GBP_TRUE;
             } else
-                Z_star_flag = FALSE;
+                Z_star_flag = GBP_FALSE;
             if(ADaPS_exist(plist->data, "t_form_star")) {
                 t_form_star      = (GBPREAL *)ADaPS_fetch(plist->data, "t_form_star");
-                t_form_star_flag = TRUE;
+                t_form_star_flag = GBP_TRUE;
             } else
-                t_form_star_flag = FALSE;
+                t_form_star_flag = GBP_FALSE;
             if(ADaPS_exist(plist->data, "s_star")) {
                 s_star      = (GBPREAL *)ADaPS_fetch(plist->data, "s_star");
-                s_star_flag = TRUE;
+                s_star_flag = GBP_TRUE;
             } else
-                s_star_flag = FALSE;
+                s_star_flag = GBP_FALSE;
             for(i = 0; i < n_star; i++) {
                 if(n_species > 1)
                     fprintf(fp, "2");

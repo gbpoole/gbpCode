@@ -58,7 +58,7 @@ void propagate_fragmented_info(tree_horizontal_extended_info **groups,
                 if(i_count > 1)
                     SID_trap_error("Multiple (%d) TREE_CASE_FRAGMENT switches present (type=%d) for i_snap/i_group=%d/%d when a max of one is "
                                    "alowed. Progenitor info: i_snap/i_halo/type=%d/%d/%d",
-                                   ERROR_LOGIC,
+                                   SID_ERROR_LOGIC,
                                    i_count,
                                    groups[(i_read + group_file_offset) % n_wrap][group_index].type,
                                    j_read + group_file_offset * i_read_step,
@@ -110,7 +110,7 @@ void propagate_fragmented_info(tree_horizontal_extended_info **groups,
                     if(i_count > 1)
                         SID_trap_error("Multiple (%d) TREE_CASE_FRAGMENT switches present (type=%d) for i_snap/i_subgroup=%d/%d when a max of one is "
                                        "alowed. Progenitor info: i_snap/i_halo/type=%d/%d/%d",
-                                       ERROR_LOGIC,
+                                       SID_ERROR_LOGIC,
                                        i_count,
                                        subgroups[(i_read + subgroup_file_offset) % n_wrap][subgroup_index].type,
                                        j_read + subgroup_file_offset * i_read_step,

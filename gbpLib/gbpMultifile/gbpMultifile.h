@@ -9,8 +9,8 @@
 // This datastructure describes the multifile file-pointer
 typedef struct fp_multifile_info fp_multifile_info;
 struct fp_multifile_info {
-    char   filename_root[MAX_FILENAME_LENGTH];
-    char   filename_base[MAX_FILENAME_LENGTH];
+    char   filename_root[SID_MAX_FILENAME_LENGTH];
+    char   filename_base[SID_MAX_FILENAME_LENGTH];
     FILE * fp_multifile;
     size_t data_size;
     int    i_file;

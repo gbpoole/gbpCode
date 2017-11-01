@@ -25,8 +25,8 @@ void init_cfunc(cfunc_info *cfunc,
     SID_log("Initializing correlation function...", SID_LOG_OPEN);
 
     // Initialize flags
-    cfunc->initialized     = TRUE;
-    cfunc->flag_compute_RR = TRUE;
+    cfunc->initialized     = GBP_TRUE;
+    cfunc->flag_compute_RR = GBP_TRUE;
 
     // Initialize constants
     cfunc->n_data     = n_data;
@@ -40,7 +40,7 @@ void init_cfunc(cfunc_info *cfunc,
     cfunc->r_max_1D   = r_max_1D;
     cfunc->r_min_2D   = r_min_2D;
     cfunc->r_max_2D   = r_max_2D;
-    cfunc->r_max      = MAX(cfunc->r_max_1D, cfunc->r_max_2D);
+    cfunc->r_max      = GBP_MAX(cfunc->r_max_1D, cfunc->r_max_2D);
     cfunc->dr_1D      = dr_1D;
     cfunc->dr_2D      = dr_2D;
 

@@ -12,7 +12,7 @@
 
 void write_treenode_all_hist(tree_info *trees, const char *filename_out_root_in, int i_type, double logM_min, double dlogM, int n_logM) {
     SID_log("Writing treenode histograms...", SID_LOG_OPEN | SID_LOG_TIMER);
-    int n_z_bin = MAX(1, trees->n_snaps / 25);
+    int n_z_bin = GBP_MAX(1, trees->n_snaps / 25);
     // double  logM_min = 9.00;
     // double  logM_min = 6.50;
     // double  dlogM    = 0.25;
@@ -40,7 +40,7 @@ void write_treenode_all_hist(tree_info *trees, const char *filename_out_root_in,
     treenode_hist_info *hist_substructure_M;
     treenode_hist_info *hist_substructure_Mpeak;
 
-    char filename_out_root[MAX_FILENAME_LENGTH];
+    char filename_out_root[SID_MAX_FILENAME_LENGTH];
     sprintf(filename_out_root, "%s_%sgroup", filename_out_root_in, group_prefix);
 
     init_treenode_hist(trees, "all", "z", "N", TREENODE_HIST_LOG_Y, &hist_all_N, n_z_bin, logN_min, dlogN, n_logN);

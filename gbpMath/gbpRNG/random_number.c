@@ -13,7 +13,7 @@ GBPREAL random_number(RNG_info *RNG) {
             random_local = (GBPREAL)ran1(&(RNG->stream));
 #endif
             //}
-            // MPI_Bcast(&random_local,1,MPI_REAL,MASTER_RANK,SID.COMM_WORLD->comm);
+            // MPI_Bcast(&random_local,1,MPI_REAL,SID_MASTER_RANK,SID.COMM_WORLD->comm);
             return (random_local);
         } else {
 #if USE_SPRNG
@@ -30,6 +30,6 @@ GBPREAL random_number(RNG_info *RNG) {
 #endif
 #endif
     } else
-        SID_trap_error("RNG_info not initialized in call to random_number.", ERROR_LOGIC);
+        SID_trap_error("RNG_info not initialized in call to random_number.", SID_ERROR_LOGIC);
     return (0.);
 }

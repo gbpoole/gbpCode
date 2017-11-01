@@ -94,49 +94,49 @@ void map_to_grid(size_t      n_particles_local,
     // If we've been given a normalization field, make sure it's got the same geometry as the results field
     if(field_norm != NULL) {
         if(field->n_d != field_norm->n_d)
-            SID_trap_error("grid dimension counts don't match (ie. %d!=%d)", ERROR_LOGIC, field->n_d, field_norm->n_d);
+            SID_trap_error("grid dimension counts don't match (ie. %d!=%d)", SID_ERROR_LOGIC, field->n_d, field_norm->n_d);
         int i_d;
         for(i_d = 0; i_d < field->n_d; i_d++) {
             if(field->n[i_d] != field_norm->n[i_d])
-                SID_trap_error("grid dimension No. %d's sizes don't match (ie. %d!=%d)", ERROR_LOGIC, i_d, field->n[i_d], field_norm->n[i_d]);
+                SID_trap_error("grid dimension No. %d's sizes don't match (ie. %d!=%d)", SID_ERROR_LOGIC, i_d, field->n[i_d], field_norm->n[i_d]);
             if(field->n_R_local[i_d] != field_norm->n_R_local[i_d])
                 SID_trap_error("grid dimension No. %d's slab sizes don't match (ie. %d!=%d)",
-                               ERROR_LOGIC,
+                               SID_ERROR_LOGIC,
                                i_d,
                                field->n_R_local[i_d],
                                field_norm->n_R_local[i_d]);
             if(field->i_R_start_local[i_d] != field_norm->i_R_start_local[i_d])
                 SID_trap_error("grid dimension No. %d's start positions don't match (ie. %le!=%le)",
-                               ERROR_LOGIC,
+                               SID_ERROR_LOGIC,
                                i_d,
                                field->i_R_start_local[i_d],
                                field_norm->i_R_start_local[i_d]);
             if(field->i_R_stop_local[i_d] != field_norm->i_R_stop_local[i_d])
                 SID_trap_error("grid dimension No. %d's stop positions don't match (ie. %le!=%le)",
-                               ERROR_LOGIC,
+                               SID_ERROR_LOGIC,
                                i_d,
                                field->i_R_stop_local[i_d],
                                field_norm->i_R_stop_local[i_d]);
         }
         if(field->n_field != field_norm->n_field)
-            SID_trap_error("grid field sizes don't match (ie. %d!=%d)", ERROR_LOGIC, field->n_field, field_norm->n_field);
+            SID_trap_error("grid field sizes don't match (ie. %d!=%d)", SID_ERROR_LOGIC, field->n_field, field_norm->n_field);
         if(field->n_field_R_local != field_norm->n_field_R_local)
-            SID_trap_error("grid local field sizes don't match (ie. %d!=%d)", ERROR_LOGIC, field->n_field_R_local, field_norm->n_field_R_local);
+            SID_trap_error("grid local field sizes don't match (ie. %d!=%d)", SID_ERROR_LOGIC, field->n_field_R_local, field_norm->n_field_R_local);
         if(field->total_local_size != field_norm->total_local_size)
-            SID_trap_error("grid total local sizes don't match (ie. %d!=%d)", ERROR_LOGIC, field->total_local_size, field_norm->total_local_size);
+            SID_trap_error("grid total local sizes don't match (ie. %d!=%d)", SID_ERROR_LOGIC, field->total_local_size, field_norm->total_local_size);
     }
 
     // Set some variables
     if(v_particles_local != NULL)
-        flag_valued_particles = TRUE;
+        flag_valued_particles = GBP_TRUE;
     else {
-        flag_valued_particles = FALSE;
+        flag_valued_particles = GBP_FALSE;
         v_p                   = 1.;
     }
     if(w_particles_local != NULL)
-        flag_weight_particles = TRUE;
+        flag_weight_particles = GBP_TRUE;
     else {
-        flag_weight_particles = FALSE;
+        flag_weight_particles = GBP_FALSE;
         w_p                   = 1.;
     }
     h_Hubble = ((double *)ADaPS_fetch(cosmo, "h_Hubble"))[0];
@@ -204,9 +204,9 @@ void map_to_grid(size_t      n_particles_local,
     }
 
     // It is essential that we not pad the field for the simple way that we add-in the boundary buffers below
-    set_FFT_padding_state(field, FALSE);
+    set_FFT_padding_state(field, GBP_FALSE);
     if(field_norm != NULL)
-        set_FFT_padding_state(field_norm, FALSE);
+        set_FFT_padding_state(field_norm, GBP_FALSE);
 
     // Create the mass distribution
     SID_log("Performing grid assignment...", SID_LOG_OPEN | SID_LOG_TIMER);
@@ -238,13 +238,13 @@ void map_to_grid(size_t      n_particles_local,
         i_i[2] = (int)z_particle_i; // position in grid-coordinates
 
         // Apply the kernel
-        flag_viable = TRUE;
+        flag_viable = GBP_TRUE;
         double x_i_effective;
         for(j_i[0] = -W_search_lo; j_i[0] <= W_search_hi; j_i[0]++) {
             for(j_i[1] = -W_search_lo; j_i[1] <= W_search_hi; j_i[1]++) {
                 for(j_i[2] = -W_search_lo; j_i[2] <= W_search_hi; j_i[2]++) {
                     // Compute distance to each grid point being searched against ...
-                    flag_active = TRUE;
+                    flag_active = GBP_TRUE;
                     for(i_coord = 0, W_i = 1.; i_coord < 3; i_coord++) {
                         switch(i_coord) {
                             case 0:
@@ -265,7 +265,7 @@ void map_to_grid(size_t      n_particles_local,
                                 if(x_i_effective > 0.)
                                     W_i *= interpolate(W_r_Daub_interp, x_i_effective);
                                 else
-                                    flag_active = FALSE;
+                                    flag_active = GBP_FALSE;
                                 break;
                                 // Distribute using the triangular shaped cloud (TSC) method
                             case MAP2GRID_DIST_TSC:
@@ -274,14 +274,14 @@ void map_to_grid(size_t      n_particles_local,
                                 else if(x_i < 1.5)
                                     W_i *= 0.5 * (1.5 - fabs(x_i)) * (1.5 - fabs(x_i));
                                 else
-                                    flag_active = FALSE;
+                                    flag_active = GBP_FALSE;
                                 break;
                                 // Distribute using the cloud-in-cell (CIC) method
                             case MAP2GRID_DIST_CIC:
                                 if(fabs(x_i) < 1.)
                                     W_i *= (1. - fabs(x_i));
                                 else
-                                    flag_active = FALSE;
+                                    flag_active = GBP_FALSE;
                                 break;
                                 // Distribute using "nearest grid point" (NGP; ie. the simplest and default) method
                             case MAP2GRID_DIST_NGP:
@@ -289,7 +289,7 @@ void map_to_grid(size_t      n_particles_local,
                                 if(fabs(x_i) <= 0.5 && flag_viable)
                                     W_i *= 1.;
                                 else
-                                    flag_active = FALSE;
+                                    flag_active = GBP_FALSE;
                                 break;
                         }
                     }
@@ -314,14 +314,14 @@ void map_to_grid(size_t      n_particles_local,
                         if(k_i[0] < field->i_R_start_local[0]) {
                             k_i[0] -= (field->i_R_start_local[0] - W_search_lo);
                             if(k_i[0] < 0)
-                                SID_trap_error("Left slab buffer limit exceeded by %d element(s).", ERROR_LOGIC, -k_i[0]);
+                                SID_trap_error("Left slab buffer limit exceeded by %d element(s).", SID_ERROR_LOGIC, -k_i[0]);
                             send_left[index_FFT_R(field, k_i)] += W_i * value_i;
                             if(field_norm != NULL)
                                 send_left_norm[index_FFT_R(field_norm, k_i)] += W_i * norm_i;
                         } else if(k_i[0] > field->i_R_stop_local[0]) {
                             k_i[0] -= (field->i_R_stop_local[0] + 1);
                             if(k_i[0] >= W_search_hi)
-                                SID_trap_error("Right slab buffer limit exceeded by %d element(s).", ERROR_LOGIC, k_i[0] - W_search_hi + 1);
+                                SID_trap_error("Right slab buffer limit exceeded by %d element(s).", SID_ERROR_LOGIC, k_i[0] - W_search_hi + 1);
                             else {
                                 send_right[index_FFT_R(field, k_i)] += W_i * value_i;
                                 if(field_norm != NULL)
@@ -332,7 +332,7 @@ void map_to_grid(size_t      n_particles_local,
                             if(field_norm != NULL)
                                 field_norm->field_local[index_local_FFT_R(field_norm, k_i)] += W_i * norm_i;
                         }
-                        flag_viable = FALSE;
+                        flag_viable = GBP_FALSE;
                     }
                 }
             }

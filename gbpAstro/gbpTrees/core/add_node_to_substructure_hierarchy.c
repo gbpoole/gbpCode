@@ -12,7 +12,7 @@
 int add_node_to_substructure_hierarchy(tree_info *     trees,    // The tree datastructure
                                        tree_node_info *subhalo,  // Pointer to the substructure being added
                                        tree_node_info *parent) { // Pointer to the parent being added to
-    int rval = FALSE;
+    int rval = GBP_FALSE;
     // Set substructure pointers
     if(subhalo != NULL) {
         subhalo->parent = parent;
@@ -24,7 +24,7 @@ int add_node_to_substructure_hierarchy(tree_info *     trees,    // The tree dat
                 parent->substructure_last->substructure_next = subhalo;
             parent->substructure_last = subhalo;
         }
-        rval = TRUE;
+        rval = GBP_TRUE;
     }
     return (rval);
 }

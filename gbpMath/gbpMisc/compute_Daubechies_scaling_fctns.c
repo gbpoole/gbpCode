@@ -259,7 +259,7 @@ void compute_Daubechies_scaling_fctns(int D_order, int l_max, double **x_return,
             N = 20;
             break;
         default:
-            SID_trap_error("Illegal or unsupported Daubechies order (%d)", ERROR_LOGIC, D_order);
+            SID_trap_error("Illegal or unsupported Daubechies order (%d)", SID_ERROR_LOGIC, D_order);
             break;
     }
 

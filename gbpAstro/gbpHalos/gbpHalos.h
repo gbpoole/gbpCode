@@ -14,30 +14,30 @@
 #define MAX_PROFILE_BINS 1000
 #define MAX_PROFILE_BINS_P1 1001 // This must be set to MAX_PROFILE_BINS+1
 
-#define READ_GROUPS_DEFAULT TTTP00
-#define READ_GROUPS_ALL TTTP01
-#define READ_GROUPS_SUBGROUPS TTTP02
-#define READ_GROUPS_NOSUBGROUPS TTTP03
-#define READ_GROUPS_PROPERTIES TTTP04
-#define READ_GROUPS_NOPROPERTIES TTTP05
-#define READ_GROUPS_NOIDS TTTP06
-#define READ_GROUPS_MBP_IDS_ONLY TTTP07
-#define READ_GROUPS_PEANOHILBERT TTTP08
+#define READ_GROUPS_DEFAULT SID_TTTP00
+#define READ_GROUPS_ALL SID_TTTP01
+#define READ_GROUPS_SUBGROUPS SID_TTTP02
+#define READ_GROUPS_NOSUBGROUPS SID_TTTP03
+#define READ_GROUPS_PROPERTIES SID_TTTP04
+#define READ_GROUPS_NOPROPERTIES SID_TTTP05
+#define READ_GROUPS_NOIDS SID_TTTP06
+#define READ_GROUPS_MBP_IDS_ONLY SID_TTTP07
+#define READ_GROUPS_PEANOHILBERT SID_TTTP08
 
-#define READ_CATALOG_GROUPS TTTP00
-#define READ_CATALOG_SUBGROUPS TTTP01
-#define READ_CATALOG_PROPERTIES TTTP02
-#define READ_CATALOG_PROFILES TTTP03
+#define READ_CATALOG_GROUPS SID_TTTP00
+#define READ_CATALOG_SUBGROUPS SID_TTTP01
+#define READ_CATALOG_PROPERTIES SID_TTTP02
+#define READ_CATALOG_PROFILES SID_TTTP03
 #define READ_CATALOG_DEFAULT READ_CATALOG_GROUPS | READ_CATALOG_PROPERTIES
 
-#define MATCH_SUBGROUPS TTTP01    // Match subgroups (default)
-#define MATCH_GROUPS TTTP02       // Match groups
-#define MATCH_BACK TTTP03         // Switch the sence of matching between plists
-#define MATCH_STORE_2 TTTP04      // Switch which plist results are stored in
-#define MATCH_STORE_SCORE TTTP05  // Store the matching score
-#define MATCH_SUBSTRUCTURE TTTP06 // Search for substructure; ie. ignore self matches
+#define MATCH_SUBGROUPS SID_TTTP01    // Match subgroups (default)
+#define MATCH_GROUPS SID_TTTP02       // Match groups
+#define MATCH_BACK SID_TTTP03         // Switch the sence of matching between plists
+#define MATCH_STORE_2 SID_TTTP04      // Switch which plist results are stored in
+#define MATCH_STORE_SCORE SID_TTTP05  // Store the matching score
+#define MATCH_SUBSTRUCTURE SID_TTTP06 // Search for substructure; ie. ignore self matches
 #define MATCH_APPLY_OFFSETS \
-    TTTP07 // When matching across multiple cores, apply
+    SID_TTTP07 // When matching across multiple cores, apply
            //   rank offsets so that match_ids are global indices
 
 #define N_P_MATCH_PRESELECT_MIN 32 // minimum number of particles for applying moment preselection
@@ -91,10 +91,10 @@ struct halo_profile_info {
 // This datastructure describes the halo catalog file-pointer
 typedef struct fp_catalog_info fp_catalog_info;
 struct fp_catalog_info {
-    char  filename_properties_root[MAX_FILENAME_LENGTH];
-    char  filename_properties_base[MAX_FILENAME_LENGTH];
-    char  filename_profiles_root[MAX_FILENAME_LENGTH];
-    char  filename_profiles_base[MAX_FILENAME_LENGTH];
+    char  filename_properties_root[SID_MAX_FILENAME_LENGTH];
+    char  filename_properties_base[SID_MAX_FILENAME_LENGTH];
+    char  filename_profiles_root[SID_MAX_FILENAME_LENGTH];
+    char  filename_profiles_base[SID_MAX_FILENAME_LENGTH];
     FILE *fp_properties;
     FILE *fp_profiles;
     int   snap_num;

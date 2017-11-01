@@ -18,5 +18,5 @@ int grab_word(char *line, int n, char *return_value) {
     }
     strncpy(return_value, word, count);
     return_value[count] = '\0';
-    return (ERROR_NONE);
+    return (SID_ERROR_NONE);
 }

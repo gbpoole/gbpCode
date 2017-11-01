@@ -7,12 +7,12 @@
 #include <gbpCosmo_core.h>
 #include <gbpCosmo_linear_theory.h>
 
-#define MF_PASS_PARAMS TTTP01
-#define MF_JENKINS TTTP02
-#define MF_PS TTTP03
-#define MF_ST TTTP04
-#define MF_WATSON TTTP05
-#define MF_TIAMAT TTTP06
+#define MF_PASS_PARAMS SID_TTTP01
+#define MF_JENKINS SID_TTTP02
+#define MF_PS SID_TTTP03
+#define MF_ST SID_TTTP04
+#define MF_WATSON SID_TTTP05
+#define MF_TIAMAT SID_TTTP06
 
 // Function definitions
 #ifdef __cplusplus

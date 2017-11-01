@@ -77,9 +77,9 @@ void set_frame(camera_info *camera) {
         }
         if(image_RGBY_MARKED != NULL) {
             for(int i_depth = 0; i_depth < camera->n_depth; i_depth++) {
-                set_image_RGB(image_RY[i_depth], 0., 1., FALSE);
-                set_image_RGB(image_GY[i_depth], 0., 1., FALSE);
-                set_image_RGB(image_BY[i_depth], 0., 1., FALSE);
+                set_image_RGB(image_RY[i_depth], 0., 1., GBP_FALSE);
+                set_image_RGB(image_GY[i_depth], 0., 1., GBP_FALSE);
+                set_image_RGB(image_BY[i_depth], 0., 1., GBP_FALSE);
                 set_image_RGBY_MARKED(image_RGBY_MARKED[i_depth],
                                       image_RY[i_depth],
                                       image_GY[i_depth],

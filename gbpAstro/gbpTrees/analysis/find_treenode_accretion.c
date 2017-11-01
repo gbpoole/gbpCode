@@ -44,10 +44,10 @@ int find_treenode_accretion(tree_info *      trees,
                     current_parent_top = NULL;
                 }
             }
-            return (TRUE);
+            return (GBP_TRUE);
         }
     }
     (*first_became_satellite)    = NULL;
     (*joined_current_parent_top) = NULL;
-    return (FALSE);
+    return (GBP_FALSE);
 }

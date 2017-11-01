@@ -12,18 +12,18 @@
 void read_treenode_markers(tree_info *trees, const char *filename_input_root, int mode) {
     SID_log("Reading markers...", SID_LOG_OPEN | SID_LOG_TIMER);
 
-    SID_trap_error("This function is not working yet.  It needs to be debugged.", ERROR_LOGIC);
+    SID_trap_error("This function is not working yet.  It needs to be debugged.", SID_ERROR_LOGIC);
 
     // Generate the markers starting recursively from each tree root
     char                 filename_input_group_text[16];
-    int                  flag_process_groups = FALSE;
+    int                  flag_process_groups = GBP_FALSE;
     tree_markers_info ***markers;
     int *                n_halos_total;
     int *                n_halos_local;
     tree_node_info **    first_neighbour;
     if(check_mode_for_flag(mode, PRECOMPUTE_TREENODE_MARKER_GROUPS)) {
         sprintf(filename_input_group_text, "groups");
-        flag_process_groups = TRUE;
+        flag_process_groups = GBP_TRUE;
         markers             = &(trees->group_markers);
         n_halos_total       = trees->n_groups_catalog;
         n_halos_local       = trees->n_groups_snap_local;
@@ -35,7 +35,7 @@ void read_treenode_markers(tree_info *trees, const char *filename_input_root, in
         n_halos_local   = trees->n_subgroups_snap_local;
         first_neighbour = trees->first_neighbour_subgroups;
     } else
-        SID_trap_error("group/subgroup mode has not been properly specified in read_treenode_markers().", ERROR_LOGIC);
+        SID_trap_error("group/subgroup mode has not been properly specified in read_treenode_markers().", SID_ERROR_LOGIC);
 
     // Allocate memory for the markers
     SID_log("Creating look-up arrays...", SID_LOG_OPEN | SID_LOG_TIMER);
@@ -58,12 +58,12 @@ void read_treenode_markers(tree_info *trees, const char *filename_input_root, in
             i_halo++;
         }
         // Sort file indices
-        merge_sort(file_index_local[i_snap], (size_t)(n_halos_local[i_snap]), &(file_index_local_index[i_snap]), SID_INT, SORT_COMPUTE_INDEX, FALSE);
+        merge_sort(file_index_local[i_snap], (size_t)(n_halos_local[i_snap]), &(file_index_local_index[i_snap]), SID_INT, SORT_COMPUTE_INDEX, GBP_FALSE);
     }
     SID_log("Done.", SID_LOG_CLOSE);
 
     // Perform the read
-    char filename_in_dir[MAX_FILENAME_LENGTH];
+    char filename_in_dir[SID_MAX_FILENAME_LENGTH];
     sprintf(filename_in_dir, "%s_markers", filename_input_root);
     for(int i_snap = 0; i_snap < trees->n_snaps; i_snap++) {
         SID_log("Processing snapshot #%03d...", SID_LOG_OPEN | SID_LOG_TIMER, trees->snap_list[i_snap]);
@@ -72,16 +72,16 @@ void read_treenode_markers(tree_info *trees, const char *filename_input_root, in
         // Open file and read header
         int  i_snap_file;
         int  n_halos_total_file;
-        char filename_in[MAX_FILENAME_LENGTH];
+        char filename_in[SID_MAX_FILENAME_LENGTH];
         sprintf(filename_in, "%s/%s_%03d.dat", filename_in_dir, filename_input_group_text, trees->snap_list[i_snap]);
         SID_fp fp_in;
         SID_fopen(filename_in, "r", &fp_in);
         SID_fread_all(&i_snap_file, sizeof(int), 1, &fp_in);
         SID_fread_all(&n_halos_total_file, sizeof(int), 1, &fp_in);
         if(i_snap_file != i_snap)
-            SID_trap_error("Snapshot numbers don't match what's in the file (ie. %d!=%d).", ERROR_LOGIC, i_snap_file, i_snap);
+            SID_trap_error("Snapshot numbers don't match what's in the file (ie. %d!=%d).", SID_ERROR_LOGIC, i_snap_file, i_snap);
         if(n_halos_total_file != n_halos_total[i_snap])
-            SID_trap_error("Halo counts don't match what's in the file (ie. %d!=%d).", ERROR_LOGIC, n_halos_total_file, n_halos_total);
+            SID_trap_error("Halo counts don't match what's in the file (ie. %d!=%d).", SID_ERROR_LOGIC, n_halos_total_file, n_halos_total);
 
         // Perform the (buffered) read of this file
         int            i_found          = 0;
@@ -89,13 +89,13 @@ void read_treenode_markers(tree_info *trees, const char *filename_input_root, in
         int            bytes_per_marker = 4;
         int            bytes_per_halo   = n_markers * bytes_per_marker;
         SID_fp_buffer *fp_in_buffer     = NULL;
-        init_SID_fp_buffer(&fp_in, (size_t)(bytes_per_halo * n_halos_total[i_snap]) * sizeof(int), SIZE_OF_MEGABYTE, &fp_in_buffer);
+        init_SID_fp_buffer(&fp_in, (size_t)(bytes_per_halo * n_halos_total[i_snap]) * sizeof(int), SID_SIZE_OF_MEGABYTE, &fp_in_buffer);
         for(int i_halo = 0; i_halo < n_halos_total[i_snap]; i_halo++) {
-            int                flag_keep     = FALSE;
+            int                flag_keep     = GBP_FALSE;
             size_t             i_found_index = file_index_local_index[i_snap][i_found];
             tree_markers_info *markers_i     = &((*markers)[i_snap][i_found_index]);
             if(file_index_local[i_snap][i_found_index] == i_halo)
-                flag_keep = TRUE;
+                flag_keep = GBP_TRUE;
             for(int i_marker = 0; i_marker < n_markers; i_marker++) {
                 int halo_snap;
                 SID_fread_all_buffer(&halo_snap, sizeof(int), 1, fp_in_buffer);
@@ -155,12 +155,12 @@ void read_treenode_markers(tree_info *trees, const char *filename_input_root, in
                         // Sanity check
                         if((*marker)->file_index != halo_index)
                             SID_trap_error("The halo identified as a marker does not have the correct file index (ie %d!=%d)",
-                                           ERROR_LOGIC,
+                                           SID_ERROR_LOGIC,
                                            (*marker)->file_index,
                                            halo_index);
                         if((*marker)->snap_tree != halo_snap)
                             SID_trap_error("The halo identified as a marker does not have the correct snapshot (ie %d!=%d)",
-                                           ERROR_LOGIC,
+                                           SID_ERROR_LOGIC,
                                            (*marker)->snap_tree,
                                            halo_snap);
                     }
@@ -176,7 +176,7 @@ void read_treenode_markers(tree_info *trees, const char *filename_input_root, in
 
         // Sanity check
         if(i_found != n_halos_local[i_snap])
-            SID_trap_error("Failed to load all local halos (ie. %d!=%d).", ERROR_LOGIC, i_found, n_halos_local[i_snap]);
+            SID_trap_error("Failed to load all local halos (ie. %d!=%d).", SID_ERROR_LOGIC, i_found, n_halos_local[i_snap]);
 
         SID_log("Done.", SID_LOG_CLOSE);
     }

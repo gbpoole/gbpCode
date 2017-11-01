@@ -11,7 +11,7 @@
 // This routine is not efficient, but it doesn't need to be
 int add_render_depth_local(render_info *render, const char *id, double FOV_x, double FOV_y, double x, double y, double d_depth, double f_stretch);
 int add_render_depth_local(render_info *render, const char *id, double FOV_x, double FOV_y, double x, double y, double d_depth, double f_stretch) {
-    int r_val = TRUE;
+    int r_val = GBP_TRUE;
 
     render->camera->n_depth++;
     render->camera->depth_array            = (double *)SID_realloc(render->camera->depth_array, sizeof(double) * render->camera->n_depth);
@@ -37,10 +37,10 @@ int add_render_depth_local(render_info *render, const char *id, double FOV_x, do
 // This code must only be called after the perspective has been finalized and
 //    updated for the camera because we need things like d_o
 int set_camera_depths(render_info *render, int stereo_offset_dir) {
-    int r_val = TRUE;
+    int r_val = GBP_TRUE;
 
     // Set a dummy value for now
-    int mode = TRUE;
+    int mode = GBP_TRUE;
 
     // Apply transformation
     double FOV_x_object_plane = 0.;
@@ -84,7 +84,7 @@ int set_camera_depths(render_info *render, int stereo_offset_dir) {
     add_render_depth_local(render, "full_frame", 1., 1., -0.5, 0.5, 0., 0.);
 
     // Add the object plane (if requested)
-    if(check_mode_for_flag(mode, TRUE)) {
+    if(check_mode_for_flag(mode, GBP_TRUE)) {
         float f_stretch = compute_f_stretch(render->camera->perspective->d_image_plane,
                                             render->camera->perspective->d_o,
                                             check_mode_for_flag(render->camera->camera_mode, CAMERA_PLANE_PARALLEL));
@@ -99,7 +99,7 @@ int set_camera_depths(render_info *render, int stereo_offset_dir) {
     }
 
     // Add the image plane (if requested)
-    if(check_mode_for_flag(mode, FALSE))
+    if(check_mode_for_flag(mode, GBP_FALSE))
         add_render_depth_local(render,
                                "image_plane",
                                render->camera->perspective->FOV_x_image_plane,
@@ -110,7 +110,7 @@ int set_camera_depths(render_info *render, int stereo_offset_dir) {
                                1.); // f_stretch=1 at image plane
 
     // Add marked objects (if requested)
-    if(check_mode_for_flag(mode, TRUE)) {
+    if(check_mode_for_flag(mode, GBP_TRUE)) {
         mark_arg_info *current_arg = render->mark_arg_first;
         int            i_arg       = 0;
         int            i_mark      = 0;
@@ -124,7 +124,7 @@ int set_camera_depths(render_info *render, int stereo_offset_dir) {
                     else if(!strcmp(current_arg->type, "subgroup_id"))
                         sprintf(mark_id, "subgroup_%d", current_arg->ival[0]);
                     else
-                        SID_trap_error("Invalid option.", ERROR_LOGIC);
+                        SID_trap_error("Invalid option.", SID_ERROR_LOGIC);
                     float x_m = 0.;
                     float y_m = 0.;
                     float z_m = 0.;
@@ -180,10 +180,10 @@ int set_camera_depths(render_info *render, int stereo_offset_dir) {
         if(render->camera->n_depth > render->camera->n_depth_alloc)
             SID_trap_error(
                 "The camera depth counter has increased (ie. %d!=%d).  Functionallity needs to be added for realloc'ing the image arrays, etc.",
-                ERROR_LOGIC,
+                SID_ERROR_LOGIC,
                 render->camera->n_depth,
                 render->camera->n_depth_alloc);
-    render->camera->flag_depth_init = FALSE;
+    render->camera->flag_depth_init = GBP_FALSE;
 
     return (r_val);
 }

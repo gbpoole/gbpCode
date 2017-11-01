@@ -23,10 +23,10 @@ int main(int argc, char *argv[]) {
     double n_spec;
     double redshift;
     int    i_rank;
-    char   filename_in[MAX_FILENAME_LENGTH];
-    char   filename_cosmology[MAX_FILENAME_LENGTH];
-    char   filename_in_model[MAX_FILENAME_LENGTH];
-    char   filename_out_root[MAX_FILENAME_LENGTH];
+    char   filename_in[SID_MAX_FILENAME_LENGTH];
+    char   filename_cosmology[SID_MAX_FILENAME_LENGTH];
+    char   filename_in_model[SID_MAX_FILENAME_LENGTH];
+    char   filename_out_root[SID_MAX_FILENAME_LENGTH];
     char   grouping_name[6];
     char   filename_TF[256];
     char   n_string[64];
@@ -60,7 +60,7 @@ int main(int argc, char *argv[]) {
     // Initialization -- MPI etc.
     SID_init(&argc, &argv, NULL, NULL);
     if(argc != 12)
-        SID_trap_error("Incorrect syntax.", ERROR_SYNTAX);
+        SID_trap_error("Incorrect syntax.", SID_ERROR_SYNTAX);
 
     // Parse arguments
     strcpy(filename_in, argv[1]);
@@ -177,12 +177,12 @@ int main(int argc, char *argv[]) {
     } // Loop over 4 P(k)'s
 
     // Now that all 4 runs are done, let's write the results
-    char filename_out_root_grouping[MAX_FILENAME_LENGTH];
+    char filename_out_root_grouping[SID_MAX_FILENAME_LENGTH];
     write_pspec(&pspec, filename_out_root, &plist, "objs");
 
     // Clean-up
     free_pspec(&pspec);
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

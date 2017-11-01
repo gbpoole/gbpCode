@@ -17,10 +17,10 @@ int main(int argc, char *argv[]) {
     int                           halo_type;
     int                           n_files_out;
     int                           select_mode;
-    char                          filename_SSimPL_root[MAX_FILENAME_LENGTH];
-    char                          filename_halo_version[MAX_FILENAME_LENGTH];
-    char                          filename_in_root[MAX_FILENAME_LENGTH];
-    char                          filename_out_root[MAX_FILENAME_LENGTH];
+    char                          filename_SSimPL_root[SID_MAX_FILENAME_LENGTH];
+    char                          filename_halo_version[SID_MAX_FILENAME_LENGTH];
+    char                          filename_in_root[SID_MAX_FILENAME_LENGTH];
+    char                          filename_out_root[SID_MAX_FILENAME_LENGTH];
     GBPREAL                       cen_select[3];
     GBPREAL                       select_size;
     strcpy(filename_SSimPL_root, argv[1]);
@@ -48,7 +48,7 @@ int main(int argc, char *argv[]) {
     //    the particles get written in the same order that they are
     //    in the halo catalog.
 
-    char filename_halos[MAX_FILENAME_LENGTH];
+    char filename_halos[SID_MAX_FILENAME_LENGTH];
     if(halo_type == 0)
         sprintf(filename_halos, "%s/halos/%s_%03d.catalog_groups", filename_SSimPL_root, filename_halo_version, snapshot);
     else
@@ -71,7 +71,7 @@ int main(int argc, char *argv[]) {
         fread_verify(&halo_offset, offset_size, 1, fp_groups);
     fclose(fp_groups);
 
-    char filename_ids[MAX_FILENAME_LENGTH];
+    char filename_ids[SID_MAX_FILENAME_LENGTH];
     sprintf(filename_ids, "%s/halos/%s_%03d.catalog_particles", filename_SSimPL_root, filename_halo_version, snapshot);
     FILE * fp_ids = fopen(filename_ids, "r");
     int    id_byte_size;
@@ -88,9 +88,9 @@ int main(int argc, char *argv[]) {
     params.n_ids             = halo_length;
     params.id_list           = (size_t *)SID_malloc(sizeof(size_t) * halo_length);
     size_t *id_list_unsorted = (size_t *)SID_malloc(sizeof(size_t) * halo_length);
-    int     flag_long_ids    = TRUE;
+    int     flag_long_ids    = GBP_TRUE;
     if(id_byte_size == sizeof(int)) {
-        flag_long_ids  = FALSE;
+        flag_long_ids  = GBP_FALSE;
         int *id_list_i = (int *)SID_malloc(sizeof(int) * halo_length);
         fread_verify(id_list_i, id_byte_size, halo_length, fp_ids);
         for(int i_p = 0; i_p < halo_length; i_p++)
@@ -135,7 +135,7 @@ int main(int argc, char *argv[]) {
 
     // Write the snapshot
     if(SID.I_am_Master) {
-        char filename_out[MAX_FILENAME_LENGTH];
+        char filename_out[SID_MAX_FILENAME_LENGTH];
         sprintf(filename_out, "%s_%03d_%08d.ascii", filename_out_root, snapshot, halo_index);
         FILE *fp = fopen(filename_out, "w");
         fprintf(fp, "#Columns:\n");
@@ -194,5 +194,5 @@ int main(int argc, char *argv[]) {
     free_plist(&plist);
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

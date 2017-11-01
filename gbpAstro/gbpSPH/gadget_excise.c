@@ -15,8 +15,8 @@ int main(int argc, char *argv[]) {
     int                              snapshot;
     int                              n_files_out;
     int                              select_mode;
-    char                             filename_in_root[MAX_FILENAME_LENGTH];
-    char                             filename_out_root[MAX_FILENAME_LENGTH];
+    char                             filename_in_root[SID_MAX_FILENAME_LENGTH];
+    char                             filename_out_root[SID_MAX_FILENAME_LENGTH];
     GBPREAL                          cen_select[3];
     GBPREAL                          select_size;
     strcpy(filename_in_root, argv[1]);
@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
         select_function                   = select_gadget_sphere;
         select_gadget_volume_params.size2 = pow(select_gadget_volume_params.size, 2.);
     } else
-        SID_trap_error("Invalid selection mode (%d) given.", ERROR_SYNTAX, select_mode);
+        SID_trap_error("Invalid selection mode (%d) given.", SID_ERROR_SYNTAX, select_mode);
 
     SID_log("Excising volume from Gadget binary file {%s;snapshot=%d}...", SID_LOG_OPEN | SID_LOG_TIMER, filename_in_root, snapshot);
 
@@ -54,7 +54,7 @@ int main(int argc, char *argv[]) {
     int                flag_file_type = fp_gadget.flag_file_type;
     gadget_header_info header         = fp_gadget.header;
     if(!flag_filefound)
-        SID_trap_error("File not found.", ERROR_LOGIC);
+        SID_trap_error("File not found.", SID_ERROR_LOGIC);
     select_gadget_volume_params.box_size = fp_gadget.header.box_size;
 
     // Count the particles
@@ -88,7 +88,7 @@ int main(int argc, char *argv[]) {
                         PROCESS_GADGET_BINARY_DEFAULT);
 
     // Write the snapshot
-    char filename_out[MAX_FILENAME_LENGTH];
+    char filename_out[SID_MAX_FILENAME_LENGTH];
     sprintf(filename_out, "%s_%03d", filename_out_root, snapshot);
     write_gadget_binary_new(&plist, filename_out, n_files_out, WRITE_GADGET_BINARY_DEFAULT);
 
@@ -96,5 +96,5 @@ int main(int argc, char *argv[]) {
     free_plist(&plist);
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

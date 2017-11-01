@@ -34,7 +34,7 @@ int write_forest_vertical_halos_recursive_local(tree_info *trees, tree_node_info
 
 void write_trees_vertical(tree_info *trees, int grid_size, const char *filename_root_trees_out) {
     // Create a directory for the results
-    char filename_root_out[MAX_FILENAME_LENGTH];
+    char filename_root_out[SID_MAX_FILENAME_LENGTH];
     sprintf(filename_root_out, "%s/vertical", filename_root_trees_out);
     mkdir(filename_root_out, 02755);
 
@@ -91,11 +91,11 @@ void write_trees_vertical(tree_info *trees, int grid_size, const char *filename_
             halo_properties_SAGE_info *halo_properties = &(properties[current_halo->snap_tree][current_halo->neighbour_index]);
             // Decide which file this forest belongs to
             int i_x = (int)((float)grid_size * (halo_properties->pos[0] / trees->box_size));
-            i_x     = MIN(i_x, grid_size - 1);
+            i_x     = GBP_MIN(i_x, grid_size - 1);
             int i_y = (int)((float)grid_size * (halo_properties->pos[1] / trees->box_size));
-            i_y     = MIN(i_y, grid_size - 1);
+            i_y     = GBP_MIN(i_y, grid_size - 1);
             int i_z = (int)((float)grid_size * (halo_properties->pos[2] / trees->box_size));
-            i_z     = MIN(i_z, grid_size - 1);
+            i_z     = GBP_MIN(i_z, grid_size - 1);
             int i_g = (i_z * grid_size + i_y) * grid_size + i_x;
             forest_count[i_g]++;
             file_out[i_forest] = i_g;
@@ -110,9 +110,9 @@ void write_trees_vertical(tree_info *trees, int grid_size, const char *filename_
         calc_sum(forest_count, &forest_count_total, n_files_write, SID_INT, CALC_MODE_DEFAULT);
         calc_sum(halo_count, &halo_count_total, n_files_write, SID_INT, CALC_MODE_DEFAULT);
         if(forest_count_total != n_forests)
-            SID_trap_error("Invalid forest count (ie. %d!=%d)", ERROR_LOGIC, forest_count_total, n_forests);
+            SID_trap_error("Invalid forest count (ie. %d!=%d)", SID_ERROR_LOGIC, forest_count_total, n_forests);
         if(halo_count_total != n_halos)
-            SID_trap_error("Invalid halo count (ie. %d!=%d)", ERROR_LOGIC, halo_count_total, n_halos);
+            SID_trap_error("Invalid halo count (ie. %d!=%d)", SID_ERROR_LOGIC, halo_count_total, n_halos);
         SID_log("Done.", SID_LOG_CLOSE);
 
         // Write the file headers
@@ -124,7 +124,7 @@ void write_trees_vertical(tree_info *trees, int grid_size, const char *filename_
                 SID_fp *fp_out;
                 fp_out = (SID_fp *)SID_malloc(sizeof(SID_fp) * n_files_write);
                 for(int i_file = 0; i_file < n_files_write; i_file++) {
-                    char filename_out[MAX_FILENAME_LENGTH];
+                    char filename_out[SID_MAX_FILENAME_LENGTH];
                     sprintf(filename_out, "%s/%sgroup_trees_%03d.dat", filename_root_out, group_text_prefix, i_file);
                     if(i_rank == 0) {
                         SID_fopen(filename_out, "w", &(fp_out[i_file]));
@@ -156,7 +156,7 @@ void write_trees_vertical(tree_info *trees, int grid_size, const char *filename_
                 SID_fp *fp_out;
                 fp_out = (SID_fp *)SID_malloc(sizeof(SID_fp) * n_files_write);
                 for(int i_file = 0; i_file < n_files_write; i_file++) {
-                    char filename_out[MAX_FILENAME_LENGTH];
+                    char filename_out[SID_MAX_FILENAME_LENGTH];
                     sprintf(filename_out, "%s/%sgroup_trees_%03d.dat", filename_root_out, group_text_prefix, i_file);
                     SID_fopen(filename_out, "a", &(fp_out[i_file]));
                 }
@@ -171,7 +171,7 @@ void write_trees_vertical(tree_info *trees, int grid_size, const char *filename_
                     }
                     if(n_halos_forest_written != n_halos_forest_local[i_forest])
                         SID_trap_error("Number of halos written is not right (i.e. %d!=%d) for forest #%d",
-                                       ERROR_LOGIC,
+                                       SID_ERROR_LOGIC,
                                        n_halos_written,
                                        n_halos_forest_local[i_forest],
                                        i_forest);

@@ -20,7 +20,7 @@ int add_node_to_trees(tree_info *      trees,            // The tree datastructu
                       int              descendant_index, // Descendant's snap
                       tree_node_info * parent_top,       // Pointer to this halo's top substructure level.  NULL if this is a FoF group.
                       tree_node_info **new_node) {       // Pointer to the new node
-    int rval = TRUE;
+    int rval = GBP_TRUE;
 
     // Create new node
     (*new_node) = (tree_node_info *)SID_malloc(sizeof(tree_node_info));
@@ -60,7 +60,7 @@ int add_node_to_trees(tree_info *      trees,            // The tree datastructu
     int flag_secondary = check_mode_for_flag(tree_case, TREE_CASE_MERGER);
     if(flag_primary && flag_secondary)
         SID_trap_error("Both primary and secondary flags have been switched on for halo (snap=%d;idx=%d;case=%d).",
-                       ERROR_LOGIC,
+                       SID_ERROR_LOGIC,
                        halo_snap,
                        halo_index,
                        tree_case);
@@ -70,7 +70,7 @@ int add_node_to_trees(tree_info *      trees,            // The tree datastructu
         // Sanity check
         if(descendant_snap == halo_snap && descendant_snap >= 0)
             SID_trap_error("A halo (snap=%d;idx=%d;flag_processing_group=%d) has the same snap as its descenant (snap=%d;idx=%d)!",
-                           ERROR_LOGIC,
+                           SID_ERROR_LOGIC,
                            halo_snap,
                            halo_index,
                            flag_processing_group,
@@ -82,7 +82,7 @@ int add_node_to_trees(tree_info *      trees,            // The tree datastructu
             // Find the descendant...
             if(!find_tree_node(trees, descendant_snap, descendant_index, flag_processing_group, &descendant))
                 SID_trap_error("Could not find descendant group (snap=%d->%d;idx=%d->%d;flag_processing_group=%d)",
-                               ERROR_LOGIC,
+                               SID_ERROR_LOGIC,
                                halo_snap,
                                descendant_snap,
                                halo_index,
@@ -90,7 +90,7 @@ int add_node_to_trees(tree_info *      trees,            // The tree datastructu
                                flag_processing_group);
             if(descendant == NULL)
                 SID_trap_error("A group (snap=%d;idx=%d;flag_processing_group=%d) has been found to have an undefined descendant (snap=%d;idx=%d)!",
-                               ERROR_LOGIC,
+                               SID_ERROR_LOGIC,
                                halo_snap,
                                halo_index,
                                flag_processing_group,
@@ -108,7 +108,7 @@ int add_node_to_trees(tree_info *      trees,            // The tree datastructu
             if(flag_primary) {
                 if(descendant->progenitor_primary != NULL)
                     SID_trap_error("Multiple primary halos have been set for a descendant (snap=%d;idx=%d other is snap=%d;idx=%d).",
-                                   ERROR_LOGIC,
+                                   SID_ERROR_LOGIC,
                                    (*new_node)->snap_tree,
                                    (*new_node)->file_index,
                                    descendant->progenitor_primary->snap_tree,

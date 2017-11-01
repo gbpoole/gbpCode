@@ -17,5 +17,5 @@ int grab_tail(char *line, int n, char *return_value) {
             count++;
     }
     strcpy(return_value, word);
-    return (ERROR_NONE);
+    return (SID_ERROR_NONE);
 }

@@ -13,9 +13,9 @@ int main(int argc, char *argv[]) {
     SID_log("Constructing match catalog...", SID_LOG_OPEN | SID_LOG_TIMER);
 
     // Parse arguments
-    char filename_catalog_root[MAX_FILENAME_LENGTH];
-    char filename_matches_root[MAX_FILENAME_LENGTH];
-    char filename_out[MAX_FILENAME_LENGTH];
+    char filename_catalog_root[SID_MAX_FILENAME_LENGTH];
+    char filename_matches_root[SID_MAX_FILENAME_LENGTH];
+    char filename_out[SID_MAX_FILENAME_LENGTH];
     char prefix_text[32];
     int  flag_matches_type;
     int  i_read;
@@ -38,11 +38,11 @@ int main(int argc, char *argv[]) {
         catalog_read_mode = READ_CATALOG_GROUPS | READ_CATALOG_PROPERTIES;
         matches_read_mode = MATCH_GROUPS;
     } else
-        SID_trap_error("Invalid catalog type (%s).", ERROR_SYNTAX, prefix_text);
+        SID_trap_error("Invalid catalog type (%s).", SID_ERROR_SYNTAX, prefix_text);
 
     // Set filenames
-    char filename_cat1[MAX_FILENAME_LENGTH];
-    char filename_cat2[MAX_FILENAME_LENGTH];
+    char filename_cat1[SID_MAX_FILENAME_LENGTH];
+    char filename_cat2[SID_MAX_FILENAME_LENGTH];
     sprintf(filename_cat1, "%s_%03d.catalog_%sgroups_properties", filename_catalog_root, i_read, prefix_text);
     sprintf(filename_cat2, "%s_%03d.catalog_%sgroups_properties", filename_catalog_root, j_read, prefix_text);
 
@@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
     int  n_groups_max;
     int  n_halos_max;
     read_matches_header(
-        filename_matches_root, 0, MAX(i_read, j_read), 1, &n_files, &n_subgroups, &n_groups, &n_subgroups_max, &n_groups_max, &n_halos_max);
+        filename_matches_root, 0, GBP_MAX(i_read, j_read), 1, &n_files, &n_subgroups, &n_groups, &n_subgroups_max, &n_groups_max, &n_halos_max);
     int *   n_particles_i = (int *)SID_malloc(sizeof(int) * n_halos_max);
     int *   n_particles_j = (int *)SID_malloc(sizeof(int) * n_halos_max);
     int *   match_ids     = (int *)SID_malloc(sizeof(int) * n_halos_max);
@@ -100,7 +100,7 @@ int main(int argc, char *argv[]) {
                  match_index,
                  NULL,
                  F_MATCH_MOMENT_DIFF_MIN_DEFAULT,
-                 FALSE);
+                 GBP_FALSE);
 
     // Create a storage array mapping the indices of the second catalog
     //    to those of the halos they are matched to in the first catalog
@@ -189,5 +189,5 @@ int main(int argc, char *argv[]) {
     SID_free(SID_FARG storage_index);
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

@@ -10,7 +10,7 @@
 
 void write_frame_metadata(render_info *render, int frame, const char *set_label) {
     if(SID.I_am_Master) {
-        char  filename[MAX_FILENAME_LENGTH];
+        char  filename[SID_MAX_FILENAME_LENGTH];
         FILE *fp_out = NULL;
 
         // Write render data

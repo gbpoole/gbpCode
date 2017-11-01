@@ -31,8 +31,8 @@ int main(int argc, char *argv[]) {
     SID_init(&argc, &argv, NULL, NULL);
 
     // Fetch user inputs
-    char filename_in[2][MAX_FILENAME_LENGTH];
-    char filename_out[MAX_FILENAME_LENGTH];
+    char filename_in[2][SID_MAX_FILENAME_LENGTH];
+    char filename_out[SID_MAX_FILENAME_LENGTH];
     strcpy(filename_in[0], argv[1]);
     strcpy(filename_in[1], argv[2]);
     strcpy(filename_out, argv[3]);
@@ -64,7 +64,7 @@ int main(int argc, char *argv[]) {
             n_groups_j = n_groups_2;
         } else if(n_groups_i != n_groups_2 || n_groups_j != n_groups_1)
             SID_trap_error(
-                "Input match file halo counts are not symetric (ie %d!=%d or %d!=%d).", ERROR_LOGIC, n_groups_i, n_groups_1, n_groups_j, n_groups_2);
+                "Input match file halo counts are not symetric (ie %d!=%d or %d!=%d).", SID_ERROR_LOGIC, n_groups_i, n_groups_1, n_groups_j, n_groups_2);
 
         // Allocate RAM
         match[i_read]   = (int *)SID_malloc(sizeof(int) * n_groups_1);
@@ -95,11 +95,11 @@ int main(int argc, char *argv[]) {
         if(match_i >= 0) {
             int match_j = match[1][match_i];
             if(match_j == i_group)
-                flag_2way[i_group] = TRUE;
+                flag_2way[i_group] = GBP_TRUE;
             else
-                flag_2way[i_group] = FALSE;
+                flag_2way[i_group] = GBP_FALSE;
         } else
-            flag_2way[i_group] = FALSE;
+            flag_2way[i_group] = GBP_FALSE;
     }
 
     // Print results
@@ -130,5 +130,5 @@ int main(int argc, char *argv[]) {
     SID_free(SID_FARG flag_2way);
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

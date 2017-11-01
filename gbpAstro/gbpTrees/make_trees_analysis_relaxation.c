@@ -18,7 +18,7 @@
 typedef struct process_trees_params_local process_trees_params_local;
 struct process_trees_params_local {
     int          flag_calc_Vir;
-    char         filename_output_root[MAX_FILENAME_LENGTH];
+    char         filename_output_root[SID_MAX_FILENAME_LENGTH];
     int          snap_lo_tau_trends;
     int          snap_hi_tau_trends;
     trend_info * mass_binning;
@@ -164,7 +164,7 @@ void process_trees_fctn_fin_local(tree_info *trees, void *params_in, int mode, i
     // Create an alias for the passed void pointer
     process_trees_params_local *params = (process_trees_params_local *)params_in;
     // Clean-up markers
-    char filename_output_root_root[MAX_FILENAME_LENGTH];
+    char filename_output_root_root[SID_MAX_FILENAME_LENGTH];
     if(i_type == 0) {
         sprintf(filename_output_root_root, "%s_groups", params->filename_output_root);
         free_precompute_treenode_markers(trees, PRECOMPUTE_TREENODE_MARKER_GROUPS);
@@ -189,7 +189,7 @@ void process_trees_fctn_fin_local(tree_info *trees, void *params_in, int mode, i
 
     // Write recovery/relaxation arrays
     for(int i_M = 0; i_M < n_M; i_M++) {
-        char filename_out[MAX_FILENAME_LENGTH];
+        char filename_out[SID_MAX_FILENAME_LENGTH];
         char mass_text_lo[64];
         char mass_text_hi[64];
         float_to_text((float)histogram_bin_x_lo(params->mass_binning->ordinate->hist, i_M), 1, mass_text_lo);
@@ -262,7 +262,7 @@ void process_trees_fctn_fin_local(tree_info *trees, void *params_in, int mode, i
     for(int i_M = 0; i_M < n_M; i_M++) {
         if(params->mass_binning->ordinate->hist->bin_count[i_M] > 50) {
             // Set the root of the output filename
-            char filename_output_root[MAX_FILENAME_LENGTH];
+            char filename_output_root[SID_MAX_FILENAME_LENGTH];
             char mass_text_lo[64];
             char mass_text_hi[64];
             float_to_text((float)histogram_bin_x_lo(params->mass_binning->ordinate->hist, i_M), 1, mass_text_lo);
@@ -294,27 +294,27 @@ int main(int argc, char *argv[]) {
     SID_init(&argc, &argv, NULL, NULL);
 
     // Fetch user inputs
-    char filename_SSimPL_root[MAX_FILENAME_LENGTH];
-    char filename_halo_version_root[MAX_FILENAME_LENGTH];
-    char filename_trees_name[MAX_FILENAME_LENGTH];
-    char filename_data_root[MAX_FILENAME_LENGTH];
-    char filename_output_root[MAX_FILENAME_LENGTH];
+    char filename_SSimPL_root[SID_MAX_FILENAME_LENGTH];
+    char filename_halo_version_root[SID_MAX_FILENAME_LENGTH];
+    char filename_trees_name[SID_MAX_FILENAME_LENGTH];
+    char filename_data_root[SID_MAX_FILENAME_LENGTH];
+    char filename_output_root[SID_MAX_FILENAME_LENGTH];
     int  i_arg         = 1;
-    int  flag_calc_Vir = TRUE;
+    int  flag_calc_Vir = GBP_TRUE;
     strcpy(filename_SSimPL_root, argv[i_arg++]);
     strcpy(filename_halo_version_root, argv[i_arg++]);
     strcpy(filename_trees_name, argv[i_arg++]);
     if(argc == 8)
         strcpy(filename_data_root, argv[i_arg++]);
     else
-        flag_calc_Vir = FALSE;
+        flag_calc_Vir = GBP_FALSE;
     strcpy(filename_output_root, argv[i_arg++]);
     double z_lo_tau_trends = atof(argv[i_arg++]);
     double z_hi_tau_trends = atof(argv[i_arg++]);
 
     // Set the halo and tree filename roots
-    char filename_trees_root[MAX_FILENAME_LENGTH];
-    char filename_halos_root[MAX_FILENAME_LENGTH];
+    char filename_trees_root[SID_MAX_FILENAME_LENGTH];
+    char filename_halos_root[SID_MAX_FILENAME_LENGTH];
     sprintf(filename_trees_root, "%s/trees/%s", filename_SSimPL_root, filename_trees_name);
     sprintf(filename_halos_root, "%s/halos/%s", filename_SSimPL_root, filename_halo_version_root);
 
@@ -330,10 +330,10 @@ int main(int argc, char *argv[]) {
     // Read NFW concentrations (if given)
     if(flag_calc_Vir) {
         // Set the filename root
-        char filename_sim_root[MAX_FILENAME_LENGTH];
+        char filename_sim_root[SID_MAX_FILENAME_LENGTH];
         strcpy(filename_sim_root, filename_SSimPL_root);
         strip_path(filename_sim_root);
-        char filename_NFW_root[MAX_FILENAME_LENGTH];
+        char filename_NFW_root[SID_MAX_FILENAME_LENGTH];
         sprintf(filename_NFW_root, "%s/NFW_concentrations_%s", filename_data_root, filename_sim_root);
 
         read_trees_data(trees, filename_NFW_root, READ_TREES_DATA_SUBGROUPS, SID_FLOAT, "c_NFW");
@@ -393,5 +393,5 @@ int main(int argc, char *argv[]) {
     free_trees(&trees);
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

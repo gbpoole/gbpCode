@@ -13,9 +13,9 @@ int ADaPS_exist(ADaPS *list, const char *name_in, ...) {
     current = list;
     while(current != NULL) {
         if(!strcmp(name, current->name))
-            return (TRUE);
+            return (GBP_TRUE);
         current = current->next;
     }
     va_end(vargs);
-    return (FALSE);
+    return (GBP_FALSE);
 }

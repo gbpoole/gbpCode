@@ -16,7 +16,7 @@ void write_treenode_list_data(tree_info *trees, const char *filename_out_root, t
     char *           catalog_name     = list->catalog_name;
 
     // Open file
-    char filename_out[MAX_FILENAME_LENGTH];
+    char filename_out[SID_MAX_FILENAME_LENGTH];
     sprintf(filename_out, "%s_%s_data.txt", filename_out_root, list->catalog_name);
     FILE *fp_props_out = fopen(filename_out, "w");
 
@@ -40,7 +40,7 @@ void write_treenode_list_data(tree_info *trees, const char *filename_out_root, t
     current                = list->data;
     while(current != NULL) {
         if(current->data_type != SID_INT && current->data_type != SID_DOUBLE)
-            SID_trap_error("Unsupported data type in write_treenode_list_data() (1).", ERROR_LOGIC);
+            SID_trap_error("Unsupported data type in write_treenode_list_data() (1).", SID_ERROR_LOGIC);
         typ_data[i_data] = current->data_type;
         ptr_data[i_data] = current->data;
         i_data++;
@@ -56,8 +56,8 @@ void write_treenode_list_data(tree_info *trees, const char *filename_out_root, t
             void *data_i;
             // Generate properties
             n_list_i = n_list_local;
-            if(i_rank != MASTER_RANK)
-                SID_Sendrecv(&n_list_local, 1, SID_INT, MASTER_RANK, 1918270, &n_list_i, 1, SID_INT, i_rank, 1918270, SID.COMM_WORLD);
+            if(i_rank != SID_MASTER_RANK)
+                SID_Sendrecv(&n_list_local, 1, SID_INT, SID_MASTER_RANK, 1918270, &n_list_i, 1, SID_INT, i_rank, 1918270, SID.COMM_WORLD);
             // Allocate buffers
             void ** buffer       = (void **)SID_malloc(sizeof(void *) * n_data);
             size_t *data_written = (size_t *)SID_calloc(sizeof(size_t) * n_data);
@@ -66,7 +66,7 @@ void write_treenode_list_data(tree_info *trees, const char *filename_out_root, t
             int     n_remaining  = n_list_i;
             for(int i_data = 0; i_data < n_data; i_data++)
                 SID_Type_size(typ_data[i_data], &(dtype_size[i_data]));
-            if(i_rank != MASTER_RANK) {
+            if(i_rank != SID_MASTER_RANK) {
                 for(int i_data = 0; i_data < n_data; i_data++)
                     buffer[i_data] = SID_malloc(n_buffer_max * dtype_size[i_data]);
             } else {
@@ -76,15 +76,15 @@ void write_treenode_list_data(tree_info *trees, const char *filename_out_root, t
             }
             // Fill buffers and perform write in chunks
             while(n_remaining > 0) {
-                int n_buffer_i = MAX(n_buffer_max, n_remaining);
+                int n_buffer_i = GBP_MAX(n_buffer_max, n_remaining);
                 // Buffer exchange between ranks
-                if(i_rank != MASTER_RANK) {
+                if(i_rank != SID_MASTER_RANK) {
                     for(int i_data = 0; i_data < n_data; i_data++) {
                         int buffer_size = n_buffer_i * dtype_size[i_data];
                         SID_Sendrecv(&(((char *)(ptr_data[i_data]))[data_written[i_data]]),
                                      buffer_size,
                                      SID_CHAR,
-                                     MASTER_RANK,
+                                     SID_MASTER_RANK,
                                      1978271,
                                      buffer[i_data],
                                      buffer_size,
@@ -104,7 +104,7 @@ void write_treenode_list_data(tree_info *trees, const char *filename_out_root, t
                             else if(typ_data[i_data] == SID_DOUBLE)
                                 fprintf(fp_props_out, " %11.4le", ((double *)(buffer[i_data]))[i_buffer]);
                             else
-                                SID_trap_error("Unsupported data type in write_treenode_list_data() (2).", ERROR_LOGIC);
+                                SID_trap_error("Unsupported data type in write_treenode_list_data() (2).", SID_ERROR_LOGIC);
                         }
                         fprintf(fp_props_out, "\n");
                     }
@@ -115,7 +115,7 @@ void write_treenode_list_data(tree_info *trees, const char *filename_out_root, t
                     data_written[i_data] += (size_t)n_buffer_i * (size_t)dtype_size[i_data];
             }
             // Free buffers
-            if(i_rank != MASTER_RANK) {
+            if(i_rank != SID_MASTER_RANK) {
                 for(int i_data = 0; i_data < n_data; i_data++)
                     SID_free(SID_FARG buffer[i_data]);
             }
@@ -128,5 +128,5 @@ void write_treenode_list_data(tree_info *trees, const char *filename_out_root, t
     fclose(fp_props_out);
     SID_free(SID_FARG ptr_data);
     SID_free(SID_FARG typ_data);
-    SID_log("Done.", ERROR_LOGIC);
+    SID_log("Done.", SID_ERROR_LOGIC);
 }

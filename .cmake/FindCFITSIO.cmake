@@ -2,7 +2,7 @@
 #
 # This module defines the following variables:
 #
-# CFITSIO_FOUND: TRUE iff cfitsio is found.
+# CFITSIO_FOUND: GBP_TRUE iff cfitsio is found.
 # CFITSIO_INCLUDE_DIRS: Include directories for cfitsio.
 # CFITSIO_LIBRARIES: Libraries required to link cfitsio.
 #

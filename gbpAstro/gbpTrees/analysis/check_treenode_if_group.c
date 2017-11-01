@@ -12,5 +12,5 @@
 int check_treenode_if_group(tree_node_info *halo) {
     if(halo != NULL)
         return (halo->parent_top == NULL);
-    return (FALSE);
+    return (GBP_FALSE);
 }

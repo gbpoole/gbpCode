@@ -90,9 +90,9 @@ void compute_MCMC_chain_stats(double **x,
         (*ln_Pr_avg) = ln_Pr_in[0];
         (*ln_Pr_max) = ln_Pr_in[0];
         for(i_avg = 1; i_avg < n_avg; i_avg++) {
-            (*ln_Pr_min) = MIN((*ln_Pr_min), ln_Pr_in[i_avg]);
+            (*ln_Pr_min) = GBP_MIN((*ln_Pr_min), ln_Pr_in[i_avg]);
             (*ln_Pr_avg) += ln_Pr_in[i_avg];
-            (*ln_Pr_max) = MAX((*ln_Pr_max), ln_Pr_in[i_avg]);
+            (*ln_Pr_max) = GBP_MAX((*ln_Pr_max), ln_Pr_in[i_avg]);
         }
         (*ln_Pr_avg) /= (double)n_avg;
     }

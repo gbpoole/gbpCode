@@ -29,7 +29,7 @@ void read_groupings(const char *filename_root, int grouping_number, plist_info *
     int        PHK_width;
     slab_info *slab;
     if(check_mode_for_flag(mode, READ_GROUPING_SLAB) && check_mode_for_flag(mode, READ_GROUPING_PHK))
-        SID_trap_error("Multiple domain decompositions have been set in read_groupings().", ERROR_LOGIC);
+        SID_trap_error("Multiple domain decompositions have been set in read_groupings().", SID_ERROR_LOGIC);
     if(check_mode_for_flag(mode, READ_GROUPING_SLAB))
         slab = (slab_info *)va_arg(vargs, slab_info *);
     else if(check_mode_for_flag(mode, READ_GROUPING_PHK)) {
@@ -38,7 +38,7 @@ void read_groupings(const char *filename_root, int grouping_number, plist_info *
         n_bits_PHK = (int)va_arg(vargs, int);
         PHK_width  = (int)va_arg(vargs, int);
     } else
-        SID_trap_error("No domain decomposition has been set in read_groupings().", ERROR_LOGIC);
+        SID_trap_error("No domain decomposition has been set in read_groupings().", SID_ERROR_LOGIC);
 
     // ... redshift space? ...
     int flag_add_zspace_x;
@@ -51,9 +51,9 @@ void read_groupings(const char *filename_root, int grouping_number, plist_info *
     flag_add_zspace_z = check_mode_for_flag(mode, READ_GROUPING_ADD_VZ);
     n_z_dims          = flag_add_zspace_x + flag_add_zspace_y + flag_add_zspace_z;
     if(n_z_dims > 1)
-        SID_trap_error("More then one redshift-space dimension (%d) has been specified.", ERROR_LOGIC, n_z_dims);
+        SID_trap_error("More then one redshift-space dimension (%d) has been specified.", SID_ERROR_LOGIC, n_z_dims);
     else if(n_z_dims == 1) {
-        flag_add_zspace = TRUE;
+        flag_add_zspace = GBP_TRUE;
         if(check_mode_for_flag(mode, READ_GROUPING_SLAB))
             box_size = (double)va_arg(vargs, double);
         redshift = va_arg(vargs, double);
@@ -62,8 +62,8 @@ void read_groupings(const char *filename_root, int grouping_number, plist_info *
     }
 
     // Set filename, open file and count the number of items
-    char   filename_in[MAX_FILENAME_LENGTH];
-    char   filename_name[MAX_FILENAME_LENGTH];
+    char   filename_in[SID_MAX_FILENAME_LENGTH];
+    char   filename_name[SID_MAX_FILENAME_LENGTH];
     FILE * fp_in;
     size_t n_halos;
     sprintf(filename_in, "%s_grouping_%03d.dat", filename_root, grouping_number);
@@ -194,18 +194,18 @@ void read_groupings(const char *filename_root, int grouping_number, plist_info *
                 vz_halos[n_halos_local] = (GBPREAL)vz_in;
 
                 // Keep track of ranges for a sanity check
-                x_min  = MIN(x_min, x_halos[n_halos_local]);
-                x_max  = MAX(x_max, x_halos[n_halos_local]);
-                y_min  = MIN(y_min, y_halos[n_halos_local]);
-                y_max  = MAX(y_max, y_halos[n_halos_local]);
-                z_min  = MIN(z_min, z_halos[n_halos_local]);
-                z_max  = MAX(z_max, z_halos[n_halos_local]);
-                vx_min = MIN(vx_min, vx_halos[n_halos_local]);
-                vx_max = MAX(vx_max, vx_halos[n_halos_local]);
-                vy_min = MIN(vy_min, vy_halos[n_halos_local]);
-                vy_max = MAX(vy_max, vy_halos[n_halos_local]);
-                vz_min = MIN(vz_min, vz_halos[n_halos_local]);
-                vz_max = MAX(vz_max, vz_halos[n_halos_local]);
+                x_min  = GBP_MIN(x_min, x_halos[n_halos_local]);
+                x_max  = GBP_MAX(x_max, x_halos[n_halos_local]);
+                y_min  = GBP_MIN(y_min, y_halos[n_halos_local]);
+                y_max  = GBP_MAX(y_max, y_halos[n_halos_local]);
+                z_min  = GBP_MIN(z_min, z_halos[n_halos_local]);
+                z_max  = GBP_MAX(z_max, z_halos[n_halos_local]);
+                vx_min = GBP_MIN(vx_min, vx_halos[n_halos_local]);
+                vx_max = GBP_MAX(vx_max, vx_halos[n_halos_local]);
+                vy_min = GBP_MIN(vy_min, vy_halos[n_halos_local]);
+                vy_max = GBP_MAX(vy_max, vy_halos[n_halos_local]);
+                vz_min = GBP_MIN(vz_min, vz_halos[n_halos_local]);
+                vz_max = GBP_MAX(vz_max, vz_halos[n_halos_local]);
 
                 // Count the number of halos read locally
                 n_halos_local++;
@@ -287,7 +287,7 @@ void read_groupings(const char *filename_root, int grouping_number, plist_info *
 
             // Sanity check
             if(j_halo != n_halos_allocate)
-                SID_trap_error("The full allocation of halos was not read (ie. %zd!=%zd).", ERROR_LOGIC, j_halo, n_halos_allocate);
+                SID_trap_error("The full allocation of halos was not read (ie. %zd!=%zd).", SID_ERROR_LOGIC, j_halo, n_halos_allocate);
 
             // Perform a global sort of the keys.  PHK_halo_rank will be the
             //   index *globally* of a given key.  We will use this index to
@@ -304,7 +304,7 @@ void read_groupings(const char *filename_root, int grouping_number, plist_info *
             // Perfrom sort of local PHKs
             SID_free(SID_FARG PHK_halo_index);
             PHK_halo_index = NULL;
-            merge_sort(PHK_halo, (size_t)n_halos_allocate, &PHK_halo_index, SID_SIZE_T, SORT_COMPUTE_INDEX, FALSE);
+            merge_sort(PHK_halo, (size_t)n_halos_allocate, &PHK_halo_index, SID_SIZE_T, SORT_COMPUTE_INDEX, GBP_FALSE);
 
             // Read an old decomposition if one exists
             if(ADaPS_exist((plist->data), "PHK_min_local_halos")) {
@@ -362,18 +362,18 @@ void read_groupings(const char *filename_root, int grouping_number, plist_info *
                         // Set the target halo.  It's PHK will set the upper range of PHKs for this rank.
                         size_t i_halo_step;
                         i_halo_step   = n_halos_remaining / n_ranks_remaining;
-                        i_halo_step   = MAX(i_halo_step, 1);
+                        i_halo_step   = GBP_MAX(i_halo_step, 1);
                         i_halo_target = i_halo_start + i_halo_step - 1;
-                        i_halo_target = MIN(i_halo_target, n_halos - 1);
+                        i_halo_target = GBP_MIN(i_halo_target, n_halos - 1);
 
                         // Find the rank that has the target rank and it's PHK
-                        int flag_found_target = FALSE;
+                        int flag_found_target = GBP_FALSE;
                         int PHK_Bcast;
                         int flag_check;
                         PHK_Bcast = 0;
                         for(i_halo = 0; i_halo < n_halos_allocate && !flag_found_target; i_halo++) {
                             if(PHK_halo_rank[i_halo] == i_halo_target) {
-                                flag_found_target = TRUE;
+                                flag_found_target = GBP_TRUE;
                                 PHK_Bcast         = (int)PHK_halo[i_halo];
                                 break;
                             }
@@ -384,7 +384,7 @@ void read_groupings(const char *filename_root, int grouping_number, plist_info *
                         SID_Allreduce(&flag_found_target, &flag_check, 1, SID_INT, SID_SUM, SID.COMM_WORLD);
                         if(flag_check != 1)
                             SID_trap_error("The desired halo (%zd) was found by %d processes during the PHK domain decomposition.",
-                                           ERROR_LOGIC,
+                                           SID_ERROR_LOGIC,
                                            i_halo_target,
                                            flag_check);
 
@@ -488,7 +488,7 @@ void read_groupings(const char *filename_root, int grouping_number, plist_info *
             // Assign to the right rank
             if(PHK_i >= (PHK_t)PHK_min_local && PHK_i <= (PHK_t)PHK_max_local) {
                 if(n_halos_local >= n_halos_allocate)
-                    SID_trap_error("Trying to read past storage allocation in PHK doain decomposition.", ERROR_LOGIC);
+                    SID_trap_error("Trying to read past storage allocation in PHK doain decomposition.", SID_ERROR_LOGIC);
                 if(is_a_member(&PHK_i, keys_boundary, n_keys_boundary, SID_PHK_T))
                     n_boundary++;
                 else
@@ -501,7 +501,7 @@ void read_groupings(const char *filename_root, int grouping_number, plist_info *
         // Sanity check
         if(n_halos_local != n_halos_allocate)
             SID_trap_error("The number of halos counted does not correspond to what was allocated (ie. %zd!=%zd).",
-                           ERROR_LOGIC,
+                           SID_ERROR_LOGIC,
                            n_halos_local,
                            n_halos_allocate);
 
@@ -566,7 +566,7 @@ void read_groupings(const char *filename_root, int grouping_number, plist_info *
             if(PHK_i >= (PHK_t)PHK_min_local && PHK_i <= (PHK_t)PHK_max_local) {
                 size_t i_store;
                 if(n_halos_local >= n_halos_allocate)
-                    SID_trap_error("Trying to read past storage allocation in PHK doain decomposition.", ERROR_LOGIC);
+                    SID_trap_error("Trying to read past storage allocation in PHK doain decomposition.", SID_ERROR_LOGIC);
                 if(is_a_member(&PHK_i, keys_boundary, n_keys_boundary, SID_PHK_T))
                     i_store = i_boundary++;
                 else
@@ -584,18 +584,18 @@ void read_groupings(const char *filename_root, int grouping_number, plist_info *
                 PHK_halo[i_store]   = (size_t)PHK_i;
 
                 // Keep track of ranges for a sanity check
-                x_min  = MIN(x_min, x_halos[i_store]);
-                x_max  = MAX(x_max, x_halos[i_store]);
-                y_min  = MIN(y_min, y_halos[i_store]);
-                y_max  = MAX(y_max, y_halos[i_store]);
-                z_min  = MIN(z_min, z_halos[i_store]);
-                z_max  = MAX(z_max, z_halos[i_store]);
-                vx_min = MIN(vx_min, vx_halos[i_store]);
-                vx_max = MAX(vx_max, vx_halos[i_store]);
-                vy_min = MIN(vy_min, vy_halos[i_store]);
-                vy_max = MAX(vy_max, vy_halos[i_store]);
-                vz_min = MIN(vz_min, vz_halos[i_store]);
-                vz_max = MAX(vz_max, vz_halos[i_store]);
+                x_min  = GBP_MIN(x_min, x_halos[i_store]);
+                x_max  = GBP_MAX(x_max, x_halos[i_store]);
+                y_min  = GBP_MIN(y_min, y_halos[i_store]);
+                y_max  = GBP_MAX(y_max, y_halos[i_store]);
+                z_min  = GBP_MIN(z_min, z_halos[i_store]);
+                z_max  = GBP_MAX(z_max, z_halos[i_store]);
+                vx_min = GBP_MIN(vx_min, vx_halos[i_store]);
+                vx_max = GBP_MAX(vx_max, vx_halos[i_store]);
+                vy_min = GBP_MIN(vy_min, vy_halos[i_store]);
+                vy_max = GBP_MAX(vy_max, vy_halos[i_store]);
+                vz_min = GBP_MIN(vz_min, vz_halos[i_store]);
+                vz_max = GBP_MAX(vz_max, vz_halos[i_store]);
 
                 // Count the number of halos read locally
                 n_halos_local++;
@@ -606,13 +606,13 @@ void read_groupings(const char *filename_root, int grouping_number, plist_info *
         // Sanity check
         if(n_halos_local != n_halos_allocate)
             SID_trap_error(
-                "The number of halos read does not correspond to what was allocated (ie. %zd!=%zd).", ERROR_LOGIC, n_halos_local, n_halos_allocate);
+                "The number of halos read does not correspond to what was allocated (ie. %zd!=%zd).", SID_ERROR_LOGIC, n_halos_local, n_halos_allocate);
 
         // Sort the local PHKs
         size_t *PHK_index;
         size_t *PHK_index_boundary;
-        merge_sort(PHK_halo, n_halos_allocate, &PHK_index, SID_SIZE_T, SORT_COMPUTE_INDEX, FALSE);
-        merge_sort(PHK_halo, n_boundary, &PHK_index_boundary, SID_SIZE_T, SORT_COMPUTE_INDEX, FALSE);
+        merge_sort(PHK_halo, n_halos_allocate, &PHK_index, SID_SIZE_T, SORT_COMPUTE_INDEX, GBP_FALSE);
+        merge_sort(PHK_halo, n_boundary, &PHK_index_boundary, SID_SIZE_T, SORT_COMPUTE_INDEX, GBP_FALSE);
 
         // Store read indices, PHKs and their sort indices
         ADaPS_store(&(plist->data), (void *)read_index, "read_index_halos", ADaPS_DEFAULT);
@@ -637,7 +637,7 @@ void read_groupings(const char *filename_root, int grouping_number, plist_info *
     SID_Allreduce(&n_halos_local, &n_halos_read, 1, SID_SIZE_T, SID_SUM, SID.COMM_WORLD);
     if(n_halos_read != n_halos)
         SID_trap_error("The correct number of halos was not read (ie. %lld!=%lld).  There must be a coordinate/box size problem.",
-                       ERROR_LOGIC,
+                       SID_ERROR_LOGIC,
                        n_halos_read,
                        n_halos);
     SID_Allreduce(SID_IN_PLACE, &x_min, 1, SID_REAL, SID_MIN, SID.COMM_WORLD);

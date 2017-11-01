@@ -32,13 +32,13 @@ void assign_progenitor_order_vertical_recursive(tree_vertical_node_info *tree, i
             assign_progenitor_order_vertical_recursive(current, &(M_iN[i_progenitor]), mode);
             progenitors[i_progenitor] = current;
             if(check_mode_for_flag(mode, TREE_PROGENITOR_ORDER_DELUCIA))
-                max_M_iN = MAX(max_M_iN, M_iN[i_progenitor]);
+                max_M_iN = GBP_MAX(max_M_iN, M_iN[i_progenitor]);
             i_progenitor++;
             current = current->progenitor_next;
         }
         if(i_progenitor != tree->n_progenitors)
             SID_trap_error(
-                "There is a progenitor problem in assign_progenitor_order_recursive! (%d!=%d)", ERROR_LOGIC, i_progenitor != tree->n_progenitors);
+                "There is a progenitor problem in assign_progenitor_order_recursive! (%d!=%d)", SID_ERROR_LOGIC, i_progenitor != tree->n_progenitors);
 
         // Assign progenitors by (descending) order of their score
         //   (note: sorting the sort indicies gives each progenitor's ranking in the sort)

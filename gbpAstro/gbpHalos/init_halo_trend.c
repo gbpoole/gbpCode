@@ -13,5 +13,5 @@ void init_halo_trend(halo_trend_info *trend_data, trend_info **trend, const char
     else if(!strcmp(name, "SSFctn"))
         init_trend(trend, name, trend_data, init_halo_trend_property_SSFctn, free_halo_trend_property_SSFctn, calc_halo_trend_property_index_SSFctn);
     else
-        SID_trap_error("Invalid property {%s} specified in init_halo_trend().", ERROR_LOGIC, name);
+        SID_trap_error("Invalid property {%s} specified in init_halo_trend().", SID_ERROR_LOGIC, name);
 }

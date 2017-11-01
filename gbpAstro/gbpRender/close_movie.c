@@ -58,6 +58,6 @@ void close_movie(movie_info *movie) {
         movie->frame_rate        = 0;
     }
 #else
-    SID_trap_error("Routine not supported.  FFMPEG not installed.", ERROR_LOGIC);
+    SID_trap_error("Routine not supported.  FFMPEG not installed.", SID_ERROR_LOGIC);
 #endif
 }

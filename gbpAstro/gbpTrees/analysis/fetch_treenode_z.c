@@ -23,7 +23,7 @@ double fetch_treenode_z(tree_info *trees, tree_node_info *halo) {
                 halo_properties_SAGE_info *properties = &(trees->group_properties_SAGE[halo->snap_tree][halo->neighbour_index]);
                 z                                     = properties->pos[2];
             } else
-                SID_trap_error("Group properties are not defined in fetch_treenode_z().  They probably have not been read.", ERROR_LOGIC);
+                SID_trap_error("Group properties are not defined in fetch_treenode_z().  They probably have not been read.", SID_ERROR_LOGIC);
         } else {
             if(trees->subgroup_properties != NULL) {
                 halo_properties_info *properties = &(trees->subgroup_properties[halo->snap_tree][halo->neighbour_index]);
@@ -35,7 +35,7 @@ double fetch_treenode_z(tree_info *trees, tree_node_info *halo) {
                 halo_properties_SAGE_info *properties = &(trees->subgroup_properties_SAGE[halo->snap_tree][halo->neighbour_index]);
                 z                                     = properties->pos[2];
             } else
-                SID_trap_error("Subgroup properties are not defined in fetch_treenode_z().  They probably have not been read.", ERROR_LOGIC);
+                SID_trap_error("Subgroup properties are not defined in fetch_treenode_z().  They probably have not been read.", SID_ERROR_LOGIC);
         }
         return (z);
     }

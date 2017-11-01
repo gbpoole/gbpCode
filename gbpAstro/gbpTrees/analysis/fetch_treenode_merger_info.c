@@ -34,9 +34,9 @@ int fetch_treenode_merger_info(tree_info *      trees,
 
     // For substructures, find the spots in the secondary and primary
     //    halo progenitor lines where we want to quantify the merger.
-    int flag_success = FALSE;
+    int flag_success = GBP_FALSE;
     if((*halo_secondary) != NULL && (*halo_primary) != NULL) {
-        flag_success = TRUE;
+        flag_success = GBP_TRUE;
         if(!check_treenode_if_group((*halo_secondary))) {
             tree_markers_info *markers_secondary = fetch_treenode_precomputed_markers(trees, (*halo_secondary));
             (*halo_secondary)                    = markers_secondary->peak_mass;

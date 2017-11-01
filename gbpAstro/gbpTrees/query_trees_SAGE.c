@@ -12,10 +12,10 @@ int main(int argc, char *argv[]) {
 
     // Fetch user inputs
     if(argc != 7 && argc != 6)
-        SID_trap_error("Invalid Syntax.", ERROR_SYNTAX);
-    char filename_SSimPL_root[MAX_FILENAME_LENGTH];
-    char filename_halos_root[MAX_FILENAME_LENGTH];
-    char filename_trees_root[MAX_FILENAME_LENGTH];
+        SID_trap_error("Invalid Syntax.", SID_ERROR_SYNTAX);
+    char filename_SSimPL_root[SID_MAX_FILENAME_LENGTH];
+    char filename_halos_root[SID_MAX_FILENAME_LENGTH];
+    char filename_trees_root[SID_MAX_FILENAME_LENGTH];
     char group_prefix[8];
     strcpy(filename_SSimPL_root, argv[1]);
     strcpy(filename_halos_root, argv[2]);
@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
         sprintf(group_prefix, "sub");
     } else {
         SID_log("Invalid mode selection {%s}.  Should be 'group' or 'subgroup'.", SID_LOG_COMMENT, argv[4]);
-        SID_exit(ERROR_SYNTAX);
+        SID_exit(SID_ERROR_SYNTAX);
     }
     int i_forest_query = atoi(argv[5]);
 
@@ -34,18 +34,18 @@ int main(int argc, char *argv[]) {
     int i_forest_lo   = 0;
     int i_forest_hi   = -1;
     int i_file        = 0;
-    int flag_continue = TRUE;
+    int flag_continue = GBP_TRUE;
     do {
         SID_log("Scanning file %d...", SID_LOG_OPEN, i_file);
 
         // Open file
-        char filename_in[MAX_FILENAME_LENGTH];
+        char filename_in[SID_MAX_FILENAME_LENGTH];
         sprintf(filename_in, "%s/trees/%s/vertical/%sgroup_trees_%03d.dat", filename_SSimPL_root, filename_trees_root, group_prefix, i_file);
         FILE *fp_in_trees = fopen(filename_in, "r");
 
         // Check that the file has been opened
         if(fp_in_trees == NULL)
-            SID_trap_error("File {%s} could not be opened while still scanning for forest %d.", ERROR_IO_OPEN, filename_in, i_forest_query);
+            SID_trap_error("File {%s} could not be opened while still scanning for forest %d.", SID_ERROR_IO_OPEN, filename_in, i_forest_query);
 
         // Read header
         int n_forest_file = 0;
@@ -90,7 +90,7 @@ int main(int argc, char *argv[]) {
             // Clean-up
             SID_free(SID_FARG n_halo_forest_file);
             SID_free(SID_FARG forest);
-            flag_continue = FALSE;
+            flag_continue = GBP_FALSE;
         }
         // Move to the next file
         else {
@@ -102,5 +102,5 @@ int main(int argc, char *argv[]) {
     } while(flag_continue); // loop over files
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

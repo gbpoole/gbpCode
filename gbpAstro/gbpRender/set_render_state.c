@@ -18,7 +18,7 @@ int set_render_state(render_info *render, int frame, int mode) {
     // Copy the next perspective to the camera
     perspective_info *perspective   = render->camera->perspective;
     scene_info *      current_scene = render->scenes;
-    int               r_val         = FALSE;
+    int               r_val         = GBP_FALSE;
     int               i_frame       = 0;
     int               i_scene       = 0;
     int               frame_start   = 0;
@@ -29,7 +29,7 @@ int set_render_state(render_info *render, int frame, int mode) {
         frame_stop = current_scene->last_frame;
         if(frame >= current_scene->first_frame && frame <= current_scene->last_frame) {
             copy_perspective(current_scene->perspectives[frame - current_scene->first_frame], perspective);
-            r_val = TRUE;
+            r_val = GBP_TRUE;
         }
         current_scene = current_scene->next;
         i_scene++;
@@ -37,7 +37,7 @@ int set_render_state(render_info *render, int frame, int mode) {
 
     // Make sure we're requesting a valid frame
     if(!r_val)
-        SID_trap_error("Invalid frame (%d) requested in set_render_state() (min/max=%d/%d).", ERROR_LOGIC, frame, frame_start, frame_stop);
+        SID_trap_error("Invalid frame (%d) requested in set_render_state() (min/max=%d/%d).", SID_ERROR_LOGIC, frame, frame_start, frame_stop);
 
     // Perform snapshot and smooth-file reading
     int    i_snap, j_snap, snap_best;
@@ -54,9 +54,9 @@ int set_render_state(render_info *render, int frame, int mode) {
             if(render->n_interpolate > 1) {
                 // Determine the list of best snapshots to use
                 if(snap_diff_best < 0)
-                    snap_list[0] = MAX(0, snap_best - render->n_interpolate / 2);
+                    snap_list[0] = GBP_MAX(0, snap_best - render->n_interpolate / 2);
                 else
-                    snap_list[0] = MAX(0, 1 + snap_best - render->n_interpolate / 2);
+                    snap_list[0] = GBP_MAX(0, 1 + snap_best - render->n_interpolate / 2);
                 for(i_snap = 1; i_snap < render->n_interpolate; i_snap++)
                     snap_list[i_snap] = snap_list[i_snap - 1] + 1;
                 if(snap_list[render->n_interpolate - 1] >= render->n_snap_a_list) {
@@ -72,11 +72,11 @@ int set_render_state(render_info *render, int frame, int mode) {
                     (perspective->time - render->snap_a_list[snap_list[0]]) / (render->snap_a_list[snap_list[1]] - render->snap_a_list[snap_list[0]]);
                 SID_log("f_interpolate=%le", SID_LOG_COMMENT, render->f_interpolate);
                 if(render->n_interpolate != 2)
-                    SID_trap_error("n_interpolate>2 not supported (yet).", ERROR_NONE);
+                    SID_trap_error("n_interpolate>2 not supported (yet).", SID_ERROR_NONE);
 
                 SID_log("Done.", SID_LOG_CLOSE);
             } else if(render->n_interpolate <= 0)
-                SID_trap_error("An invalid value for n_interpolate (%d) has been set.", ERROR_LOGIC, render->n_interpolate);
+                SID_trap_error("An invalid value for n_interpolate (%d) has been set.", SID_ERROR_LOGIC, render->n_interpolate);
             else {
                 snap_list[0] = snap_best;
                 SID_log("snap=%d is best with t=%lf...Done.", SID_LOG_CLOSE, snap_list[0], render->snap_a_list[snap_best]);

@@ -23,13 +23,13 @@ void compute_progenitor_score_vertical_recursive(tree_vertical_node_info *tree, 
             M_iN = 0;
             compute_progenitor_score_vertical_recursive(current, &M_iN, mode);
             if(check_mode_for_flag(mode, TREE_PROGENITOR_ORDER_DELUCIA))
-                max_M_iN = MAX(max_M_iN, M_iN);
+                max_M_iN = GBP_MAX(max_M_iN, M_iN);
             i_progenitor++;
             current = current->progenitor_next;
         }
         if(i_progenitor != tree->n_progenitors)
             SID_trap_error(
-                "There is a progenitor problem in compute_progenitor_score_recursive! (%d!=%d)", ERROR_LOGIC, i_progenitor != tree->n_progenitors);
+                "There is a progenitor problem in compute_progenitor_score_recursive! (%d!=%d)", SID_ERROR_LOGIC, i_progenitor != tree->n_progenitors);
     }
 
     // Add this progenitor's score to the descendant's sum (see De Lucia and Blaizot (2006))

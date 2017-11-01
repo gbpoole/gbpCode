@@ -28,7 +28,7 @@ void read_forests(const char *filename_root_in,
                   int *       n_subgroups_max_snap_local) {
     int *  n_halos_tree_group;
     int *  n_halos_tree_subgroup;
-    char   filename_in[MAX_FILENAME_LENGTH];
+    char   filename_in[SID_MAX_FILENAME_LENGTH];
     FILE * fp_in       = NULL;
     char * line        = NULL;
     size_t line_length = 0;
@@ -81,7 +81,7 @@ void read_forests(const char *filename_root_in,
             tree2forest_mapping_group_largest = i_forest;
         }
         if(n_trees_forest < 1)
-            SID_trap_error("There is a gap in the group tree->forest mapping (%d is missing).", ERROR_LOGIC, i_forest);
+            SID_trap_error("There is a gap in the group tree->forest mapping (%d is missing).", SID_ERROR_LOGIC, i_forest);
     }
     (*n_forests_group) = i_forest;
     SID_free(SID_FARG tree2forest_mapping_group_index);
@@ -133,7 +133,7 @@ void read_forests(const char *filename_root_in,
             tree2forest_mapping_subgroup_largest = i_forest;
         }
         if(n_trees_forest < 1)
-            SID_trap_error("There is a gap in the subgroup tree->forest mapping (%d is missing).", ERROR_LOGIC, i_forest);
+            SID_trap_error("There is a gap in the subgroup tree->forest mapping (%d is missing).", SID_ERROR_LOGIC, i_forest);
     }
     (*n_forests_subgroup) = i_forest;
     SID_free(SID_FARG tree2forest_mapping_subgroup_index);
@@ -192,7 +192,7 @@ void read_forests(const char *filename_root_in,
     fp_in              = fopen(filename_in, "r");
     n_forests_group_in = count_lines_data(fp_in);
     if((*n_forests_group) != n_forests_group_in)
-        SID_trap_error("The group forest count does not match the input (%d!=%d)", ERROR_LOGIC, n_forests_group, n_forests_group_in);
+        SID_trap_error("The group forest count does not match the input (%d!=%d)", SID_ERROR_LOGIC, n_forests_group, n_forests_group_in);
     (*n_groups_local)          = 0;
     (*n_groups_max_snap_local) = 0;
     for(i_forest = 0; i_forest < (*n_forests_group); i_forest++) {
@@ -214,7 +214,7 @@ void read_forests(const char *filename_root_in,
     fp_in                 = fopen(filename_in, "r");
     n_forests_subgroup_in = count_lines_data(fp_in);
     if((*n_forests_subgroup) != n_forests_subgroup_in)
-        SID_trap_error("The subgroup forest count does not match the input (%d!=%d)", ERROR_LOGIC, n_forests_subgroup, n_forests_subgroup_in);
+        SID_trap_error("The subgroup forest count does not match the input (%d!=%d)", SID_ERROR_LOGIC, n_forests_subgroup, n_forests_subgroup_in);
     (*n_subgroups_local)          = 0;
     (*n_subgroups_max_snap_local) = 0;
     for(i_forest = 0; i_forest < (*n_forests_subgroup); i_forest++) {

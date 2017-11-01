@@ -129,7 +129,7 @@ void init_tree_property_tau(trend_property_info *property, void *trees_in, int i
         n_bins = trees->n_snaps;
         i_0    = trees->n_snaps - 1;
     } else {
-        n_bins = MIN(i_hist + 1, trees->n_snaps);
+        n_bins = GBP_MIN(i_hist + 1, trees->n_snaps);
         i_0    = i_hist;
     }
     gbp_va_start(vargs);

@@ -18,7 +18,7 @@ void set_image_RGB(image_info *image_RGB_in, double RGB_min_in, double RGB_max_i
             if(flag_log_RGB)
                 image_RGB_i = take_log10(image_RGB_i);
             int pixel_value = (int)((double)n_colours * (image_RGB_i - RGB_min) / RGB_range);
-            pixel_value     = MAX(0, MIN(pixel_value, n_colours));
+            pixel_value     = GBP_MAX(0, GBP_MIN(pixel_value, n_colours));
             int red         = (int)image_RGB_in->colour_table[0][pixel_value];
             int green       = (int)image_RGB_in->colour_table[1][pixel_value];
             int blue        = (int)image_RGB_in->colour_table[2][pixel_value];

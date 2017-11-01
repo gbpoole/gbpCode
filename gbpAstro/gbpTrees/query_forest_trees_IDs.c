@@ -34,10 +34,10 @@ int main(int argc, char *argv[]) {
 
     // Fetch user inputs
     if(argc != 6)
-        SID_trap_error("Invalid Syntax.", ERROR_SYNTAX);
-    char filename_SSimPL_root[MAX_FILENAME_LENGTH];
-    char filename_halos_root[MAX_FILENAME_LENGTH];
-    char filename_trees_root[MAX_FILENAME_LENGTH];
+        SID_trap_error("Invalid Syntax.", SID_ERROR_SYNTAX);
+    char filename_SSimPL_root[SID_MAX_FILENAME_LENGTH];
+    char filename_halos_root[SID_MAX_FILENAME_LENGTH];
+    char filename_trees_root[SID_MAX_FILENAME_LENGTH];
     char halo_type_prefix_text[8];
     strcpy(filename_SSimPL_root, argv[1]);
     strcpy(filename_halos_root, argv[2]);
@@ -48,7 +48,7 @@ int main(int argc, char *argv[]) {
         mode = MATCH_SUBGROUPS;
     else {
         SID_log("Invalid mode selection {%s}.  Should be 'group' or 'subgroup'.", SID_LOG_COMMENT, argv[4]);
-        SID_exit(ERROR_SYNTAX);
+        SID_exit(SID_ERROR_SYNTAX);
     }
     int halo_forest_find = atoi(argv[5]);
 
@@ -56,7 +56,7 @@ int main(int argc, char *argv[]) {
 
     // Read tree header information
     tree_info *trees;
-    char       filename_file_root[MAX_FILENAME_LENGTH];
+    char       filename_file_root[SID_MAX_FILENAME_LENGTH];
     sprintf(filename_file_root, "%s/trees/%s", filename_SSimPL_root, filename_trees_root);
     init_trees_read(filename_SSimPL_root, filename_halos_root, filename_trees_root, TREE_READ_DEFAULT, &trees);
 
@@ -75,11 +75,11 @@ int main(int argc, char *argv[]) {
             }
         }
     } else
-        SID_trap_error("Invalid mode (%d).", ERROR_LOGIC, mode);
+        SID_trap_error("Invalid mode (%d).", SID_ERROR_LOGIC, mode);
 
     // Clean-up
     free_trees(&trees);
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }

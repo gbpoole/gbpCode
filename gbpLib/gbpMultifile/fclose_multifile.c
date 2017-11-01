@@ -14,5 +14,5 @@ void fclose_multifile(fp_multifile_info *fp_in) {
     fp_in->i_item_start   = 0;
     fp_in->i_item_stop    = 0;
     fp_in->n_items_file   = 0;
-    fp_in->flag_multifile = FALSE;
+    fp_in->flag_multifile = GBP_FALSE;
 }

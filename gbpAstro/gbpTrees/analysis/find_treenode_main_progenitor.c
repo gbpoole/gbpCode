@@ -29,15 +29,15 @@ int find_treenode_main_progenitor(tree_info *trees, tree_node_info *halo, tree_n
                     //       at this point.
                     if(track_halo->snap_tree == target_snap) {
                         (*main_progenitor) = track_halo;
-                        return (TRUE);
+                        return (GBP_TRUE);
                     } else
-                        return (FALSE);
+                        return (GBP_FALSE);
                 } else
-                    return (FALSE);
+                    return (GBP_FALSE);
             } else
-                return (FALSE);
+                return (GBP_FALSE);
         } else
-            return (FALSE);
+            return (GBP_FALSE);
     }
-    return (FALSE);
+    return (GBP_FALSE);
 }

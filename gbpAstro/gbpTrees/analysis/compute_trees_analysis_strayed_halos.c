@@ -21,7 +21,7 @@ void compute_trees_analysis_strayed_halos(tree_info *trees, char *filename_out_r
         neighbour_list_start = trees->first_neighbour_subgroups;
     }
 
-    char filename_out_root[MAX_FILENAME_LENGTH];
+    char filename_out_root[SID_MAX_FILENAME_LENGTH];
     sprintf(filename_out_root, "%s_%sgroup", filename_out_root_in, group_prefix);
 
     SID_log("Performing strayed %sgroup analysis...", SID_LOG_OPEN | SID_LOG_TIMER, group_prefix);
@@ -40,8 +40,8 @@ void compute_trees_analysis_strayed_halos(tree_info *trees, char *filename_out_r
     SID_log("Done.", SID_LOG_CLOSE);
 
     // Set filename roots
-    char filename_root_halos[MAX_FILENAME_LENGTH];
-    char filename_root_branches[MAX_FILENAME_LENGTH];
+    char filename_root_halos[SID_MAX_FILENAME_LENGTH];
+    char filename_root_branches[SID_MAX_FILENAME_LENGTH];
     sprintf(filename_root_halos, "%s_strayed_%sgroup", filename_out_root, group_prefix);
     sprintf(filename_root_branches, "%s_strayed_%sgroup_branches", filename_out_root, group_prefix);
 

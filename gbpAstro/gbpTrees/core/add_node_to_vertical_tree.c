@@ -47,7 +47,7 @@ int add_node_to_vertical_tree(tree_vertical_info *       tree,
 
     // Find the halo's descendant and set various pointers
     //   All used halos must be added to the neighbour list (done below) for this to work
-    int flag_found_group = FALSE;
+    int flag_found_group = GBP_FALSE;
     if(halo_snap != descendant_snap && descendant_snap >= 0) {
         descendant_halo_list = tree->neighbour_halos[descendant_snap];
         if(descendant_halo_list != NULL && descendant_id >= 0) {
@@ -78,7 +78,7 @@ int add_node_to_vertical_tree(tree_vertical_info *       tree,
             }
             if(new_node->descendant == NULL)
                 SID_trap_error("Could not find the descendant (%d;snap=%d) of a halo (%d;snap=%d)!",
-                               ERROR_LOGIC,
+                               SID_ERROR_LOGIC,
                                halo_id,
                                halo_snap,
                                descendant_id,
@@ -86,7 +86,7 @@ int add_node_to_vertical_tree(tree_vertical_info *       tree,
         }
     } else if(descendant_snap == halo_snap)
         SID_trap_error("This halo (%d;snap=%d) has the same snap as its descenant (%d;snap=%d)!",
-                       ERROR_LOGIC,
+                       SID_ERROR_LOGIC,
                        halo_id,
                        halo_snap,
                        descendant_id,
@@ -112,7 +112,7 @@ int add_node_to_vertical_tree(tree_vertical_info *       tree,
                     next_node = last_node->group_halo_next;
                 }
                 last_node->group_halo_next = new_node;
-                flag_found_group           = TRUE;
+                flag_found_group           = GBP_TRUE;
             }
             // ... else, keep searching
             else

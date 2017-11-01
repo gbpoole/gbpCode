@@ -8,5 +8,5 @@ int grab_long(char *line, int n, long *return_value) {
     char *word = NULL;
     scan_to_nth_word(line, n, &word);
     sscanf(word, "%ld", return_value);
-    return (ERROR_NONE);
+    return (SID_ERROR_NONE);
 }

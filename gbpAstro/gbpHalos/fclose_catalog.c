@@ -20,7 +20,7 @@ void fclose_catalog(fp_catalog_info *fp_in) {
     fp_in->i_halo_start         = 0;
     fp_in->i_halo_stop          = 0;
     fp_in->n_halos_file         = 0;
-    fp_in->flag_read_properties = FALSE;
-    fp_in->flag_read_profiles   = FALSE;
-    fp_in->flag_multifile       = FALSE;
+    fp_in->flag_read_properties = GBP_FALSE;
+    fp_in->flag_read_profiles   = GBP_FALSE;
+    fp_in->flag_multifile       = GBP_FALSE;
 }

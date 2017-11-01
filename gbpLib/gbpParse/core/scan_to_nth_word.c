@@ -6,10 +6,10 @@
 
 int scan_to_nth_word(char *line, int n, char **word) {
     if(n <= 0)
-        SID_trap_error("Invalid word index (%d) requested in scan_to_nth_word().", ERROR_LOGIC, n);
+        SID_trap_error("Invalid word index (%d) requested in scan_to_nth_word().", SID_ERROR_LOGIC, n);
     int    n_words   = 0;
-    int    flag_last = FALSE;
-    int    flag_new  = FALSE;
+    int    flag_last = GBP_FALSE;
+    int    flag_new  = GBP_FALSE;
     size_t i_line    = 0;
     for(; i_line < strlen(line); i_line++) {
         flag_new = !check_space(line + i_line);

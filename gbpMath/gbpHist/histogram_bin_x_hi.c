@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <limits.h>
+#include <float.h>
 #include <gbpLib.h>
 #include <gbpHist.h>
 
@@ -10,26 +11,26 @@ double histogram_bin_x_hi(hist_info *hist, int bin) {
 
     // Sanity check
     if(!is_histogram_index_in_range(hist, bin))
-        SID_trap_error("Invalid bin requested (%d) in histogram_bin_x_hi().", ERROR_LOGIC, bin);
+        SID_trap_error("Invalid bin requested (%d) in histogram_bin_x_hi().", SID_ERROR_LOGIC, bin);
 
     if(check_mode_for_flag(hist->mode, GBP_HISTOGRAM_FIXED)) {
         switch(hist->flag_bin_order_inverted) {
-            case FALSE:
+            case GBP_FALSE:
                 r_val = hist->x_min + ((double)(bin + 1)) * hist->dx;
                 break;
-            case TRUE:
+            case GBP_TRUE:
                 r_val = hist->x_min + ((double)(hist->n_bins - bin)) * hist->dx;
                 break;
         }
     } else if(check_mode_for_flag(hist->mode, GBP_HISTOGRAM_IRREGULAR_XLO_DEFINED)) {
         switch(hist->flag_bin_order_inverted) {
-            case FALSE:
+            case GBP_FALSE:
                 if(bin < (hist->n_bins - 1))
                     r_val = hist->x_lo[bin + 1];
                 else
                     r_val = DBL_MAX;
                 break;
-            case TRUE:
+            case GBP_TRUE:
                 if(bin > 0)
                     r_val = hist->x_lo[bin - 1];
                 else
@@ -37,6 +38,6 @@ double histogram_bin_x_hi(hist_info *hist, int bin) {
                 break;
         }
     } else
-        SID_trap_error("Invalid mode (%d) specified in histogram_bin_x_lo().", ERROR_LOGIC, hist->mode);
+        SID_trap_error("Invalid mode (%d) specified in histogram_bin_x_lo().", SID_ERROR_LOGIC, hist->mode);
     return (r_val);
 }

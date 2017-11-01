@@ -97,7 +97,7 @@ int main(int argc, char *argv[]) {
     i_file_hi   = atoi(argv[3]);
     i_file_skip = atoi(argv[4]);
 
-    flag_process_profiles = FALSE;
+    flag_process_profiles = GBP_FALSE;
 
     SID_log("Processing group/subgroup statistics for files #%d->#%d...", SID_LOG_OPEN | SID_LOG_TIMER, i_file_lo, i_file_hi);
 
@@ -115,7 +115,7 @@ int main(int argc, char *argv[]) {
                     break;
             }
             SID_log("Processing %sgroup files...", SID_LOG_OPEN | SID_LOG_TIMER, group_text_prefix);
-            char filename_base[MAX_FILENAME_LENGTH];
+            char filename_base[SID_MAX_FILENAME_LENGTH];
             sprintf(filename_base, "%s_%03d", filename_groups_root, i_file);
             strip_path(filename_base);
             sprintf(filename_input_properties, "%s_%s.catalog_%sgroups_properties", filename_groups_root, filename_number, group_text_prefix);
@@ -138,7 +138,7 @@ int main(int argc, char *argv[]) {
                     group_text_prefix,
                     j_file);
             if((fp_properties_temp = fopen(filename_input_properties_temp, "r")) == NULL)
-                SID_trap_error("Can not open {%s}", ERROR_IO_OPEN, filename_output_properties_temp);
+                SID_trap_error("Can not open {%s}", SID_ERROR_IO_OPEN, filename_output_properties_temp);
             fread_verify(&j_file, sizeof(int), 1, fp_properties_temp);
             fread_verify(&n_files, sizeof(int), 1, fp_properties_temp);
             fclose(fp_properties_temp);
@@ -164,7 +164,7 @@ int main(int argc, char *argv[]) {
                         j_file);
                 // Cat properties
                 if((fp_properties_temp = fopen(filename_input_properties_temp, "r")) == NULL)
-                    SID_trap_error("Can't open file {%s}", ERROR_IO_OPEN, filename_output_properties_temp);
+                    SID_trap_error("Can't open file {%s}", SID_ERROR_IO_OPEN, filename_output_properties_temp);
                 fread_verify(&j_file_in, sizeof(int), 1, fp_properties_temp);
                 fread_verify(&n_files_i, sizeof(int), 1, fp_properties_temp);
                 fread_verify(&n_groups, sizeof(int), 1, fp_properties_temp);
@@ -219,5 +219,5 @@ int main(int argc, char *argv[]) {
     }
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(ERROR_NONE);
+    SID_exit(SID_ERROR_NONE);
 }
