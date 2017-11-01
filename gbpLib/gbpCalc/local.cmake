@@ -15,26 +15,28 @@ set(DATASUBDIR "" )
 
 # Add directories that contribute source files 
 # eg. list(APPEND SRCDIRS "dirname")
-list(APPEND SRCDIRS "gbpSID" )
-list(APPEND SRCDIRS "gbpSort" )
-list(APPEND SRCDIRS "gbpCalc" )
-list(APPEND SRCDIRS "gbpParse" )
-list(APPEND SRCDIRS "gbpADaPS" )
-list(APPEND SRCDIRS "gbpMultifile")
-if(USE_CFITSIO)
-    list(APPEND SRCDIRS "gbpFITS")
-endif()
-if(USE_HDF5)
-    list(APPEND SRCDIRS "gbpHDF5")
-endif()
+# -- NONE FOR THIS DIR --
 
 # Add header files
 # eg. list(APPEND INCFILES "filename.ext")
-list(APPEND INCFILES "gbpLib.h")
+list(APPEND INCFILES "gbpCalc.h" )
 
 # Add source files
 # eg. list(APPEND SRCFILES "filename.ext")
-# -- NONE FOR THIS DIR --
+list(APPEND SRCFILES "calc_min.c" )
+list(APPEND SRCFILES "calc_min_global.c" )
+list(APPEND SRCFILES "calc_max.c" )
+list(APPEND SRCFILES "calc_max_global.c" )
+list(APPEND SRCFILES "calc_mean.c" )
+list(APPEND SRCFILES "calc_mean_global.c" )
+list(APPEND SRCFILES "calc_sum.c" )
+list(APPEND SRCFILES "calc_sum_global.c" )
+list(APPEND SRCFILES "calc_stddev.c" )
+list(APPEND SRCFILES "calc_stddev_global.c" )
+list(APPEND SRCFILES "calc_mean.c" )
+list(APPEND SRCFILES "calc_mean_global.c" )
+list(APPEND SRCFILES "calc_median.c" )
+list(APPEND SRCFILES "calc_median_global.c" )
 
 # Add executable source files (those with a main())
 # eg. list(APPEND EXEFILES "filename.ext")
@@ -48,11 +50,6 @@ list(APPEND INCFILES "gbpLib.h")
 # eg. list(APPEND TARGETDEPS "dep_name")
 # -- NONE FOR THIS DIR --
 
-# Set data subdirectory
-# eg. set(DATASUBDIR "dir" )
-# -- NONE FOR THIS DIR --
-
 # Add subdirectories that we want to decend into
 #   but which we won't scan for sources, etc
 # -- NONE FOR THIS DIR --
-

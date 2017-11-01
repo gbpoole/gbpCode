@@ -1,5 +1,6 @@
 #include <math.h>
 #include <gbpSID.h>
+#include <gbpCalc.h>
 
 void calc_stddev_global(void *data, void *result, size_t n_data_local, SID_Datatype type, int mode, SID_Comm *comm) {
     int    i_data;

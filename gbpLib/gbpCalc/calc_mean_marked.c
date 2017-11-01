@@ -1,4 +1,5 @@
 #include <gbpSID.h>
+#include <gbpCalc.h>
 
 double calc_mean_marked(double *data,
                         int    *marked,

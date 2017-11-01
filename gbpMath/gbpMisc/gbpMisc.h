@@ -19,6 +19,7 @@ struct bisect_af_params {
 extern "C" {
 #endif
 
+double calc_sep_periodic(double x_1, double y_1, double z_1, double x_2, double y_2, double z_2, double box_size);
 void   invert_square_matrix(double *matrix_in, int size, double *inverse_out);
 double take_aln(double val);
 double take_alog10(double val);

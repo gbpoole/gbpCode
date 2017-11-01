@@ -1,11 +1,11 @@
-#include <gbpLib.h>
+#include <gbpSID.h>
 #include <gbpSort.h>
-#include <gbpStats.h>
+#include <gbpCalc.h>
 
 void calc_median(void *data, void *result, size_t n_data, SID_Datatype type, int mode) {
     int     i_mid;
     double  median;
-    size_t *index;
+    size_t               *index;
 
     if(n_data < 1) {
         if(type == SID_DOUBLE || check_mode_for_flag(mode, CALC_MODE_RETURN_DOUBLE))

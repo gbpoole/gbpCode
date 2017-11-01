@@ -1,5 +1,6 @@
-#include <gbpLib.h>
-#include <gbpStats.h>
+#include <gbpSID.h>
+#include <gbpSort.h>
+#include <gbpCalc.h>
 
 void calc_median_global(void   *data_local,
                         void   *result,

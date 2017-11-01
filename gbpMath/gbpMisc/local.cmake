@@ -22,6 +22,7 @@ list(APPEND INCFILES "gbpMisc.h" )
 
 # Add source files
 # eg. list(APPEND SRCFILES "file" )
+list(APPEND SRCFILES "calc_sep_periodic.c" )
 list(APPEND SRCFILES "init_array_linear.c" )
 list(APPEND SRCFILES "init_array_log.c" )
 list(APPEND SRCFILES "apply_rotation.c" )

@@ -1,6 +1,8 @@
 #ifndef GBPLIB_AWAKE
 #define GBPLIB_AWAKE
 #include <gbpSID.h>
+#include <gbpSort.h>
+#include <gbpCalc.h>
 #include <gbpADaPS.h>
 #include <gbpParse.h>
 #if USE_CFITSIO

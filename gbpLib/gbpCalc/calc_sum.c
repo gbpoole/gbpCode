@@ -1,4 +1,5 @@
 #include <gbpSID.h>
+#include <gbpCalc.h>
 
 void calc_sum(void *data, void *result, size_t n_data, SID_Datatype type, int mode) {
     int          i_data;

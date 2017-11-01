@@ -5,9 +5,7 @@
 #endif
 #include <gbpDomain.h>
 #include <gbpInterpolate.h>
-#include <gbpSort.h>
 #include <gbpPHKs.h>
-#include <gbpStats.h>
 #include <gbpMisc.h>
 #include <gbpHist.h>
 #include <gbpRNG.h>
