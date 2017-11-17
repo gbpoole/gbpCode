@@ -19,4 +19,5 @@ myInclude
 myLib
 .cshrc.myCode
 .bashrc.myCode
-build*
+build-*
+docs/themes/*
