@@ -39,10 +39,10 @@ void generate_MCMC_proposition(MCMC_info *MCMC, int flag_chain_init) {
     MCMC->compute_MCMC_ln_likelihood(
         MCMC, MCMC->M_new, MCMC->P_new, MCMC->ln_likelihood_DS, MCMC->n_DoF_DS, &(MCMC->ln_likelihood_new), &(MCMC->n_DoF));
     if(!check_mode_for_flag(MCMC->mode, MCMC_MODE_PARALLEL)) {
-        SID_Bcast(MCMC->ln_likelihood_DS, MCMC->n_DS, SID_DOUBLE, MCMC->comm, SID_MASTER_RANK);
-        SID_Bcast(MCMC->n_DoF_DS, MCMC->n_DS, SID_INT, MCMC->comm, SID_MASTER_RANK);
-        SID_Bcast(&(MCMC->ln_likelihood_new), 1, SID_DOUBLE, MCMC->comm, SID_MASTER_RANK);
-        SID_Bcast(&(MCMC->n_DoF), 1, SID_INT, MCMC->comm, SID_MASTER_RANK);
+        SID_Bcast(MCMC->ln_likelihood_DS, MCMC->n_DS, SID_DOUBLE, SID_MASTER_RANK, MCMC->comm);
+        SID_Bcast(MCMC->n_DoF_DS, MCMC->n_DS, SID_INT, SID_MASTER_RANK, MCMC->comm);
+        SID_Bcast(&(MCMC->ln_likelihood_new), 1, SID_DOUBLE, SID_MASTER_RANK, MCMC->comm);
+        SID_Bcast(&(MCMC->n_DoF), 1, SID_INT, SID_MASTER_RANK, MCMC->comm);
     }
 
     MCMC->first_likelihood_call = GBP_FALSE;

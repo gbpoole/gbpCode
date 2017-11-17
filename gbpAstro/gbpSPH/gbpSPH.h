@@ -99,6 +99,7 @@ struct smooth_header_info {
 };
 
 // Structure to store Abstract Item Lists (AbILs)
+/*
 typedef struct AbIL_info AbIL_info;
 struct AbIL_info {
     int      n_species;
@@ -116,6 +117,7 @@ struct AbIL_info {
     double   time_unit;
     double   velocity_unit;
 };
+ */
 
 // Structure to store particle info
 typedef struct plist_info plist_info;

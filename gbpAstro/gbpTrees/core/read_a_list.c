@@ -17,7 +17,7 @@ void read_a_list(const char *filename_root_in, double **a_list_in, int *n_a_list
         fp_in       = fopen(filename_snap_list_in, "r");
         (*n_a_list) = count_lines_data(fp_in);
     }
-    SID_Bcast(n_a_list, 1, SID_INT, SID.COMM_WORLD, SID_MASTER_RANK);
+    SID_Bcast(n_a_list, 1, SID_INT, SID_MASTER_RANK, SID.COMM_WORLD);
     (*a_list_in) = (double *)SID_malloc(sizeof(double) * (*n_a_list));
     if(SID.I_am_Master) {
         char * line        = NULL;
@@ -29,6 +29,6 @@ void read_a_list(const char *filename_root_in, double **a_list_in, int *n_a_list
         SID_free(SID_FARG line);
         fclose(fp_in);
     }
-    SID_Bcast(a_list_in, (*n_a_list), SID_DOUBLE, SID.COMM_WORLD, SID_MASTER_RANK);
+    SID_Bcast(a_list_in, (*n_a_list), SID_DOUBLE, SID_MASTER_RANK, SID.COMM_WORLD);
     SID_log("Done.", SID_LOG_CLOSE);
 }

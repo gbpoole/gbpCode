@@ -35,7 +35,7 @@ struct field_info {
     double * k_Nyquist;
     // Field sizes
     int    n_d;
-    int *  n;
+    ptrdiff_t *  n;
     int *  n_R_local;
     int *  n_k_local;
     int *  i_R_start_local;

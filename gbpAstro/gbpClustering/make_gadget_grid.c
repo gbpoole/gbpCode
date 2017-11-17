@@ -196,8 +196,8 @@ void read_gadget_binary_local(char *      filename_root_in,
                             fread_verify(pos_buffer, sizeof(GBPREAL), 3 * i_step, fp_pos);
                             fread_verify(vel_buffer, sizeof(GBPREAL), 3 * i_step, fp_vel);
                         }
-                        SID_Bcast(pos_buffer, 3 * i_step, SID_REAL, SID.COMM_WORLD, SID_MASTER_RANK);
-                        SID_Bcast(vel_buffer, 3 * i_step, SID_REAL, SID.COMM_WORLD, SID_MASTER_RANK);
+                        SID_Bcast(pos_buffer, 3 * i_step, SID_REAL, SID_MASTER_RANK, SID.COMM_WORLD);
+                        SID_Bcast(vel_buffer, 3 * i_step, SID_REAL, SID_MASTER_RANK, SID.COMM_WORLD);
                         for(i_buffer = 0; i_buffer < i_step; i_buffer++) {
                             index    = 3 * i_buffer;
                             pos_test = (double)(pos_buffer[index]);
@@ -220,8 +220,8 @@ void read_gadget_binary_local(char *      filename_root_in,
                             fread_verify(pos_buffer, sizeof(GBPREAL), 3 * i_step, fp_pos);
                             fread_verify(vel_buffer, sizeof(GBPREAL), 3 * i_step, fp_vel);
                         }
-                        SID_Bcast(pos_buffer, 3 * i_step, SID_REAL, SID.COMM_WORLD, SID_MASTER_RANK);
-                        SID_Bcast(vel_buffer, 3 * i_step, SID_REAL, SID.COMM_WORLD, SID_MASTER_RANK);
+                        SID_Bcast(pos_buffer, 3 * i_step, SID_REAL, SID_MASTER_RANK, SID.COMM_WORLD);
+                        SID_Bcast(vel_buffer, 3 * i_step, SID_REAL, SID_MASTER_RANK, SID.COMM_WORLD);
                         for(i_buffer = 0; i_buffer < i_step; i_buffer++) {
                             pos_test = pos_buffer[3 * i_buffer];
                             if(pos_test >= slab->x_min_local && pos_test < slab->x_max_local)
@@ -287,8 +287,8 @@ void read_gadget_binary_local(char *      filename_root_in,
                         fread_verify(pos_buffer, sizeof(GBPREAL), 3 * i_step, fp_pos);
                         fread_verify(vel_buffer, sizeof(GBPREAL), 3 * i_step, fp_vel);
                     }
-                    SID_Bcast(pos_buffer, 3 * i_step, SID_REAL, SID.COMM_WORLD, SID_MASTER_RANK);
-                    SID_Bcast(vel_buffer, 3 * i_step, SID_REAL, SID.COMM_WORLD, SID_MASTER_RANK);
+                    SID_Bcast(pos_buffer, 3 * i_step, SID_REAL, SID_MASTER_RANK, SID.COMM_WORLD);
+                    SID_Bcast(vel_buffer, 3 * i_step, SID_REAL, SID_MASTER_RANK, SID.COMM_WORLD);
                     for(i_buffer = 0; i_buffer < i_step; i_buffer++) {
                         double x_test;
                         double y_test;
@@ -499,7 +499,7 @@ int main(int argc, char *argv[]) {
                 SID_exit_error("Block lengths don't match (ie. %d!=%d).", SID_ERROR_LOGIC, block_length_open,
                                block_length_close);
         }
-        SID_Bcast(&header, sizeof(gadget_header_info), SID_CHAR, SID.COMM_WORLD, SID_MASTER_RANK);
+        SID_Bcast(&header, sizeof(gadget_header_info), SID_CHAR, SID_MASTER_RANK, SID.COMM_WORLD);
         redshift = header.redshift;
         h_Hubble = header.h_Hubble;
         box_size = header.box_size;

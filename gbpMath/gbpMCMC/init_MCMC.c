@@ -195,12 +195,12 @@ void init_MCMC(MCMC_info * MCMC,
         SID_log("ouput_dir set to: %s", SID_LOG_COMMENT, MCMC->filename_output_dir);
     }
     // Broadcast the output directory to all the other cores.
-    SID_Bcast(MCMC->filename_output_dir, SID_MAX_FILENAME_LENGTH, SID_CHAR, MCMC->comm, MCMC->my_chain);
+    SID_Bcast(MCMC->filename_output_dir, SID_MAX_FILENAME_LENGTH, SID_CHAR, MCMC->my_chain, MCMC->comm);
 
     // Initilize the random number generator
     MCMC->RNG = (RNG_info *)SID_malloc(sizeof(RNG_info));
     init_seed_from_clock(&(MCMC->seed));
-    SID_Bcast(&(MCMC->seed), 1, SID_INT, MCMC->comm, SID_MASTER_RANK);
+    SID_Bcast(&(MCMC->seed), 1, SID_INT, SID_MASTER_RANK, MCMC->comm);
     init_RNG(&(MCMC->seed), MCMC->RNG, RNG_DEFAULT);
 
     SID_log("Done.", SID_LOG_CLOSE);

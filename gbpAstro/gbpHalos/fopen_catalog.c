@@ -198,7 +198,7 @@ int fopen_catalog(char *filename_catalog_root, int snapshot_number, int mode, fp
             fp_out->fp_properties = NULL;
         }
     }
-    SID_Bcast(fp_out, sizeof(fp_catalog_info), SID_CHAR, SID.COMM_WORLD, SID_MASTER_RANK);
+    SID_Bcast(fp_out, sizeof(fp_catalog_info), SID_CHAR, SID_MASTER_RANK, SID.COMM_WORLD);
 
     // Initialize things by opening the first file.  Even if we want a halo
     //   that's deep in the list, we have to scan all the headers (starting

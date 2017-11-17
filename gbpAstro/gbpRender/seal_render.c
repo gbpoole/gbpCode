@@ -21,7 +21,7 @@ void seal_render(render_info *render) {
                                    render->snap_a_list_filename);
                 render->n_snap_a_list = count_lines_data(fp_list);
             }
-            SID_Bcast(&(render->n_snap_a_list), 1, SID_INT, SID.COMM_WORLD, SID_MASTER_RANK);
+            SID_Bcast(&(render->n_snap_a_list), 1, SID_INT, SID_MASTER_RANK, SID.COMM_WORLD);
             render->snap_a_list = (double *)SID_malloc(sizeof(double) * render->n_snap_a_list);
             if(SID.I_am_Master) {
                 char * line        = NULL;
@@ -33,7 +33,7 @@ void seal_render(render_info *render) {
                 fclose(fp_list);
                 SID_free(SID_FARG line);
             }
-            SID_Bcast(render->snap_a_list, render->n_snap_a_list, SID_DOUBLE, SID.COMM_WORLD, SID_MASTER_RANK);
+            SID_Bcast(render->snap_a_list, render->n_snap_a_list, SID_DOUBLE, SID_MASTER_RANK, SID.COMM_WORLD);
         }
 
         // Seal the scenes

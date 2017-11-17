@@ -49,9 +49,9 @@ int main(int argc, char *argv[]) {
     FILE *                fp_out           = NULL;
     int                   n_match;
     int *                 id_2                   = NULL;
-    id_int *              particle_ids_AHF       = NULL;
+    size_t *              particle_ids_AHF       = NULL;
     size_t *              particle_ids_AHF_index = NULL;
-    id_int                id_largest;
+    size_t                id_largest;
     int                   id_byte_size;
     size_t *              group_particles = NULL;
     int                   group_id;

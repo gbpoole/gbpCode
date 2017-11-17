@@ -248,11 +248,11 @@ void read_forests(const char *filename_root_in,
             tree_count_rank = tree_count_group_local;
             n_halos_rank    = (*n_groups_local);
             n_alloc_rank    = (*n_groups_max_snap_local);
-            SID_Bcast(&forest_lo_rank, 1, SID_INT, SID.COMM_WORLD, i_rank);
-            SID_Bcast(&forest_hi_rank, 1, SID_INT, SID.COMM_WORLD, i_rank);
-            SID_Bcast(&tree_count_rank, 1, SID_INT, SID.COMM_WORLD, i_rank);
-            SID_Bcast(&n_halos_rank, 1, SID_INT, SID.COMM_WORLD, i_rank);
-            SID_Bcast(&n_alloc_rank, 1, SID_INT, SID.COMM_WORLD, i_rank);
+            SID_Bcast(&forest_lo_rank, 1, SID_INT, i_rank, SID.COMM_WORLD);
+            SID_Bcast(&forest_hi_rank, 1, SID_INT, i_rank, SID.COMM_WORLD);
+            SID_Bcast(&tree_count_rank, 1, SID_INT, i_rank, SID.COMM_WORLD);
+            SID_Bcast(&n_halos_rank, 1, SID_INT, i_rank, SID.COMM_WORLD);
+            SID_Bcast(&n_alloc_rank, 1, SID_INT, i_rank, SID.COMM_WORLD);
             SID_log("Rank #%4d will process %5d    group forests (%5d trees, %8d halos in total; alloc for %8d halos)",
                     SID_LOG_COMMENT,
                     i_rank,
@@ -272,11 +272,11 @@ void read_forests(const char *filename_root_in,
             tree_count_rank = tree_count_subgroup_local;
             n_halos_rank    = (*n_subgroups_local);
             n_alloc_rank    = (*n_subgroups_max_snap_local);
-            SID_Bcast(&forest_lo_rank, 1, SID_INT, SID.COMM_WORLD, i_rank);
-            SID_Bcast(&forest_hi_rank, 1, SID_INT, SID.COMM_WORLD, i_rank);
-            SID_Bcast(&tree_count_rank, 1, SID_INT, SID.COMM_WORLD, i_rank);
-            SID_Bcast(&n_halos_rank, 1, SID_INT, SID.COMM_WORLD, i_rank);
-            SID_Bcast(&n_alloc_rank, 1, SID_INT, SID.COMM_WORLD, i_rank);
+            SID_Bcast(&forest_lo_rank, 1, SID_INT, i_rank, SID.COMM_WORLD);
+            SID_Bcast(&forest_hi_rank, 1, SID_INT, i_rank, SID.COMM_WORLD);
+            SID_Bcast(&tree_count_rank, 1, SID_INT, i_rank, SID.COMM_WORLD);
+            SID_Bcast(&n_halos_rank, 1, SID_INT, i_rank, SID.COMM_WORLD);
+            SID_Bcast(&n_alloc_rank, 1, SID_INT, i_rank, SID.COMM_WORLD);
             SID_log("Rank #%4d will process %5d subgroup forests (%5d trees, %8d halos in total; alloc for %8d halos)",
                     SID_LOG_COMMENT,
                     i_rank,

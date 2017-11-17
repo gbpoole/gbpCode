@@ -7,10 +7,10 @@
 void init_field(int n_d, int *n, double *L, field_info *FFT) {
     int  i_d;
     int  i_i;
-    int  n_x_local;
-    int  i_x_start_local;
-    int  n_y_transpose_local;
-    int  i_y_start_transpose_local;
+    ptrdiff_t  n_x_local;
+    ptrdiff_t  i_x_start_local;
+    ptrdiff_t  n_y_transpose_local;
+    ptrdiff_t  i_y_start_transpose_local;
     int *n_x_rank;
     int  i_rank;
     int  j_rank;
@@ -29,7 +29,7 @@ void init_field(int n_d, int *n, double *L, field_info *FFT) {
 
     // Initialize FFT sizes
     FFT->n_d             = n_d;
-    FFT->n               = (int *)SID_calloc(sizeof(int) * FFT->n_d);
+    FFT->n               = (ptrdiff_t *)SID_calloc(sizeof(int) * FFT->n_d);
     FFT->L               = (double *)SID_calloc(sizeof(double) * FFT->n_d);
     FFT->n_k_local       = (int *)SID_calloc(sizeof(int) * FFT->n_d);
     FFT->n_R_local       = (int *)SID_calloc(sizeof(int) * FFT->n_d);
@@ -92,7 +92,7 @@ void init_field(int n_d, int *n, double *L, field_info *FFT) {
 
     // Allocate field
     FFT->field_local  = fftwf_alloc_real(FFT->total_local_size);
-    FFT->cfield_local = (fftw_complex *)FFT->field_local;
+    FFT->cfield_local = (gbpFFT_complex *)FFT->field_local;
 
 // Generate plans
 #ifdef USE_DOUBLE
@@ -199,7 +199,7 @@ void init_field(int n_d, int *n, double *L, field_info *FFT) {
     SID_Allreduce(&n_x_rank[SID.My_rank], &min_size, 1, SID_INT, SID_MIN, SID.COMM_WORLD);
     SID_Allreduce(&n_x_rank[SID.My_rank], &max_size, 1, SID_INT, SID_MAX, SID.COMM_WORLD);
     for(i_rank = 0; i_rank < SID.n_proc; i_rank++)
-        SID_Bcast(&(n_x_rank[i_rank]), sizeof(int), i_rank, SID.COMM_WORLD);
+        SID_Bcast(&(n_x_rank[i_rank]), 1, SID_INT, i_rank, SID.COMM_WORLD);
     FFT->slab.rank_to_right = -1;
     for(i_rank = SID.My_rank + 1; i_rank < SID.My_rank + SID.n_proc && FFT->slab.rank_to_right < 0; i_rank++) {
         j_rank = i_rank % SID.n_proc;

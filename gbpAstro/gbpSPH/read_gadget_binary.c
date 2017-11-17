@@ -918,7 +918,7 @@ void read_gadget_binary(char *filename_root_in, int snapshot_number, plist_info 
 #if USE_MPI
         for(i_rank = 0; i_rank < SID.n_proc; i_rank++) {
             n_particles_bcast = n_particles_rank;
-            SID_Bcast(&n_particles_bcast, sizeof(size_t), i_rank, SID.COMM_WORLD);
+            SID_Bcast(&n_particles_bcast, 1, SID_SIZE_T, i_rank, SID.COMM_WORLD);
             SID_log("Number of particles on rank #%d:\t%lld", SID_LOG_COMMENT, i_rank, n_particles_bcast);
             n_particles_all += n_particles_bcast;
         }

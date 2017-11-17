@@ -39,8 +39,8 @@ void write_treenode_list_markers(tree_info *trees, const char *filename_out_root
                 tree_case_list[i_list] = list_in[i_list]->tree_case;
             }
         }
-        SID_Bcast(halo_ID_list, n_list_max, SID_INT, SID.COMM_WORLD, i_rank);
-        SID_Bcast(tree_case_list, n_list_max, SID_INT, SID.COMM_WORLD, i_rank);
+        SID_Bcast(halo_ID_list, n_list_max, SID_INT, i_rank, SID.COMM_WORLD);
+        SID_Bcast(tree_case_list, n_list_max, SID_INT, i_rank, SID.COMM_WORLD);
         // Master Rank does all the writing
         if(SID.My_rank == i_rank || SID.I_am_Master) {
             int n_list_i;

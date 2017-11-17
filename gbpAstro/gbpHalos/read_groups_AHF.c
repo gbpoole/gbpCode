@@ -17,11 +17,11 @@ void read_groups_AHF(char *filename_groups_root, int i_file, int mode, plist_inf
     int *    n_particles_group;
     int *    group_offsets;
     int      n_particles_inemp;
-    big_int  n_particles_in;
-    big_int *particle_ids;
-    big_int  n_particles;
-    big_int  dummy;
-    big_int  n_groups_file;
+    long long  n_particles_in;
+    long long *particle_ids;
+    long long  n_particles;
+    long long  dummy;
+    long long  n_groups_file;
     size_t   i_group;
     size_t   j_group;
 
@@ -61,7 +61,7 @@ void read_groups_AHF(char *filename_groups_root, int i_file, int mode, plist_inf
         // Fill arrays
         n_particles_group = (int *)SID_malloc(n_groups * sizeof(int));
         group_offsets     = (int *)SID_malloc(n_groups * sizeof(int));
-        particle_ids      = (big_int *)SID_malloc(n_particles * sizeof(big_int));
+        particle_ids      = (long long *)SID_malloc(n_particles * sizeof(long long));
         i_particle        = 0;
         i_group           = 0;
         if(n_groups > 0)

@@ -1,4 +1,5 @@
 #include <string.h>
+#include <stdarg.h>
 #include <gbpParse.h>
 #include <gbpMultifile.h>
 
@@ -49,7 +50,7 @@ int fopen_multifile(const char *filename_root, size_t data_size, fp_multifile_in
             fp_out->fp_multifile = NULL;
         }
     }
-    SID_Bcast(fp_out, sizeof(fp_multifile_info), SID_CHAR, SID.COMM_WORLD, SID_MASTER_RANK);
+    SID_Bcast(fp_out, sizeof(fp_multifile_info), SID_CHAR, SID_MASTER_RANK, SID.COMM_WORLD);
 
     // Set the data size
     fp_out->data_size = data_size;

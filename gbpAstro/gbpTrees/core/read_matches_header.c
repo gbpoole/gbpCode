@@ -138,8 +138,8 @@ int read_matches_header(char *filename_root_in,
                                SID_ERROR_LOGIC, j_read, (*n_files_return));
         }
     }
-    SID_Bcast((*n_subgroups_return), (*n_files_return), SID_INT, SID.COMM_WORLD, SID_MASTER_RANK);
-    SID_Bcast((*n_groups_return), (*n_files_return), SID_INT, SID.COMM_WORLD, SID_MASTER_RANK);
+    SID_Bcast((*n_subgroups_return), (*n_files_return), SID_INT, SID_MASTER_RANK, SID.COMM_WORLD);
+    SID_Bcast((*n_groups_return), (*n_files_return), SID_INT, SID_MASTER_RANK, SID.COMM_WORLD);
 
     // Compute some maxs (useful for array allocation)
     calc_max((*n_subgroups_return), n_subgroups_max, (*n_files_return), SID_INT, CALC_MODE_DEFAULT);

@@ -404,7 +404,7 @@ void read_gadget_binary_local(char *filename_root_in, int snapshot_number, plist
                     SID_log_warning("Problem with GADGET record size (close of header)", SID_ERROR_LOGIC);
                 fread_verify(&record_length_open, sizeof(int), 1, fp_positions);
             }
-            SID_Bcast(&header, sizeof(gadget_header_info), SID_CHAR, SID.COMM_WORLD, SID_MASTER_RANK);
+            SID_Bcast(&header, sizeof(gadget_header_info), SID_CHAR, SID_MASTER_RANK, SID.COMM_WORLD);
             for(i = 0, n_particles_file = 0; i < N_GADGET_TYPE; i++)
                 n_particles_file += (size_t)header.n_file[i];
 
@@ -456,7 +456,7 @@ void read_gadget_binary_local(char *filename_root_in, int snapshot_number, plist
                             "IDs record length (%d) does not set a sensible id byte size for the number of particles given in the header (%s)",
                             SID_ERROR_LOGIC, record_length_open, n_particles_file);
             }
-            SID_Bcast(&flag_LONGIDS, 1, SID_INT, SID.COMM_WORLD, SID_MASTER_RANK);
+            SID_Bcast(&flag_LONGIDS, 1, SID_INT, SID_MASTER_RANK, SID.COMM_WORLD);
 
             // Allocate buffers
             int      n_buffer_max = GBP_MIN(n_particles_file, 4 * 1024 * 1024);
@@ -494,9 +494,9 @@ void read_gadget_binary_local(char *filename_root_in, int snapshot_number, plist
                                 } else
                                     fread_verify(buffer_IDs, sizeof(size_t), n_buffer, fp_IDs);
                             }
-                            SID_Bcast(buffer_positions, 3 * n_buffer, SID_REAL, SID.COMM_WORLD, SID_MASTER_RANK);
-                            SID_Bcast(buffer_velocities, 3 * n_buffer, SID_REAL, SID.COMM_WORLD, SID_MASTER_RANK);
-                            SID_Bcast(buffer_IDs, n_buffer, SID_SIZE_T, SID.COMM_WORLD, SID_MASTER_RANK);
+                            SID_Bcast(buffer_positions, 3 * n_buffer, SID_REAL, SID_MASTER_RANK, SID.COMM_WORLD);
+                            SID_Bcast(buffer_velocities, 3 * n_buffer, SID_REAL, SID_MASTER_RANK, SID.COMM_WORLD);
+                            SID_Bcast(buffer_IDs, n_buffer, SID_SIZE_T, SID_MASTER_RANK, SID.COMM_WORLD);
                             SID_free(SID_FARG buffer_index);
                             merge_sort(buffer_IDs, (size_t)n_buffer, &buffer_index, SID_SIZE_T, SORT_COMPUTE_INDEX, GBP_FALSE);
                             n_buffer_left -= n_buffer;

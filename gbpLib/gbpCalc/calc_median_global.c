@@ -17,7 +17,7 @@ void calc_median_global(void *data_local, void *result, size_t n_data_local, SID
     int     rank_1_local, rank_1, rank_2_local, rank_2;
 
 #if USE_MPI
-    SID_trap_error("calc_median_global has not been implemented yet!", SID_ERROR_LOGIC);
+    SID_exit_error("calc_median_global has not been implemented yet!", SID_ERROR_LOGIC);
 /*
 MPI_Allreduce(&n_data_local,&n_data,1,MPI_SIZE_T,MPI_SUM,MPI_COMM_WORLD);
 if(n_data>0){

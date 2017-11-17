@@ -94,8 +94,8 @@ void check_for_tree_matches_local(char *filename_root_out,
             }
         }
     }
-    SID_Bcast(flag_go, 1, SID_INT, SID.COMM_WORLD, SID_MASTER_RANK);
-    SID_Bcast((*flag_go_array), n_search_total, SID_INT, SID.COMM_WORLD, SID_MASTER_RANK);
+    SID_Bcast(flag_go, 1, SID_INT, SID_MASTER_RANK, SID.COMM_WORLD);
+    SID_Bcast((*flag_go_array), n_search_total, SID_INT, SID_MASTER_RANK, SID.COMM_WORLD);
 }
 
 int compute_trees_matches(char *filename_root_in,
@@ -313,8 +313,8 @@ int compute_trees_matches(char *filename_root_in,
                                     n_buffer = n_groups_1_local;
                                     memcpy(buffer, n_particles, n_buffer * sizeof(int));
                                 }
-                                SID_Bcast(&n_buffer, 1, SID_INT, SID.COMM_WORLD, i_rank);
-                                SID_Bcast(buffer, n_buffer, SID_INT, SID.COMM_WORLD, i_rank);
+                                SID_Bcast(&n_buffer, 1, SID_INT, i_rank, SID.COMM_WORLD);
+                                SID_Bcast(buffer, n_buffer, SID_INT, i_rank, SID.COMM_WORLD);
                                 if(SID.I_am_Master)
                                     fwrite(buffer, n_buffer, sizeof(int), fp_out);
                             }
@@ -327,8 +327,8 @@ int compute_trees_matches(char *filename_root_in,
                                         n_buffer = n_groups_1_local;
                                         memcpy(buffer, n_sub_group, n_buffer * sizeof(int));
                                     }
-                                    SID_Bcast(&n_buffer, 1, SID_INT, SID.COMM_WORLD, i_rank);
-                                    SID_Bcast(buffer, n_buffer, SID_INT, SID.COMM_WORLD, i_rank);
+                                    SID_Bcast(&n_buffer, 1, SID_INT, i_rank, SID.COMM_WORLD);
+                                    SID_Bcast(buffer, n_buffer, SID_INT, i_rank, SID.COMM_WORLD);
                                     if(SID.I_am_Master)
                                         fwrite(buffer, n_buffer, sizeof(int), fp_out);
                                 }

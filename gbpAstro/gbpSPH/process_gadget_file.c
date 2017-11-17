@@ -181,9 +181,9 @@ void process_gadget_file(const char *status_message,
                     fread_verify(ids_buffer, ID_byte_size, n_buffer, fp_ids);
                 }
                 if(flag_all_to_all) {
-                    SID_Bcast(pos_buffer, 3 * n_buffer, SID_REAL, SID.COMM_WORLD, all_to_all_reader_rank);
-                    SID_Bcast(vel_buffer, 3 * n_buffer, SID_REAL, SID.COMM_WORLD, all_to_all_reader_rank);
-                    SID_Bcast(ids_buffer, ID_byte_size * n_buffer, SID_CHAR, SID.COMM_WORLD, all_to_all_reader_rank);
+                    SID_Bcast(pos_buffer, 3 * n_buffer, SID_REAL, all_to_all_reader_rank, SID.COMM_WORLD);
+                    SID_Bcast(vel_buffer, 3 * n_buffer, SID_REAL, all_to_all_reader_rank, SID.COMM_WORLD);
+                    SID_Bcast(ids_buffer, ID_byte_size * n_buffer, SID_CHAR, all_to_all_reader_rank, SID.COMM_WORLD);
                 }
                 for(int i_buffer = 0; i_buffer < n_buffer; i_buffer++) {
                     size_t ID_i;

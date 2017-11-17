@@ -61,7 +61,7 @@ void write_mark_file(plist_info *plist, const char *mark_name, const char *filen
             for(i_rank = 0; i_rank < SID.n_proc; i_rank++) {
                 if(SID.My_rank == i_rank)
                     n_mark_bcast = n_mark_type_local[i_species];
-                SID_Bcast(&n_mark_bcast, sizeof(size_t), i_rank, SID.COMM_WORLD);
+                SID_Bcast(&n_mark_bcast, 1, SID_SIZE_T, i_rank, SID.COMM_WORLD);
                 if(i_rank < SID.My_rank)
                     i_start_local += n_mark_bcast;
             }

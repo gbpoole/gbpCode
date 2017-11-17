@@ -1,5 +1,6 @@
 // Free memory allocated by initialize_field()
 #include <gbpLib.h>
+#include <stdarg.h>
 #include <gbpPHKs.h>
 
 PHK_t compute_PHK_from_Cartesian(int PHK_bit_size, int n_D, ...) {

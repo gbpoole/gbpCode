@@ -450,9 +450,9 @@ void compute_MCMC(MCMC_info *MCMC) {
             SID_log("Done.", SID_LOG_CLOSE);
         }
     }
-    SID_Bcast(&flag_restart, 1, SID_INT, MCMC->comm, SID_MASTER_RANK);
-    SID_Bcast(&(MCMC->n_chains), 1, SID_INT, MCMC->comm, SID_MASTER_RANK);
-    SID_Bcast(&(MCMC->P_name_length), 1, SID_INT, MCMC->comm, SID_MASTER_RANK);
+    SID_Bcast(&flag_restart, 1, SID_INT, SID_MASTER_RANK, MCMC->comm);
+    SID_Bcast(&(MCMC->n_chains), 1, SID_INT, SID_MASTER_RANK, MCMC->comm);
+    SID_Bcast(&(MCMC->P_name_length), 1, SID_INT, SID_MASTER_RANK, MCMC->comm);
     sprintf(MCMC->P_name_format, "%%-%ds", MCMC->P_name_length);
 
     // If this is NOT a restart, start from scratch ...
@@ -603,12 +603,12 @@ void compute_MCMC(MCMC_info *MCMC) {
         SID_log("Done.", SID_LOG_CLOSE);
 
     } // End of restart stuff
-    SID_Bcast(&n_iterations_file_total, 1, SID_INT, MCMC->comm, my_chain);
-    SID_Bcast(&n_iterations_file_burn, 1, SID_INT, MCMC->comm, my_chain);
-    SID_Bcast(&n_iterations, 1, SID_INT, MCMC->comm, my_chain);
-    SID_Bcast(&(MCMC->flag_init_chain), 1, SID_INT, MCMC->comm, my_chain);
-    SID_Bcast(&(MCMC->ln_likelihood_chain), 1, SID_DOUBLE, MCMC->comm, my_chain);
-    SID_Bcast(&(MCMC->ln_likelihood_new), 1, SID_DOUBLE, MCMC->comm, my_chain);
+    SID_Bcast(&n_iterations_file_total, 1, SID_INT, my_chain, MCMC->comm);
+    SID_Bcast(&n_iterations_file_burn, 1, SID_INT, my_chain, MCMC->comm);
+    SID_Bcast(&n_iterations, 1, SID_INT, my_chain, MCMC->comm);
+    SID_Bcast(&(MCMC->flag_init_chain), 1, SID_INT, my_chain, MCMC->comm);
+    SID_Bcast(&(MCMC->ln_likelihood_chain), 1, SID_DOUBLE, my_chain, MCMC->comm);
+    SID_Bcast(&(MCMC->ln_likelihood_new), 1, SID_DOUBLE, my_chain, MCMC->comm);
 
     // Remove the existant iterations from the totals we need to perform still
     if(n_iterations_file_total < n_iterations_burn) {
@@ -793,7 +793,7 @@ void compute_MCMC(MCMC_info *MCMC) {
                     flag_stop = GBP_TRUE;
                 }
             }
-            SID_Bcast(&flag_stop, 1, SID_INT, MCMC->comm, SID_MASTER_RANK);
+            SID_Bcast(&flag_stop, 1, SID_INT, SID_MASTER_RANK, MCMC->comm);
 
             // ... if so, stop all ranks and cancel the subsequent analysis stage
             if(flag_stop) {
