@@ -177,14 +177,14 @@ void process_trees_fctn_fin_local(tree_info *trees, void *params_in, int mode, i
     int n_M = params->mass_binning->ordinate->hist->n_bins;
     for(int i_M = 0; i_M < n_M; i_M++) {
         int n_z = params->trends_z[i_M]->ordinate->hist->n_bins;
-        SID_Allreduce(SID_IN_PLACE, params->n_halos_z[i_M], n_z, SID_INT, SID_SUM, SID.COMM_WORLD);
-        SID_Allreduce(SID_IN_PLACE, params->n_halos_z_recovered_form[i_M], n_z, SID_INT, SID_SUM, SID.COMM_WORLD);
-        SID_Allreduce(SID_IN_PLACE, params->n_halos_z_recovered_3to1[i_M], n_z, SID_INT, SID_SUM, SID.COMM_WORLD);
-        SID_Allreduce(SID_IN_PLACE, params->n_halos_z_recovered_10to1[i_M], n_z, SID_INT, SID_SUM, SID.COMM_WORLD);
-        SID_Allreduce(SID_IN_PLACE, params->n_halos_z_relaxed_x_off[i_M], n_z, SID_INT, SID_SUM, SID.COMM_WORLD);
-        SID_Allreduce(SID_IN_PLACE, params->n_halos_z_relaxed_f_sub[i_M], n_z, SID_INT, SID_SUM, SID.COMM_WORLD);
-        SID_Allreduce(SID_IN_PLACE, params->n_halos_z_relaxed_Vir_ratio[i_M], n_z, SID_INT, SID_SUM, SID.COMM_WORLD);
-        SID_Allreduce(SID_IN_PLACE, params->n_halos_z_relaxed_all[i_M], n_z, SID_INT, SID_SUM, SID.COMM_WORLD);
+        SID_Allreduce(SID_IN_PLACE, params->n_halos_z[i_M], n_z, SID_INT, SID_SUM, SID_COMM_WORLD);
+        SID_Allreduce(SID_IN_PLACE, params->n_halos_z_recovered_form[i_M], n_z, SID_INT, SID_SUM, SID_COMM_WORLD);
+        SID_Allreduce(SID_IN_PLACE, params->n_halos_z_recovered_3to1[i_M], n_z, SID_INT, SID_SUM, SID_COMM_WORLD);
+        SID_Allreduce(SID_IN_PLACE, params->n_halos_z_recovered_10to1[i_M], n_z, SID_INT, SID_SUM, SID_COMM_WORLD);
+        SID_Allreduce(SID_IN_PLACE, params->n_halos_z_relaxed_x_off[i_M], n_z, SID_INT, SID_SUM, SID_COMM_WORLD);
+        SID_Allreduce(SID_IN_PLACE, params->n_halos_z_relaxed_f_sub[i_M], n_z, SID_INT, SID_SUM, SID_COMM_WORLD);
+        SID_Allreduce(SID_IN_PLACE, params->n_halos_z_relaxed_Vir_ratio[i_M], n_z, SID_INT, SID_SUM, SID_COMM_WORLD);
+        SID_Allreduce(SID_IN_PLACE, params->n_halos_z_relaxed_all[i_M], n_z, SID_INT, SID_SUM, SID_COMM_WORLD);
     }
 
     // Write recovery/relaxation arrays

@@ -57,7 +57,7 @@ void write_grid(field_info *field,
     size_t alloc_size;
     size_t alloc_size_local;
     alloc_size_local = (size_t)field->n_field_R_local * sizeof(GBPREAL);
-    SID_Allreduce(&alloc_size_local, &alloc_size, 1, SID_SIZE_T, SID_MAX, SID.COMM_WORLD);
+    SID_Allreduce(&alloc_size_local, &alloc_size, 1, SID_SIZE_T, SID_MAX, SID_COMM_WORLD);
     buffer = SID_malloc(alloc_size);
     SID_set_verbosity(SID_SET_VERBOSITY_RELATIVE, -1);
     // remove_buffer_FFT_R(field);
@@ -66,8 +66,8 @@ void write_grid(field_info *field,
         size_t alloc_size_i;
         memcpy(buffer, field->field_local, alloc_size_local);
         alloc_size_i = alloc_size_local;
-        SID_Bcast(&alloc_size_i, 1, SID_SIZE_T, i_rank, SID.COMM_WORLD);
-        SID_Bcast(buffer, alloc_size_i, SID_CHAR, i_rank, SID.COMM_WORLD);
+        SID_Bcast(&alloc_size_i, 1, SID_SIZE_T, i_rank, SID_COMM_WORLD);
+        SID_Bcast(buffer, alloc_size_i, SID_CHAR, i_rank, SID_COMM_WORLD);
         if(SID.I_am_Master)
             fwrite(buffer, alloc_size_i, 1, fp_out);
     }

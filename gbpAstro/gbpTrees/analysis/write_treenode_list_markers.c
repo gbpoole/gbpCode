@@ -27,7 +27,7 @@ void write_treenode_list_markers(tree_info *trees, const char *filename_out_root
 
     // Create arrays holding halo_IDs and tree_case flags
     int n_list_max;
-    calc_max_global(&n_list_in, &n_list_max, 1, SID_INT, CALC_MODE_DEFAULT, SID.COMM_WORLD);
+    calc_max_global(&n_list_in, &n_list_max, 1, SID_INT, CALC_MODE_DEFAULT, SID_COMM_WORLD);
     int *halo_ID_list   = (int *)SID_malloc(sizeof(int) * n_list_max);
     int *tree_case_list = (int *)SID_malloc(sizeof(int) * n_list_max);
 
@@ -39,8 +39,8 @@ void write_treenode_list_markers(tree_info *trees, const char *filename_out_root
                 tree_case_list[i_list] = list_in[i_list]->tree_case;
             }
         }
-        SID_Bcast(halo_ID_list, n_list_max, SID_INT, i_rank, SID.COMM_WORLD);
-        SID_Bcast(tree_case_list, n_list_max, SID_INT, i_rank, SID.COMM_WORLD);
+        SID_Bcast(halo_ID_list, n_list_max, SID_INT, i_rank, SID_COMM_WORLD);
+        SID_Bcast(tree_case_list, n_list_max, SID_INT, i_rank, SID_COMM_WORLD);
         // Master Rank does all the writing
         if(SID.My_rank == i_rank || SID.I_am_Master) {
             int n_list_i;
@@ -48,7 +48,7 @@ void write_treenode_list_markers(tree_info *trees, const char *filename_out_root
             if(i_rank == 0)
                 n_list_i = n_list_in;
             else {
-                SID_Sendrecv(&n_list_in, 1, SID_INT, SID_MASTER_RANK, 1918270, &n_list_i, 1, SID_INT, i_rank, 1918270, SID.COMM_WORLD);
+                SID_Sendrecv(&n_list_in, 1, SID_INT, SID_MASTER_RANK, 1918270, &n_list_i, 1, SID_INT, i_rank, 1918270, SID_COMM_WORLD);
             }
             for(int i_list = 0; i_list < n_list_i; i_list++, j_list++) {
                 // Point to the halo to be processed
@@ -164,13 +164,13 @@ void write_treenode_list_markers(tree_info *trees, const char *filename_out_root
 
                     // Write properties
                     if(i_rank != 0) {
-                        SID_Sendrecv(&i_z_node, 1, SID_INT, SID_MASTER_RANK, 1918271, &i_z_node, 1, SID_INT, i_rank, 1918271, SID.COMM_WORLD);
-                        SID_Sendrecv(&idx_node, 1, SID_INT, SID_MASTER_RANK, 1918272, &idx_node, 1, SID_INT, i_rank, 1918272, SID.COMM_WORLD);
-                        SID_Sendrecv(&t_node, 1, SID_DOUBLE, SID_MASTER_RANK, 1918273, &t_node, 1, SID_DOUBLE, i_rank, 1918273, SID.COMM_WORLD);
-                        SID_Sendrecv(&z_node, 1, SID_DOUBLE, SID_MASTER_RANK, 1918274, &z_node, 1, SID_DOUBLE, i_rank, 1918274, SID.COMM_WORLD);
-                        SID_Sendrecv(&M_node, 1, SID_DOUBLE, SID_MASTER_RANK, 1918275, &M_node, 1, SID_DOUBLE, i_rank, 1918275, SID.COMM_WORLD);
+                        SID_Sendrecv(&i_z_node, 1, SID_INT, SID_MASTER_RANK, 1918271, &i_z_node, 1, SID_INT, i_rank, 1918271, SID_COMM_WORLD);
+                        SID_Sendrecv(&idx_node, 1, SID_INT, SID_MASTER_RANK, 1918272, &idx_node, 1, SID_INT, i_rank, 1918272, SID_COMM_WORLD);
+                        SID_Sendrecv(&t_node, 1, SID_DOUBLE, SID_MASTER_RANK, 1918273, &t_node, 1, SID_DOUBLE, i_rank, 1918273, SID_COMM_WORLD);
+                        SID_Sendrecv(&z_node, 1, SID_DOUBLE, SID_MASTER_RANK, 1918274, &z_node, 1, SID_DOUBLE, i_rank, 1918274, SID_COMM_WORLD);
+                        SID_Sendrecv(&M_node, 1, SID_DOUBLE, SID_MASTER_RANK, 1918275, &M_node, 1, SID_DOUBLE, i_rank, 1918275, SID_COMM_WORLD);
                         SID_Sendrecv(
-                            &M_node_parent, 1, SID_DOUBLE, SID_MASTER_RANK, 1918276, &M_node_parent, 1, SID_DOUBLE, i_rank, 1918276, SID.COMM_WORLD);
+                            &M_node_parent, 1, SID_DOUBLE, SID_MASTER_RANK, 1918276, &M_node_parent, 1, SID_DOUBLE, i_rank, 1918276, SID_COMM_WORLD);
                     }
                     if(SID.I_am_Master) {
                         int snap_node = -1;
@@ -192,7 +192,7 @@ void write_treenode_list_markers(tree_info *trees, const char *filename_out_root
                     fprintf(fp_props_out, "\n");
             }
         } // if i_rank
-        SID_Barrier(SID.COMM_WORLD);
+        SID_Barrier(SID_COMM_WORLD);
     } // for i_rank
     SID_free(SID_FARG halo_ID_list);
     SID_free(SID_FARG tree_case_list);

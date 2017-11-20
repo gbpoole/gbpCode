@@ -96,7 +96,7 @@ int main(int argc, char *argv[]) {
                     }
                     fclose(fp_out);
                 }
-                SID_Barrier(SID.COMM_WORLD);
+                SID_Barrier(SID_COMM_WORLD);
             }
             j_species++;
             SID_log("Done.", SID_LOG_CLOSE);

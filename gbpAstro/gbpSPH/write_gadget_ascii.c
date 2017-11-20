@@ -75,7 +75,7 @@ void write_gadget_ascii(char *filename_out, plist_info *plist, size_t *write_ord
             }
             fclose(fp);
         }
-        SID_Barrier(SID.COMM_WORLD);
+        SID_Barrier(SID_COMM_WORLD);
     }
     SID_log("Done.", SID_LOG_CLOSE);
 }

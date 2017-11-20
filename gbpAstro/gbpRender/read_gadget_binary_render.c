@@ -273,9 +273,9 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                         n_file_missing++;
                     }
                 }
-                SID_Bcast(&flag_file_missing, 1, SID_INT, read_rank, SID.COMM_WORLD);
+                SID_Bcast(&flag_file_missing, 1, SID_INT, read_rank, SID_COMM_WORLD);
                 if(!flag_file_missing) {
-                    SID_Bcast(&header, (int)sizeof(gadget_header_info), SID_CHAR, read_rank, SID.COMM_WORLD);
+                    SID_Bcast(&header, (int)sizeof(gadget_header_info), SID_CHAR, read_rank, SID_COMM_WORLD);
                     for(i = 0; i < N_GADGET_TYPE; i++) {
                         for(i_particle = 0; i_particle < header.n_file[i]; i_particle++, k_particle++) {
                             scatter_rank = (int)(random_number(RNG) * (GBPREAL)SID.n_proc);
@@ -337,7 +337,7 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                 SID_exit_error("The full IDs range has not been properly rank-allocated (ie. %zd!=%zd).",
                                SID_ERROR_LOGIC, n_particles_left, 0);
             n_particles_local = id_local_max - id_local_min + 1;
-            SID_Allreduce(&n_particles_local, &n_particles_test, 1, SID_SIZE_T, SID_SUM, SID.COMM_WORLD);
+            SID_Allreduce(&n_particles_local, &n_particles_test, 1, SID_SIZE_T, SID_SUM, SID_COMM_WORLD);
             if(n_particles_test != n_particles_all)
                 SID_exit_error("Not all particles were allocated during domain decompositioni (%zd!=%zd).",
                                SID_ERROR_LOGIC, n_particles_test, n_particles_all);
@@ -356,7 +356,7 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
 
         // Perform a particle count check
         long long n_particles_check = 0;
-        SID_Allreduce(&n_particles_rank, &n_particles_check, 1, SID_LONG_LONG, SID_SUM, SID.COMM_WORLD);
+        SID_Allreduce(&n_particles_rank, &n_particles_check, 1, SID_LONG_LONG, SID_SUM, SID_COMM_WORLD);
         if(n_particles_check != n_particles_all)
             SID_exit_error("Rank-allocated particle counts don't sum to the total (ie. %zd!=%zd).", SID_ERROR_LOGIC,
                            n_particles_check, n_particles_all);
@@ -435,13 +435,13 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                     n_file_missing++;
                 }
             }
-            SID_Bcast(&n_particles_file, 1, SID_SIZE_T, read_rank, SID.COMM_WORLD);
-            SID_Bcast(&flag_file_empty, 1, SID_INT, read_rank, SID.COMM_WORLD);
-            SID_Bcast(&flag_file_missing, 1, SID_INT, read_rank, SID.COMM_WORLD);
+            SID_Bcast(&n_particles_file, 1, SID_SIZE_T, read_rank, SID_COMM_WORLD);
+            SID_Bcast(&flag_file_empty, 1, SID_INT, read_rank, SID_COMM_WORLD);
+            SID_Bcast(&flag_file_missing, 1, SID_INT, read_rank, SID_COMM_WORLD);
 
             if(!flag_file_empty && !flag_file_missing) {
-                SID_Bcast(&record_length_positions, 4, SID_CHAR, read_rank, SID.COMM_WORLD);
-                SID_Bcast(&header, (int)sizeof(gadget_header_info), SID_CHAR, read_rank, SID.COMM_WORLD);
+                SID_Bcast(&record_length_positions, 4, SID_CHAR, read_rank, SID_COMM_WORLD);
+                SID_Bcast(&header, (int)sizeof(gadget_header_info), SID_CHAR, read_rank, SID_COMM_WORLD);
                 // Initialize buffer
                 buffer = SID_malloc((size_t)record_length_positions); // This is large enough to hold any of the blocks
                 if(check_mode_for_flag(mode, READ_GADGET_RENDER_SCATTER)) {
@@ -489,9 +489,9 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                             SID_exit_error("IDs record lengths don't match (ie. %d!=%d)", SID_ERROR_LOGIC,
                                            record_length_open, record_length_close);
                     }
-                    SID_Barrier(SID.COMM_WORLD);
-                    SID_Bcast(&record_length_open, 4, SID_CHAR, read_rank, SID.COMM_WORLD);
-                    SID_Bcast(buffer, record_length_open, SID_CHAR, read_rank, SID.COMM_WORLD);
+                    SID_Barrier(SID_COMM_WORLD);
+                    SID_Bcast(&record_length_open, 4, SID_CHAR, read_rank, SID_COMM_WORLD);
+                    SID_Bcast(buffer, record_length_open, SID_CHAR, read_rank, SID_COMM_WORLD);
                     if(record_length_open / (int)(n_particles_file) == sizeof(long long)) {
                         flag_LONGIDs = GBP_TRUE;
                         ids_long     = (long long *)buffer;
@@ -555,8 +555,8 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                         if(record_length_open != record_length_close)
                             SID_log_warning("Problem with GADGET record size (close of positions)", SID_ERROR_LOGIC);
                     }
-                    SID_Bcast(&record_length_open, 1, SID_INT, read_rank, SID.COMM_WORLD);
-                    SID_Bcast(buffer2, (int)record_length_open, SID_CHAR, read_rank, SID.COMM_WORLD);
+                    SID_Bcast(&record_length_open, 1, SID_INT, read_rank, SID_COMM_WORLD);
+                    SID_Bcast(buffer2, (int)record_length_open, SID_CHAR, read_rank, SID_COMM_WORLD);
                     if(check_mode_for_flag(mode, READ_GADGET_RENDER_SCATTER)) {
                         for(i = 0, jj = 0; i < N_GADGET_TYPE; i++) {
                             for(j = 0, k = 0; j < header.n_file[i]; j++, jj++) {
@@ -630,8 +630,8 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                         if(record_length_open != record_length_close)
                             SID_log_warning("Problem with GADGET record size (close of velocities)", SID_ERROR_LOGIC);
                     }
-                    SID_Bcast(&record_length_open, 1, SID_INT, read_rank, SID.COMM_WORLD);
-                    SID_Bcast(buffer2, record_length_open, SID_CHAR, read_rank, SID.COMM_WORLD);
+                    SID_Bcast(&record_length_open, 1, SID_INT, read_rank, SID_COMM_WORLD);
+                    SID_Bcast(buffer2, record_length_open, SID_CHAR, read_rank, SID_COMM_WORLD);
                     if(check_mode_for_flag(mode, READ_GADGET_RENDER_SCATTER)) {
                         for(i = 0, jj = 0; i < N_GADGET_TYPE; i++) {
                             for(j = 0, k = 0; j < header.n_file[i]; j++, jj++) {
@@ -704,9 +704,9 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                         if(record_length_open != record_length_close)
                             SID_log_warning("Problem with GADGET record size (close of IDs)", SID_ERROR_LOGIC);
                     }
-                    SID_Barrier(SID.COMM_WORLD);
-                    SID_Bcast(&record_length_open, 1, SID_INT, read_rank, SID.COMM_WORLD);
-                    SID_Bcast(buffer2, (int)record_length_open, SID_CHAR, read_rank, SID.COMM_WORLD);
+                    SID_Barrier(SID_COMM_WORLD);
+                    SID_Bcast(&record_length_open, 1, SID_INT, read_rank, SID_COMM_WORLD);
+                    SID_Bcast(buffer2, (int)record_length_open, SID_CHAR, read_rank, SID_COMM_WORLD);
 
                     // Decide what kind of IDs we have
                     if(record_length_open / (int)(n_particles_file) == sizeof(long long)) {
@@ -801,14 +801,14 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
         //   ... particle counts ...
         size_t n_of_type[N_GADGET_TYPE];
         for(i = 0, n_particles_kept_all = 0; i < N_GADGET_TYPE; i++) {
-            SID_Allreduce(&(n_of_type_rank[i]), &(n_of_type[i]), 1, SID_SIZE_T, SID_SUM, SID.COMM_WORLD);
+            SID_Allreduce(&(n_of_type_rank[i]), &(n_of_type[i]), 1, SID_SIZE_T, SID_SUM, SID_COMM_WORLD);
             if(n_all[i] > 0) {
                 n_particles_kept_all += n_of_type_rank[i];
                 ADaPS_store(&(plist->data), (void *)(&(n_of_type_rank[i])), "n_%s", ADaPS_SCALAR_SIZE_T, pname[i]);
                 ADaPS_store(&(plist->data), (void *)(&(n_all[i])), "n_all_%s", ADaPS_SCALAR_SIZE_T, pname[i]);
             }
         }
-        SID_Allreduce(SID_IN_PLACE, &n_particles_kept_all, 1, SID_SIZE_T, SID_SUM, SID.COMM_WORLD);
+        SID_Allreduce(SID_IN_PLACE, &n_particles_kept_all, 1, SID_SIZE_T, SID_SUM, SID_COMM_WORLD);
         ADaPS_store(&(plist->data), (void *)(&n_particles_all), "n_particles_all", ADaPS_SCALAR_SIZE_T);
 
         // Check that the right number of particles have been read

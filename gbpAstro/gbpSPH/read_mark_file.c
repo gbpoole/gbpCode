@@ -117,7 +117,7 @@ void read_mark_file(plist_info *plist, const char *mark_name, const char *filena
     }
 
     // Sanity check
-    SID_Allreduce(&n_mark_local, &n_mark_total, 1, SID_SIZE_T, SID_SUM, SID.COMM_WORLD);
+    SID_Allreduce(&n_mark_local, &n_mark_total, 1, SID_SIZE_T, SID_SUM, SID_COMM_WORLD);
     if(n_mark_total != n_mark_total_check)
         SID_exit_error("Particle numbers don't add-up right in read_mark_file!", SID_ERROR_LOGIC);
 

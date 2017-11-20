@@ -200,7 +200,7 @@ void init_make_map_noabs(render_info *render,
             }
         }
     }
-    SID_Allreduce(n_rank_local, n_rank, SID.n_proc, SID_SIZE_T, SID_SUM, SID.COMM_WORLD);
+    SID_Allreduce(n_rank_local, n_rank, SID.n_proc, SID_SIZE_T, SID_SUM, SID_COMM_WORLD);
     n_particles_local = n_rank[SID.My_rank];
     (*n_particles)    = n_particles_local;
     SID_log("Done.", SID_LOG_CLOSE);
@@ -217,7 +217,7 @@ void init_make_map_noabs(render_info *render,
     size_t n_buffer;
     size_t n_buffer_max;
     calc_max(n_rank_local, &n_buffer, SID.n_proc, SID_SIZE_T, CALC_MODE_DEFAULT);
-    SID_Allreduce(&n_buffer, &n_buffer_max, 1, SID_SIZE_T, SID_MAX, SID.COMM_WORLD);
+    SID_Allreduce(&n_buffer, &n_buffer_max, 1, SID_SIZE_T, SID_MAX, SID_COMM_WORLD);
     // Broadcast particles
     size_t particle_index;
     SID_log("Broadcast particles...(buffer=%zd particles)...", SID_LOG_OPEN | SID_LOG_TIMER, n_buffer_max);

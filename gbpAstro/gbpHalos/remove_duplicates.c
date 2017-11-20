@@ -133,7 +133,7 @@ void read_duplicates_file_local(const char *filename_in,
                 (*index_duplicate_added_to)[i_duplicate]    = n_particles_local + 1;
             }
         }
-        SID_Allreduce(SID_IN_PLACE, (*id_duplicate_added), (*n_duplicates_added), SID_SIZE_T, SID_MAX, SID.COMM_WORLD);
+        SID_Allreduce(SID_IN_PLACE, (*id_duplicate_added), (*n_duplicates_added), SID_SIZE_T, SID_MAX, SID_COMM_WORLD);
         fclose(fp_in);
         SID_free(SID_FARG line);
         (*flag_add_duplicates) = GBP_TRUE;
@@ -276,7 +276,7 @@ void write_duplicates_local(const char *filename_out_root,
 
     // Allocate exchange buffers
     n_buffer_alloc = n_duplicates_local;
-    SID_Allreduce(SID_IN_PLACE, &n_buffer_alloc, 1, SID_INT, SID_MAX, SID.COMM_WORLD);
+    SID_Allreduce(SID_IN_PLACE, &n_buffer_alloc, 1, SID_INT, SID_MAX, SID_COMM_WORLD);
     buffer_ids      = (size_t *)SID_malloc(sizeof(size_t) * n_buffer_alloc);
     buffer_group    = (int *)SID_malloc(sizeof(int) * n_buffer_alloc);
     buffer_subgroup = (int *)SID_malloc(sizeof(int) * n_buffer_alloc);
@@ -308,13 +308,13 @@ void write_duplicates_local(const char *filename_out_root,
             buffer_group[i_duplicate] += group_index_local_offset;
             buffer_subgroup[i_duplicate] += subgroup_index_local_offset;
         }
-        SID_Bcast(&n_buffer, 1, SID_INT, i_rank, SID.COMM_WORLD);
+        SID_Bcast(&n_buffer, 1, SID_INT, i_rank, SID_COMM_WORLD);
         if(n_buffer > 0) {
-            SID_Bcast(buffer_ids, n_buffer, SID_SIZE_T, i_rank, SID.COMM_WORLD);
-            SID_Bcast(buffer_group, n_buffer, SID_INT, i_rank, SID.COMM_WORLD);
-            SID_Bcast(buffer_subgroup, n_buffer, SID_INT, i_rank, SID.COMM_WORLD);
-            SID_Bcast(buffer_r2, n_buffer, SID_REAL, i_rank, SID.COMM_WORLD);
-            SID_Bcast(buffer_flag, n_buffer, SID_CHAR, i_rank, SID.COMM_WORLD);
+            SID_Bcast(buffer_ids, n_buffer, SID_SIZE_T, i_rank, SID_COMM_WORLD);
+            SID_Bcast(buffer_group, n_buffer, SID_INT, i_rank, SID_COMM_WORLD);
+            SID_Bcast(buffer_subgroup, n_buffer, SID_INT, i_rank, SID_COMM_WORLD);
+            SID_Bcast(buffer_r2, n_buffer, SID_REAL, i_rank, SID_COMM_WORLD);
+            SID_Bcast(buffer_flag, n_buffer, SID_CHAR, i_rank, SID_COMM_WORLD);
             if(SID.I_am_Master) {
                 int i_buffer;
                 for(i_buffer = 0; i_buffer < n_buffer; i_buffer++) {
@@ -422,7 +422,7 @@ void construct_duplicate_list_local(plist_info *plist,
         }
 
         // Doing a global max on the buffer yields the needed buffer on all ranks
-        SID_Allreduce(SID_IN_PLACE, buffer_id, n_buffer, SID_SIZE_T, SID_MAX, SID.COMM_WORLD);
+        SID_Allreduce(SID_IN_PLACE, buffer_id, n_buffer, SID_SIZE_T, SID_MAX, SID_COMM_WORLD);
 
         // Check for duplicates
         for(i_buffer = 0; i_buffer < n_buffer; i_buffer++) {
@@ -549,7 +549,7 @@ void construct_duplicate_list_local(plist_info *plist,
             if(index_duplicates_group_local[i_duplicate] < 0 && index_duplicates_subgroup_local[i_duplicate] < 0)
                 n_bad++;
         }
-        SID_Allreduce(SID_IN_PLACE, &n_bad, 1, SID_INT, SID_SUM, SID.COMM_WORLD);
+        SID_Allreduce(SID_IN_PLACE, &n_bad, 1, SID_INT, SID_SUM, SID_COMM_WORLD);
         if(n_bad > 0)
             SID_exit_error("%d duplicate(s) have not been sucessfully assigned to a group or subgroup.",
                            SID_ERROR_LOGIC, n_bad);
@@ -816,7 +816,7 @@ void read_gadget_binary_local(char *      filename_root_in,
                     SID_log_warning("Problem with GADGET record size (close of header)", SID_ERROR_LOGIC);
                 fread_verify(&record_length_open, sizeof(int), 1, fp_positions);
             }
-            SID_Bcast(&header, sizeof(gadget_header_info), SID_CHAR, SID_MASTER_RANK, SID.COMM_WORLD);
+            SID_Bcast(&header, sizeof(gadget_header_info), SID_CHAR, SID_MASTER_RANK, SID_COMM_WORLD);
             for(i = 0, n_particles_file = 0; i < N_GADGET_TYPE; i++)
                 n_particles_file += (size_t)header.n_file[i];
 
@@ -851,7 +851,7 @@ void read_gadget_binary_local(char *      filename_root_in,
                             "IDs record length (%d) does not set a sensible id byte size for the number of particles given in the header (%s)",
                             SID_ERROR_LOGIC, record_length_open, n_particles_file);
             }
-            SID_Bcast(&flag_LONGIDS, 1, SID_INT, SID_MASTER_RANK, SID.COMM_WORLD);
+            SID_Bcast(&flag_LONGIDS, 1, SID_INT, SID_MASTER_RANK, SID_COMM_WORLD);
 
             // Allocate buffers
             int      n_buffer_max = GBP_MIN(n_particles_file, 4 * 1024 * 1024);
@@ -885,8 +885,8 @@ void read_gadget_binary_local(char *      filename_root_in,
                                 } else
                                     fread_verify(buffer_IDs, sizeof(size_t), n_buffer, fp_IDs);
                             }
-                            SID_Bcast(buffer_positions, 3 * n_buffer, SID_REAL, SID_MASTER_RANK, SID.COMM_WORLD);
-                            SID_Bcast(buffer_IDs, n_buffer, SID_SIZE_T, SID_MASTER_RANK, SID.COMM_WORLD);
+                            SID_Bcast(buffer_positions, 3 * n_buffer, SID_REAL, SID_MASTER_RANK, SID_COMM_WORLD);
+                            SID_Bcast(buffer_IDs, n_buffer, SID_SIZE_T, SID_MASTER_RANK, SID_COMM_WORLD);
                             SID_free(SID_FARG buffer_index);
                             merge_sort(buffer_IDs, (size_t)n_buffer, &buffer_index, SID_SIZE_T, SORT_COMPUTE_INDEX, GBP_FALSE);
                             n_buffer_left -= n_buffer;
@@ -944,7 +944,7 @@ void read_gadget_binary_local(char *      filename_root_in,
                             SID.My_rank,
                             n_particles_kept,
                             n_particles_rank);
-        SID_Allreduce(&n_particles_rank, &n_particles_all, 1, SID_SIZE_T, SID_SUM, SID.COMM_WORLD);
+        SID_Allreduce(&n_particles_rank, &n_particles_all, 1, SID_SIZE_T, SID_SUM, SID_COMM_WORLD);
 
         // Store everything in the data structure...
         //   ... particle counts ...
@@ -1090,8 +1090,8 @@ int main(int argc, char *argv[]) {
                 group_index_local_offset_comm    = group_index_local_offset + n_groups_local;
                 subgroup_index_local_offset_comm = subgroup_index_local_offset + n_groups_local;
             }
-            SID_Bcast(&group_index_local_offset_comm, 1, SID_INT, i_rank, SID.COMM_WORLD);
-            SID_Bcast(&subgroup_index_local_offset_comm, 1, SID_INT, i_rank, SID.COMM_WORLD);
+            SID_Bcast(&group_index_local_offset_comm, 1, SID_INT, i_rank, SID_COMM_WORLD);
+            SID_Bcast(&subgroup_index_local_offset_comm, 1, SID_INT, i_rank, SID_COMM_WORLD);
         }
         SID_log("Done.", SID_LOG_CLOSE);
 
@@ -1251,7 +1251,7 @@ int main(int argc, char *argv[]) {
                     offset_to_global_local = offset_to_global_bcast;
                     offset_to_global_bcast = offset_to_global_local + n_particles_local;
                 }
-                SID_Bcast(&offset_to_global_bcast, 1, SID_INT, i_rank, SID.COMM_WORLD);
+                SID_Bcast(&offset_to_global_bcast, 1, SID_INT, i_rank, SID_COMM_WORLD);
             }
             SID_log("Done.", SID_LOG_CLOSE);
 
@@ -1264,7 +1264,7 @@ int main(int argc, char *argv[]) {
             size_t   offset_to_global_exchange;
             char *   flag_keep_local;
             int      n_exchange_max;
-            SID_Allreduce(&n_duplicates_local, &n_exchange_max, 1, SID_INT, SID_MAX, SID.COMM_WORLD);
+            SID_Allreduce(&n_duplicates_local, &n_exchange_max, 1, SID_INT, SID_MAX, SID_COMM_WORLD);
             if(SID.n_proc > 1) {
                 id_duplicates_exchange       = (size_t *)SID_malloc(sizeof(size_t) * n_exchange_max);
                 id_duplicates_exchange_index = (size_t *)SID_malloc(sizeof(size_t) * n_exchange_max);
@@ -1414,7 +1414,7 @@ int main(int argc, char *argv[]) {
                 }
             }
             SID_free(SID_FARG r2_duplicates_local);
-            SID_Allreduce(&n_removed_local, &n_removed, 1, SID_INT, SID_SUM, SID.COMM_WORLD);
+            SID_Allreduce(&n_removed_local, &n_removed, 1, SID_INT, SID_SUM, SID_COMM_WORLD);
             n_particles_local -= n_removed_local;
             n_particles_all -= n_removed;
             SID_log("No. of duplicates removed = %d", SID_LOG_COMMENT, n_removed);
@@ -1546,12 +1546,12 @@ int main(int argc, char *argv[]) {
         n_groups_local    = j_group;
         n_subgroups_local = j_subgroup;
         n_particles_local = j_particle;
-        SID_Allreduce(SID_IN_PLACE, &n_groups_removed, 1, SID_INT, SID_SUM, SID.COMM_WORLD);
-        SID_Allreduce(SID_IN_PLACE, &n_subgroups_removed, 1, SID_INT, SID_SUM, SID.COMM_WORLD);
-        SID_Allreduce(SID_IN_PLACE, &n_particles_removed, 1, SID_SIZE_T, SID_SUM, SID.COMM_WORLD);
-        SID_Allreduce(&n_groups_local, &n_groups_all, 1, SID_INT, SID_SUM, SID.COMM_WORLD);
-        SID_Allreduce(&n_subgroups_local, &n_subgroups_all, 1, SID_INT, SID_SUM, SID.COMM_WORLD);
-        SID_Allreduce(&n_particles_local, &n_particles_all, 1, SID_SIZE_T, SID_SUM, SID.COMM_WORLD);
+        SID_Allreduce(SID_IN_PLACE, &n_groups_removed, 1, SID_INT, SID_SUM, SID_COMM_WORLD);
+        SID_Allreduce(SID_IN_PLACE, &n_subgroups_removed, 1, SID_INT, SID_SUM, SID_COMM_WORLD);
+        SID_Allreduce(SID_IN_PLACE, &n_particles_removed, 1, SID_SIZE_T, SID_SUM, SID_COMM_WORLD);
+        SID_Allreduce(&n_groups_local, &n_groups_all, 1, SID_INT, SID_SUM, SID_COMM_WORLD);
+        SID_Allreduce(&n_subgroups_local, &n_subgroups_all, 1, SID_INT, SID_SUM, SID_COMM_WORLD);
+        SID_Allreduce(&n_particles_local, &n_particles_all, 1, SID_SIZE_T, SID_SUM, SID_COMM_WORLD);
         SID_log("No. of groups    removed = %d", SID_LOG_COMMENT, n_groups_removed);
         SID_log("No. of subgroups removed = %d", SID_LOG_COMMENT, n_subgroups_removed);
         SID_log("No. of particles removed = %d", SID_LOG_COMMENT, n_particles_removed);
@@ -1571,7 +1571,7 @@ int main(int argc, char *argv[]) {
                     offset_subgroups[i_subgroup] += offset_to_global;
                 offset_to_global += n_particles_local;
             }
-            SID_Bcast(&offset_to_global, 1, SID_SIZE_T, i_rank, SID.COMM_WORLD);
+            SID_Bcast(&offset_to_global, 1, SID_SIZE_T, i_rank, SID_COMM_WORLD);
         }
         SID_log("Done.", SID_LOG_CLOSE);
 
@@ -1581,7 +1581,7 @@ int main(int argc, char *argv[]) {
         int *   buffer_int;
         size_t *buffer_size_t;
         n_buffer_alloc = n_particles_local;
-        SID_Allreduce(SID_IN_PLACE, &n_buffer_alloc, 1, SID_SIZE_T, SID_MAX, SID.COMM_WORLD);
+        SID_Allreduce(SID_IN_PLACE, &n_buffer_alloc, 1, SID_SIZE_T, SID_MAX, SID_COMM_WORLD);
         buffer        = SID_malloc(sizeof(size_t) * n_buffer_alloc);
         buffer_int    = (int *)buffer;
         buffer_size_t = (size_t *)buffer;
@@ -1614,9 +1614,9 @@ int main(int argc, char *argv[]) {
             fclose(fp_in_subgroups);
             fclose(fp_in_particles);
         }
-        SID_Bcast(&n_byte_offsets_groups, 1, SID_INT, SID_MASTER_RANK, SID.COMM_WORLD);
-        SID_Bcast(&n_byte_offsets_subgroups, 1, SID_INT, SID_MASTER_RANK, SID.COMM_WORLD);
-        SID_Bcast(&n_byte_ids, 1, SID_INT, SID_MASTER_RANK, SID.COMM_WORLD);
+        SID_Bcast(&n_byte_offsets_groups, 1, SID_INT, SID_MASTER_RANK, SID_COMM_WORLD);
+        SID_Bcast(&n_byte_offsets_subgroups, 1, SID_INT, SID_MASTER_RANK, SID_COMM_WORLD);
+        SID_Bcast(&n_byte_ids, 1, SID_INT, SID_MASTER_RANK, SID_COMM_WORLD);
         SID_log("Halo catalog byte-sizes:", SID_LOG_OPEN);
         SID_log("particle IDs    = %d byte", SID_LOG_COMMENT, n_byte_ids);
         SID_log("group    offset = %d byte", SID_LOG_COMMENT, n_byte_offsets_groups);
@@ -1665,8 +1665,8 @@ int main(int argc, char *argv[]) {
                 buffer_size = sizeof(int) * (size_t)n_groups_local;
                 memcpy(buffer, size_groups, buffer_size);
             }
-            SID_Bcast(&buffer_size, 1, SID_SIZE_T, i_rank, SID.COMM_WORLD);
-            SID_Bcast_local(buffer, buffer_size, i_rank, SID.COMM_WORLD);
+            SID_Bcast(&buffer_size, 1, SID_SIZE_T, i_rank, SID_COMM_WORLD);
+            SID_Bcast_local(buffer, buffer_size, i_rank, SID_COMM_WORLD);
             if(SID.I_am_Master) {
                 size_t n_write;
                 n_write = fwrite(buffer, 1, buffer_size, fp_out_groups);
@@ -1690,8 +1690,8 @@ int main(int argc, char *argv[]) {
                     SID_exit_error("Invalid group offset byte-size (%d)", SID_ERROR_LOGIC, n_byte_offsets_groups);
                 buffer_size = (size_t)n_byte_offsets_groups * (size_t)n_groups_local;
             }
-            SID_Bcast(&buffer_size, 1, SID_SIZE_T, i_rank, SID.COMM_WORLD);
-            SID_Bcast_local(buffer, buffer_size, i_rank, SID.COMM_WORLD);
+            SID_Bcast(&buffer_size, 1, SID_SIZE_T, i_rank, SID_COMM_WORLD);
+            SID_Bcast_local(buffer, buffer_size, i_rank, SID_COMM_WORLD);
             if(SID.I_am_Master) {
                 size_t n_write;
                 n_write = fwrite(buffer, 1, buffer_size, fp_out_groups);
@@ -1709,8 +1709,8 @@ int main(int argc, char *argv[]) {
                 buffer_size = sizeof(int) * (size_t)n_groups_local;
                 memcpy(buffer, n_subgroups_group, buffer_size);
             }
-            SID_Bcast(&buffer_size, 1, SID_SIZE_T, i_rank, SID.COMM_WORLD);
-            SID_Bcast_local(buffer, buffer_size, i_rank, SID.COMM_WORLD);
+            SID_Bcast(&buffer_size, 1, SID_SIZE_T, i_rank, SID_COMM_WORLD);
+            SID_Bcast_local(buffer, buffer_size, i_rank, SID_COMM_WORLD);
             if(SID.I_am_Master) {
                 size_t n_write;
                 n_write = fwrite(buffer, 1, buffer_size, fp_out_groups);
@@ -1727,8 +1727,8 @@ int main(int argc, char *argv[]) {
                 buffer_size = sizeof(int) * (size_t)n_subgroups_local;
                 memcpy(buffer, size_subgroups, buffer_size);
             }
-            SID_Bcast(&buffer_size, 1, SID_SIZE_T, i_rank, SID.COMM_WORLD);
-            SID_Bcast_local(buffer, buffer_size, i_rank, SID.COMM_WORLD);
+            SID_Bcast(&buffer_size, 1, SID_SIZE_T, i_rank, SID_COMM_WORLD);
+            SID_Bcast_local(buffer, buffer_size, i_rank, SID_COMM_WORLD);
             if(SID.I_am_Master) {
                 size_t n_write;
                 n_write = fwrite(buffer, 1, buffer_size, fp_out_subgroups);
@@ -1752,8 +1752,8 @@ int main(int argc, char *argv[]) {
                     SID_exit_error("Invalid subgroup offset byte-size (%d)", SID_ERROR_LOGIC, n_byte_offsets_subgroups);
                 buffer_size = (size_t)n_byte_offsets_subgroups * (size_t)n_subgroups_local;
             }
-            SID_Bcast(&buffer_size, 1, SID_SIZE_T, i_rank, SID.COMM_WORLD);
-            SID_Bcast_local(buffer, buffer_size, i_rank, SID.COMM_WORLD);
+            SID_Bcast(&buffer_size, 1, SID_SIZE_T, i_rank, SID_COMM_WORLD);
+            SID_Bcast_local(buffer, buffer_size, i_rank, SID_COMM_WORLD);
             if(SID.I_am_Master) {
                 size_t n_write;
                 n_write = fwrite(buffer, 1, buffer_size, fp_out_subgroups);
@@ -1778,8 +1778,8 @@ int main(int argc, char *argv[]) {
                     SID_exit_error("Invalid ID byte-size (%d)", SID_ERROR_LOGIC, n_byte_ids);
                 buffer_size = (size_t)n_byte_ids * (size_t)n_particles_local;
             }
-            SID_Bcast(&buffer_size, 1, SID_SIZE_T, i_rank, SID.COMM_WORLD);
-            SID_Bcast_local(buffer, buffer_size, i_rank, SID.COMM_WORLD);
+            SID_Bcast(&buffer_size, 1, SID_SIZE_T, i_rank, SID_COMM_WORLD);
+            SID_Bcast_local(buffer, buffer_size, i_rank, SID_COMM_WORLD);
             if(SID.I_am_Master) {
                 size_t n_write;
                 n_write = fwrite(buffer, 1, buffer_size, fp_out_particles);

@@ -222,8 +222,8 @@ void init_trees_read(const char *filename_SSimPL_dir,
                      &((*tree)->n_subgroups_raw_local),
                      &((*tree)->n_groups_snap_alloc_local),
                      &((*tree)->n_subgroups_snap_alloc_local));
-        calc_sum_global(&((*tree)->n_groups_raw_local), &((*tree)->n_groups_raw), 1, SID_INT, CALC_MODE_DEFAULT, SID.COMM_WORLD);
-        calc_sum_global(&((*tree)->n_subgroups_raw_local), &((*tree)->n_subgroups_raw), 1, SID_INT, CALC_MODE_DEFAULT, SID.COMM_WORLD);
+        calc_sum_global(&((*tree)->n_groups_raw_local), &((*tree)->n_groups_raw), 1, SID_INT, CALC_MODE_DEFAULT, SID_COMM_WORLD);
+        calc_sum_global(&((*tree)->n_subgroups_raw_local), &((*tree)->n_subgroups_raw), 1, SID_INT, CALC_MODE_DEFAULT, SID_COMM_WORLD);
 
         // Set counts etc.  We set the number of forests to be
         //    the number of subgroup forests, since this is the

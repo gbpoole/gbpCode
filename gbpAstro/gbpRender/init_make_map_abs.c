@@ -224,7 +224,7 @@ void init_make_map_abs(render_info *render,
             j_particle += n_particles_species;
         }
     }
-    SID_Allreduce(SID_IN_PLACE, n_column, nx, SID_SIZE_T, SID_SUM, SID.COMM_WORLD);
+    SID_Allreduce(SID_IN_PLACE, n_column, nx, SID_SIZE_T, SID_SUM, SID_COMM_WORLD);
 
     // Create cumulative histogram
     for(i_x = 1; i_x < nx; i_x++)
@@ -265,8 +265,8 @@ void init_make_map_abs(render_info *render,
     for(i_rank = 0; i_rank < SID.n_proc; i_rank++) {
         i_x_min_send = i_x_min_local;
         i_x_max_send = i_x_max_local;
-        SID_Bcast(&i_x_min_send, 1, SID_INT, i_rank, SID.COMM_WORLD);
-        SID_Bcast(&i_x_max_send, 1, SID_INT, i_rank, SID.COMM_WORLD);
+        SID_Bcast(&i_x_min_send, 1, SID_INT, i_rank, SID_COMM_WORLD);
+        SID_Bcast(&i_x_max_send, 1, SID_INT, i_rank, SID_COMM_WORLD);
         i_x_min_rank[i_rank] = i_x_min_send;
         i_x_max_rank[i_rank] = i_x_max_send;
     }
@@ -354,7 +354,7 @@ void init_make_map_abs(render_info *render,
             j_particle += n_particles_species;
         }
     }
-    SID_Allreduce(n_rank_local, n_rank, SID.n_proc, SID_SIZE_T, SID_SUM, SID.COMM_WORLD);
+    SID_Allreduce(n_rank_local, n_rank, SID.n_proc, SID_SIZE_T, SID_SUM, SID_COMM_WORLD);
     n_particles_local = n_rank[SID.My_rank];
     (*n_particles)    = n_particles_local;
     SID_free(SID_FARG n_column);
@@ -377,7 +377,7 @@ void init_make_map_abs(render_info *render,
     size_t n_buffer;
     size_t n_buffer_max;
     calc_max(n_rank_local, &n_buffer, SID.n_proc, SID_SIZE_T, CALC_MODE_DEFAULT);
-    SID_Allreduce(&n_buffer, &n_buffer_max, 1, SID_SIZE_T, SID_MAX, SID.COMM_WORLD);
+    SID_Allreduce(&n_buffer, &n_buffer_max, 1, SID_SIZE_T, SID_MAX, SID_COMM_WORLD);
 
     // Broadcast particles
     SID_log("Broadcast particles...(buffer=%zd particles)...", SID_LOG_OPEN | SID_LOG_TIMER, n_buffer_max);

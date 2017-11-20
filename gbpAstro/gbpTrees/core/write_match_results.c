@@ -153,7 +153,7 @@ void write_match_results(char *      filename_out_dir,
                 }
             }
             // Doing a global max on the buffer yields the needed buffer on all ranks
-            SID_Allreduce(SID_IN_PLACE, buffer_int, n_buffer, SID_INT, SID_MAX, SID.COMM_WORLD);
+            SID_Allreduce(SID_IN_PLACE, buffer_int, n_buffer, SID_INT, SID_MAX, SID_COMM_WORLD);
 
             if(SID.I_am_Master) {
                 // Sanity check
@@ -169,7 +169,7 @@ void write_match_results(char *      filename_out_dir,
         }
 
         // Sanity check
-        calc_sum_global(&buffered_count_local, &buffered_count, 1, SID_INT, CALC_MODE_DEFAULT, SID.COMM_WORLD);
+        calc_sum_global(&buffered_count_local, &buffered_count, 1, SID_INT, CALC_MODE_DEFAULT, SID_COMM_WORLD);
         if(buffered_count != n_groups_1)
             SID_exit_error("Buffer counts don't make sense (ie %d!=%d) after writing match IDs.", SID_ERROR_LOGIC,
                            buffered_count, n_groups_1);
@@ -194,7 +194,7 @@ void write_match_results(char *      filename_out_dir,
                 }
             }
             // Doing a global max on the buffer yields the needed buffer on all ranks
-            SID_Allreduce(SID_IN_PLACE, buffer_float, n_buffer, SID_FLOAT, SID_MAX, SID.COMM_WORLD);
+            SID_Allreduce(SID_IN_PLACE, buffer_float, n_buffer, SID_FLOAT, SID_MAX, SID_COMM_WORLD);
 
             if(SID.I_am_Master) {
                 // Sanity check
@@ -209,7 +209,7 @@ void write_match_results(char *      filename_out_dir,
         }
 
         // Sanity check
-        calc_sum_global(&buffered_count_local, &buffered_count, 1, SID_INT, CALC_MODE_DEFAULT, SID.COMM_WORLD);
+        calc_sum_global(&buffered_count_local, &buffered_count, 1, SID_INT, CALC_MODE_DEFAULT, SID_COMM_WORLD);
         if(buffered_count != n_groups_1)
             SID_exit_error("Buffer counts don't make sense (ie %d!=%d) after writing match scores.", SID_ERROR_LOGIC,
                            buffered_count, n_groups_1);
@@ -234,7 +234,7 @@ void write_match_results(char *      filename_out_dir,
                 }
             }
             // Doing a global max on the buffer yields the needed buffer on all ranks
-            SID_Allreduce(SID_IN_PLACE, buffer_int, n_buffer, SID_INT, SID_MAX, SID.COMM_WORLD);
+            SID_Allreduce(SID_IN_PLACE, buffer_int, n_buffer, SID_INT, SID_MAX, SID_COMM_WORLD);
 
             if(SID.I_am_Master) {
                 // Sanity check
@@ -249,7 +249,7 @@ void write_match_results(char *      filename_out_dir,
         }
 
         // Sanity check
-        calc_sum_global(&buffered_count_local, &buffered_count, 1, SID_INT, CALC_MODE_DEFAULT, SID.COMM_WORLD);
+        calc_sum_global(&buffered_count_local, &buffered_count, 1, SID_INT, CALC_MODE_DEFAULT, SID_COMM_WORLD);
         if(buffered_count != n_groups_1)
             SID_exit_error("Buffer counts don't make sense (ie %d!=%d) after writing match scores.", SID_ERROR_LOGIC,
                            buffered_count, n_groups_1);

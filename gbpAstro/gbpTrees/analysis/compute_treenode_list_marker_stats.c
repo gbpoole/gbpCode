@@ -92,8 +92,8 @@ void compute_treenode_list_marker_stats(tree_info *              trees,
     if(markers_all == NULL)
         SID_free(SID_FARG markers);
     for(int i_hist = 0; i_hist < (*n_hist); i_hist++) {
-        SID_Allreduce(SID_IN_PLACE, hist[i_hist], n_bins[i_hist], SID_INT, SID_SUM, SID.COMM_WORLD);
-        SID_Allreduce(SID_IN_PLACE, &((*n_hist_count)[i_hist]), 1, SID_INT, SID_SUM, SID.COMM_WORLD);
+        SID_Allreduce(SID_IN_PLACE, hist[i_hist], n_bins[i_hist], SID_INT, SID_SUM, SID_COMM_WORLD);
+        SID_Allreduce(SID_IN_PLACE, &((*n_hist_count)[i_hist]), 1, SID_INT, SID_SUM, SID_COMM_WORLD);
     }
 
     // Find 68 and 95 percent confidence ranges

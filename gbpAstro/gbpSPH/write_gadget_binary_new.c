@@ -69,7 +69,7 @@ void write_gadget_binary_block(plist_info *plist,
             for(int i_rank = 0; i_rank < SID.n_proc; i_rank++) {
                 // Fetch and communicate this rank's particle count
                 size_t n_of_type = ((size_t *)ADaPS_fetch(plist->data, "n_%s", plist->species[i_type]))[0];
-                SID_Bcast(&n_of_type, 1, SID_SIZE_T, i_rank, SID.COMM_WORLD);
+                SID_Bcast(&n_of_type, 1, SID_SIZE_T, i_rank, SID_COMM_WORLD);
                 // Fetch the local data pointers
                 for(int i_variable = 0; i_variable < n_variables; i_variable++)
                     local_array[i_variable] = (char *)ADaPS_fetch(plist->data, "%s_%s", variable[i_variable], plist->species[i_type]);
@@ -103,7 +103,7 @@ void write_gadget_binary_block(plist_info *plist,
                                              SID_BYTE,
                                              i_rank,
                                              191273,
-                                             SID.COMM_WORLD);
+                                             SID_COMM_WORLD);
                             }
                         }
                         // Write the buffer
@@ -195,9 +195,9 @@ void write_gadget_binary_block(plist_info *plist,
                         }     // if I'm master
                     }         // loop over n_particles_type
                 }             // only i_rank and MASTER
-                SID_Bcast(&i_file, 1, SID_INT, i_rank, SID.COMM_WORLD);
-                SID_Bcast(&n_of_type_processed, 1, SID_SIZE_T, i_rank, SID.COMM_WORLD);
-                SID_Bcast(&n_of_type_file_left, 1, SID_SIZE_T, i_rank, SID.COMM_WORLD);
+                SID_Bcast(&i_file, 1, SID_INT, i_rank, SID_COMM_WORLD);
+                SID_Bcast(&n_of_type_processed, 1, SID_SIZE_T, i_rank, SID_COMM_WORLD);
+                SID_Bcast(&n_of_type_file_left, 1, SID_SIZE_T, i_rank, SID_COMM_WORLD);
             } // i_rank
             if(fp_out != NULL) {
                 fwrite(&block_size, sizeof(int), 1, fp_out);
@@ -342,7 +342,7 @@ void write_gadget_binary_new(plist_info *plist, char *filename_out_root, int n_f
                      ids[i_particle]=last_ID++;
                }
             }
-            SID_Bcast(&last_ID,1,SID_SIZE_T,i_rank,SID.COMM_WORLD);
+            SID_Bcast(&last_ID,1,SID_SIZE_T,i_rank,SID_COMM_WORLD);
          }
       }
       SID_log("Done.",SID_LOG_CLOSE);

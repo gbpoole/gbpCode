@@ -35,10 +35,10 @@ void write_mark_file(plist_info *plist, const char *mark_name, const char *filen
                     n_mark_type_local[i_species]++;
             }
             n_mark_local += n_mark_type_local[i_species];
-            SID_Allreduce(&(n_mark_type_local[i_species]), &(header.n_mark_species[i_species]), 1, SID_SIZE_T, SID_SUM, SID.COMM_WORLD);
+            SID_Allreduce(&(n_mark_type_local[i_species]), &(header.n_mark_species[i_species]), 1, SID_SIZE_T, SID_SUM, SID_COMM_WORLD);
         }
     }
-    SID_Allreduce(&n_mark_local, &n_mark_total, 1, SID_SIZE_T, SID_SUM, SID.COMM_WORLD);
+    SID_Allreduce(&n_mark_local, &n_mark_total, 1, SID_SIZE_T, SID_SUM, SID_COMM_WORLD);
 
     // Open the file and write the header
     SID_fopen_chunked(filename_out, "w", &fp_mark_file, &header, sizeof(markfile_header_info), n_mark_total, sizeof(size_t), n_chunks);
@@ -61,7 +61,7 @@ void write_mark_file(plist_info *plist, const char *mark_name, const char *filen
             for(i_rank = 0; i_rank < SID.n_proc; i_rank++) {
                 if(SID.My_rank == i_rank)
                     n_mark_bcast = n_mark_type_local[i_species];
-                SID_Bcast(&n_mark_bcast, 1, SID_SIZE_T, i_rank, SID.COMM_WORLD);
+                SID_Bcast(&n_mark_bcast, 1, SID_SIZE_T, i_rank, SID_COMM_WORLD);
                 if(i_rank < SID.My_rank)
                     i_start_local += n_mark_bcast;
             }

@@ -88,7 +88,7 @@ void map_to_grid(size_t      n_particles_local,
     double       accumulator;
 
     // Compute the total poulation size and print a status message
-    calc_sum_global(&n_particles_local, &n_particles, 1, SID_SIZE_T, CALC_MODE_DEFAULT, SID.COMM_WORLD);
+    calc_sum_global(&n_particles_local, &n_particles, 1, SID_SIZE_T, CALC_MODE_DEFAULT, SID_COMM_WORLD);
     SID_log("Distributing %zu items onto a %dx%dx%d grid...", SID_LOG_OPEN, n_particles, field->n[0], field->n[1], field->n[2]);
 
     // If we've been given a normalization field, make sure it's got the same geometry as the results field
@@ -389,7 +389,7 @@ void map_to_grid(size_t      n_particles_local,
             norm_local = 0;
             for(i_grid = 0; i_grid < field->n_field_R_local; i_grid++)
                 norm_local += (double)field->field_local[i_grid];
-            calc_sum_global(&norm_local, &normalization, 1, SID_DOUBLE, CALC_MODE_DEFAULT, SID.COMM_WORLD);
+            calc_sum_global(&norm_local, &normalization, 1, SID_DOUBLE, CALC_MODE_DEFAULT, SID_COMM_WORLD);
             double normalization_factor;
             normalization_factor = normalization_constant / normalization;
             for(i_grid = 0; i_grid < field->n_field_R_local; i_grid++)

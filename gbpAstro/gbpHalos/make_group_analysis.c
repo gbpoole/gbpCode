@@ -404,7 +404,7 @@ void read_gadget_binary_local(char *filename_root_in, int snapshot_number, plist
                     SID_log_warning("Problem with GADGET record size (close of header)", SID_ERROR_LOGIC);
                 fread_verify(&record_length_open, sizeof(int), 1, fp_positions);
             }
-            SID_Bcast(&header, sizeof(gadget_header_info), SID_CHAR, SID_MASTER_RANK, SID.COMM_WORLD);
+            SID_Bcast(&header, sizeof(gadget_header_info), SID_CHAR, SID_MASTER_RANK, SID_COMM_WORLD);
             for(i = 0, n_particles_file = 0; i < N_GADGET_TYPE; i++)
                 n_particles_file += (size_t)header.n_file[i];
 
@@ -456,7 +456,7 @@ void read_gadget_binary_local(char *filename_root_in, int snapshot_number, plist
                             "IDs record length (%d) does not set a sensible id byte size for the number of particles given in the header (%s)",
                             SID_ERROR_LOGIC, record_length_open, n_particles_file);
             }
-            SID_Bcast(&flag_LONGIDS, 1, SID_INT, SID_MASTER_RANK, SID.COMM_WORLD);
+            SID_Bcast(&flag_LONGIDS, 1, SID_INT, SID_MASTER_RANK, SID_COMM_WORLD);
 
             // Allocate buffers
             int      n_buffer_max = GBP_MIN(n_particles_file, 4 * 1024 * 1024);
@@ -494,9 +494,9 @@ void read_gadget_binary_local(char *filename_root_in, int snapshot_number, plist
                                 } else
                                     fread_verify(buffer_IDs, sizeof(size_t), n_buffer, fp_IDs);
                             }
-                            SID_Bcast(buffer_positions, 3 * n_buffer, SID_REAL, SID_MASTER_RANK, SID.COMM_WORLD);
-                            SID_Bcast(buffer_velocities, 3 * n_buffer, SID_REAL, SID_MASTER_RANK, SID.COMM_WORLD);
-                            SID_Bcast(buffer_IDs, n_buffer, SID_SIZE_T, SID_MASTER_RANK, SID.COMM_WORLD);
+                            SID_Bcast(buffer_positions, 3 * n_buffer, SID_REAL, SID_MASTER_RANK, SID_COMM_WORLD);
+                            SID_Bcast(buffer_velocities, 3 * n_buffer, SID_REAL, SID_MASTER_RANK, SID_COMM_WORLD);
+                            SID_Bcast(buffer_IDs, n_buffer, SID_SIZE_T, SID_MASTER_RANK, SID_COMM_WORLD);
                             SID_free(SID_FARG buffer_index);
                             merge_sort(buffer_IDs, (size_t)n_buffer, &buffer_index, SID_SIZE_T, SORT_COMPUTE_INDEX, GBP_FALSE);
                             n_buffer_left -= n_buffer;
@@ -579,7 +579,7 @@ void read_gadget_binary_local(char *filename_root_in, int snapshot_number, plist
         //   ... particle counts ...
         for(i = 0; i < N_GADGET_TYPE; i++) {
             if(n_of_type[i] > 0) {
-                SID_Allreduce(&(n_of_type_rank[i]), &(n_of_type[i]), 1, SID_SIZE_T, SID_SUM, SID.COMM_WORLD);
+                SID_Allreduce(&(n_of_type_rank[i]), &(n_of_type[i]), 1, SID_SIZE_T, SID_SUM, SID_COMM_WORLD);
                 ADaPS_store(&(plist->data), (void *)(&(n_of_type_rank[i])), "n_%s", ADaPS_SCALAR_SIZE_T, pname[i]);
                 ADaPS_store(&(plist->data), (void *)(&(n_of_type[i])), "n_all_%s", ADaPS_SCALAR_SIZE_T, pname[i]);
             }
@@ -826,7 +826,7 @@ int main(int argc, char *argv[]) {
                         strcpy(filename_output_properties_dir, filename_output_properties_temp);
                         if(SID.I_am_Master)
                             mkdir(filename_output_properties_dir, 02755);
-                        SID_Barrier(SID.COMM_WORLD);
+                        SID_Barrier(SID_COMM_WORLD);
                         sprintf(filename_output_properties, "%s/%s.%d", filename_output_properties_dir, properties_root, SID.My_rank);
                     }
                     // Create profile filenames
@@ -837,7 +837,7 @@ int main(int argc, char *argv[]) {
                         strcpy(filename_output_profiles_dir, filename_output_profiles_temp);
                         if(SID.I_am_Master)
                             mkdir(filename_output_profiles_dir, 02755);
-                        SID_Barrier(SID.COMM_WORLD);
+                        SID_Barrier(SID_COMM_WORLD);
                         sprintf(filename_output_profiles, "%s/%s.%d", filename_output_profiles_dir, profiles_root, SID.My_rank);
                     }
                     // Create sort indices filenames
@@ -848,7 +848,7 @@ int main(int argc, char *argv[]) {
                         strcpy(filename_output_indices_dir, filename_output_indices_temp);
                         if(SID.I_am_Master)
                             mkdir(filename_output_indices_dir, 02755);
-                        SID_Barrier(SID.COMM_WORLD);
+                        SID_Barrier(SID_COMM_WORLD);
                         sprintf(filename_output_indices, "%s/%s.%d", filename_output_indices_dir, indices_root, SID.My_rank);
                     }
                 } else {
@@ -856,7 +856,7 @@ int main(int argc, char *argv[]) {
                     strcpy(filename_output_profiles, filename_output_profiles_temp);
                     strcpy(filename_output_indices, filename_output_indices_temp);
                 }
-                SID_Barrier(SID.COMM_WORLD); // This makes sure that any created directories are there before proceeding
+                SID_Barrier(SID_COMM_WORLD); // This makes sure that any created directories are there before proceeding
 
                 // Open files
                 SID_log("Processing %sgroups...", SID_LOG_OPEN | SID_LOG_TIMER, group_text_prefix);
@@ -974,13 +974,13 @@ int main(int argc, char *argv[]) {
                     fclose(fp_profiles);
                 if(fp_indices != NULL)
                     fclose(fp_indices);
-                calc_sum_global(&n_truncated_local, &n_truncated, 1, SID_INT, CALC_MODE_DEFAULT, SID.COMM_WORLD);
-                calc_max_global(&largest_truncated_local, &largest_truncated, 1, SID_INT, CALC_MODE_DEFAULT, SID.COMM_WORLD);
+                calc_sum_global(&n_truncated_local, &n_truncated, 1, SID_INT, CALC_MODE_DEFAULT, SID_COMM_WORLD);
+                calc_max_global(&largest_truncated_local, &largest_truncated, 1, SID_INT, CALC_MODE_DEFAULT, SID_COMM_WORLD);
 
                 // Restore the original handler
                 gsl_set_error_handler(original_handler);
 
-                SID_Barrier(SID.COMM_WORLD);
+                SID_Barrier(SID_COMM_WORLD);
                 SID_log(
                     "Done. (f_truncated=%6.2lf%% largest=%d)", SID_LOG_CLOSE, 100. * (double)n_truncated / (double)n_groups_all, largest_truncated);
             }

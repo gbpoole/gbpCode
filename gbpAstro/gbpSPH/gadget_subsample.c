@@ -105,7 +105,7 @@ int main(int argc, char *argv[]) {
             if(n_files > 1)
                 SID_log("Done.", SID_LOG_CLOSE);
         }
-        SID_Allreduce(SID_IN_PLACE, n_all_keep, N_GADGET_TYPE, SID_LONG_LONG, SID_SUM, SID.COMM_WORLD);
+        SID_Allreduce(SID_IN_PLACE, n_all_keep, N_GADGET_TYPE, SID_LONG_LONG, SID_SUM, SID_COMM_WORLD);
         SID_log("Done.", SID_LOG_CLOSE);
         SID_log("Header properties will be...", SID_LOG_OPEN);
         for(i_type = 0; i_type < N_GADGET_TYPE; i_type++) {

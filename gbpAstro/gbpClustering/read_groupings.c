@@ -276,9 +276,9 @@ void read_groupings(const char *filename_root, int grouping_number, plist_info *
                         (size_t)compute_PHK_from_Cartesian(n_bits_PHK, 3, (double)x_in / box_size, (double)y_in / box_size, (double)z_in / box_size);
                 }
             }
-            SID_Allreduce(&n_z_space_local, &n_z_space, 1, SID_SIZE_T, SID_SUM, SID.COMM_WORLD);
+            SID_Allreduce(&n_z_space_local, &n_z_space, 1, SID_SIZE_T, SID_SUM, SID_COMM_WORLD);
             if(n_z_space > 0) {
-                SID_Allreduce(&z_space_local, &z_space, 1, SID_DOUBLE, SID_SUM, SID.COMM_WORLD);
+                SID_Allreduce(&z_space_local, &z_space, 1, SID_DOUBLE, SID_SUM, SID_COMM_WORLD);
                 z_space /= (double)n_z_space;
                 SID_log("Average z-space dispacement=%le [Mpc/h]", SID_LOG_COMMENT, z_space);
             }
@@ -320,13 +320,13 @@ void read_groupings(const char *filename_root, int grouping_number, plist_info *
                     int    PHK_max_bcast;
                     PHK_min_bcast = PHK_min_local;
                     PHK_max_bcast = PHK_max_local;
-                    SID_Bcast(&PHK_min_bcast, 1, SID_INT, i_rank, SID.COMM_WORLD);
-                    SID_Bcast(&PHK_max_bcast, 1, SID_INT, i_rank, SID.COMM_WORLD);
+                    SID_Bcast(&PHK_min_bcast, 1, SID_INT, i_rank, SID_COMM_WORLD);
+                    SID_Bcast(&PHK_max_bcast, 1, SID_INT, i_rank, SID_COMM_WORLD);
                     for(i_halo = 0, n_halos_bcast = 0; i_halo < n_halos_allocate; i_halo++) {
                         if(PHK_halo[i_halo] >= (size_t)PHK_min_bcast && PHK_halo[i_halo] <= (size_t)PHK_max_bcast)
                             n_halos_bcast++;
                     }
-                    SID_Allreduce(SID_IN_PLACE, &n_halos_bcast, 1, SID_SIZE_T, SID_SUM, SID.COMM_WORLD);
+                    SID_Allreduce(SID_IN_PLACE, &n_halos_bcast, 1, SID_SIZE_T, SID_SUM, SID_COMM_WORLD);
                     if(SID.My_rank == i_rank)
                         n_halos_local = n_halos_bcast;
                 }
@@ -379,10 +379,10 @@ void read_groupings(const char *filename_root, int grouping_number, plist_info *
                                 break;
                             }
                         }
-                        SID_Allreduce(SID_IN_PLACE, &PHK_Bcast, 1, SID_INT, SID_MAX, SID.COMM_WORLD);
+                        SID_Allreduce(SID_IN_PLACE, &PHK_Bcast, 1, SID_INT, SID_MAX, SID_COMM_WORLD);
 
                         // Sanity check
-                        SID_Allreduce(&flag_found_target, &flag_check, 1, SID_INT, SID_SUM, SID.COMM_WORLD);
+                        SID_Allreduce(&flag_found_target, &flag_check, 1, SID_INT, SID_SUM, SID_COMM_WORLD);
                         if(flag_check != 1)
                             SID_exit_error(
                                     "The desired halo (%zd) was found by %d processes during the PHK domain decomposition.",
@@ -401,7 +401,7 @@ void read_groupings(const char *filename_root, int grouping_number, plist_info *
                                 i_halo_highest = PHK_halo_rank[PHK_halo_index[i_halo]];
                             }
                         }
-                        SID_Allreduce(&i_halo_highest, &i_halo_stop, 1, SID_SIZE_T, SID_MAX, SID.COMM_WORLD);
+                        SID_Allreduce(&i_halo_highest, &i_halo_stop, 1, SID_SIZE_T, SID_MAX, SID_COMM_WORLD);
 
                         // Set the starting halo index of the next rank and
                         //   the number of halos on this rank and remaining to be allocated.
@@ -517,10 +517,10 @@ void read_groupings(const char *filename_root, int grouping_number, plist_info *
                 n_boundary_report = n_boundary;
                 PHK_min_report    = PHK_min_local;
                 PHK_max_report    = PHK_max_local;
-                SID_Bcast(&n_halos_report, 1, SID_SIZE_T, i_rank, SID.COMM_WORLD);
-                SID_Bcast(&n_boundary_report, 1, SID_SIZE_T, i_rank, SID.COMM_WORLD);
-                SID_Bcast(&PHK_min_report, 1, SID_INT, i_rank, SID.COMM_WORLD);
-                SID_Bcast(&PHK_max_report, 1, SID_INT, i_rank, SID.COMM_WORLD);
+                SID_Bcast(&n_halos_report, 1, SID_SIZE_T, i_rank, SID_COMM_WORLD);
+                SID_Bcast(&n_boundary_report, 1, SID_SIZE_T, i_rank, SID_COMM_WORLD);
+                SID_Bcast(&PHK_min_report, 1, SID_INT, i_rank, SID_COMM_WORLD);
+                SID_Bcast(&PHK_max_report, 1, SID_INT, i_rank, SID_COMM_WORLD);
                 SID_log("Rank #%03d: n_objects=%6zd n_boundary=%6zd PHK=%d->%d",
                         SID_LOG_COMMENT,
                         i_rank,
@@ -634,23 +634,23 @@ void read_groupings(const char *filename_root, int grouping_number, plist_info *
 
     // Some sanity checks on what we have read
     size_t n_halos_read;
-    SID_Allreduce(&n_halos_local, &n_halos_read, 1, SID_SIZE_T, SID_SUM, SID.COMM_WORLD);
+    SID_Allreduce(&n_halos_local, &n_halos_read, 1, SID_SIZE_T, SID_SUM, SID_COMM_WORLD);
     if(n_halos_read != n_halos)
         SID_exit_error(
                 "The correct number of halos was not read (ie. %lld!=%lld).  There must be a coordinate/box size problem.",
                 SID_ERROR_LOGIC, n_halos_read, n_halos);
-    SID_Allreduce(SID_IN_PLACE, &x_min, 1, SID_REAL, SID_MIN, SID.COMM_WORLD);
-    SID_Allreduce(SID_IN_PLACE, &x_max, 1, SID_REAL, SID_MAX, SID.COMM_WORLD);
-    SID_Allreduce(SID_IN_PLACE, &y_min, 1, SID_REAL, SID_MIN, SID.COMM_WORLD);
-    SID_Allreduce(SID_IN_PLACE, &y_max, 1, SID_REAL, SID_MAX, SID.COMM_WORLD);
-    SID_Allreduce(SID_IN_PLACE, &z_min, 1, SID_REAL, SID_MIN, SID.COMM_WORLD);
-    SID_Allreduce(SID_IN_PLACE, &z_max, 1, SID_REAL, SID_MAX, SID.COMM_WORLD);
-    SID_Allreduce(SID_IN_PLACE, &vx_min, 1, SID_REAL, SID_MIN, SID.COMM_WORLD);
-    SID_Allreduce(SID_IN_PLACE, &vx_max, 1, SID_REAL, SID_MAX, SID.COMM_WORLD);
-    SID_Allreduce(SID_IN_PLACE, &vy_min, 1, SID_REAL, SID_MIN, SID.COMM_WORLD);
-    SID_Allreduce(SID_IN_PLACE, &vy_max, 1, SID_REAL, SID_MAX, SID.COMM_WORLD);
-    SID_Allreduce(SID_IN_PLACE, &vz_min, 1, SID_REAL, SID_MIN, SID.COMM_WORLD);
-    SID_Allreduce(SID_IN_PLACE, &vz_max, 1, SID_REAL, SID_MAX, SID.COMM_WORLD);
+    SID_Allreduce(SID_IN_PLACE, &x_min, 1, SID_REAL, SID_MIN, SID_COMM_WORLD);
+    SID_Allreduce(SID_IN_PLACE, &x_max, 1, SID_REAL, SID_MAX, SID_COMM_WORLD);
+    SID_Allreduce(SID_IN_PLACE, &y_min, 1, SID_REAL, SID_MIN, SID_COMM_WORLD);
+    SID_Allreduce(SID_IN_PLACE, &y_max, 1, SID_REAL, SID_MAX, SID_COMM_WORLD);
+    SID_Allreduce(SID_IN_PLACE, &z_min, 1, SID_REAL, SID_MIN, SID_COMM_WORLD);
+    SID_Allreduce(SID_IN_PLACE, &z_max, 1, SID_REAL, SID_MAX, SID_COMM_WORLD);
+    SID_Allreduce(SID_IN_PLACE, &vx_min, 1, SID_REAL, SID_MIN, SID_COMM_WORLD);
+    SID_Allreduce(SID_IN_PLACE, &vx_max, 1, SID_REAL, SID_MAX, SID_COMM_WORLD);
+    SID_Allreduce(SID_IN_PLACE, &vy_min, 1, SID_REAL, SID_MIN, SID_COMM_WORLD);
+    SID_Allreduce(SID_IN_PLACE, &vy_max, 1, SID_REAL, SID_MAX, SID_COMM_WORLD);
+    SID_Allreduce(SID_IN_PLACE, &vz_min, 1, SID_REAL, SID_MIN, SID_COMM_WORLD);
+    SID_Allreduce(SID_IN_PLACE, &vz_max, 1, SID_REAL, SID_MAX, SID_COMM_WORLD);
     SID_log("x_range =%le->%le", SID_LOG_COMMENT, x_min, x_max);
     SID_log("y_range =%le->%le", SID_LOG_COMMENT, y_min, y_max);
     SID_log("z_range =%le->%le", SID_LOG_COMMENT, z_min, z_max);

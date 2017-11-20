@@ -148,7 +148,7 @@ void init_MCMC(MCMC_info * MCMC,
 
     // Initialize Communicator
     SID_Comm_init(&(MCMC->comm));
-    SID_Comm_split(SID.COMM_WORLD, MCMC->my_chain, SID.My_rank, MCMC->comm);
+    SID_Comm_split(SID_COMM_WORLD, MCMC->my_chain, SID.My_rank, MCMC->comm);
 
     // Set the base output directory
     if(MCMC->my_chain == SID.My_rank) {

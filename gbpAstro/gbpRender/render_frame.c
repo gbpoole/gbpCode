@@ -545,8 +545,8 @@ void render_frame(render_info *render) {
             }     // near-field selection
             SID_check_pcounter(&pcounter, ii_particle);
         } // loop over particles
-        SID_Barrier(SID.COMM_WORLD);
-        SID_Allreduce(&n_particles_used_local, &n_particles_used, 1, SID_SIZE_T, SID_SUM, SID.COMM_WORLD);
+        SID_Barrier(SID_COMM_WORLD);
+        SID_Allreduce(&n_particles_used_local, &n_particles_used, 1, SID_SIZE_T, SID_SUM, SID_COMM_WORLD);
         SID_log("n_particles_used=%zd", SID_LOG_COMMENT, n_particles_used);
         SID_log("Done.", SID_LOG_CLOSE);
 
@@ -580,7 +580,7 @@ void render_frame(render_info *render) {
         for(int i_y = 0; i_y < ny; i_y++) {
             for(int i_x = 0, i_pixel = i_y * nx; i_x < nx; i_x++, i_pixel++)
                 mask_buffer[i_x] = (int)mask[i_pixel];
-            SID_Allreduce(SID_IN_PLACE, mask_buffer, nx, SID_INT, SID_MAX, SID.COMM_WORLD);
+            SID_Allreduce(SID_IN_PLACE, mask_buffer, nx, SID_INT, SID_MAX, SID_COMM_WORLD);
             for(int i_x = 0, i_pixel = i_y * nx; i_x < nx; i_x++, i_pixel++) {
                 if(mask_buffer[i_x])
                     mask[i_pixel] = GBP_TRUE;
@@ -589,12 +589,12 @@ void render_frame(render_info *render) {
         SID_free(SID_FARG mask_buffer);
 #endif
         for(int i_depth = 0; i_depth < n_depth; i_depth++) {
-            SID_Allreduce(SID_IN_PLACE, temp_image[i_depth], n_pixels, SID_DOUBLE, SID_SUM, SID.COMM_WORLD);
-            SID_Allreduce(SID_IN_PLACE, Y_image[i_depth], n_pixels, SID_DOUBLE, SID_SUM, SID.COMM_WORLD);
+            SID_Allreduce(SID_IN_PLACE, temp_image[i_depth], n_pixels, SID_DOUBLE, SID_SUM, SID_COMM_WORLD);
+            SID_Allreduce(SID_IN_PLACE, Y_image[i_depth], n_pixels, SID_DOUBLE, SID_SUM, SID_COMM_WORLD);
             if(RY_image != NULL) {
-                SID_Allreduce(SID_IN_PLACE, RY_image[i_depth], n_pixels, SID_DOUBLE, SID_SUM, SID.COMM_WORLD);
-                SID_Allreduce(SID_IN_PLACE, GY_image[i_depth], n_pixels, SID_DOUBLE, SID_SUM, SID.COMM_WORLD);
-                SID_Allreduce(SID_IN_PLACE, BY_image[i_depth], n_pixels, SID_DOUBLE, SID_SUM, SID.COMM_WORLD);
+                SID_Allreduce(SID_IN_PLACE, RY_image[i_depth], n_pixels, SID_DOUBLE, SID_SUM, SID_COMM_WORLD);
+                SID_Allreduce(SID_IN_PLACE, GY_image[i_depth], n_pixels, SID_DOUBLE, SID_SUM, SID_COMM_WORLD);
+                SID_Allreduce(SID_IN_PLACE, BY_image[i_depth], n_pixels, SID_DOUBLE, SID_SUM, SID_COMM_WORLD);
             }
         }
 

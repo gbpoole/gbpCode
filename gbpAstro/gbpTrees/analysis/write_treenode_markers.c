@@ -145,7 +145,7 @@ void write_treenode_markers(tree_info *trees, const char *filename_output_root, 
                 current_halo = current_halo->next_neighbour;
             }
             // Doing a global max on the buffer yields the needed buffer on all ranks
-            SID_Allreduce(SID_IN_PLACE, buffer, n_buffer, SID_INT, SID_MAX, SID.COMM_WORLD);
+            SID_Allreduce(SID_IN_PLACE, buffer, n_buffer, SID_INT, SID_MAX, SID_COMM_WORLD);
             // Perform the write
             if(SID.I_am_Master) {
                 // Sanity check

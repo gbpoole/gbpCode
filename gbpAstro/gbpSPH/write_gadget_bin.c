@@ -52,7 +52,7 @@ void write_gadget_bin(char *filename_out, plist_info *plist) {
                                 }
                             }
                             int n_write = 0;
-                            SID_Allreduce(&flag, &n_write, 1, SID_INT, SID_SUM, SID.COMM_WORLD);
+                            SID_Allreduce(&flag, &n_write, 1, SID_INT, SID_SUM, SID_COMM_WORLD);
                             if(n_write != 1)
                                 SID_exit_error("Particle %d was not written correctly.", SID_ERROR_LOGIC, i_p);
                         }
@@ -61,7 +61,7 @@ void write_gadget_bin(char *filename_out, plist_info *plist) {
             } // i_species
             fclose(fp_out);
         } // if i_rank
-        SID_Barrier(SID.COMM_WORLD);
+        SID_Barrier(SID_COMM_WORLD);
     }
     SID_log("Done.", SID_LOG_CLOSE);
 }

@@ -918,7 +918,7 @@ void read_gadget_binary(char *filename_root_in, int snapshot_number, plist_info 
 #if USE_MPI
         for(i_rank = 0; i_rank < SID.n_proc; i_rank++) {
             n_particles_bcast = n_particles_rank;
-            SID_Bcast(&n_particles_bcast, 1, SID_SIZE_T, i_rank, SID.COMM_WORLD);
+            SID_Bcast(&n_particles_bcast, 1, SID_SIZE_T, i_rank, SID_COMM_WORLD);
             SID_log("Number of particles on rank #%d:\t%lld", SID_LOG_COMMENT, i_rank, n_particles_bcast);
             n_particles_all += n_particles_bcast;
         }
@@ -1106,7 +1106,7 @@ void read_gadget_binary(char *filename_root_in, int snapshot_number, plist_info 
 
                 // Read masses (if needed)
                 if(flag_multimass) {
-                    SID_Allreduce(&n_particles_mass_rank, &n_particles_mass, 1, SID_SIZE_T, SID_SUM, SID.COMM_WORLD);
+                    SID_Allreduce(&n_particles_mass_rank, &n_particles_mass, 1, SID_SIZE_T, SID_SUM, SID_COMM_WORLD);
                     SID_log("Reading mass array (%d multimass particles)...", SID_LOG_OPEN | SID_LOG_TIMER, n_particles_mass);
                     SID_fread_all(&record_length_open, 4, 1, &fp);
                     for(i = 0; i < N_GADGET_TYPE; i++) {
@@ -1218,7 +1218,7 @@ void read_gadget_binary(char *filename_root_in, int snapshot_number, plist_info 
         SID_free((void **)&buffer);
         if(flag_read_marked || flag_read_catalog)
             SID_free((void **)&buffer_ids);
-        SID_Barrier(SID.COMM_WORLD);
+        SID_Barrier(SID_COMM_WORLD);
 
         // Store everything in the data structure...
 
@@ -1233,7 +1233,7 @@ void read_gadget_binary(char *filename_root_in, int snapshot_number, plist_info 
             k += n_of_type_rank[i];
             if(mass_array[i] == 0.)
                 j += n_of_type_rank[i];
-            SID_Allreduce(&(n_of_type_rank[i]), &(n_of_type[i]), 1, SID_SIZE_T, SID_SUM, SID.COMM_WORLD);
+            SID_Allreduce(&(n_of_type_rank[i]), &(n_of_type[i]), 1, SID_SIZE_T, SID_SUM, SID_COMM_WORLD);
         }
         for(i = 0; i < N_GADGET_TYPE; i++) {
             if(n_of_type[i] > 0) {
@@ -1311,7 +1311,7 @@ void read_gadget_binary(char *filename_root_in, int snapshot_number, plist_info 
                 SID_free((void **)&list_file_rank[i][i_file]);
             SID_free((void **)&list_file_rank[i]);
         }
-        SID_Barrier(SID.COMM_WORLD);
+        SID_Barrier(SID_COMM_WORLD);
         SID_log("Done.", SID_LOG_CLOSE);
     }
 }

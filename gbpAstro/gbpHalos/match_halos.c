@@ -225,7 +225,7 @@ void match_halos(plist_info *plist_1_in,
 
     // Allow a mark list to be passed if we are
     //   only interested in certain objects
-    calc_sum_global(&n_mark_1_local, &n_mark_1_all, 1, SID_INT, CALC_MODE_DEFAULT, SID.COMM_WORLD);
+    calc_sum_global(&n_mark_1_local, &n_mark_1_all, 1, SID_INT, CALC_MODE_DEFAULT, SID_COMM_WORLD);
     if(n_mark_1_all > 0) {
         flag_read_marked = GBP_TRUE;
         n_match_1        = n_mark_1_local;
@@ -371,8 +371,8 @@ void match_halos(plist_info *plist_1_in,
         // Allocate some buffers for rank exchanges
         size_t n_particles_2_max;
         int    n_groups_2_max;
-        SID_Allreduce(&n_particles_2_local, &n_particles_2_max, 1, SID_SIZE_T, SID_MAX, SID.COMM_WORLD);
-        SID_Allreduce(&n_groups_2_local, &n_groups_2_max, 1, SID_INT, SID_MAX, SID.COMM_WORLD);
+        SID_Allreduce(&n_particles_2_local, &n_particles_2_max, 1, SID_SIZE_T, SID_MAX, SID_COMM_WORLD);
+        SID_Allreduce(&n_groups_2_local, &n_groups_2_max, 1, SID_INT, SID_MAX, SID_COMM_WORLD);
         if(SID.n_proc > 1) {
             SID_log("Allocate exchange buffers...", SID_LOG_OPEN);
             SID_log("Group    buffer size=%d groups", SID_LOG_COMMENT, n_groups_2_max);
@@ -487,7 +487,7 @@ void match_halos(plist_info *plist_1_in,
                 SID_log("particle count...", SID_LOG_COMMENT);
                 exchange_ring_buffer(&n_particles_2_local, sizeof(size_t), 1, &n_particles_2, NULL, i_rank);
                 SID_log("group count...", SID_LOG_COMMENT);
-                SID_Barrier(SID.COMM_WORLD);
+                SID_Barrier(SID_COMM_WORLD);
                 exchange_ring_buffer(&n_groups_2_local, // send
                                      sizeof(int),       // send/recv
                                      1,                 // send
@@ -705,14 +705,14 @@ void match_halos(plist_info *plist_1_in,
         // Check that the hist_size array didn't over-flow
         int hist_size_max_global;
         int hist_size_limit = 32767; // Largest number supported by 16-bit signed int
-        calc_max_global(&hist_size_max, &hist_size_max_global, 1, SID_INT, CALC_MODE_DEFAULT, SID.COMM_WORLD);
+        calc_max_global(&hist_size_max, &hist_size_max_global, 1, SID_INT, CALC_MODE_DEFAULT, SID_COMM_WORLD);
         SID_log("Largest hist size=%d", SID_LOG_COMMENT, hist_size_max_global);
         if(hist_size_max_global > hist_size_limit)
             SID_exit_error("The histogram size array has overflowed (ie. %d>%d)", SID_LOG_COMMENT, hist_size_max_global,
                            hist_size_limit);
 
         // How many matches across all ranks?
-        calc_sum_global(&n_match, &n_match_all, 1, SID_INT, CALC_MODE_DEFAULT, SID.COMM_WORLD);
+        calc_sum_global(&n_match, &n_match_all, 1, SID_INT, CALC_MODE_DEFAULT, SID_COMM_WORLD);
         n_match = n_match_all;
 
         // Clean-up

@@ -94,8 +94,8 @@ void check_for_tree_matches_local(char *filename_root_out,
             }
         }
     }
-    SID_Bcast(flag_go, 1, SID_INT, SID_MASTER_RANK, SID.COMM_WORLD);
-    SID_Bcast((*flag_go_array), n_search_total, SID_INT, SID_MASTER_RANK, SID.COMM_WORLD);
+    SID_Bcast(flag_go, 1, SID_INT, SID_MASTER_RANK, SID_COMM_WORLD);
+    SID_Bcast((*flag_go_array), n_search_total, SID_INT, SID_MASTER_RANK, SID_COMM_WORLD);
 }
 
 int compute_trees_matches(char *filename_root_in,
@@ -293,7 +293,7 @@ int compute_trees_matches(char *filename_root_in,
                             fwrite(&n_groups_1, sizeof(int), 1, fp_out);
                             fclose(fp_out);
                         }
-                        SID_Barrier(SID.COMM_WORLD);
+                        SID_Barrier(SID_COMM_WORLD);
 
                         // Write the arrays for each snapshot
                         fp_out = fopen(filename_out, "a");
@@ -302,7 +302,7 @@ int compute_trees_matches(char *filename_root_in,
                             int   n_groups_1_local_max;
                             int   n_buffer;
                             char *buffer;
-                            calc_max_global(&n_groups_1_local, &n_groups_1_local_max, 1, SID_INT, CALC_MODE_DEFAULT, SID.COMM_WORLD);
+                            calc_max_global(&n_groups_1_local, &n_groups_1_local_max, 1, SID_INT, CALC_MODE_DEFAULT, SID_COMM_WORLD);
                             buffer = (char *)SID_malloc(n_groups_1_local_max * sizeof(int));
 
                             // Write the group/subgroup sizes
@@ -313,8 +313,8 @@ int compute_trees_matches(char *filename_root_in,
                                     n_buffer = n_groups_1_local;
                                     memcpy(buffer, n_particles, n_buffer * sizeof(int));
                                 }
-                                SID_Bcast(&n_buffer, 1, SID_INT, i_rank, SID.COMM_WORLD);
-                                SID_Bcast(buffer, n_buffer, SID_INT, i_rank, SID.COMM_WORLD);
+                                SID_Bcast(&n_buffer, 1, SID_INT, i_rank, SID_COMM_WORLD);
+                                SID_Bcast(buffer, n_buffer, SID_INT, i_rank, SID_COMM_WORLD);
                                 if(SID.I_am_Master)
                                     fwrite(buffer, n_buffer, sizeof(int), fp_out);
                             }
@@ -327,8 +327,8 @@ int compute_trees_matches(char *filename_root_in,
                                         n_buffer = n_groups_1_local;
                                         memcpy(buffer, n_sub_group, n_buffer * sizeof(int));
                                     }
-                                    SID_Bcast(&n_buffer, 1, SID_INT, i_rank, SID.COMM_WORLD);
-                                    SID_Bcast(buffer, n_buffer, SID_INT, i_rank, SID.COMM_WORLD);
+                                    SID_Bcast(&n_buffer, 1, SID_INT, i_rank, SID_COMM_WORLD);
+                                    SID_Bcast(buffer, n_buffer, SID_INT, i_rank, SID_COMM_WORLD);
                                     if(SID.I_am_Master)
                                         fwrite(buffer, n_buffer, sizeof(int), fp_out);
                                 }

@@ -42,7 +42,7 @@ void parse_render_file(render_info **render, char *filename) {
     for(i_line = 0; i_line < n_lines; i_line++) {
         grab_next_line_data(fp, &line, &line_length);
         SID_log("Processing line %d of %d {%s}...", SID_LOG_OPEN, i_line + 1, n_lines, line);
-        SID_Barrier(SID.COMM_WORLD);
+        SID_Barrier(SID_COMM_WORLD);
         i_word = 1;
         grab_word(line, i_word++, command);
         if(strlen(line) > 0) {

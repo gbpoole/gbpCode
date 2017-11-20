@@ -8,7 +8,7 @@ void write_trend_ascii(trend_info *trend, const char *filename_output_root) {
     sprintf(filename, "%s_%s.txt", filename_output_root, trend->ordinate->name);
     FILE *fp_out;
     SID_log("Writing trend to {%s}...", SID_LOG_OPEN, filename);
-    SID_Barrier(SID.COMM_WORLD);
+    SID_Barrier(SID_COMM_WORLD);
     if(SID.I_am_Master) {
         fp_out = fopen(filename, "w");
 

@@ -70,6 +70,6 @@ size_t mark_particles(plist_info *plist, int run_mode, double *input_vals, const
             }
         }
     }
-    calc_sum_global(&n_marked_local, &n_marked, 1, SID_SIZE_T, CALC_MODE_DEFAULT, SID.COMM_WORLD);
+    calc_sum_global(&n_marked_local, &n_marked, 1, SID_SIZE_T, CALC_MODE_DEFAULT, SID_COMM_WORLD);
     return (n_marked);
 }

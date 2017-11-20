@@ -468,6 +468,6 @@ void write_gadget_csv(char *filename_out, plist_info *plist) {
             /******************/
             fclose(fp);
         }
-        SID_Barrier(SID.COMM_WORLD);
+        SID_Barrier(SID_COMM_WORLD);
     }
 }

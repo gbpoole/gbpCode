@@ -183,7 +183,7 @@ void write_tree_branches(tree_info *      trees,
             if(i_rank == 0)
                 n_list_i = n_list_in;
             else
-                SID_Sendrecv(&n_list_in, 1, SID_INT, SID_MASTER_RANK, 1918270, &n_list_i, 1, SID_INT, i_rank, 1918270, SID.COMM_WORLD);
+                SID_Sendrecv(&n_list_in, 1, SID_INT, SID_MASTER_RANK, 1918270, &n_list_i, 1, SID_INT, i_rank, 1918270, SID_COMM_WORLD);
             for(int i_list = 0; i_list < n_list_i; i_list++) {
                 // Point to the halo to be processed
                 tree_node_info *current_halo = list_in[i_list];
@@ -284,13 +284,13 @@ void write_tree_branches(tree_info *      trees,
 
                     // Write properties
                     if(i_rank != 0) {
-                        SID_Sendrecv(&i_z_node, 1, SID_INT, SID_MASTER_RANK, 1918271, &i_z_node, 1, SID_INT, i_rank, 1918271, SID.COMM_WORLD);
-                        SID_Sendrecv(&idx_node, 1, SID_INT, SID_MASTER_RANK, 1918272, &idx_node, 1, SID_INT, i_rank, 1918272, SID.COMM_WORLD);
-                        SID_Sendrecv(&t_node, 1, SID_DOUBLE, SID_MASTER_RANK, 1918273, &t_node, 1, SID_DOUBLE, i_rank, 1918273, SID.COMM_WORLD);
-                        SID_Sendrecv(&z_node, 1, SID_DOUBLE, SID_MASTER_RANK, 1918274, &z_node, 1, SID_DOUBLE, i_rank, 1918274, SID.COMM_WORLD);
-                        SID_Sendrecv(&M_node, 1, SID_DOUBLE, SID_MASTER_RANK, 1918275, &M_node, 1, SID_DOUBLE, i_rank, 1918275, SID.COMM_WORLD);
+                        SID_Sendrecv(&i_z_node, 1, SID_INT, SID_MASTER_RANK, 1918271, &i_z_node, 1, SID_INT, i_rank, 1918271, SID_COMM_WORLD);
+                        SID_Sendrecv(&idx_node, 1, SID_INT, SID_MASTER_RANK, 1918272, &idx_node, 1, SID_INT, i_rank, 1918272, SID_COMM_WORLD);
+                        SID_Sendrecv(&t_node, 1, SID_DOUBLE, SID_MASTER_RANK, 1918273, &t_node, 1, SID_DOUBLE, i_rank, 1918273, SID_COMM_WORLD);
+                        SID_Sendrecv(&z_node, 1, SID_DOUBLE, SID_MASTER_RANK, 1918274, &z_node, 1, SID_DOUBLE, i_rank, 1918274, SID_COMM_WORLD);
+                        SID_Sendrecv(&M_node, 1, SID_DOUBLE, SID_MASTER_RANK, 1918275, &M_node, 1, SID_DOUBLE, i_rank, 1918275, SID_COMM_WORLD);
                         SID_Sendrecv(
-                            &M_node_parent, 1, SID_DOUBLE, SID_MASTER_RANK, 1918276, &M_node_parent, 1, SID_DOUBLE, i_rank, 1918276, SID.COMM_WORLD);
+                            &M_node_parent, 1, SID_DOUBLE, SID_MASTER_RANK, 1918276, &M_node_parent, 1, SID_DOUBLE, i_rank, 1918276, SID_COMM_WORLD);
                     }
                     if(SID.I_am_Master) {
                         int snap_node = -1;
@@ -316,7 +316,7 @@ void write_tree_branches(tree_info *      trees,
             if(i_rank == 0)
                 n_list_i = n_list;
             else
-                SID_Sendrecv(&n_list, 1, SID_INT, SID_MASTER_RANK, 1918270, &n_list_i, 1, SID_INT, i_rank, 1918270, SID.COMM_WORLD);
+                SID_Sendrecv(&n_list, 1, SID_INT, SID_MASTER_RANK, 1918270, &n_list_i, 1, SID_INT, i_rank, 1918270, SID_COMM_WORLD);
             for(int i_list = 0; i_list < n_list_i; i_list++) {
                 // Point to the halo to be processed
                 tree_node_info *current_halo = list[i_list];
@@ -346,17 +346,17 @@ void write_tree_branches(tree_info *      trees,
 
                 // Write track
                 if(i_rank != 0) {
-                    SID_Sendrecv(&n_track, 1, SID_INT, SID_MASTER_RANK, 1918370, &n_track, 1, SID_INT, i_rank, 1918370, SID.COMM_WORLD);
-                    SID_Sendrecv(i_z_track, n_track, SID_INT, SID_MASTER_RANK, 1918371, i_z_track, n_track, SID_INT, i_rank, 1918371, SID.COMM_WORLD);
-                    SID_Sendrecv(idx_track, n_track, SID_INT, SID_MASTER_RANK, 1918372, idx_track, n_track, SID_INT, i_rank, 1918372, SID.COMM_WORLD);
-                    SID_Sendrecv(tc_track, n_track, SID_INT, SID_MASTER_RANK, 1918373, tc_track, n_track, SID_INT, i_rank, 1918373, SID.COMM_WORLD);
-                    SID_Sendrecv(x_track, n_track, SID_INT, SID_MASTER_RANK, 1918374, x_track, n_track, SID_INT, i_rank, 1918374, SID.COMM_WORLD);
-                    SID_Sendrecv(y_track, n_track, SID_INT, SID_MASTER_RANK, 1918375, y_track, n_track, SID_INT, i_rank, 1918375, SID.COMM_WORLD);
-                    SID_Sendrecv(z_track, n_track, SID_INT, SID_MASTER_RANK, 1918376, z_track, n_track, SID_INT, i_rank, 1918376, SID.COMM_WORLD);
-                    SID_Sendrecv(vx_track, n_track, SID_INT, SID_MASTER_RANK, 1918377, vx_track, n_track, SID_INT, i_rank, 1918377, SID.COMM_WORLD);
-                    SID_Sendrecv(vy_track, n_track, SID_INT, SID_MASTER_RANK, 1918378, vy_track, n_track, SID_INT, i_rank, 1918378, SID.COMM_WORLD);
-                    SID_Sendrecv(vz_track, n_track, SID_INT, SID_MASTER_RANK, 1918379, vz_track, n_track, SID_INT, i_rank, 1918379, SID.COMM_WORLD);
-                    SID_Sendrecv(M_track, n_track, SID_INT, SID_MASTER_RANK, 1918380, M_track, n_track, SID_INT, i_rank, 1918380, SID.COMM_WORLD);
+                    SID_Sendrecv(&n_track, 1, SID_INT, SID_MASTER_RANK, 1918370, &n_track, 1, SID_INT, i_rank, 1918370, SID_COMM_WORLD);
+                    SID_Sendrecv(i_z_track, n_track, SID_INT, SID_MASTER_RANK, 1918371, i_z_track, n_track, SID_INT, i_rank, 1918371, SID_COMM_WORLD);
+                    SID_Sendrecv(idx_track, n_track, SID_INT, SID_MASTER_RANK, 1918372, idx_track, n_track, SID_INT, i_rank, 1918372, SID_COMM_WORLD);
+                    SID_Sendrecv(tc_track, n_track, SID_INT, SID_MASTER_RANK, 1918373, tc_track, n_track, SID_INT, i_rank, 1918373, SID_COMM_WORLD);
+                    SID_Sendrecv(x_track, n_track, SID_INT, SID_MASTER_RANK, 1918374, x_track, n_track, SID_INT, i_rank, 1918374, SID_COMM_WORLD);
+                    SID_Sendrecv(y_track, n_track, SID_INT, SID_MASTER_RANK, 1918375, y_track, n_track, SID_INT, i_rank, 1918375, SID_COMM_WORLD);
+                    SID_Sendrecv(z_track, n_track, SID_INT, SID_MASTER_RANK, 1918376, z_track, n_track, SID_INT, i_rank, 1918376, SID_COMM_WORLD);
+                    SID_Sendrecv(vx_track, n_track, SID_INT, SID_MASTER_RANK, 1918377, vx_track, n_track, SID_INT, i_rank, 1918377, SID_COMM_WORLD);
+                    SID_Sendrecv(vy_track, n_track, SID_INT, SID_MASTER_RANK, 1918378, vy_track, n_track, SID_INT, i_rank, 1918378, SID_COMM_WORLD);
+                    SID_Sendrecv(vz_track, n_track, SID_INT, SID_MASTER_RANK, 1918379, vz_track, n_track, SID_INT, i_rank, 1918379, SID_COMM_WORLD);
+                    SID_Sendrecv(M_track, n_track, SID_INT, SID_MASTER_RANK, 1918380, M_track, n_track, SID_INT, i_rank, 1918380, SID_COMM_WORLD);
                 }
                 if(SID.I_am_Master) {
                     fwrite(&n_track, sizeof(int), 1, fp_tracks_out);
@@ -374,7 +374,7 @@ void write_tree_branches(tree_info *      trees,
 
             } // for i_list
         }     // if i_rank
-        SID_Barrier(SID.COMM_WORLD);
+        SID_Barrier(SID_COMM_WORLD);
     } // for i_rank
     if(SID.I_am_Master) {
         fclose(fp_tracks_out);

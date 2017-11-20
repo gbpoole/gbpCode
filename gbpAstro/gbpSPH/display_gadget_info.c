@@ -291,6 +291,6 @@ void display_gadget_info(plist_info *plist) {
                 fprintf(stderr, "NO PARTICLES TO ANALYZE!\n");
         }
         fflush(stderr);
-        SID_Barrier(SID.COMM_WORLD);
+        SID_Barrier(SID_COMM_WORLD);
     }
 };

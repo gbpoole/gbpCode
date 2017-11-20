@@ -193,13 +193,13 @@ void write_gadget_binary(char *filename_in, plist_info *plist) {
                     }
                 }
             }
-            SID_Bcast(&i_p, 1, SID_SIZE_T, i_rank, SID.COMM_WORLD);
-            SID_Bcast(&i_file, 1, SID_INT, i_rank, SID.COMM_WORLD);
+            SID_Bcast(&i_p, 1, SID_SIZE_T, i_rank, SID_COMM_WORLD);
+            SID_Bcast(&i_file, 1, SID_INT, i_rank, SID_COMM_WORLD);
             for(j = 0; j < n_files; j++) {
-                SID_Bcast(n_of_type_file[j], N_GADGET_TYPE, SID_SIZE_T, i_rank, SID.COMM_WORLD);
-                SID_Bcast(&(n_particles_file[j]), 1, SID_SIZE_T, i_rank, SID.COMM_WORLD);
-                SID_Bcast(&(n_particles_multimass_file[j]), 1, SID_SIZE_T, i_rank, SID.COMM_WORLD);
-                SID_Bcast(&(n_gas_file[j]), 1, SID_SIZE_T, i_rank, SID.COMM_WORLD);
+                SID_Bcast(n_of_type_file[j], N_GADGET_TYPE, SID_SIZE_T, i_rank, SID_COMM_WORLD);
+                SID_Bcast(&(n_particles_file[j]), 1, SID_SIZE_T, i_rank, SID_COMM_WORLD);
+                SID_Bcast(&(n_particles_multimass_file[j]), 1, SID_SIZE_T, i_rank, SID_COMM_WORLD);
+                SID_Bcast(&(n_gas_file[j]), 1, SID_SIZE_T, i_rank, SID_COMM_WORLD);
             }
         }
     }
@@ -211,7 +211,7 @@ void write_gadget_binary(char *filename_in, plist_info *plist) {
              fprintf(stderr,"rank=%d of %d type=%d of %d n_of_type_file=%d
      n_particles_file=%d\n",SID.My_rank,n_files,i,N_GADGET_TYPE,n_of_type_file[i_file][i],n_particles_file[i_file]);
            }
-           SID_Barrier(SID.COMM_WORLD);
+           SID_Barrier(SID_COMM_WORLD);
          }
        }
      }
@@ -385,9 +385,9 @@ void write_gadget_binary(char *filename_in, plist_info *plist) {
                     SID_log("Error writing headers!", SID_LOG_COMMENT);
             }
         }
-        SID_Bcast(&flag_LONGIDS, 1, SID_INT, SID_MASTER_RANK, SID.COMM_WORLD);
-        SID_Bcast(&box_size, 1, SID_DOUBLE, SID_MASTER_RANK, SID.COMM_WORLD);
-        SID_Bcast(&box_size_offset, 1, SID_DOUBLE, SID_MASTER_RANK, SID.COMM_WORLD);
+        SID_Bcast(&flag_LONGIDS, 1, SID_INT, SID_MASTER_RANK, SID_COMM_WORLD);
+        SID_Bcast(&box_size, 1, SID_DOUBLE, SID_MASTER_RANK, SID_COMM_WORLD);
+        SID_Bcast(&box_size_offset, 1, SID_DOUBLE, SID_MASTER_RANK, SID_COMM_WORLD);
         if(flag_LONGIDS)
             SID_log("(using LONG IDS)...", SID_LOG_CONTINUE);
         SID_log("Done.", SID_LOG_CLOSE);
@@ -449,7 +449,7 @@ void write_gadget_binary(char *filename_in, plist_info *plist) {
                         }
                         fclose(fp);
                     }
-                    SID_Barrier(SID.COMM_WORLD);
+                    SID_Barrier(SID_COMM_WORLD);
                 }
             }
             if(SID.I_am_Master && flag_recordlength_written) {
@@ -504,7 +504,7 @@ void write_gadget_binary(char *filename_in, plist_info *plist) {
                         }
                         fclose(fp);
                     }
-                    SID_Barrier(SID.COMM_WORLD);
+                    SID_Barrier(SID_COMM_WORLD);
                 }
             }
             if(SID.I_am_Master && flag_recordlength_written) {
@@ -585,7 +585,7 @@ void write_gadget_binary(char *filename_in, plist_info *plist) {
                         }
                         fclose(fp);
                     }
-                    SID_Bcast(&i_p, 1, SID_SIZE_T, i_rank, SID.COMM_WORLD);
+                    SID_Bcast(&i_p, 1, SID_SIZE_T, i_rank, SID_COMM_WORLD);
                 }
             }
             if(SID.I_am_Master && flag_recordlength_written) {
@@ -632,7 +632,7 @@ void write_gadget_binary(char *filename_in, plist_info *plist) {
                                 }
                                 fclose(fp);
                             }
-                            SID_Barrier(SID.COMM_WORLD);
+                            SID_Barrier(SID_COMM_WORLD);
                         }
                     }
                 }
@@ -714,7 +714,7 @@ void write_gadget_binary(char *filename_in, plist_info *plist) {
                         }
                         fclose(fp);
                     }
-                    SID_Barrier(SID.COMM_WORLD);
+                    SID_Barrier(SID_COMM_WORLD);
                 }
                 if(SID.I_am_Master && flag_recordlength_written) {
                     fp = fopen(filename, "a");
@@ -775,7 +775,7 @@ void write_gadget_binary(char *filename_in, plist_info *plist) {
                         }
                         fclose(fp);
                     }
-                    SID_Barrier(SID.COMM_WORLD);
+                    SID_Barrier(SID_COMM_WORLD);
                 }
                 if(SID.I_am_Master && flag_recordlength_written) {
                     fp = fopen(filename, "a");
@@ -836,7 +836,7 @@ void write_gadget_binary(char *filename_in, plist_info *plist) {
                         }
                         fclose(fp);
                     }
-                    SID_Barrier(SID.COMM_WORLD);
+                    SID_Barrier(SID_COMM_WORLD);
                 }
                 if(SID.I_am_Master && flag_recordlength_written) {
                     fp = fopen(filename, "a");

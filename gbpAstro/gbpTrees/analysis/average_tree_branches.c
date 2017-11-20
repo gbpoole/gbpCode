@@ -154,7 +154,7 @@ void average_tree_branches(const char *catalog_name) {
         SID_free(SID_FARG t_list);
         SID_log("Done.", SID_LOG_CLOSE);
     } // if I_am_Master
-    SID_Barrier(SID.COMM_WORLD);
+    SID_Barrier(SID_COMM_WORLD);
 
     SID_log("Done.", SID_LOG_CLOSE);
 }

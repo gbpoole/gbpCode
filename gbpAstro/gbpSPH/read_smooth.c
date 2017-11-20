@@ -78,10 +78,10 @@ void read_smooth(plist_info *plist, char *filename_root_in, int snapshot_number,
         offset            = header.offset;
         n_particles_total = header.n_particles_total;
         n_files           = GBP_MAX(1, header.n_files);
-        SID_Bcast(&n_particles_file, 1, SID_INT, read_rank, SID.COMM_WORLD);
-        SID_Bcast(&offset, 1, SID_INT, read_rank, SID.COMM_WORLD);
-        SID_Bcast(&n_particles_total, 1, SID_LONG_LONG, read_rank, SID.COMM_WORLD);
-        SID_Bcast(&n_files, 1, SID_INT, read_rank, SID.COMM_WORLD);
+        SID_Bcast(&n_particles_file, 1, SID_INT, read_rank, SID_COMM_WORLD);
+        SID_Bcast(&offset, 1, SID_INT, read_rank, SID_COMM_WORLD);
+        SID_Bcast(&n_particles_total, 1, SID_LONG_LONG, read_rank, SID_COMM_WORLD);
+        SID_Bcast(&n_files, 1, SID_INT, read_rank, SID_COMM_WORLD);
 
         // Fetch the number of particles and their ids
         species_name        = plist->species[GADGET_TYPE_DARK];
@@ -147,10 +147,10 @@ void read_smooth(plist_info *plist, char *filename_root_in, int snapshot_number,
                 offset            = header.offset;
                 n_particles_total = header.n_particles_total;
                 n_files           = GBP_MAX(1, header.n_files);
-                SID_Bcast(&n_particles_file, 1, SID_INT, read_rank, SID.COMM_WORLD);
-                SID_Bcast(&offset, 1, SID_INT, read_rank, SID.COMM_WORLD);
-                SID_Bcast(&n_particles_total, 1, SID_LONG_LONG, read_rank, SID.COMM_WORLD);
-                SID_Bcast(&n_files, 1, SID_INT, read_rank, SID.COMM_WORLD);
+                SID_Bcast(&n_particles_file, 1, SID_INT, read_rank, SID_COMM_WORLD);
+                SID_Bcast(&offset, 1, SID_INT, read_rank, SID_COMM_WORLD);
+                SID_Bcast(&n_particles_total, 1, SID_LONG_LONG, read_rank, SID_COMM_WORLD);
+                SID_Bcast(&n_files, 1, SID_INT, read_rank, SID_COMM_WORLD);
 
                 // Read IDs
                 if(flag_LONGIDs) {
@@ -162,8 +162,8 @@ void read_smooth(plist_info *plist, char *filename_root_in, int snapshot_number,
                         fseeko(fp, (size_t)(3 * n_particles_file * sizeof(float)), SEEK_CUR);
                         fread_verify(id_buf, sizeof(long long), n_particles_file, fp);
                     }
-                    SID_Barrier(SID.COMM_WORLD);
-                    SID_Bcast(id_buf_L, (int)n_particles_file, SID_LONG_LONG, read_rank, SID.COMM_WORLD);
+                    SID_Barrier(SID_COMM_WORLD);
+                    SID_Bcast(id_buf_L, (int)n_particles_file, SID_LONG_LONG, read_rank, SID_COMM_WORLD);
                     merge_sort(id_buf_L, (size_t)n_particles_file, &id_buf_index, SID_SIZE_T, SORT_COMPUTE_INDEX, GBP_FALSE);
                 } else {
                     if(i_file == 0)
@@ -174,8 +174,8 @@ void read_smooth(plist_info *plist, char *filename_root_in, int snapshot_number,
                         fseeko(fp, (size_t)(3 * n_particles_file * sizeof(float)), SEEK_CUR);
                         fread_verify(id_buf, sizeof(int), n_particles_file, fp);
                     }
-                    SID_Barrier(SID.COMM_WORLD);
-                    SID_Bcast(id_buf_i, (int)n_particles_file, SID_INT, read_rank, SID.COMM_WORLD);
+                    SID_Barrier(SID_COMM_WORLD);
+                    SID_Bcast(id_buf_i, (int)n_particles_file, SID_INT, read_rank, SID_COMM_WORLD);
                     merge_sort(id_buf_i, (size_t)n_particles_file, &id_buf_index, SID_INT, SORT_COMPUTE_INDEX, GBP_FALSE);
                 }
 
@@ -217,10 +217,10 @@ void read_smooth(plist_info *plist, char *filename_root_in, int snapshot_number,
                     fread_verify(&n_files, sizeof(int), 1, fp);
                     n_files = GBP_MAX(1, n_files);
                 }
-                SID_Bcast(&n_particles_file, 1, SID_INT, read_rank, SID.COMM_WORLD);
-                SID_Bcast(&offset, 1, SID_INT, read_rank, SID.COMM_WORLD);
-                SID_Bcast(&n_particles_total, 1, SID_LONG_LONG, read_rank, SID.COMM_WORLD);
-                SID_Bcast(&n_files, 1, SID_INT, read_rank, SID.COMM_WORLD);
+                SID_Bcast(&n_particles_file, 1, SID_INT, read_rank, SID_COMM_WORLD);
+                SID_Bcast(&offset, 1, SID_INT, read_rank, SID_COMM_WORLD);
+                SID_Bcast(&n_particles_total, 1, SID_LONG_LONG, read_rank, SID_COMM_WORLD);
+                SID_Bcast(&n_files, 1, SID_INT, read_rank, SID_COMM_WORLD);
                 buffer = SID_malloc(sizeof(float) * n_particles_file);
                 for(i_quantity = 0; i_quantity < n_quantities; i_quantity++) {
                     int flag_log_quantity;
@@ -248,8 +248,8 @@ void read_smooth(plist_info *plist, char *filename_root_in, int snapshot_number,
                     // Read next quantity
                     if(SID.My_rank == read_rank)
                         fread_verify(buffer, sizeof(float), n_particles_file, fp);
-                    SID_Barrier(SID.COMM_WORLD);
-                    SID_Bcast(buffer, (int)n_particles_file, SID_FLOAT, read_rank, SID.COMM_WORLD);
+                    SID_Barrier(SID_COMM_WORLD);
+                    SID_Bcast(buffer, (int)n_particles_file, SID_FLOAT, read_rank, SID_COMM_WORLD);
 
                     // Place in final array
                     if(n_mark_i > 0) {
@@ -273,7 +273,7 @@ void read_smooth(plist_info *plist, char *filename_root_in, int snapshot_number,
                 SID_check_pcounter(&pcounter, n_particles_read);
         } // i_file
         SID_free(SID_FARG ids_index);
-        SID_Barrier(SID.COMM_WORLD);
+        SID_Barrier(SID_COMM_WORLD);
         if(n_files_not_found > 0)
             SID_log("(%d files not present)...", SID_LOG_CONTINUE, n_files_not_found);
         SID_log("Done.", SID_LOG_CLOSE);
@@ -282,7 +282,7 @@ void read_smooth(plist_info *plist, char *filename_root_in, int snapshot_number,
         size_t sum_check = 0;
         for(i_particle = 0; i_particle < n_particles_local; i_particle++)
             sum_check += (size_t)read_array[i_particle];
-        SID_Allreduce(SID_IN_PLACE, &sum_check, 1, SID_SIZE_T, SID_SUM, SID.COMM_WORLD);
+        SID_Allreduce(SID_IN_PLACE, &sum_check, 1, SID_SIZE_T, SID_SUM, SID_COMM_WORLD);
         if(sum_check != n_particles_all_mem)
             SID_exit_error("Only %lld of %lld particles were set.", SID_ERROR_LOGIC, sum_check, n_particles_all_mem);
         SID_free(SID_FARG read_array);
@@ -313,9 +313,9 @@ void read_smooth(plist_info *plist, char *filename_root_in, int snapshot_number,
 
             // Report some stats
             float var_min, var_max, var_mean;
-            calc_min_global(local_array, &var_min, n_particles_local, SID_FLOAT, CALC_MODE_DEFAULT, SID.COMM_WORLD);
-            calc_max_global(local_array, &var_max, n_particles_local, SID_FLOAT, CALC_MODE_DEFAULT, SID.COMM_WORLD);
-            calc_mean_global(local_array, &var_mean, n_particles_local, SID_FLOAT, CALC_MODE_DEFAULT, SID.COMM_WORLD);
+            calc_min_global(local_array, &var_min, n_particles_local, SID_FLOAT, CALC_MODE_DEFAULT, SID_COMM_WORLD);
+            calc_max_global(local_array, &var_max, n_particles_local, SID_FLOAT, CALC_MODE_DEFAULT, SID_COMM_WORLD);
+            calc_mean_global(local_array, &var_mean, n_particles_local, SID_FLOAT, CALC_MODE_DEFAULT, SID_COMM_WORLD);
 
             // Remove NaN's from sigma_v's if needed
             size_t n_NaN = 0;
@@ -373,7 +373,7 @@ void read_smooth(plist_info *plist, char *filename_root_in, int snapshot_number,
             }
             SID_log("Done.", SID_LOG_CLOSE);
         }
-        SID_Barrier(SID.COMM_WORLD);
+        SID_Barrier(SID_COMM_WORLD);
         SID_log("Done.", SID_LOG_CLOSE);
     } else
         SID_exit_error("Could not find file with root {%s}", SID_ERROR_IO_OPEN, filename_root_in);

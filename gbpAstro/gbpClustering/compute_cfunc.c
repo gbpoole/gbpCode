@@ -674,9 +674,9 @@ void compute_cfunc(plist_info *plist, const char *species_name, const char *rand
 
                 // Determine the max size of exchanges and report results
                 SID_log("Communicating array sizes...", SID_LOG_OPEN | SID_LOG_CHECKPOINT);
-                SID_Allreduce(&n_data_local, &n_data_allocate, 1, SID_SIZE_T, SID_MAX, SID.COMM_WORLD);
+                SID_Allreduce(&n_data_local, &n_data_allocate, 1, SID_SIZE_T, SID_MAX, SID_COMM_WORLD);
                 SID_log("n_data_max  =%lld", SID_LOG_COMMENT, n_data_allocate);
-                SID_Allreduce(&n_random_local, &n_random_allocate, 1, SID_SIZE_T, SID_MAX, SID.COMM_WORLD);
+                SID_Allreduce(&n_random_local, &n_random_allocate, 1, SID_SIZE_T, SID_MAX, SID_COMM_WORLD);
                 SID_log("n_random_max=%lld", SID_LOG_COMMENT, n_random_allocate);
                 SID_log("Done.", SID_LOG_CLOSE);
                 SID_log("Allocating arrays...", SID_LOG_OPEN | SID_LOG_CHECKPOINT);
@@ -768,18 +768,18 @@ void compute_cfunc(plist_info *plist, const char *species_name, const char *rand
     if(SID.n_proc > 1) {
         SID_log("Combining results from separate ranks...", SID_LOG_OPEN);
         for(i_jack = 0; i_jack <= n_jack_total; i_jack++) {
-            SID_Allreduce(SID_IN_PLACE, DD_l1D[i_jack], n_1D, SID_LONG_LONG, SID_SUM, SID.COMM_WORLD);
-            SID_Allreduce(SID_IN_PLACE, DR_l1D[i_jack], n_1D, SID_LONG_LONG, SID_SUM, SID.COMM_WORLD);
-            SID_Allreduce(SID_IN_PLACE, DD_1D[i_jack], n_1D, SID_LONG_LONG, SID_SUM, SID.COMM_WORLD);
-            SID_Allreduce(SID_IN_PLACE, DR_1D[i_jack], n_1D, SID_LONG_LONG, SID_SUM, SID.COMM_WORLD);
+            SID_Allreduce(SID_IN_PLACE, DD_l1D[i_jack], n_1D, SID_LONG_LONG, SID_SUM, SID_COMM_WORLD);
+            SID_Allreduce(SID_IN_PLACE, DR_l1D[i_jack], n_1D, SID_LONG_LONG, SID_SUM, SID_COMM_WORLD);
+            SID_Allreduce(SID_IN_PLACE, DD_1D[i_jack], n_1D, SID_LONG_LONG, SID_SUM, SID_COMM_WORLD);
+            SID_Allreduce(SID_IN_PLACE, DR_1D[i_jack], n_1D, SID_LONG_LONG, SID_SUM, SID_COMM_WORLD);
             if(cfunc->flag_compute_RR) {
-                SID_Allreduce(SID_IN_PLACE, RR_l1D[i_jack], n_1D, SID_LONG_LONG, SID_SUM, SID.COMM_WORLD);
-                SID_Allreduce(SID_IN_PLACE, RR_1D[i_jack], n_1D, SID_LONG_LONG, SID_SUM, SID.COMM_WORLD);
+                SID_Allreduce(SID_IN_PLACE, RR_l1D[i_jack], n_1D, SID_LONG_LONG, SID_SUM, SID_COMM_WORLD);
+                SID_Allreduce(SID_IN_PLACE, RR_1D[i_jack], n_1D, SID_LONG_LONG, SID_SUM, SID_COMM_WORLD);
             }
-            SID_Allreduce(SID_IN_PLACE, DD_2D[i_jack], n_2D * n_2D, SID_LONG_LONG, SID_SUM, SID.COMM_WORLD);
-            SID_Allreduce(SID_IN_PLACE, DR_2D[i_jack], n_2D * n_2D, SID_LONG_LONG, SID_SUM, SID.COMM_WORLD);
+            SID_Allreduce(SID_IN_PLACE, DD_2D[i_jack], n_2D * n_2D, SID_LONG_LONG, SID_SUM, SID_COMM_WORLD);
+            SID_Allreduce(SID_IN_PLACE, DR_2D[i_jack], n_2D * n_2D, SID_LONG_LONG, SID_SUM, SID_COMM_WORLD);
             if(cfunc->flag_compute_RR)
-                SID_Allreduce(SID_IN_PLACE, RR_2D[i_jack], n_2D * n_2D, SID_LONG_LONG, SID_SUM, SID.COMM_WORLD);
+                SID_Allreduce(SID_IN_PLACE, RR_2D[i_jack], n_2D * n_2D, SID_LONG_LONG, SID_SUM, SID_COMM_WORLD);
         }
         SID_log("Done.", SID_LOG_CLOSE);
     }

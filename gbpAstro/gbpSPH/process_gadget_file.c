@@ -181,9 +181,9 @@ void process_gadget_file(const char *status_message,
                     fread_verify(ids_buffer, ID_byte_size, n_buffer, fp_ids);
                 }
                 if(flag_all_to_all) {
-                    SID_Bcast(pos_buffer, 3 * n_buffer, SID_REAL, all_to_all_reader_rank, SID.COMM_WORLD);
-                    SID_Bcast(vel_buffer, 3 * n_buffer, SID_REAL, all_to_all_reader_rank, SID.COMM_WORLD);
-                    SID_Bcast(ids_buffer, ID_byte_size * n_buffer, SID_CHAR, all_to_all_reader_rank, SID.COMM_WORLD);
+                    SID_Bcast(pos_buffer, 3 * n_buffer, SID_REAL, all_to_all_reader_rank, SID_COMM_WORLD);
+                    SID_Bcast(vel_buffer, 3 * n_buffer, SID_REAL, all_to_all_reader_rank, SID_COMM_WORLD);
+                    SID_Bcast(ids_buffer, ID_byte_size * n_buffer, SID_CHAR, all_to_all_reader_rank, SID_COMM_WORLD);
                 }
                 for(int i_buffer = 0; i_buffer < n_buffer; i_buffer++) {
                     size_t ID_i;
@@ -218,8 +218,8 @@ void process_gadget_file(const char *status_message,
                     fp_gadget.first_select_call = GBP_FALSE;
                 }
                 n_particles_processed_local += n_buffer;
-                SID_Allreduce(&flag_active, &n_ranks_active, 1, SID_INT, SID_SUM, SID.COMM_WORLD);
-                SID_Allreduce(&n_particles_processed_local, &n_particles_processed, 1, SID_SIZE_T, SID_SUM, SID.COMM_WORLD);
+                SID_Allreduce(&flag_active, &n_ranks_active, 1, SID_INT, SID_SUM, SID_COMM_WORLD);
+                SID_Allreduce(&n_particles_processed_local, &n_particles_processed, 1, SID_SIZE_T, SID_SUM, SID_COMM_WORLD);
                 SID_check_pcounter(&pcounter, n_particles_processed);
             }
         }
@@ -233,13 +233,13 @@ void process_gadget_file(const char *status_message,
     //   until all ranks are done
     flag_active = GBP_FALSE;
     do {
-        SID_Allreduce(&flag_active, &n_ranks_active, 1, SID_INT, SID_SUM, SID.COMM_WORLD);
-        SID_Allreduce(&n_particles_processed_local, &n_particles_processed, 1, SID_SIZE_T, SID_SUM, SID.COMM_WORLD);
+        SID_Allreduce(&flag_active, &n_ranks_active, 1, SID_INT, SID_SUM, SID_COMM_WORLD);
+        SID_Allreduce(&n_particles_processed_local, &n_particles_processed, 1, SID_SIZE_T, SID_SUM, SID_COMM_WORLD);
         SID_check_pcounter(&pcounter, n_particles_processed);
     } while(n_ranks_active > 0);
 
     // Create global counts
-    SID_Allreduce(n_particles_type_local, n_particles_type, N_GADGET_TYPE, SID_SIZE_T, SID_SUM, SID.COMM_WORLD);
+    SID_Allreduce(n_particles_type_local, n_particles_type, N_GADGET_TYPE, SID_SIZE_T, SID_SUM, SID_COMM_WORLD);
 
     SID_log("%lld particles processed.", SID_LOG_COMMENT, n_particles_processed);
 

@@ -34,10 +34,10 @@ void write_treenode_list_hist(tree_info *trees, const char *filename_out_root, t
         add_to_treenode_hist(trees, hist_list_M, current_halo);
         add_to_treenode_hist(trees, hist_list_Mpeak, current_halo);
     }
-    SID_Allreduce(SID_IN_PLACE, (hist_list_N->array), (hist_list_N->n_x * hist_list_N->n_y), SID_INT, SID_SUM, SID.COMM_WORLD);
-    SID_Allreduce(SID_IN_PLACE, (hist_list_Npeak->array), (hist_list_Npeak->n_x * hist_list_Npeak->n_y), SID_INT, SID_SUM, SID.COMM_WORLD);
-    SID_Allreduce(SID_IN_PLACE, (hist_list_M->array), (hist_list_M->n_x * hist_list_M->n_y), SID_INT, SID_SUM, SID.COMM_WORLD);
-    SID_Allreduce(SID_IN_PLACE, (hist_list_Mpeak->array), (hist_list_Mpeak->n_x * hist_list_Mpeak->n_y), SID_INT, SID_SUM, SID.COMM_WORLD);
+    SID_Allreduce(SID_IN_PLACE, (hist_list_N->array), (hist_list_N->n_x * hist_list_N->n_y), SID_INT, SID_SUM, SID_COMM_WORLD);
+    SID_Allreduce(SID_IN_PLACE, (hist_list_Npeak->array), (hist_list_Npeak->n_x * hist_list_Npeak->n_y), SID_INT, SID_SUM, SID_COMM_WORLD);
+    SID_Allreduce(SID_IN_PLACE, (hist_list_M->array), (hist_list_M->n_x * hist_list_M->n_y), SID_INT, SID_SUM, SID_COMM_WORLD);
+    SID_Allreduce(SID_IN_PLACE, (hist_list_Mpeak->array), (hist_list_Mpeak->n_x * hist_list_Mpeak->n_y), SID_INT, SID_SUM, SID_COMM_WORLD);
     write_treenode_hist(trees, filename_out_root, hist_list_N);
     write_treenode_hist(trees, filename_out_root, hist_list_Npeak);
     write_treenode_hist(trees, filename_out_root, hist_list_M);

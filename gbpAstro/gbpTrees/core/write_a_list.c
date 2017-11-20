@@ -55,5 +55,5 @@ void write_a_list(const char *filename_snap_list_in, const char *filename_root_o
 
         SID_log("Done.", SID_LOG_CLOSE);
     }
-    SID_Barrier(SID.COMM_WORLD);
+    SID_Barrier(SID_COMM_WORLD);
 }

@@ -213,9 +213,9 @@ void compute_pspec(plist_info *plist, const char *species_name, pspec_info *pspe
 
     // Normalize the quantities we are averaging
     for(i_k = 0; i_k < n_k_1D; i_k++) {
-        calc_sum_global(&(n_modes_1D_local[i_k]), &(n_modes_1D[i_k]), 1, SID_INT, CALC_MODE_DEFAULT, SID.COMM_WORLD);
-        calc_sum_global(&(k_1D_local[i_k]), &(k_1D[i_k]), 1, SID_DOUBLE, CALC_MODE_DEFAULT, SID.COMM_WORLD);
-        calc_sum_global(&(P_k_1D_local[i_k]), &(P_k_1D[i_k]), 1, SID_DOUBLE, CALC_MODE_DEFAULT, SID.COMM_WORLD);
+        calc_sum_global(&(n_modes_1D_local[i_k]), &(n_modes_1D[i_k]), 1, SID_INT, CALC_MODE_DEFAULT, SID_COMM_WORLD);
+        calc_sum_global(&(k_1D_local[i_k]), &(k_1D[i_k]), 1, SID_DOUBLE, CALC_MODE_DEFAULT, SID_COMM_WORLD);
+        calc_sum_global(&(P_k_1D_local[i_k]), &(P_k_1D[i_k]), 1, SID_DOUBLE, CALC_MODE_DEFAULT, SID_COMM_WORLD);
         k_1D[i_k] /= (double)((n_modes_1D)[i_k]);
         P_k_1D[i_k] /= (double)((n_modes_1D)[i_k]);
     }
@@ -279,9 +279,9 @@ void compute_pspec(plist_info *plist, const char *species_name, pspec_info *pspe
         }
     }
     for(i_k = 0; i_k < (n_k_2D) * (n_k_2D); i_k++) {
-        calc_sum_global(&(n_modes_2D_local[i_k]), &(n_modes_2D[i_k]), 1, SID_INT, CALC_MODE_DEFAULT, SID.COMM_WORLD);
-        calc_sum_global(&(k_2D_local[i_k]), &(k_2D[i_k]), 1, SID_DOUBLE, CALC_MODE_DEFAULT, SID.COMM_WORLD);
-        calc_sum_global(&(P_k_2D_local[i_k]), &(P_k_2D[i_k]), 1, SID_DOUBLE, CALC_MODE_DEFAULT, SID.COMM_WORLD);
+        calc_sum_global(&(n_modes_2D_local[i_k]), &(n_modes_2D[i_k]), 1, SID_INT, CALC_MODE_DEFAULT, SID_COMM_WORLD);
+        calc_sum_global(&(k_2D_local[i_k]), &(k_2D[i_k]), 1, SID_DOUBLE, CALC_MODE_DEFAULT, SID_COMM_WORLD);
+        calc_sum_global(&(P_k_2D_local[i_k]), &(P_k_2D[i_k]), 1, SID_DOUBLE, CALC_MODE_DEFAULT, SID_COMM_WORLD);
         k_2D[i_k] /= (double)((n_modes_2D)[i_k]);
         P_k_2D[i_k] /= (double)((n_modes_2D)[i_k]);
     }

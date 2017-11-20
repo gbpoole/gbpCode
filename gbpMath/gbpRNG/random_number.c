@@ -13,7 +13,7 @@ GBPREAL random_number(RNG_info *RNG) {
             random_local = (GBPREAL)ran1(&(RNG->stream));
 #endif
             //}
-            // MPI_Bcast(&random_local,1,MPI_REAL,SID_MASTER_RANK,SID.COMM_WORLD->comm);
+            // MPI_Bcast(&random_local,1,MPI_REAL,SID_MASTER_RANK,SID_COMM_WORLD->comm);
             return (random_local);
         } else {
 #if USE_SPRNG

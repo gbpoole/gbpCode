@@ -22,7 +22,7 @@ void exchange_slab_buffer_left(void *send_buffer, size_t send_buffer_size, void 
                      MPI_SIZE_T,
                      slab->rank_to_right,
                      123,
-                     SID.COMM_WORLD->comm,
+                     SID_COMM_WORLD->comm,
                      MPI_STATUS_IGNORE);
         if(size_temp > 0 || *receive_buffer_size > 0)
             MPI_Sendrecv(send_buffer,
@@ -35,7 +35,7 @@ void exchange_slab_buffer_left(void *send_buffer, size_t send_buffer_size, void 
                          MPI_BYTE,
                          slab->rank_to_right,
                          125,
-                         SID.COMM_WORLD->comm,
+                         SID_COMM_WORLD->comm,
                          MPI_STATUS_IGNORE);
 #else
         if(send_buffer != NULL && send_buffer_size > 0) {

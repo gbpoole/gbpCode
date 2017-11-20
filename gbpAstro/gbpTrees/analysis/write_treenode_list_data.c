@@ -57,7 +57,7 @@ void write_treenode_list_data(tree_info *trees, const char *filename_out_root, t
             // Generate properties
             n_list_i = n_list_local;
             if(i_rank != SID_MASTER_RANK)
-                SID_Sendrecv(&n_list_local, 1, SID_INT, SID_MASTER_RANK, 1918270, &n_list_i, 1, SID_INT, i_rank, 1918270, SID.COMM_WORLD);
+                SID_Sendrecv(&n_list_local, 1, SID_INT, SID_MASTER_RANK, 1918270, &n_list_i, 1, SID_INT, i_rank, 1918270, SID_COMM_WORLD);
             // Allocate buffers
             void ** buffer       = (void **)SID_malloc(sizeof(void *) * n_data);
             size_t *data_written = (size_t *)SID_calloc(sizeof(size_t) * n_data);
@@ -91,7 +91,7 @@ void write_treenode_list_data(tree_info *trees, const char *filename_out_root, t
                                      SID_CHAR,
                                      i_rank,
                                      1978271,
-                                     SID.COMM_WORLD);
+                                     SID_COMM_WORLD);
                     }
                 }
                 // Write buffer
@@ -124,7 +124,7 @@ void write_treenode_list_data(tree_info *trees, const char *filename_out_root, t
             SID_free(SID_FARG data_written);
             SID_free(SID_FARG dtype_size);
         } // if i_rank
-        SID_Barrier(SID.COMM_WORLD);
+        SID_Barrier(SID_COMM_WORLD);
     } // for i_rank
     fclose(fp_props_out);
     SID_free(SID_FARG ptr_data);

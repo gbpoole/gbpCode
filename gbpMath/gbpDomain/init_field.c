@@ -57,7 +57,7 @@ void init_field(int n_d, int *n, double *L, field_info *FFT) {
                                                                 1,
                                                                 FFTW_MPI_DEFAULT_BLOCK,
                                                                 FFTW_MPI_DEFAULT_BLOCK,
-                                                                SID.COMM_WORLD->comm,
+                                                                SID_COMM_WORLD->comm,
                                                                 &(n_x_local),
                                                                 &(i_x_start_local),
                                                                 &(n_y_transpose_local),
@@ -69,7 +69,7 @@ void init_field(int n_d, int *n, double *L, field_info *FFT) {
                                                                  1,
                                                                  FFTW_MPI_DEFAULT_BLOCK,
                                                                  FFTW_MPI_DEFAULT_BLOCK,
-                                                                 SID.COMM_WORLD->comm,
+                                                                 SID_COMM_WORLD->comm,
                                                                  &(n_x_local),
                                                                  &(i_x_start_local),
                                                                  &(n_y_transpose_local),
@@ -96,11 +96,11 @@ void init_field(int n_d, int *n, double *L, field_info *FFT) {
 
 // Generate plans
 #ifdef USE_DOUBLE
-    FFT->plan  = fftw_mpi_plan_dft_r2c(FFT->n_d, FFT->n, FFT->field_local, FFT->cfield_local, SID.COMM_WORLD->comm, FFTW_ESTIMATE);
-    FFT->iplan = fftw_mpi_plan_dft_c2r(FFT->n_d, FFT->n, FFT->cfield_local, FFT->field_local, SID.COMM_WORLD->comm, FFTW_ESTIMATE);
+    FFT->plan  = fftw_mpi_plan_dft_r2c(FFT->n_d, FFT->n, FFT->field_local, FFT->cfield_local, SID_COMM_WORLD->comm, FFTW_ESTIMATE);
+    FFT->iplan = fftw_mpi_plan_dft_c2r(FFT->n_d, FFT->n, FFT->cfield_local, FFT->field_local, SID_COMM_WORLD->comm, FFTW_ESTIMATE);
 #else
-    FFT->plan               = fftwf_mpi_plan_dft_r2c(FFT->n_d, FFT->n, FFT->field_local, FFT->cfield_local, SID.COMM_WORLD->comm, FFTW_ESTIMATE);
-    FFT->iplan              = fftwf_mpi_plan_dft_c2r(FFT->n_d, FFT->n, FFT->cfield_local, FFT->field_local, SID.COMM_WORLD->comm, FFTW_ESTIMATE);
+    FFT->plan               = fftwf_mpi_plan_dft_r2c(FFT->n_d, FFT->n, FFT->field_local, FFT->cfield_local, SID_COMM_WORLD->comm, FFTW_ESTIMATE);
+    FFT->iplan              = fftwf_mpi_plan_dft_c2r(FFT->n_d, FFT->n, FFT->cfield_local, FFT->field_local, SID_COMM_WORLD->comm, FFTW_ESTIMATE);
 #endif
 
 #else
@@ -183,7 +183,7 @@ void init_field(int n_d, int *n, double *L, field_info *FFT) {
         FFT->slab.x_max_local = FFT->R_field[0][FFT->i_R_stop_local[0] + 1];
     else
         FFT->slab.x_max_local = FFT->slab.x_min_local;
-    SID_Allreduce(&(FFT->slab.x_max_local), &(FFT->slab.x_max), 1, SID_DOUBLE, SID_MAX, SID.COMM_WORLD);
+    SID_Allreduce(&(FFT->slab.x_max_local), &(FFT->slab.x_max), 1, SID_DOUBLE, SID_MAX, SID_COMM_WORLD);
 
 #if USE_MPI
     // All ranks are not necessarily assigned any slices, so
@@ -195,11 +195,11 @@ void init_field(int n_d, int *n, double *L, field_info *FFT) {
         flag_active = GBP_TRUE;
     else
         flag_active = GBP_FALSE;
-    SID_Allreduce(&flag_active, &n_active, 1, SID_INT, SID_SUM, SID.COMM_WORLD);
-    SID_Allreduce(&n_x_rank[SID.My_rank], &min_size, 1, SID_INT, SID_MIN, SID.COMM_WORLD);
-    SID_Allreduce(&n_x_rank[SID.My_rank], &max_size, 1, SID_INT, SID_MAX, SID.COMM_WORLD);
+    SID_Allreduce(&flag_active, &n_active, 1, SID_INT, SID_SUM, SID_COMM_WORLD);
+    SID_Allreduce(&n_x_rank[SID.My_rank], &min_size, 1, SID_INT, SID_MIN, SID_COMM_WORLD);
+    SID_Allreduce(&n_x_rank[SID.My_rank], &max_size, 1, SID_INT, SID_MAX, SID_COMM_WORLD);
     for(i_rank = 0; i_rank < SID.n_proc; i_rank++)
-        SID_Bcast(&(n_x_rank[i_rank]), 1, SID_INT, i_rank, SID.COMM_WORLD);
+        SID_Bcast(&(n_x_rank[i_rank]), 1, SID_INT, i_rank, SID_COMM_WORLD);
     FFT->slab.rank_to_right = -1;
     for(i_rank = SID.My_rank + 1; i_rank < SID.My_rank + SID.n_proc && FFT->slab.rank_to_right < 0; i_rank++) {
         j_rank = i_rank % SID.n_proc;

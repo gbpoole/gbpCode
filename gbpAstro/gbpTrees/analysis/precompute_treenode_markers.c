@@ -60,6 +60,6 @@ void precompute_treenode_markers(tree_info *trees, int mode) {
         }
         // SID_log("Done.",SID_LOG_CLOSE);
     }
-    SID_Barrier(SID.COMM_WORLD);
+    SID_Barrier(SID_COMM_WORLD);
     SID_log("Done.", SID_LOG_CLOSE);
 }

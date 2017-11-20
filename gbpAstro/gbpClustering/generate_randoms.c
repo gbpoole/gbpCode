@@ -88,7 +88,7 @@ void generate_randoms(cfunc_info *cfunc, plist_info *plist, const char *species_
     }
     if(flag_read_randoms)
         rewind(fp_randoms);
-    SID_Allreduce(&n_random_local, &n_random, 1, SID_SIZE_T, SID_SUM, SID.COMM_WORLD);
+    SID_Allreduce(&n_random_local, &n_random, 1, SID_SIZE_T, SID_SUM, SID_COMM_WORLD);
 
     // Sanity check
     if(n_random != n_random_target)
@@ -155,9 +155,9 @@ void generate_randoms(cfunc_info *cfunc, plist_info *plist, const char *species_
             n_species_report  = n_species_local;
             n_random_report   = n_boundary;
             n_boundary_report = n_random_local;
-            SID_Bcast(&n_species_report, 1, SID_SIZE_T, i_rank, SID.COMM_WORLD);
-            SID_Bcast(&n_random_report, 1, SID_SIZE_T, i_rank, SID.COMM_WORLD);
-            SID_Bcast(&n_boundary_report, 1, SID_SIZE_T, i_rank, SID.COMM_WORLD);
+            SID_Bcast(&n_species_report, 1, SID_SIZE_T, i_rank, SID_COMM_WORLD);
+            SID_Bcast(&n_random_report, 1, SID_SIZE_T, i_rank, SID_COMM_WORLD);
+            SID_Bcast(&n_boundary_report, 1, SID_SIZE_T, i_rank, SID_COMM_WORLD);
             SID_log("Rank #%03d: n_species=%6zd n_random=%6zd n_boundary=%zd",
                     SID_LOG_COMMENT,
                     i_rank,
@@ -206,7 +206,7 @@ void generate_randoms(cfunc_info *cfunc, plist_info *plist, const char *species_
         fprintf(fp_randoms, "#        (2): y-position\n");
         fprintf(fp_randoms, "#        (3): z-position\n");
         n_random_rank = n_random_local;
-        SID_Allreduce(&n_random_local, &n_random_alloc, 1, SID_INT, SID_MAX, SID.COMM_WORLD);
+        SID_Allreduce(&n_random_local, &n_random_alloc, 1, SID_INT, SID_MAX, SID_COMM_WORLD);
         x_random_buffer = (GBPREAL *)SID_malloc(sizeof(GBPREAL) * n_random_alloc);
         y_random_buffer = (GBPREAL *)SID_malloc(sizeof(GBPREAL) * n_random_alloc);
         z_random_buffer = (GBPREAL *)SID_malloc(sizeof(GBPREAL) * n_random_alloc);
@@ -215,10 +215,10 @@ void generate_randoms(cfunc_info *cfunc, plist_info *plist, const char *species_
             memcpy(x_random_buffer, x_random, sizeof(GBPREAL) * n_random_local);
             memcpy(y_random_buffer, y_random, sizeof(GBPREAL) * n_random_local);
             memcpy(z_random_buffer, z_random, sizeof(GBPREAL) * n_random_local);
-            SID_Bcast(&n_random_buffer, 1, SID_INT, i_rank, SID.COMM_WORLD);
-            SID_Bcast(x_random_buffer, n_random_buffer, SID_REAL, i_rank, SID.COMM_WORLD);
-            SID_Bcast(y_random_buffer, n_random_buffer, SID_REAL, i_rank, SID.COMM_WORLD);
-            SID_Bcast(z_random_buffer, n_random_buffer, SID_REAL, i_rank, SID.COMM_WORLD);
+            SID_Bcast(&n_random_buffer, 1, SID_INT, i_rank, SID_COMM_WORLD);
+            SID_Bcast(x_random_buffer, n_random_buffer, SID_REAL, i_rank, SID_COMM_WORLD);
+            SID_Bcast(y_random_buffer, n_random_buffer, SID_REAL, i_rank, SID_COMM_WORLD);
+            SID_Bcast(z_random_buffer, n_random_buffer, SID_REAL, i_rank, SID_COMM_WORLD);
             for(i = 0; i < n_random_buffer; i++)
                 fprintf(fp_randoms, "%le %le %le\n", x_random_buffer[i], y_random_buffer[i], z_random_buffer[i]);
         }

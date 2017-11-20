@@ -368,7 +368,7 @@ void read_trees(const char *filename_SSimPL_root,
             }
 
             // Check how many ranks have used this group.  Should be just one.
-            SID_Allreduce(SID_IN_PLACE, &flag_group_added, 1, SID_INT, SID_SUM, SID.COMM_WORLD);
+            SID_Allreduce(SID_IN_PLACE, &flag_group_added, 1, SID_INT, SID_SUM, SID_COMM_WORLD);
             if(flag_group_added == 0)
                 n_groups_unused++;
             else if(flag_group_added > 1)
@@ -469,8 +469,8 @@ void read_trees(const char *filename_SSimPL_root,
     SID_log("Done.", SID_LOG_CLOSE);
 
     // Create halo sums
-    calc_sum_global(&((*trees)->n_groups_trees_local), &((*trees)->n_groups_trees), 1, SID_INT, CALC_MODE_DEFAULT, SID.COMM_WORLD);
-    calc_sum_global(&((*trees)->n_subgroups_trees_local), &((*trees)->n_subgroups_trees), 1, SID_INT, CALC_MODE_DEFAULT, SID.COMM_WORLD);
+    calc_sum_global(&((*trees)->n_groups_trees_local), &((*trees)->n_groups_trees), 1, SID_INT, CALC_MODE_DEFAULT, SID_COMM_WORLD);
+    calc_sum_global(&((*trees)->n_subgroups_trees_local), &((*trees)->n_subgroups_trees), 1, SID_INT, CALC_MODE_DEFAULT, SID_COMM_WORLD);
 
     // Finalize trees
     finalize_trees((*trees), TREE_PROGENITOR_ORDER_N_PARTICLES_INCLUSIVE, TREE_PROGENITOR_ORDER_N_PARTICLES_PEAK);

@@ -72,8 +72,8 @@ int init_gadget_read(char *filename_root_in, int snapshot_number, gadget_read_in
             fp_gadget->n_particles += fp_gadget->n_all[i_type];
         }
     }
-    SID_Bcast(fp_gadget, sizeof(gadget_read_info), SID_CHAR, SID_MASTER_RANK, SID.COMM_WORLD);
-    SID_Bcast(&flag_filefound, 1, SID_INT, SID_MASTER_RANK, SID.COMM_WORLD);
+    SID_Bcast(fp_gadget, sizeof(gadget_read_info), SID_CHAR, SID_MASTER_RANK, SID_COMM_WORLD);
+    SID_Bcast(&flag_filefound, 1, SID_INT, SID_MASTER_RANK, SID_COMM_WORLD);
 
     return (flag_filefound);
 }

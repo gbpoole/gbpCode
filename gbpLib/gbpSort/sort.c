@@ -62,7 +62,7 @@ void sort(void *sval, size_t nval, size_t **index, SID_Datatype data_type, int f
         SID_log("Done.", SID_LOG_CLOSE);
 
         // ... get the largest number of items on any rank ...
-        SID_Allreduce(&nval, &nval_max, 1, SID_SIZE_T, SID_MAX, SID.COMM_WORLD);
+        SID_Allreduce(&nval, &nval_max, 1, SID_SIZE_T, SID_MAX, SID_COMM_WORLD);
 
         // ... get the size of our data-type ...
         SID_Type_size(data_type, &data_type_size_i);
@@ -277,7 +277,7 @@ void sort(void *sval, size_t nval, size_t **index, SID_Datatype data_type, int f
             size_t first_index;
             for(i_rank = 0, first_index = 0; i_rank < SID.n_proc; i_rank++) {
                 nval_tmp = nval;
-                SID_Bcast(&nval_tmp, 1, SID_SIZE_T, i_rank, SID.COMM_WORLD);
+                SID_Bcast(&nval_tmp, 1, SID_SIZE_T, i_rank, SID_COMM_WORLD);
                 if(i_rank < SID.My_rank)
                     first_index += nval_tmp;
             }
@@ -292,10 +292,10 @@ void sort(void *sval, size_t nval, size_t **index, SID_Datatype data_type, int f
             // ... loop over ranks, performing exchanges and setting indices ...
             for(i_rank = 0, offset = 0; i_rank < SID.n_proc; i_rank++) {
                 nval_tmp = nval;
-                SID_Bcast(&nval_tmp, 1, SID_SIZE_T, i_rank, SID.COMM_WORLD);
+                SID_Bcast(&nval_tmp, 1, SID_SIZE_T, i_rank, SID_COMM_WORLD);
                 if(i_rank == SID.My_rank)
                     memcpy(rank_rank, sort_ranks, nval * sizeof(size_t));
-                SID_Bcast(rank_rank, nval_tmp, SID_SIZE_T, i_rank, SID.COMM_WORLD);
+                SID_Bcast(rank_rank, nval_tmp, SID_SIZE_T, i_rank, SID_COMM_WORLD);
                 // ... scan the sort ranks we've just received and see if any of them
                 //     are supposed to be pointed to by the indices stored locally ...
                 for(i_val = 0; i_val < nval_tmp; i_val++) {

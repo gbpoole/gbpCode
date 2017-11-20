@@ -101,8 +101,8 @@ void write_trees_vertical(tree_info *trees, int grid_size, const char *filename_
             file_out[i_forest] = i_g;
             halo_count[i_g] += n_halos_forest_local[i_forest];
         }
-        SID_Allreduce(SID_IN_PLACE, halo_count, n_files_write, SID_INT, SID_SUM, SID.COMM_WORLD);
-        SID_Allreduce(SID_IN_PLACE, forest_count, n_files_write, SID_INT, SID_SUM, SID.COMM_WORLD);
+        SID_Allreduce(SID_IN_PLACE, halo_count, n_files_write, SID_INT, SID_SUM, SID_COMM_WORLD);
+        SID_Allreduce(SID_IN_PLACE, forest_count, n_files_write, SID_INT, SID_SUM, SID_COMM_WORLD);
 
         // Sanity checks
         int forest_count_total;
@@ -141,7 +141,7 @@ void write_trees_vertical(tree_info *trees, int grid_size, const char *filename_
                     SID_fclose(&(fp_out[i_file]));
                 SID_free(SID_FARG fp_out);
             }
-            SID_Barrier(SID.COMM_WORLD);
+            SID_Barrier(SID_COMM_WORLD);
         }
         SID_log("Done.", SID_LOG_CLOSE);
 
@@ -180,10 +180,10 @@ void write_trees_vertical(tree_info *trees, int grid_size, const char *filename_
                     SID_fclose(&(fp_out[i_file]));
                 SID_free(SID_FARG fp_out);
             }
-            SID_Barrier(SID.COMM_WORLD);
+            SID_Barrier(SID_COMM_WORLD);
         }
-        calc_sum_global(&n_halos_written, &n_halos_written, 1, SID_INT, CALC_MODE_DEFAULT, SID.COMM_WORLD);
-        calc_sum_global(&n_forests_written, &n_forests_written, 1, SID_INT, CALC_MODE_DEFAULT, SID.COMM_WORLD);
+        calc_sum_global(&n_halos_written, &n_halos_written, 1, SID_INT, CALC_MODE_DEFAULT, SID_COMM_WORLD);
+        calc_sum_global(&n_forests_written, &n_forests_written, 1, SID_INT, CALC_MODE_DEFAULT, SID_COMM_WORLD);
         SID_log("Done.", SID_LOG_CLOSE);
 
         // Clean-up
