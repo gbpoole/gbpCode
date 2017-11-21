@@ -40,8 +40,8 @@ void swap_endian_halos_groups_local(const char *filename_in_root,
     // Read the needed header information and rewind
     int n_groups;
     int offset_size_bytes;
-    fread_verify(&n_groups, sizeof(int), 1, fp_in);
-    fread_verify(&offset_size_bytes, sizeof(int), 1, fp_in);
+    SID_fread_verify(&n_groups, sizeof(int), 1, fp_in);
+    SID_fread_verify(&offset_size_bytes, sizeof(int), 1, fp_in);
     if(SID_CHECK_BITFIELD_SWITCH(mode, SWAP_SSIMPL_ENDIAN_TO_NATIVE)) {
         swap_endian((char *)(&n_groups), 1, sizeof(int));
         swap_endian((char *)(&offset_size_bytes), 1, sizeof(int));
@@ -104,8 +104,8 @@ void swap_endian_halos_subgroups_local(const char *filename_in_root,
     // Read the needed header information and rewind
     int n_subgroups;
     int offset_size_bytes;
-    fread_verify(&n_subgroups, sizeof(int), 1, fp_in);
-    fread_verify(&offset_size_bytes, sizeof(int), 1, fp_in);
+    SID_fread_verify(&n_subgroups, sizeof(int), 1, fp_in);
+    SID_fread_verify(&offset_size_bytes, sizeof(int), 1, fp_in);
     if(SID_CHECK_BITFIELD_SWITCH(mode, SWAP_SSIMPL_ENDIAN_TO_NATIVE)) {
         swap_endian((char *)(&n_subgroups), 1, sizeof(int));
         swap_endian((char *)(&offset_size_bytes), 1, sizeof(int));
@@ -170,16 +170,16 @@ void swap_endian_halos_particles_local(const char *filename_in_root,
     int       n_particles_int;
     long long n_particles_long_long;
     size_t    n_particles;
-    fread_verify(&particle_size_bytes, sizeof(int), 1, fp_in);
+    SID_fread_verify(&particle_size_bytes, sizeof(int), 1, fp_in);
     if(SID_CHECK_BITFIELD_SWITCH(mode, SWAP_SSIMPL_ENDIAN_TO_NATIVE))
         swap_endian((char *)(&particle_size_bytes), 1, sizeof(int));
     if(particle_size_bytes == sizeof(int)) {
-        fread_verify(&n_particles_int, sizeof(int), 1, fp_in);
+        SID_fread_verify(&n_particles_int, sizeof(int), 1, fp_in);
         if(SID_CHECK_BITFIELD_SWITCH(mode, SWAP_SSIMPL_ENDIAN_TO_NATIVE))
             swap_endian((char *)(&n_particles_int), 1, sizeof(int));
         n_particles = (size_t)n_particles_int;
     } else if(particle_size_bytes == sizeof(long long)) {
-        fread_verify(&n_particles_long_long, sizeof(long long), 1, fp_in);
+        SID_fread_verify(&n_particles_long_long, sizeof(long long), 1, fp_in);
         if(SID_CHECK_BITFIELD_SWITCH(mode, SWAP_SSIMPL_ENDIAN_TO_NATIVE))
             swap_endian((char *)(&n_particles_long_long), 1, sizeof(long long));
         n_particles = (size_t)n_particles_long_long;

@@ -42,10 +42,10 @@ int fopen_multifile(const char *filename_root, size_t data_size, fp_multifile_in
 
         // Load/set header information
         if(fp_out->fp_multifile != NULL) {
-            fread_verify(&(fp_out->i_file), sizeof(int), 1, fp_out->fp_multifile);
-            fread_verify(&(fp_out->n_files), sizeof(int), 1, fp_out->fp_multifile);
-            fread_verify(&(fp_out->n_items_file), sizeof(int), 1, fp_out->fp_multifile);
-            fread_verify(&(fp_out->n_items_total), sizeof(int), 1, fp_out->fp_multifile);
+            SID_fread_verify(&(fp_out->i_file), sizeof(int), 1, fp_out->fp_multifile);
+            SID_fread_verify(&(fp_out->n_files), sizeof(int), 1, fp_out->fp_multifile);
+            SID_fread_verify(&(fp_out->n_items_file), sizeof(int), 1, fp_out->fp_multifile);
+            SID_fread_verify(&(fp_out->n_items_total), sizeof(int), 1, fp_out->fp_multifile);
             fclose(fp_out->fp_multifile);
             fp_out->fp_multifile = NULL;
         }

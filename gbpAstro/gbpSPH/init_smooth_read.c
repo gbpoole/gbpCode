@@ -52,10 +52,10 @@ int init_smooth_read(char *filename_root_in, int snapshot_number, int *flag_mult
     }
 
     if(flag_filefound) {
-        fread_verify(&(header->n_particles_file), sizeof(int), 1, fp);
-        fread_verify(&(header->offset), sizeof(int), 1, fp);
-        fread_verify(&(header->n_particles_total), sizeof(long long), 1, fp);
-        fread_verify(&(header->n_files), sizeof(int), 1, fp);
+        SID_fread_verify(&(header->n_particles_file), sizeof(int), 1, fp);
+        SID_fread_verify(&(header->offset), sizeof(int), 1, fp);
+        SID_fread_verify(&(header->n_particles_total), sizeof(long long), 1, fp);
+        SID_fread_verify(&(header->n_files), sizeof(int), 1, fp);
         fclose(fp);
     }
     return (flag_filefound);

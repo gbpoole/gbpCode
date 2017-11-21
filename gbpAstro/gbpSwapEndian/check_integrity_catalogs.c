@@ -38,8 +38,8 @@ void check_integrity_catalogs_properties_local(const char *filename_in_root, con
     // Read the needed header information
     int i_file_in;
     int n_files;
-    fread_verify(&i_file_in, sizeof(int), 1, fp_in);
-    fread_verify(&n_files, sizeof(int), 1, fp_in);
+    SID_fread_verify(&i_file_in, sizeof(int), 1, fp_in);
+    SID_fread_verify(&n_files, sizeof(int), 1, fp_in);
     fclose(fp_in);
 
     // Sanity check
@@ -69,15 +69,15 @@ void check_integrity_catalogs_properties_local(const char *filename_in_root, con
         // Read the header and rewind
         int n_halos_file;
         int n_halos_total;
-        fread_verify(&i_file_in, sizeof(int), 1, fp_in);
-        fread_verify(&n_files, sizeof(int), 1, fp_in);
-        fread_verify(&n_halos_file, sizeof(int), 1, fp_in);
-        fread_verify(&n_halos_total, sizeof(int), 1, fp_in);
+        SID_fread_verify(&i_file_in, sizeof(int), 1, fp_in);
+        SID_fread_verify(&n_files, sizeof(int), 1, fp_in);
+        SID_fread_verify(&n_halos_file, sizeof(int), 1, fp_in);
+        SID_fread_verify(&n_halos_total, sizeof(int), 1, fp_in);
 
         // Process the file
         for(int i_halo = 0; i_halo < n_halos_file; i_halo++) {
             halo_properties_info properties;
-            fread_verify(&properties, sizeof(halo_properties_info), 1, fp_in);
+            SID_fread_verify(&properties, sizeof(halo_properties_info), 1, fp_in);
         }
 
         // Check that we are at the end of the file
@@ -123,8 +123,8 @@ void check_integrity_catalogs_profiles_local(const char *filename_in_root, const
     // Read the needed header information
     int i_file_in;
     int n_files;
-    fread_verify(&i_file_in, sizeof(int), 1, fp_in);
-    fread_verify(&n_files, sizeof(int), 1, fp_in);
+    SID_fread_verify(&i_file_in, sizeof(int), 1, fp_in);
+    SID_fread_verify(&n_files, sizeof(int), 1, fp_in);
     fclose(fp_in);
 
     // Sanity check
@@ -153,18 +153,18 @@ void check_integrity_catalogs_profiles_local(const char *filename_in_root, const
         // Read the header and rewind
         int n_halos_file;
         int n_halos_total;
-        fread_verify(&i_file_in, sizeof(int), 1, fp_in);
-        fread_verify(&n_files, sizeof(int), 1, fp_in);
-        fread_verify(&n_halos_file, sizeof(int), 1, fp_in);
-        fread_verify(&n_halos_total, sizeof(int), 1, fp_in);
+        SID_fread_verify(&i_file_in, sizeof(int), 1, fp_in);
+        SID_fread_verify(&n_files, sizeof(int), 1, fp_in);
+        SID_fread_verify(&n_halos_file, sizeof(int), 1, fp_in);
+        SID_fread_verify(&n_halos_total, sizeof(int), 1, fp_in);
 
         // Process the file
         for(int i_halo = 0; i_halo < n_halos_file; i_halo++) {
             int n_bins;
-            fread_verify(&n_bins, sizeof(int), 1, fp_in);
+            SID_fread_verify(&n_bins, sizeof(int), 1, fp_in);
             for(int i_bin = 0; i_bin < n_bins; i_bin++) {
                 halo_profile_bin_info profile_bin;
-                fread_verify(&profile_bin, sizeof(halo_profile_bin_info), 1, fp_in);
+                SID_fread_verify(&profile_bin, sizeof(halo_profile_bin_info), 1, fp_in);
             }
         }
 
@@ -213,8 +213,8 @@ void check_integrity_catalogs_SO_local(const char *filename_in_root, const char 
     // Read the needed header information
     int i_file_in;
     int n_files;
-    fread_verify(&i_file_in, sizeof(int), 1, fp_in);
-    fread_verify(&n_files, sizeof(int), 1, fp_in);
+    SID_fread_verify(&i_file_in, sizeof(int), 1, fp_in);
+    SID_fread_verify(&n_files, sizeof(int), 1, fp_in);
     fclose(fp_in);
 
     // Sanity check
@@ -244,15 +244,15 @@ void check_integrity_catalogs_SO_local(const char *filename_in_root, const char 
         // Read the header and rewind
         int n_halos_file;
         int n_halos_total;
-        fread_verify(&i_file_in, sizeof(int), 1, fp_in);
-        fread_verify(&n_files, sizeof(int), 1, fp_in);
-        fread_verify(&n_halos_file, sizeof(int), 1, fp_in);
-        fread_verify(&n_halos_total, sizeof(int), 1, fp_in);
+        SID_fread_verify(&i_file_in, sizeof(int), 1, fp_in);
+        SID_fread_verify(&n_files, sizeof(int), 1, fp_in);
+        SID_fread_verify(&n_halos_file, sizeof(int), 1, fp_in);
+        SID_fread_verify(&n_halos_total, sizeof(int), 1, fp_in);
 
         // Process the file
         for(int i_halo = 0; i_halo < (6 * n_halos_file); i_halo++) {
             float buffer;
-            fread_verify(&buffer, sizeof(float), 1, fp_in);
+            SID_fread_verify(&buffer, sizeof(float), 1, fp_in);
         }
 
         // Check that we are at the end of the file

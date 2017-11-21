@@ -93,7 +93,8 @@ void read_treenode_markers(tree_info *trees, const char *filename_input_root, in
         int            bytes_per_marker = 4;
         int            bytes_per_halo   = n_markers * bytes_per_marker;
         SID_fp_buffer *fp_in_buffer     = NULL;
-        init_SID_fp_buffer(&fp_in, (size_t)(bytes_per_halo * n_halos_total[i_snap]) * sizeof(int), SID_SIZE_OF_MEGABYTE, &fp_in_buffer);
+        SID_init_fp_buffer(&fp_in, (size_t) (bytes_per_halo * n_halos_total[i_snap]) * sizeof(int),
+                           SID_SIZE_OF_MEGABYTE, &fp_in_buffer);
         for(int i_halo = 0; i_halo < n_halos_total[i_snap]; i_halo++) {
             int                flag_keep     = GBP_FALSE;
             size_t             i_found_index = file_index_local_index[i_snap][i_found];
@@ -173,7 +174,7 @@ void read_treenode_markers(tree_info *trees, const char *filename_input_root, in
         }
 
         // Close the file and clean-up
-        free_SID_fp_buffer(&fp_in_buffer);
+        SID_free_fp_buffer(&fp_in_buffer);
         SID_fclose(&fp_in);
 
         // Sanity check

@@ -127,11 +127,15 @@ void process_SSimPL_halos(render_info *render,
     SID_fp_buffer *fp_groups_offset_buffer    = NULL;
     SID_fp_buffer *fp_trees_in_buffer         = NULL;
     size_t         n_bytes_trees              = sizeof(int) * ((8 * (size_t)n_groups) + (7 * (size_t)n_subgroups));
-    init_SID_fp_buffer(&fp_subgroups_length, (size_t)n_subgroups * sizeof(int), SID_SIZE_OF_MEGABYTE, &fp_subgroups_length_buffer);
-    init_SID_fp_buffer(&fp_subgroups_offset, (size_t)n_subgroups * offset_size, SID_SIZE_OF_MEGABYTE, &fp_subgroups_offset_buffer);
-    init_SID_fp_buffer(&fp_groups_length, (size_t)n_groups * sizeof(int), SID_SIZE_OF_MEGABYTE, &fp_groups_length_buffer);
-    init_SID_fp_buffer(&fp_groups_offset, (size_t)n_groups * offset_size, SID_SIZE_OF_MEGABYTE, &fp_groups_offset_buffer);
-    init_SID_fp_buffer(&fp_trees_in, n_bytes_trees, SID_SIZE_OF_MEGABYTE, &fp_trees_in_buffer);
+    SID_init_fp_buffer(&fp_subgroups_length, (size_t) n_subgroups * sizeof(int), SID_SIZE_OF_MEGABYTE,
+                       &fp_subgroups_length_buffer);
+    SID_init_fp_buffer(&fp_subgroups_offset, (size_t) n_subgroups * offset_size, SID_SIZE_OF_MEGABYTE,
+                       &fp_subgroups_offset_buffer);
+    SID_init_fp_buffer(&fp_groups_length, (size_t) n_groups * sizeof(int), SID_SIZE_OF_MEGABYTE,
+                       &fp_groups_length_buffer);
+    SID_init_fp_buffer(&fp_groups_offset, (size_t) n_groups * offset_size, SID_SIZE_OF_MEGABYTE,
+                       &fp_groups_offset_buffer);
+    SID_init_fp_buffer(&fp_trees_in, n_bytes_trees, SID_SIZE_OF_MEGABYTE, &fp_trees_in_buffer);
 
     // Open IDs file and initialize the IDs array
     int    flag_long_ids = GBP_TRUE;
@@ -164,7 +168,7 @@ void process_SSimPL_halos(render_info *render,
     size_t *ids_l = (size_t *)ids;
     // Reset the group length pointer
     SID_fseek(&fp_groups_length, sizeof(int), 2, SID_SEEK_SET);
-    reset_SID_fp_buffer(&fp_groups_length_buffer);
+    SID_reset_fp_buffer(&fp_groups_length_buffer);
 
     // Initialize the datastructures which will hold the group and subgroup information
     process_halo_info group_i;
@@ -270,11 +274,11 @@ void process_SSimPL_halos(render_info *render,
     SID_fclose(&fp_subgroups_offset);
     fclose_catalog(&fp_properties_groups);
     fclose_catalog(&fp_properties_subgroups);
-    free_SID_fp_buffer(&fp_trees_in_buffer);
-    free_SID_fp_buffer(&fp_groups_length_buffer);
-    free_SID_fp_buffer(&fp_groups_offset_buffer);
-    free_SID_fp_buffer(&fp_subgroups_length_buffer);
-    free_SID_fp_buffer(&fp_subgroups_offset_buffer);
+    SID_free_fp_buffer(&fp_trees_in_buffer);
+    SID_free_fp_buffer(&fp_groups_length_buffer);
+    SID_free_fp_buffer(&fp_groups_offset_buffer);
+    SID_free_fp_buffer(&fp_subgroups_length_buffer);
+    SID_free_fp_buffer(&fp_subgroups_offset_buffer);
     if(i_pass) {
         SID_fclose(&fp_ids);
         SID_free(SID_FARG ids);

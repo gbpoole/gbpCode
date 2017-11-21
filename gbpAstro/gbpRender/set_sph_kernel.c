@@ -31,18 +31,18 @@ void set_sph_kernel(double **kernel_radius, double **kernel_table_3d, double **k
         if(fp_in != NULL) {
             int n_k_in;
             int mode_in;
-            fread_verify(&n_k_in, sizeof(int), 1, fp_in);
-            fread_verify(&mode_in, sizeof(int), 1, fp_in);
+            SID_fread_verify(&n_k_in, sizeof(int), 1, fp_in);
+            SID_fread_verify(&mode_in, sizeof(int), 1, fp_in);
             if(n_k_in == N_KERNEL_TABLE && mode_in == mode) {
                 SID_log("Reading SPH kernel...", SID_LOG_OPEN | SID_LOG_TIMER);
                 (*kernel_radius)   = (double *)SID_malloc(sizeof(double) * (N_KERNEL_TABLE + 1));
                 (*kernel_table_3d) = (double *)SID_malloc(sizeof(double) * (N_KERNEL_TABLE + 1));
-                fread_verify((*kernel_radius), sizeof(double), N_KERNEL_TABLE + 1, fp_in);
-                fread_verify((*kernel_table_3d), sizeof(double), N_KERNEL_TABLE + 1, fp_in);
+                SID_fread_verify((*kernel_radius), sizeof(double), N_KERNEL_TABLE + 1, fp_in);
+                SID_fread_verify((*kernel_table_3d), sizeof(double), N_KERNEL_TABLE + 1, fp_in);
                 if(SID_CHECK_BITFIELD_SWITCH(mode, SPH_KERNEL_2D)) {
                     (*kernel_table_2d) = (double *)SID_malloc(sizeof(double) * (N_KERNEL_TABLE + 1));
-                    fread_verify((*kernel_table_2d), sizeof(double), N_KERNEL_TABLE + 1, fp_in);
-                    fread_verify(kernel_table_2d_average, sizeof(double), 1, fp_in);
+                    SID_fread_verify((*kernel_table_2d), sizeof(double), N_KERNEL_TABLE + 1, fp_in);
+                    SID_fread_verify(kernel_table_2d_average, sizeof(double), 1, fp_in);
                 }
                 flag_recompute = GBP_FALSE;
             }

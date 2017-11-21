@@ -168,24 +168,24 @@ void read_gadget_binary_local(char *      filename_root_in,
             FILE *fp_pos;
             FILE *fp_vel;
             fp_pos = fopen(filename, "r");
-            fread_verify(&record_length_open, 4, 1, fp_pos);
-            fread_verify(&header, sizeof(gadget_header_info), 1, fp_pos);
-            fread_verify(&record_length_close, 4, 1, fp_pos);
+            SID_fread_verify(&record_length_open, 4, 1, fp_pos);
+            SID_fread_verify(&header, sizeof(gadget_header_info), 1, fp_pos);
+            SID_fread_verify(&record_length_close, 4, 1, fp_pos);
             if(record_length_open != record_length_close)
                 SID_log_warning("Problem with GADGET record size (close of header)", SID_ERROR_LOGIC);
-            fread_verify(&record_length_open, 4, 1, fp_pos);
+            SID_fread_verify(&record_length_open, 4, 1, fp_pos);
 
             // Create a file pointer to the velocities
             fp_vel = fopen(filename, "r");
-            fread_verify(&record_length_open, 4, 1, fp_vel);
+            SID_fread_verify(&record_length_open, 4, 1, fp_vel);
             fseeko(fp_vel, (off_t)(record_length_open), SEEK_CUR);
-            fread_verify(&record_length_close, 4, 1, fp_vel);
-            fread_verify(&record_length_open, 4, 1, fp_vel);
+            SID_fread_verify(&record_length_close, 4, 1, fp_vel);
+            SID_fread_verify(&record_length_open, 4, 1, fp_vel);
             fseeko(fp_vel, (off_t)(record_length_open), SEEK_CUR);
-            fread_verify(&record_length_close, 4, 1, fp_vel);
+            SID_fread_verify(&record_length_close, 4, 1, fp_vel);
             if(record_length_open != record_length_close)
                 SID_log_warning("Problem with GADGET record size (close of positons)", SID_ERROR_LOGIC);
-            fread_verify(&record_length_open, 4, 1, fp_vel);
+            SID_fread_verify(&record_length_open, 4, 1, fp_vel);
 
             // We only have to worry about z-space effects for domain decomposition in this one case.
             if(i_coord == 1) {
@@ -193,8 +193,8 @@ void read_gadget_binary_local(char *      filename_root_in,
                     for(i_particle = 0; i_particle < header.n_file[i_type]; i_particle += i_step) {
                         i_step = GBP_MIN(READ_BUFFER_SIZE_LOCAL, header.n_file[i_type] - i_particle);
                         if(SID.I_am_Master) {
-                            fread_verify(pos_buffer, sizeof(GBPREAL), 3 * i_step, fp_pos);
-                            fread_verify(vel_buffer, sizeof(GBPREAL), 3 * i_step, fp_vel);
+                            SID_fread_verify(pos_buffer, sizeof(GBPREAL), 3 * i_step, fp_pos);
+                            SID_fread_verify(vel_buffer, sizeof(GBPREAL), 3 * i_step, fp_vel);
                         }
                         SID_Bcast(pos_buffer, 3 * i_step, SID_REAL, SID_MASTER_RANK, SID_COMM_WORLD);
                         SID_Bcast(vel_buffer, 3 * i_step, SID_REAL, SID_MASTER_RANK, SID_COMM_WORLD);
@@ -217,8 +217,8 @@ void read_gadget_binary_local(char *      filename_root_in,
                     for(i_particle = 0; i_particle < header.n_file[i_type]; i_particle += i_step) {
                         i_step = GBP_MIN(READ_BUFFER_SIZE_LOCAL, header.n_file[i_type] - i_particle);
                         if(SID.I_am_Master) {
-                            fread_verify(pos_buffer, sizeof(GBPREAL), 3 * i_step, fp_pos);
-                            fread_verify(vel_buffer, sizeof(GBPREAL), 3 * i_step, fp_vel);
+                            SID_fread_verify(pos_buffer, sizeof(GBPREAL), 3 * i_step, fp_pos);
+                            SID_fread_verify(vel_buffer, sizeof(GBPREAL), 3 * i_step, fp_vel);
                         }
                         SID_Bcast(pos_buffer, 3 * i_step, SID_REAL, SID_MASTER_RANK, SID_COMM_WORLD);
                         SID_Bcast(vel_buffer, 3 * i_step, SID_REAL, SID_MASTER_RANK, SID_COMM_WORLD);
@@ -257,24 +257,24 @@ void read_gadget_binary_local(char *      filename_root_in,
             FILE *fp_pos;
             FILE *fp_vel;
             fp_pos = fopen(filename, "r");
-            fread_verify(&record_length_open, 4, 1, fp_pos);
-            fread_verify(&header, sizeof(gadget_header_info), 1, fp_pos);
-            fread_verify(&record_length_close, 4, 1, fp_pos);
+            SID_fread_verify(&record_length_open, 4, 1, fp_pos);
+            SID_fread_verify(&header, sizeof(gadget_header_info), 1, fp_pos);
+            SID_fread_verify(&record_length_close, 4, 1, fp_pos);
             if(record_length_open != record_length_close)
                 SID_log_warning("Problem with GADGET record size (close of header)", SID_ERROR_LOGIC);
-            fread_verify(&record_length_open, 4, 1, fp_pos);
+            SID_fread_verify(&record_length_open, 4, 1, fp_pos);
 
             // Create a file pointer to the velocities
             fp_vel = fopen(filename, "r");
-            fread_verify(&record_length_open, 4, 1, fp_vel);
+            SID_fread_verify(&record_length_open, 4, 1, fp_vel);
             fseeko(fp_vel, (off_t)(record_length_open), SEEK_CUR);
-            fread_verify(&record_length_close, 4, 1, fp_vel);
-            fread_verify(&record_length_open, 4, 1, fp_vel);
+            SID_fread_verify(&record_length_close, 4, 1, fp_vel);
+            SID_fread_verify(&record_length_open, 4, 1, fp_vel);
             fseeko(fp_vel, (off_t)(record_length_open), SEEK_CUR);
-            fread_verify(&record_length_close, 4, 1, fp_vel);
+            SID_fread_verify(&record_length_close, 4, 1, fp_vel);
             if(record_length_open != record_length_close)
                 SID_log_warning("Problem with GADGET record size (close of positions)", SID_ERROR_LOGIC);
-            fread_verify(&record_length_open, 4, 1, fp_vel);
+            SID_fread_verify(&record_length_open, 4, 1, fp_vel);
 
             // Perform the read and populate the local position arrays
             size_t i_particle;
@@ -284,8 +284,8 @@ void read_gadget_binary_local(char *      filename_root_in,
                 for(i_particle = 0; i_particle < header.n_file[i_type]; i_particle += i_step) {
                     i_step = GBP_MIN(READ_BUFFER_SIZE_LOCAL, header.n_file[i_type] - i_particle);
                     if(SID.I_am_Master) {
-                        fread_verify(pos_buffer, sizeof(GBPREAL), 3 * i_step, fp_pos);
-                        fread_verify(vel_buffer, sizeof(GBPREAL), 3 * i_step, fp_vel);
+                        SID_fread_verify(pos_buffer, sizeof(GBPREAL), 3 * i_step, fp_pos);
+                        SID_fread_verify(vel_buffer, sizeof(GBPREAL), 3 * i_step, fp_vel);
                     }
                     SID_Bcast(pos_buffer, 3 * i_step, SID_REAL, SID_MASTER_RANK, SID_COMM_WORLD);
                     SID_Bcast(vel_buffer, 3 * i_step, SID_REAL, SID_MASTER_RANK, SID_COMM_WORLD);
@@ -491,9 +491,9 @@ int main(int argc, char *argv[]) {
             int   block_length_close;
             set_gadget_filename(&fp_gadget, 0, filename);
             fp_in = fopen(filename, "r");
-            fread_verify(&block_length_open, sizeof(int), 1, fp_in);
-            fread_verify(&header, sizeof(gadget_header_info), 1, fp_in);
-            fread_verify(&block_length_close, sizeof(int), 1, fp_in);
+            SID_fread_verify(&block_length_open, sizeof(int), 1, fp_in);
+            SID_fread_verify(&header, sizeof(gadget_header_info), 1, fp_in);
+            SID_fread_verify(&block_length_close, sizeof(int), 1, fp_in);
             fclose(fp_in);
             if(block_length_open != block_length_close)
                 SID_exit_error("Block lengths don't match (ie. %d!=%d).", SID_ERROR_LOGIC, block_length_open,

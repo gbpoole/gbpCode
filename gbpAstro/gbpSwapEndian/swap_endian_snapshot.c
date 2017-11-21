@@ -99,9 +99,9 @@ int swap_endian_snapshot(const char *filename_in_root,
     int                block_size_out;
     int                i_file_in;
     int                n_files;
-    fread_verify(&block_size_in, sizeof(int), 1, fp_in);
-    fread_verify(&header, sizeof(gadget_header_info), 1, fp_in);
-    fread_verify(&block_size_out, sizeof(int), 1, fp_in);
+    SID_fread_verify(&block_size_in, sizeof(int), 1, fp_in);
+    SID_fread_verify(&header, sizeof(gadget_header_info), 1, fp_in);
+    SID_fread_verify(&block_size_out, sizeof(int), 1, fp_in);
     if(SID_CHECK_BITFIELD_SWITCH(mode, SWAP_SSIMPL_ENDIAN_TO_NATIVE))
         swap_endian_gadget_header_local(&header);
     n_files = header.n_files;
@@ -147,16 +147,16 @@ int swap_endian_snapshot(const char *filename_in_root,
         }
         if((fp_in = fopen(filename_in, "r")) == NULL)
             SID_exit_error("Could not open {%s} for reading.", SID_ERROR_IO_OPEN, filename_in);
-        fread_verify(&block_size_in, sizeof(int), 1, fp_in);
-        fread_verify(&header, sizeof(gadget_header_info), 1, fp_in);
-        fread_verify(&block_size_out, sizeof(int), 1, fp_in);
+        SID_fread_verify(&block_size_in, sizeof(int), 1, fp_in);
+        SID_fread_verify(&header, sizeof(gadget_header_info), 1, fp_in);
+        SID_fread_verify(&block_size_out, sizeof(int), 1, fp_in);
         if(SID_CHECK_BITFIELD_SWITCH(mode, SWAP_SSIMPL_ENDIAN_TO_NATIVE))
             swap_endian_gadget_header_local(&header);
         for(int i_type = 0; i_type < N_GADGET_TYPE; i_type++)
             n_particles_file += header.n_file[i_type];
         if(n_particles_file > 0) {
             fseeko(fp_in, (off_t)(6 * sizeof(int) + sizeof(gadget_header_info) + n_particles_file * 6 * sizeof(GBPREAL)), SEEK_SET);
-            fread_verify(&block_size_in, sizeof(int), 1, fp_in);
+            SID_fread_verify(&block_size_in, sizeof(int), 1, fp_in);
             if(SID_CHECK_BITFIELD_SWITCH(mode, SWAP_SSIMPL_ENDIAN_TO_NATIVE))
                 swap_endian((char *)(&block_size_in), 1, sizeof(int));
             if(n_particles_file == (block_size_in / sizeof(int)))
@@ -221,7 +221,7 @@ int swap_endian_snapshot(const char *filename_in_root,
 
         // Process the header
         rewrite_swap_endian(fp_in, fp_out, 1, sizeof(int), buffer);
-        fread_verify(&header, sizeof(gadget_header_info), 1, fp_in);
+        SID_fread_verify(&header, sizeof(gadget_header_info), 1, fp_in);
         if(SID_CHECK_BITFIELD_SWITCH(mode, SWAP_SSIMPL_ENDIAN_TO_NATIVE))
             swap_endian_gadget_header_local(&header);
         fwrite(&header, sizeof(gadget_header_info), 1, fp_out);

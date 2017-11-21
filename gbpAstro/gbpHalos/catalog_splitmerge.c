@@ -161,19 +161,19 @@ int main(int argc, char *argv[]) {
             char  filename_test[SID_MAX_FILENAME_LENGTH];
             sprintf(filename_test, "%s/%s.0", filename_properties_in, filename_properties_in_base);
             if((fp_test = fopen(filename_test, "r")) != NULL) {
-                fread_verify(&i_file, sizeof(int), 1, fp_test);
-                fread_verify(&n_files_props, sizeof(int), 1, fp_test);
-                fread_verify(&n_props, sizeof(int), 1, fp_test);
-                fread_verify(&n_props_all, sizeof(int), 1, fp_test);
+                SID_fread_verify(&i_file, sizeof(int), 1, fp_test);
+                SID_fread_verify(&n_files_props, sizeof(int), 1, fp_test);
+                SID_fread_verify(&n_props, sizeof(int), 1, fp_test);
+                SID_fread_verify(&n_props_all, sizeof(int), 1, fp_test);
                 fclose(fp_test);
                 flag_multifile_properties = GBP_TRUE;
             } else {
                 sprintf(filename_test, "%s", filename_properties_in);
                 if((fp_test = fopen(filename_test, "r")) != NULL) {
-                    fread_verify(&i_file, sizeof(int), 1, fp_test);
-                    fread_verify(&n_files_props, sizeof(int), 1, fp_test);
-                    fread_verify(&n_props, sizeof(int), 1, fp_test);
-                    fread_verify(&n_props_all, sizeof(int), 1, fp_test);
+                    SID_fread_verify(&i_file, sizeof(int), 1, fp_test);
+                    SID_fread_verify(&n_files_props, sizeof(int), 1, fp_test);
+                    SID_fread_verify(&n_props, sizeof(int), 1, fp_test);
+                    SID_fread_verify(&n_props_all, sizeof(int), 1, fp_test);
                     fclose(fp_test);
                     flag_multifile_properties = GBP_FALSE;
                     if(n_props != n_props_all)
@@ -196,19 +196,19 @@ int main(int argc, char *argv[]) {
             sprintf(filename_test, "%s/%s.0", filename_profiles_in, filename_profiles_in_base);
             if((fp_test = fopen(filename_test, "r")) != NULL) {
                 int i_file;
-                fread_verify(&i_file, sizeof(int), 1, fp_test);
-                fread_verify(&n_files_profs, sizeof(int), 1, fp_test);
-                fread_verify(&n_profs, sizeof(int), 1, fp_test);
-                fread_verify(&n_profs_all, sizeof(int), 1, fp_test);
+                SID_fread_verify(&i_file, sizeof(int), 1, fp_test);
+                SID_fread_verify(&n_files_profs, sizeof(int), 1, fp_test);
+                SID_fread_verify(&n_profs, sizeof(int), 1, fp_test);
+                SID_fread_verify(&n_profs_all, sizeof(int), 1, fp_test);
                 fclose(fp_test);
                 flag_multifile_profiles = GBP_TRUE;
             } else {
                 sprintf(filename_test, "%s", filename_profiles_in);
                 if((fp_test = fopen(filename_test, "r")) != NULL) {
-                    fread_verify(&i_file, sizeof(int), 1, fp_test);
-                    fread_verify(&n_files_profs, sizeof(int), 1, fp_test);
-                    fread_verify(&n_profs, sizeof(int), 1, fp_test);
-                    fread_verify(&n_profs_all, sizeof(int), 1, fp_test);
+                    SID_fread_verify(&i_file, sizeof(int), 1, fp_test);
+                    SID_fread_verify(&n_files_profs, sizeof(int), 1, fp_test);
+                    SID_fread_verify(&n_profs, sizeof(int), 1, fp_test);
+                    SID_fread_verify(&n_profs_all, sizeof(int), 1, fp_test);
                     fclose(fp_test);
                     flag_multifile_profiles = GBP_FALSE;
                     if(n_profs != n_profs_all)
@@ -241,19 +241,19 @@ int main(int argc, char *argv[]) {
                 sprintf(filename_test, "%s/%s.0", filename_SO_in, filename_SO_in_base);
                 if((fp_test = fopen(filename_test, "r")) != NULL) {
                     int i_file;
-                    fread_verify(&i_file, sizeof(int), 1, fp_test);
-                    fread_verify(&n_files_SO, sizeof(int), 1, fp_test);
-                    fread_verify(&n_SO, sizeof(int), 1, fp_test);
-                    fread_verify(&n_SO_all, sizeof(int), 1, fp_test);
+                    SID_fread_verify(&i_file, sizeof(int), 1, fp_test);
+                    SID_fread_verify(&n_files_SO, sizeof(int), 1, fp_test);
+                    SID_fread_verify(&n_SO, sizeof(int), 1, fp_test);
+                    SID_fread_verify(&n_SO_all, sizeof(int), 1, fp_test);
                     fclose(fp_test);
                     flag_multifile_SO = GBP_TRUE;
                 } else {
                     sprintf(filename_test, "%s", filename_SO_in);
                     if((fp_test = fopen(filename_test, "r")) != NULL) {
-                        fread_verify(&i_file, sizeof(int), 1, fp_test);
-                        fread_verify(&n_files_SO, sizeof(int), 1, fp_test);
-                        fread_verify(&n_SO, sizeof(int), 1, fp_test);
-                        fread_verify(&n_SO_all, sizeof(int), 1, fp_test);
+                        SID_fread_verify(&i_file, sizeof(int), 1, fp_test);
+                        SID_fread_verify(&n_files_SO, sizeof(int), 1, fp_test);
+                        SID_fread_verify(&n_SO, sizeof(int), 1, fp_test);
+                        SID_fread_verify(&n_SO_all, sizeof(int), 1, fp_test);
                         fclose(fp_test);
                         flag_multifile_SO = GBP_FALSE;
                         if(n_SO != n_SO_all)
@@ -351,10 +351,10 @@ int main(int argc, char *argv[]) {
                             fclose(fp_read);
                         if((fp_read = fopen(filename_in, "r")) != NULL) {
                             int n_files_in;
-                            fread_verify(&i_file, sizeof(int), 1, fp_read);
-                            fread_verify(&n_files_in, sizeof(int), 1, fp_read);
-                            fread_verify(&n_halos_read, sizeof(int), 1, fp_read);
-                            fread_verify(&n_items_all, sizeof(int), 1, fp_read);
+                            SID_fread_verify(&i_file, sizeof(int), 1, fp_read);
+                            SID_fread_verify(&n_files_in, sizeof(int), 1, fp_read);
+                            SID_fread_verify(&n_halos_read, sizeof(int), 1, fp_read);
+                            SID_fread_verify(&n_items_all, sizeof(int), 1, fp_read);
                             if(n_files_in != n_files_rewrite)
                                 SID_exit_error("File counts are not consistant (ie. %d!=%d).", SID_ERROR_LOGIC,
                                                n_files_in, n_files_rewrite);
@@ -402,23 +402,23 @@ int main(int argc, char *argv[]) {
                     switch(i_rewrite) {
                         // Rewrite properties
                         case 0:
-                            fread_verify(buffer, sizeof(halo_properties_info), 1, fp_read);
+                            SID_fread_verify(buffer, sizeof(halo_properties_info), 1, fp_read);
                             fwrite(buffer, sizeof(halo_properties_info), 1, fp_write);
                             break;
                         // Rewrite profiles
                         case 1: {
                             int n_bins;
-                            fread_verify(&n_bins, sizeof(int), 1, fp_read);
+                            SID_fread_verify(&n_bins, sizeof(int), 1, fp_read);
                             fwrite(&n_bins, sizeof(int), 1, fp_write);
                             for(int i_bin = 0; i_bin < n_bins; i_bin++) {
-                                fread_verify(buffer, sizeof(halo_profile_bin_info), 1, fp_read);
+                                SID_fread_verify(buffer, sizeof(halo_profile_bin_info), 1, fp_read);
                                 fwrite(buffer, sizeof(halo_profile_bin_info), 1, fp_write);
                             }
                             break;
                         }
                         // Rewrite SOs
                         case 2:
-                            fread_verify(buffer, sizeof(float), 6, fp_read);
+                            SID_fread_verify(buffer, sizeof(float), 6, fp_read);
                             fwrite(buffer, sizeof(float), 6, fp_write);
                             break;
                     }

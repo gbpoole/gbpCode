@@ -51,8 +51,8 @@ int main(int argc, char *argv[]) {
         // Read header
         int n_forest_file = 0;
         int n_halo_file   = 0;
-        fread_verify(&n_forest_file, sizeof(int), 1, fp_in_trees);
-        fread_verify(&n_halo_file, sizeof(int), 1, fp_in_trees);
+        SID_fread_verify(&n_forest_file, sizeof(int), 1, fp_in_trees);
+        SID_fread_verify(&n_halo_file, sizeof(int), 1, fp_in_trees);
 
         // Set this file's bounds
         i_forest_lo = i_forest_hi + 1;
@@ -62,7 +62,7 @@ int main(int argc, char *argv[]) {
         if(i_forest_query >= i_forest_lo && i_forest_query <= i_forest_hi) {
             // Finish reading the header
             int *n_halo_forest_file = (int *)SID_malloc(sizeof(int) * n_forest_file);
-            fread_verify(n_halo_forest_file, sizeof(int), n_forest_file, fp_in_trees);
+            SID_fread_verify(n_halo_forest_file, sizeof(int), n_forest_file, fp_in_trees);
 
             // Scan up-to the desired forest
             int j_forest = 0;
@@ -73,7 +73,7 @@ int main(int argc, char *argv[]) {
             // Read the forest we're querying
             int                        n_halo_forest_query = n_halo_forest_file[j_forest];
             halo_properties_SAGE_info *forest = (halo_properties_SAGE_info *)SID_malloc(sizeof(halo_properties_SAGE_info) * n_halo_forest_query);
-            fread_verify(forest, sizeof(halo_properties_SAGE_info), n_halo_forest_query, fp_in_trees);
+            SID_fread_verify(forest, sizeof(halo_properties_SAGE_info), n_halo_forest_query, fp_in_trees);
             SID_log("%d halos read.", SID_LOG_COMMENT, n_halo_forest_query, i_forest);
 
             // Process the forest

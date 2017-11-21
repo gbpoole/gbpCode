@@ -217,12 +217,12 @@ void read_gadget_binary_local(char *filename_root_in, int snapshot_number, plist
 
         // Header record length
         SID_log("Reading header...", SID_LOG_OPEN);
-        fread_verify(&record_length_open, 4, 1, fp);
+        SID_fread_verify(&record_length_open, 4, 1, fp);
         if(record_length_open != GADGET_HEADER_SIZE)
             SID_log_warning("Problem with GADGET record size (opening size of header is wrong)", SID_ERROR_LOGIC);
 
         // Read header
-        fread_verify(&header, sizeof(gadget_header_info), 1, fp);
+        SID_fread_verify(&header, sizeof(gadget_header_info), 1, fp);
 
         // Number of particles for each species in this file
         for(i = 0; i < N_GADGET_TYPE; i++)
@@ -304,7 +304,7 @@ void read_gadget_binary_local(char *filename_root_in, int snapshot_number, plist
             SID_log(" particles...", SID_LOG_CONTINUE);
 
         // Check closing record length
-        fread_verify(&record_length_close, 4, 1, fp);
+        SID_fread_verify(&record_length_close, 4, 1, fp);
         if(record_length_open != record_length_close)
             SID_log_warning("Problem with GADGET record size (close of header)", SID_ERROR_LOGIC);
 
@@ -397,12 +397,12 @@ void read_gadget_binary_local(char *filename_root_in, int snapshot_number, plist
             FILE *fp_positions;
             if(SID.I_am_Master) {
                 fp_positions = fopen(filename, "r");
-                fread_verify(&record_length_open, sizeof(int), 1, fp_positions);
-                fread_verify(&header, sizeof(gadget_header_info), 1, fp_positions);
-                fread_verify(&record_length_close, sizeof(int), 1, fp_positions);
+                SID_fread_verify(&record_length_open, sizeof(int), 1, fp_positions);
+                SID_fread_verify(&header, sizeof(gadget_header_info), 1, fp_positions);
+                SID_fread_verify(&record_length_close, sizeof(int), 1, fp_positions);
                 if(record_length_open != record_length_close)
                     SID_log_warning("Problem with GADGET record size (close of header)", SID_ERROR_LOGIC);
-                fread_verify(&record_length_open, sizeof(int), 1, fp_positions);
+                SID_fread_verify(&record_length_open, sizeof(int), 1, fp_positions);
             }
             SID_Bcast(&header, sizeof(gadget_header_info), SID_CHAR, SID_MASTER_RANK, SID_COMM_WORLD);
             for(i = 0, n_particles_file = 0; i < N_GADGET_TYPE; i++)
@@ -412,39 +412,39 @@ void read_gadget_binary_local(char *filename_root_in, int snapshot_number, plist
             FILE *fp_velocities;
             if(SID.I_am_Master) {
                 fp_velocities = fopen(filename, "r");
-                fread_verify(&record_length_open, sizeof(int), 1, fp_velocities);
+                SID_fread_verify(&record_length_open, sizeof(int), 1, fp_velocities);
                 fseeko(fp_velocities, (off_t)record_length_open, SEEK_CUR);
-                fread_verify(&record_length_close, sizeof(int), 1, fp_velocities);
+                SID_fread_verify(&record_length_close, sizeof(int), 1, fp_velocities);
                 if(record_length_open != record_length_close)
                     SID_log_warning("Problem with GADGET record size (close of header)", SID_ERROR_LOGIC);
-                fread_verify(&record_length_open, sizeof(int), 1, fp_velocities);
+                SID_fread_verify(&record_length_open, sizeof(int), 1, fp_velocities);
                 fseeko(fp_velocities, (off_t)record_length_open, SEEK_CUR);
-                fread_verify(&record_length_close, sizeof(int), 1, fp_velocities);
+                SID_fread_verify(&record_length_close, sizeof(int), 1, fp_velocities);
                 if(record_length_open != record_length_close)
                     SID_log_warning("Problem with GADGET record size (close of positions)", SID_ERROR_LOGIC);
-                fread_verify(&record_length_open, sizeof(int), 1, fp_velocities);
+                SID_fread_verify(&record_length_open, sizeof(int), 1, fp_velocities);
             }
 
             // Set IDs pointer
             FILE *fp_IDs;
             if(SID.I_am_Master) {
                 fp_IDs = fopen(filename, "r");
-                fread_verify(&record_length_open, sizeof(int), 1, fp_IDs);
+                SID_fread_verify(&record_length_open, sizeof(int), 1, fp_IDs);
                 fseeko(fp_IDs, (off_t)record_length_open, SEEK_CUR);
-                fread_verify(&record_length_close, sizeof(int), 1, fp_IDs);
+                SID_fread_verify(&record_length_close, sizeof(int), 1, fp_IDs);
                 if(record_length_open != record_length_close)
                     SID_log_warning("Problem with GADGET record size (close of header)", SID_ERROR_LOGIC);
-                fread_verify(&record_length_open, sizeof(int), 1, fp_IDs);
+                SID_fread_verify(&record_length_open, sizeof(int), 1, fp_IDs);
                 fseeko(fp_IDs, (off_t)record_length_open, SEEK_CUR);
-                fread_verify(&record_length_close, sizeof(int), 1, fp_IDs);
+                SID_fread_verify(&record_length_close, sizeof(int), 1, fp_IDs);
                 if(record_length_open != record_length_close)
                     SID_log_warning("Problem with GADGET record size (close of positions)", SID_ERROR_LOGIC);
-                fread_verify(&record_length_open, sizeof(int), 1, fp_IDs);
+                SID_fread_verify(&record_length_open, sizeof(int), 1, fp_IDs);
                 fseeko(fp_IDs, (off_t)record_length_open, SEEK_CUR);
-                fread_verify(&record_length_close, sizeof(int), 1, fp_IDs);
+                SID_fread_verify(&record_length_close, sizeof(int), 1, fp_IDs);
                 if(record_length_open != record_length_close)
                     SID_log_warning("Problem with GADGET record size (close of velocities)", SID_ERROR_LOGIC);
-                fread_verify(&record_length_open, sizeof(int), 1, fp_IDs);
+                SID_fread_verify(&record_length_open, sizeof(int), 1, fp_IDs);
                 if((size_t)record_length_open / n_particles_file == sizeof(long long)) {
                     SID_log("(long long IDs)...", SID_LOG_CONTINUE);
                     flag_LONGIDS = GBP_TRUE;
@@ -484,15 +484,15 @@ void read_gadget_binary_local(char *filename_root_in, int snapshot_number, plist
                         if(i_buffer >= n_buffer_max) {
                             n_buffer = GBP_MIN(n_buffer_max, n_buffer_left);
                             if(SID.I_am_Master) {
-                                fread_verify(buffer_positions, sizeof(GBPREAL), 3 * n_buffer, fp_positions);
-                                fread_verify(buffer_velocities, sizeof(GBPREAL), 3 * n_buffer, fp_velocities);
+                                SID_fread_verify(buffer_positions, sizeof(GBPREAL), 3 * n_buffer, fp_positions);
+                                SID_fread_verify(buffer_velocities, sizeof(GBPREAL), 3 * n_buffer, fp_velocities);
                                 if(!flag_LONGIDS) {
                                     int *buffer_IDs_int = (int *)buffer_IDs;
-                                    fread_verify(buffer_IDs_int, sizeof(int), n_buffer, fp_IDs);
+                                    SID_fread_verify(buffer_IDs_int, sizeof(int), n_buffer, fp_IDs);
                                     for(j_particle = n_buffer - 1; j_particle >= 0; j_particle--)
                                         buffer_IDs[j_particle] = (size_t)buffer_IDs_int[j_particle];
                                 } else
-                                    fread_verify(buffer_IDs, sizeof(size_t), n_buffer, fp_IDs);
+                                    SID_fread_verify(buffer_IDs, sizeof(size_t), n_buffer, fp_IDs);
                             }
                             SID_Bcast(buffer_positions, 3 * n_buffer, SID_REAL, SID_MASTER_RANK, SID_COMM_WORLD);
                             SID_Bcast(buffer_velocities, 3 * n_buffer, SID_REAL, SID_MASTER_RANK, SID_COMM_WORLD);

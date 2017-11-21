@@ -95,8 +95,8 @@ int main(int argc, char *argv[]) {
             if((fp_halos = fopen(filename_halos, "r")) == NULL)
                 SID_exit_error("Could not open halo file {%s} for reading.", SID_ERROR_IO_OPEN, filename_halos);
             int n_groups_halos, group_offset_byte_size;
-            fread_verify(&n_groups_halos, sizeof(int), 1, fp_halos);
-            fread_verify(&group_offset_byte_size, sizeof(int), 1, fp_halos);
+            SID_fread_verify(&n_groups_halos, sizeof(int), 1, fp_halos);
+            SID_fread_verify(&group_offset_byte_size, sizeof(int), 1, fp_halos);
             fseeko(fp_halos, (off_t)(n_groups_halos * (sizeof(int) + group_offset_byte_size)), SEEK_CUR);
 
             // Open halos and skip to the substructure hierarchy array (if it's defined)
@@ -109,8 +109,8 @@ int main(int argc, char *argv[]) {
                     SID_exit_error("Could not open halo file {%s} for substructure hierarchy reading.",
                                    SID_ERROR_IO_OPEN, filename_halos);
                 int n_subgroups_halos, subgroup_offset_byte_size;
-                fread_verify(&n_subgroups_halos, sizeof(int), 1, fp_hier);
-                fread_verify(&subgroup_offset_byte_size, sizeof(int), 1, fp_hier);
+                SID_fread_verify(&n_subgroups_halos, sizeof(int), 1, fp_hier);
+                SID_fread_verify(&subgroup_offset_byte_size, sizeof(int), 1, fp_hier);
                 fseeko(fp_hier, (off_t)(n_subgroups_halos * (sizeof(int) + subgroup_offset_byte_size)), SEEK_CUR);
             }
 
@@ -165,7 +165,7 @@ int main(int argc, char *argv[]) {
                 // Read group catalog
                 fread_catalog_file(&fp_catalog_groups, NULL, NULL, properties_group, profile_group, i_group);
                 // Read number of subgroups
-                fread_verify(&n_subgroups_group, sizeof(int), 1, fp_halos);
+                SID_fread_verify(&n_subgroups_group, sizeof(int), 1, fp_halos);
                 // Read SO masses (if available)
                 if(group_SO_data != NULL)
                     fread_multifile(&fp_SO, group_SO_data, i_group);
@@ -181,7 +181,7 @@ int main(int argc, char *argv[]) {
                         SID_free(SID_FARG sub_hier);
                         sub_hier = (int *)SID_malloc(sizeof(int) * n_buffer_alloc);
                     }
-                    fread_verify(sub_hier, sizeof(int), n_subgroups_group, fp_hier);
+                    SID_fread_verify(sub_hier, sizeof(int), n_subgroups_group, fp_hier);
                     for(int j_subgroup = 0; j_subgroup < n_subgroups_group; j_subgroup++) {
                         if(j_subgroup == 0 || sub_hier[j_subgroup] == j_subgroup)
                             sub_hier[j_subgroup] = -1;

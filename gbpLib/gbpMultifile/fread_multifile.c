@@ -27,7 +27,7 @@ int fread_multifile(fp_multifile_info *fp_in, void *data_out, int item_index) {
     }
 
     // Read data
-    fread_verify(data_out, fp_in->data_size, 1, fp_in->fp_multifile);
+    SID_fread_verify(data_out, fp_in->data_size, 1, fp_in->fp_multifile);
 
     // Set counter
     fp_in->i_item++;
@@ -57,7 +57,7 @@ int fread_multifile_raw(fp_multifile_info *fp_in, void *data_out, int item_index
     }
 
     // Read data
-    fread_verify(data_out, fp_in->data_size, 1, fp_in->fp_multifile);
+    SID_fread_verify(data_out, fp_in->data_size, 1, fp_in->fp_multifile);
 
     // Set counter
     fp_in->i_item++;

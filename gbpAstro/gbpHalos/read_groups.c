@@ -86,8 +86,8 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
     // ... from groups file...
     if((fp_groups = fopen(filename_groups, "r")) != NULL) {
         if(SID.I_am_Master) {
-            fread_verify(&n_groups, sizeof(int), 1, fp_groups);
-            fread_verify(&group_offset_byte_size, sizeof(int), 1, fp_groups);
+            SID_fread_verify(&n_groups, sizeof(int), 1, fp_groups);
+            SID_fread_verify(&group_offset_byte_size, sizeof(int), 1, fp_groups);
         }
         fclose(fp_groups);
         SID_Bcast(&n_groups, 1, SID_INT, SID_MASTER_RANK, SID_COMM_WORLD);
@@ -106,8 +106,8 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
     // ... from subgroups file...
     if((fp_subgroups = fopen(filename_subgroups, "r")) != NULL) {
         if(SID.I_am_Master) {
-            fread_verify(&n_subgroups, sizeof(int), 1, fp_subgroups);
-            fread_verify(&subgroup_offset_byte_size, sizeof(int), 1, fp_subgroups);
+            SID_fread_verify(&n_subgroups, sizeof(int), 1, fp_subgroups);
+            SID_fread_verify(&subgroup_offset_byte_size, sizeof(int), 1, fp_subgroups);
         }
         fclose(fp_subgroups);
         SID_Bcast(&n_subgroups, 1, SID_INT, SID_MASTER_RANK, SID_COMM_WORLD);
@@ -126,12 +126,12 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
     // ... from ids file...
     if((fp_ids = fopen(filename_ids, "r")) != NULL) {
         if(SID.I_am_Master) {
-            fread_verify(&id_byte_size, sizeof(int), 1, fp_ids);
+            SID_fread_verify(&id_byte_size, sizeof(int), 1, fp_ids);
             if(id_byte_size == sizeof(int)) {
-                fread_verify(&n_ids_i, sizeof(int), 1, fp_ids);
+                SID_fread_verify(&n_ids_i, sizeof(int), 1, fp_ids);
                 n_ids = (size_t)n_ids_i;
             } else
-                fread_verify(&n_ids, sizeof(size_t), 1, fp_ids);
+                SID_fread_verify(&n_ids, sizeof(size_t), 1, fp_ids);
         }
         fclose(fp_ids);
         SID_Bcast(&id_byte_size, 1, SID_INT, SID_MASTER_RANK, SID_COMM_WORLD);
@@ -189,9 +189,9 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
         if(fp_PHKs != NULL) {
             // Read the header values
             if(SID.I_am_Master) {
-                fread_verify(&n_groups, sizeof(int), 1, fp_PHKs);
-                fread_verify(&n_bits_PHK, sizeof(int), 1, fp_PHKs);
-                fread_verify(&n_particles, sizeof(size_t), 1, fp_PHKs);
+                SID_fread_verify(&n_groups, sizeof(int), 1, fp_PHKs);
+                SID_fread_verify(&n_bits_PHK, sizeof(int), 1, fp_PHKs);
+                SID_fread_verify(&n_particles, sizeof(size_t), 1, fp_PHKs);
                 // Set n_bits to a default of 0 if there are no groups
                 if(n_groups <= 0)
                     n_bits_PHK = 0;
@@ -230,7 +230,7 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
                             n_buffer = GBP_MIN(n_buffer_max, n_groups - i_group);
                             n_seek += n_buffer;
                             i_buffer = 0;
-                            fread_verify(buffer, unit_size, n_buffer, fp_PHKs);
+                            SID_fread_verify(buffer, unit_size, n_buffer, fp_PHKs);
                         }
                         int    PHK_i         = ((int *)(&(buffer[i_buffer * unit_size])))[0];
                         int    PHK_index_i   = ((int *)(&(buffer[i_buffer * unit_size + 1 * sizeof(int)])))[0];
@@ -248,7 +248,7 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
                                 n_buffer = GBP_MIN(n_buffer_max, n_groups - i_group);
                                 n_seek += n_buffer;
                                 i_buffer = 0;
-                                fread_verify(buffer, unit_size, n_buffer, fp_PHKs);
+                                SID_fread_verify(buffer, unit_size, n_buffer, fp_PHKs);
                             }
                             PHK_i         = ((int *)(&(buffer[i_buffer * unit_size])))[0];
                             PHK_index_i   = ((int *)(&(buffer[i_buffer * unit_size + 1 * sizeof(int)])))[0];
@@ -333,7 +333,7 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
                         n_buffer = GBP_MIN(n_buffer_max, n_groups - i_group);
                         i_buffer = 0;
                         if(SID.I_am_Master)
-                            fread_verify(buffer, unit_size, n_buffer, fp_PHKs);
+                            SID_fread_verify(buffer, unit_size, n_buffer, fp_PHKs);
                         SID_Bcast(buffer, n_buffer * unit_size, SID_CHAR, SID_MASTER_RANK, SID_COMM_WORLD);
                     }
                     int    PHK_i         = ((int *)(&(buffer[i_buffer * unit_size])))[0];
@@ -397,7 +397,7 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
                     n_buffer = GBP_MIN(n_buffer_max, n_groups - i_group);
                     i_buffer = 0;
                     if(SID.I_am_Master)
-                        fread_verify(buffer, unit_size, n_buffer, fp_PHKs);
+                        SID_fread_verify(buffer, unit_size, n_buffer, fp_PHKs);
                     SID_Bcast(buffer, n_buffer * unit_size, SID_CHAR, SID_MASTER_RANK, SID_COMM_WORLD);
                 }
                 int PHK_i       = ((int *)(&(buffer[i_buffer * unit_size])))[0];
@@ -523,10 +523,10 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
             int group_length_i = 0;
             if(SID.I_am_Master) {
                 int offset_size = sizeof(int);
-                fread_verify(&n_groups, sizeof(int), 1, fp_groups);
-                fread_verify(&offset_size, sizeof(int), 1, fp_groups);
+                SID_fread_verify(&n_groups, sizeof(int), 1, fp_groups);
+                SID_fread_verify(&offset_size, sizeof(int), 1, fp_groups);
                 for(int i_group = 0; i_group < n_groups; i_group++) {
-                    fread_verify(&group_length_i, sizeof(int), 1, fp_groups);
+                    SID_fread_verify(&group_length_i, sizeof(int), 1, fp_groups);
                     n_particles += (size_t)group_length_i;
                 }
             }
@@ -549,7 +549,7 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
                     //   this check isn't there, the last group will be skipped, causing subsequent sanity checks on n_groups to fail
                     while((i_group < n_groups && n_particles_local < (size_t)((double)(n_particles_left) / (double)(SID.n_proc - i_rank))) ||
                           (group_length_i == 0)) {
-                        fread_verify(&group_length_i, sizeof(int), 1, fp_groups);
+                        SID_fread_verify(&group_length_i, sizeof(int), 1, fp_groups);
                         n_groups_local++;
                         n_particles_local += (size_t)group_length_i;
                         n_seek++;
@@ -569,7 +569,7 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
             // If there are groups left over, give them to the last used rank
             if(last_used_rank == SID.My_rank) {
                 while(i_group < n_groups) {
-                    fread_verify(&group_length_i, sizeof(int), 1, fp_groups);
+                    SID_fread_verify(&group_length_i, sizeof(int), 1, fp_groups);
                     n_groups_local++;
                     n_particles_local += (size_t)group_length_i;
                     i_group++;
@@ -675,7 +675,7 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
                         i_buffer = 0;
                         n_buffer = GBP_MIN(n_buffer_max, n_groups - i_group);
                         if(SID.I_am_Master)
-                            fread_verify(buffer_i, sizeof(int), n_buffer, fp_groups);
+                            SID_fread_verify(buffer_i, sizeof(int), n_buffer, fp_groups);
                         SID_Bcast(buffer_i, n_buffer, SID_INT, SID_MASTER_RANK, SID_COMM_WORLD);
                     }
                     if(j_group < n_groups_local) {
@@ -717,7 +717,7 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
                         i_buffer = 0;
                         n_buffer = GBP_MIN(n_buffer_max, n_groups - i_group);
                         if(SID.I_am_Master)
-                            fread_verify(buffer, group_offset_byte_size, n_buffer, fp_groups);
+                            SID_fread_verify(buffer, group_offset_byte_size, n_buffer, fp_groups);
                         SID_Bcast(buffer, n_buffer * group_offset_byte_size, SID_CHAR, SID_MASTER_RANK, SID_COMM_WORLD);
                     }
                     if(j_group < n_groups_local) {
@@ -762,7 +762,7 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
                         i_buffer = 0;
                         n_buffer = GBP_MIN(n_buffer_max, n_groups - i_group);
                         if(SID.I_am_Master)
-                            fread_verify(buffer, sizeof(int), n_buffer, fp_groups);
+                            SID_fread_verify(buffer, sizeof(int), n_buffer, fp_groups);
                         SID_Bcast(buffer, n_buffer, SID_INT, SID_MASTER_RANK, SID_COMM_WORLD);
                     }
                     if(j_group < n_groups_local) {
@@ -945,7 +945,8 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
                         index_group    = storage_index_group[j_group];
                         index_subgroup = storage_index_subgroup[j_group];
                         fseeko(fp_subgroups, (off_t)(read_seek_subgroup[j_group] * sizeof(int)), SEEK_CUR);
-                        fread_verify(&(subgroup_length[index_subgroup]), sizeof(int), n_subgroups_group[index_group], fp_subgroups);
+                        SID_fread_verify(&(subgroup_length[index_subgroup]), sizeof(int),
+                                         n_subgroups_group[index_group], fp_subgroups);
                         for(int i_test = index_subgroup, j_test = 0; j_test < n_subgroups_group[index_group]; i_test++, j_test++)
                             test[i_test]++;
                         j_group++;
@@ -982,7 +983,7 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
                             case GBP_TRUE:
                                 for(int i_subgroup = index_subgroup, j_subgroup = 0; j_subgroup < n_subgroups_group[index_group];
                                     i_subgroup++, j_subgroup++) {
-                                    fread_verify(&offset_ll, subgroup_offset_byte_size, 1, fp_subgroups);
+                                    SID_fread_verify(&offset_ll, subgroup_offset_byte_size, 1, fp_subgroups);
                                     subgroup_offset[i_subgroup] = (size_t)offset_ll;
                                     test[i_subgroup]++;
                                 }
@@ -990,7 +991,7 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
                             case GBP_FALSE:
                                 for(int i_subgroup = index_subgroup, j_subgroup = 0; j_subgroup < n_subgroups_group[index_group];
                                     i_subgroup++, j_subgroup++) {
-                                    fread_verify(&offset_ui, subgroup_offset_byte_size, 1, fp_subgroups);
+                                    SID_fread_verify(&offset_ui, subgroup_offset_byte_size, 1, fp_subgroups);
                                     subgroup_offset[i_subgroup] = (size_t)offset_ui;
                                     test[i_subgroup]++;
                                 }
@@ -1173,14 +1174,15 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
                             if(buffer_ranks[i_buffer] == SID_MASTER_RANK) {
                                 switch(flag_long_ids) {
                                     case GBP_TRUE:
-                                        fread_verify(&(input_id[buffer_indices_local[j_buffer]]), id_byte_size, buffer_sizes_local[j_buffer], fp_ids);
+                                        SID_fread_verify(&(input_id[buffer_indices_local[j_buffer]]), id_byte_size,
+                                                         buffer_sizes_local[j_buffer], fp_ids);
                                         for(size_t i_particle = 0, j_particle = buffer_indices_local[j_buffer];
                                             i_particle < buffer_sizes_local[j_buffer];
                                             i_particle++, j_particle++)
                                             test[j_particle]++;
                                         break;
                                     default:
-                                        fread_verify(buffer_int, id_byte_size, buffer_sizes_local[j_buffer], fp_ids);
+                                        SID_fread_verify(buffer_int, id_byte_size, buffer_sizes_local[j_buffer], fp_ids);
                                         for(size_t i_particle = 0, j_particle = buffer_indices_local[j_buffer];
                                             i_particle < buffer_sizes_local[j_buffer];
                                             i_particle++, j_particle++) {
@@ -1195,10 +1197,10 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
                             else {
                                 switch(flag_long_ids) {
                                     case GBP_TRUE:
-                                        fread_verify(buffer, id_byte_size, buffer_sizes[i_buffer], fp_ids);
+                                        SID_fread_verify(buffer, id_byte_size, buffer_sizes[i_buffer], fp_ids);
                                         break;
                                     default:
-                                        fread_verify(buffer_int, id_byte_size, buffer_sizes[i_buffer], fp_ids);
+                                        SID_fread_verify(buffer_int, id_byte_size, buffer_sizes[i_buffer], fp_ids);
                                         for(size_t i_particle = 0; i_particle < buffer_sizes[i_buffer]; i_particle++)
                                             buffer[i_particle] = (size_t)(buffer_int[i_particle]);
                                         break;

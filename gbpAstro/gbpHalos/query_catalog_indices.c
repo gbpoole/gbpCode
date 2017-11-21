@@ -54,21 +54,21 @@ int main(int argc, char *argv[]) {
         if((fp_in = fopen(filename_indices, "r")) == NULL)
             SID_exit_error("Could not open file {%s}.", SID_ERROR_IO_OPEN, filename_indices);
         int i_file, n_files, n_groups, n_groups_all;
-        fread_verify(&i_file, sizeof(int), 1, fp_in);
-        fread_verify(&n_files, sizeof(int), 1, fp_in);
-        fread_verify(&n_groups, sizeof(int), 1, fp_in);
-        fread_verify(&n_groups_all, sizeof(int), 1, fp_in);
+        SID_fread_verify(&i_file, sizeof(int), 1, fp_in);
+        SID_fread_verify(&n_files, sizeof(int), 1, fp_in);
+        SID_fread_verify(&n_groups, sizeof(int), 1, fp_in);
+        SID_fread_verify(&n_groups_all, sizeof(int), 1, fp_in);
         int n_particles_i;
         for(i_group = 0; i_group < i_group_selected; i_group++) {
-            fread_verify(&n_particles_i, sizeof(int), 1, fp_in);
+            SID_fread_verify(&n_particles_i, sizeof(int), 1, fp_in);
             fseeko(fp_in, (off_t)(sizeof(size_t) * n_particles_i), SEEK_CUR);
         }
-        fread_verify(&n_particles_i, sizeof(int), 1, fp_in);
+        SID_fread_verify(&n_particles_i, sizeof(int), 1, fp_in);
         fprintf(stderr, "n_particles=%d\n", n_particles_i);
         int i_particle;
         for(i_particle = 0; i_particle < n_particles_i; i_particle++) {
             size_t index_i;
-            fread_verify(&index_i, sizeof(size_t), 1, fp_in);
+            SID_fread_verify(&index_i, sizeof(size_t), 1, fp_in);
             fprintf(stderr, "%4d %zu\n", i_particle, index_i);
         }
 

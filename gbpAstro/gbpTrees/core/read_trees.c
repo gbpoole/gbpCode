@@ -238,11 +238,13 @@ void read_trees(const char *filename_SSimPL_root,
         SID_fp_buffer *fp_groups_in_buffer    = NULL;
         SID_fp_buffer *fp_trees_in_buffer     = NULL;
         size_t         n_bytes_trees          = sizeof(int) * ((8 * (size_t)n_groups) + (7 * (size_t)n_subgroups));
-        init_SID_fp_buffer(&fp_subgroups_in, (size_t)n_subgroups * sizeof(int), SID_SIZE_OF_MEGABYTE, &fp_subgroups_in_buffer);
-        init_SID_fp_buffer(&fp_groups_in, (size_t)n_groups * sizeof(int), SID_SIZE_OF_MEGABYTE, &fp_groups_in_buffer);
-        init_SID_fp_buffer(&fp_trees_in, n_bytes_trees, SID_SIZE_OF_MEGABYTE, &fp_trees_in_buffer);
+        SID_init_fp_buffer(&fp_subgroups_in, (size_t) n_subgroups * sizeof(int), SID_SIZE_OF_MEGABYTE,
+                           &fp_subgroups_in_buffer);
+        SID_init_fp_buffer(&fp_groups_in, (size_t) n_groups * sizeof(int), SID_SIZE_OF_MEGABYTE, &fp_groups_in_buffer);
+        SID_init_fp_buffer(&fp_trees_in, n_bytes_trees, SID_SIZE_OF_MEGABYTE, &fp_trees_in_buffer);
         if(flag_read_sub_pointers)
-            init_SID_fp_buffer(&fp_hierarchy_in, (size_t)n_subgroups * sizeof(int), SID_SIZE_OF_MEGABYTE, &fp_hierarchy_in_buffer);
+            SID_init_fp_buffer(&fp_hierarchy_in, (size_t) n_subgroups * sizeof(int), SID_SIZE_OF_MEGABYTE,
+                               &fp_hierarchy_in_buffer);
 
         // Read each group in turn
         int n_groups_unused         = 0;
@@ -421,12 +423,12 @@ void read_trees(const char *filename_SSimPL_root,
         SID_fclose(&fp_trees_in);
         SID_fclose(&fp_groups_in);
         SID_fclose(&fp_subgroups_in);
-        free_SID_fp_buffer(&fp_subgroups_in_buffer);
-        free_SID_fp_buffer(&fp_groups_in_buffer);
-        free_SID_fp_buffer(&fp_trees_in_buffer);
+        SID_free_fp_buffer(&fp_subgroups_in_buffer);
+        SID_free_fp_buffer(&fp_groups_in_buffer);
+        SID_free_fp_buffer(&fp_trees_in_buffer);
         if(flag_read_sub_pointers) {
             SID_fclose(&fp_hierarchy_in);
-            free_SID_fp_buffer(&fp_hierarchy_in_buffer);
+            SID_free_fp_buffer(&fp_hierarchy_in_buffer);
         }
 
         // Update the temporary look-up arrays

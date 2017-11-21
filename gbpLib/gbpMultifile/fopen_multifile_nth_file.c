@@ -50,10 +50,10 @@ int fopen_multifile_nth_file(fp_multifile_info *fp_in, int n) {
             r_val = GBP_FALSE;
         else {
             // Read header information
-            fread_verify(&(fp_in->i_file), sizeof(int), 1, fp_in->fp_multifile);
-            fread_verify(&(fp_in->n_files), sizeof(int), 1, fp_in->fp_multifile);
-            fread_verify(&(fp_in->n_items_file), sizeof(int), 1, fp_in->fp_multifile);
-            fread_verify(&(fp_in->n_items_total), sizeof(int), 1, fp_in->fp_multifile);
+            SID_fread_verify(&(fp_in->i_file), sizeof(int), 1, fp_in->fp_multifile);
+            SID_fread_verify(&(fp_in->n_files), sizeof(int), 1, fp_in->fp_multifile);
+            SID_fread_verify(&(fp_in->n_items_file), sizeof(int), 1, fp_in->fp_multifile);
+            SID_fread_verify(&(fp_in->n_items_total), sizeof(int), 1, fp_in->fp_multifile);
             // Check that the file number in the file is correct
             if(i_file != fp_in->i_file)
                 SID_exit_error("Invalid file number (ie. %d!=%d) in multifile {%s}.", SID_ERROR_LOGIC, i_file,

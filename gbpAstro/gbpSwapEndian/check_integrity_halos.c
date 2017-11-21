@@ -22,19 +22,19 @@ void check_integrity_halos_groups_local(const char *filename_in_root, const char
     // Read the needed header information and rewind
     int n_groups;
     int offset_size_bytes;
-    fread_verify(&n_groups, sizeof(int), 1, fp_in);
-    fread_verify(&offset_size_bytes, sizeof(int), 1, fp_in);
+    SID_fread_verify(&n_groups, sizeof(int), 1, fp_in);
+    SID_fread_verify(&offset_size_bytes, sizeof(int), 1, fp_in);
 
     // Create a read buffer
     char *buffer = (char *)SID_malloc(sizeof(char) * offset_size_bytes);
 
     // Process the file
     for(int i_group = 0; i_group < n_groups; i_group++)
-        fread_verify(buffer, sizeof(int), 1, fp_in);
+        SID_fread_verify(buffer, sizeof(int), 1, fp_in);
     for(int i_group = 0; i_group < n_groups; i_group++)
-        fread_verify(buffer, offset_size_bytes, 1, fp_in);
+        SID_fread_verify(buffer, offset_size_bytes, 1, fp_in);
     for(int i_group = 0; i_group < n_groups; i_group++)
-        fread_verify(buffer, sizeof(int), 1, fp_in);
+        SID_fread_verify(buffer, sizeof(int), 1, fp_in);
 
     // Free the read buffer
     SID_free(SID_FARG buffer);
@@ -67,19 +67,19 @@ void check_integrity_halos_subgroups_local(const char *filename_in_root, const c
     // Read the needed header information and rewind
     int n_subgroups;
     int offset_size_bytes;
-    fread_verify(&n_subgroups, sizeof(int), 1, fp_in);
-    fread_verify(&offset_size_bytes, sizeof(int), 1, fp_in);
+    SID_fread_verify(&n_subgroups, sizeof(int), 1, fp_in);
+    SID_fread_verify(&offset_size_bytes, sizeof(int), 1, fp_in);
 
     // Create a read buffer
     char *buffer = (char *)SID_malloc(sizeof(char) * offset_size_bytes);
 
     // Process the file
     for(int i_subgroup = 0; i_subgroup < n_subgroups; i_subgroup++)
-        fread_verify(buffer, sizeof(int), 1, fp_in);
+        SID_fread_verify(buffer, sizeof(int), 1, fp_in);
     for(int i_subgroup = 0; i_subgroup < n_subgroups; i_subgroup++)
-        fread_verify(buffer, offset_size_bytes, 1, fp_in);
+        SID_fread_verify(buffer, offset_size_bytes, 1, fp_in);
     for(int i_subgroup = 0; i_subgroup < n_subgroups; i_subgroup++)
-        fread_verify(buffer, sizeof(int), 1, fp_in);
+        SID_fread_verify(buffer, sizeof(int), 1, fp_in);
 
     // Free the read buffer
     SID_free(SID_FARG buffer);
@@ -114,12 +114,12 @@ void check_integrity_halos_particles_local(const char *filename_in_root, const c
     int       n_particles_int;
     long long n_particles_long_long;
     size_t    n_particles;
-    fread_verify(&particle_size_bytes, sizeof(int), 1, fp_in);
+    SID_fread_verify(&particle_size_bytes, sizeof(int), 1, fp_in);
     if(particle_size_bytes == sizeof(int)) {
-        fread_verify(&n_particles_int, sizeof(int), 1, fp_in);
+        SID_fread_verify(&n_particles_int, sizeof(int), 1, fp_in);
         n_particles = (size_t)n_particles_int;
     } else if(particle_size_bytes == sizeof(long long)) {
-        fread_verify(&n_particles_long_long, sizeof(long long), 1, fp_in);
+        SID_fread_verify(&n_particles_long_long, sizeof(long long), 1, fp_in);
         n_particles = (size_t)n_particles_long_long;
     } else
         SID_exit_error("Invalid particle ID size (%d) in {%s}.", SID_ERROR_LOGIC, particle_size_bytes, filename_in);
@@ -129,7 +129,7 @@ void check_integrity_halos_particles_local(const char *filename_in_root, const c
 
     // Process the file
     for(size_t i_particle = 0; i_particle < n_particles; i_particle++)
-        fread_verify(buffer, particle_size_bytes, 1, fp_in);
+        SID_fread_verify(buffer, particle_size_bytes, 1, fp_in);
 
     // Free the read buffer
     SID_free(SID_FARG buffer);

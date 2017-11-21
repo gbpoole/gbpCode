@@ -20,27 +20,27 @@ int main(int argc, char *argv[]) {
     int    nx1, ny1, nz1, ng1, as1;
     double Lx1, Ly1, Lz1;
     fp1 = fopen(argv[1], "r");
-    fread_verify(&nx1, sizeof(int), 1, fp1);
-    fread_verify(&ny1, sizeof(int), 1, fp1);
-    fread_verify(&nz1, sizeof(int), 1, fp1);
-    fread_verify(&Lx1, sizeof(double), 1, fp1);
-    fread_verify(&Ly1, sizeof(double), 1, fp1);
-    fread_verify(&Lz1, sizeof(double), 1, fp1);
-    fread_verify(&ng1, sizeof(int), 1, fp1);
-    fread_verify(&as1, sizeof(int), 1, fp1);
+    SID_fread_verify(&nx1, sizeof(int), 1, fp1);
+    SID_fread_verify(&ny1, sizeof(int), 1, fp1);
+    SID_fread_verify(&nz1, sizeof(int), 1, fp1);
+    SID_fread_verify(&Lx1, sizeof(double), 1, fp1);
+    SID_fread_verify(&Ly1, sizeof(double), 1, fp1);
+    SID_fread_verify(&Lz1, sizeof(double), 1, fp1);
+    SID_fread_verify(&ng1, sizeof(int), 1, fp1);
+    SID_fread_verify(&as1, sizeof(int), 1, fp1);
 
     FILE * fp2;
     int    nx2, ny2, nz2, ng2, as2;
     double Lx2, Ly2, Lz2;
     fp2 = fopen(argv[2], "r");
-    fread_verify(&nx2, sizeof(int), 1, fp2);
-    fread_verify(&ny2, sizeof(int), 1, fp2);
-    fread_verify(&nz2, sizeof(int), 1, fp2);
-    fread_verify(&Lx2, sizeof(double), 1, fp2);
-    fread_verify(&Ly2, sizeof(double), 1, fp2);
-    fread_verify(&Lz2, sizeof(double), 1, fp2);
-    fread_verify(&ng2, sizeof(int), 1, fp2);
-    fread_verify(&as2, sizeof(int), 1, fp2);
+    SID_fread_verify(&nx2, sizeof(int), 1, fp2);
+    SID_fread_verify(&ny2, sizeof(int), 1, fp2);
+    SID_fread_verify(&nz2, sizeof(int), 1, fp2);
+    SID_fread_verify(&Lx2, sizeof(double), 1, fp2);
+    SID_fread_verify(&Ly2, sizeof(double), 1, fp2);
+    SID_fread_verify(&Lz2, sizeof(double), 1, fp2);
+    SID_fread_verify(&ng2, sizeof(int), 1, fp2);
+    SID_fread_verify(&as2, sizeof(int), 1, fp2);
 
     if(nx1 != nx2)
         SID_exit_error("nx's don't match (ie. %d!=%d)", SID_ERROR_LOGIC, nx1, nx2);
@@ -65,16 +65,16 @@ int main(int argc, char *argv[]) {
     grid_identifier_1 = (char *)SID_malloc(GRID_IDENTIFIER_SIZE * sizeof(char));
     grid_identifier_2 = (char *)SID_malloc(GRID_IDENTIFIER_SIZE * sizeof(char));
     for(i_grid = 0; i_grid < ng1; i_grid++) {
-        fread_verify(grid_identifier_1, sizeof(char), GRID_IDENTIFIER_SIZE, fp1);
-        fread_verify(grid_identifier_2, sizeof(char), GRID_IDENTIFIER_SIZE, fp2);
+        SID_fread_verify(grid_identifier_1, sizeof(char), GRID_IDENTIFIER_SIZE, fp1);
+        SID_fread_verify(grid_identifier_2, sizeof(char), GRID_IDENTIFIER_SIZE, fp2);
         if(strcmp(grid_identifier_1, grid_identifier_2))
             SID_log_warning("grid identifiers don't match (ie. {%s}!={%s})", SID_ERROR_LOGIC, grid_identifier_1, grid_identifier_2);
         SID_log("Processing {%s} ...", SID_LOG_OPEN, grid_identifier_1);
         for(i_x = 0; i_x < nx1; i_x++) {
             for(i_y = 0; i_y < ny1; i_y++) {
                 for(i_z = 0; i_z < nz1; i_z++) {
-                    fread_verify(&d1, sizeof(GBPREAL), 1, fp1);
-                    fread_verify(&d2, sizeof(GBPREAL), 1, fp2);
+                    SID_fread_verify(&d1, sizeof(GBPREAL), 1, fp1);
+                    SID_fread_verify(&d2, sizeof(GBPREAL), 1, fp2);
                     if(d2 != d1)
                         fprintf(stdout, "%3d %4d %4d %4d %le %le %le\n", i_grid, i_x, i_y, i_z, (double)d1, (double)d2, (double)(d2 - d1));
                 }

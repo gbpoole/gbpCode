@@ -297,66 +297,66 @@ void compute_MCMC(MCMC_info *MCMC) {
         if((fp_run = fopen(filename_run, "rb")) != NULL) {
             flag_restart = GBP_TRUE;
             SID_log("Checking the consistancy of this run with the previous run...", SID_LOG_OPEN);
-            fread_verify(problem_name_test, sizeof(char), MCMC_NAME_SIZE, fp_run);
+            SID_fread_verify(problem_name_test, sizeof(char), MCMC_NAME_SIZE, fp_run);
             if(strcmp(problem_name_test, MCMC->problem_name))
                 SID_exit_error("Problem names are inconsistant (i.e. {%s}!={%s}).", SID_ERROR_LOGIC, MCMC->problem_name,
                                problem_name_test);
-            fread_verify(&n_chains_test, sizeof(int), 1, fp_run);
+            SID_fread_verify(&n_chains_test, sizeof(int), 1, fp_run);
             MCMC->n_chains = GBP_MAX(MCMC->n_chains, n_chains_test);
-            fread_verify(&n_avg_test, sizeof(int), 1, fp_run);
+            SID_fread_verify(&n_avg_test, sizeof(int), 1, fp_run);
             if(n_avg_test != n_avg)
                 SID_exit_error("Integration averaging intervals are inconsistant (i.e. %d!=%d).", SID_ERROR_LOGIC,
                                n_avg, n_avg_test);
-            fread_verify(&flag_autocor_on_test, sizeof(int), 1, fp_run);
+            SID_fread_verify(&flag_autocor_on_test, sizeof(int), 1, fp_run);
             if(flag_autocor_on_test != flag_autocor_on)
                 SID_exit_error("Autocorrelation flags are inconsistant (i.e. %d!=%d).", SID_ERROR_LOGIC,
                                flag_autocor_on, flag_autocor_on_test);
-            fread_verify(&flag_no_map_write_test, sizeof(int), 1, fp_run);
+            SID_fread_verify(&flag_no_map_write_test, sizeof(int), 1, fp_run);
             if(flag_no_map_write_test != flag_no_map_write)
                 SID_exit_error("Map write flags are inconsistant (i.e. %d!=%d).", SID_ERROR_LOGIC, flag_no_map_write,
                                flag_no_map_write_test);
-            fread_verify(&n_P_test, sizeof(int), 1, fp_run);
+            SID_fread_verify(&n_P_test, sizeof(int), 1, fp_run);
             if(n_P_test != n_P)
                 SID_exit_error("The number of paramaters is inconsistant (i.e. %d!=%d).", SID_ERROR_LOGIC, n_P,
                                n_P_test);
             MCMC->P_name_length = 0;
             for(i_P = 0; i_P < n_P; i_P++) {
-                fread_verify(P_name_test, sizeof(char), MCMC_NAME_SIZE, fp_run);
+                SID_fread_verify(P_name_test, sizeof(char), MCMC_NAME_SIZE, fp_run);
                 if(strcmp(P_name_test, MCMC->P_names[i_P]))
                     SID_exit_error("Parameter #%d's names are inconsistant (i.e. {%s}!={%s}).", SID_ERROR_LOGIC, i_P,
                                    MCMC->P_names[i_P], P_name_test);
-                fread_verify(&P_init_test, sizeof(double), 1, fp_run);
+                SID_fread_verify(&P_init_test, sizeof(double), 1, fp_run);
                 // if(P_init_test!=MCMC->P_init[i_P])
                 //   SID_exit_error("Parameter #%d's initial values are inconsistant (i.e.
                 //   %le!=%le).",SID_ERROR_LOGIC,i_P,MCMC->P_init[i_P],P_init_test);
-                fread_verify(&P_min_test, sizeof(double), 1, fp_run);
+                SID_fread_verify(&P_min_test, sizeof(double), 1, fp_run);
                 if(P_min_test != MCMC->P_limit_min[i_P])
                     SID_exit_error("Parameter #%d's minimum values are inconsistant (i.e. %le!=%le).", SID_ERROR_LOGIC,
                                    i_P, MCMC->P_limit_min[i_P], P_min_test);
-                fread_verify(&P_max_test, sizeof(double), 1, fp_run);
+                SID_fread_verify(&P_max_test, sizeof(double), 1, fp_run);
                 if(P_max_test != MCMC->P_limit_max[i_P])
                     SID_exit_error("Parameter #%d's maximum values are inconsistant (i.e. %le!=%le).", SID_ERROR_LOGIC,
                                    i_P, MCMC->P_limit_max[i_P], P_max_test);
                 MCMC->P_name_length = GBP_MAX(MCMC->P_name_length, strlen(MCMC->P_names[i_P]));
             }
             sprintf(MCMC->P_name_format, "%%-%ds", MCMC->P_name_length);
-            fread_verify(&n_arrays_test, sizeof(int), 1, fp_run);
+            SID_fread_verify(&n_arrays_test, sizeof(int), 1, fp_run);
             if(n_arrays_test != MCMC->n_arrays)
                 SID_exit_error("Numbers of project arrays are inconsistant (i.e. %d!=%d).", SID_ERROR_LOGIC,
                                MCMC->n_arrays, n_arrays_test);
             for(i_array = 0; i_array < MCMC->n_arrays; i_array++) {
-                fread_verify(&array_name_test, sizeof(char), MCMC_NAME_SIZE, fp_run);
+                SID_fread_verify(&array_name_test, sizeof(char), MCMC_NAME_SIZE, fp_run);
                 if(strcmp(array_name_test, MCMC->array_name[i_array]))
                     SID_exit_error("Project array names are inconsisitant (i.e. {%s}!={%s}).", SID_ERROR_LOGIC,
                                    MCMC->array_name[i_array], array_name_test);
                 for(i_P = 0; i_P < n_P; i_P++) {
-                    fread_verify(&array_test, sizeof(double), 1, fp_run);
+                    SID_fread_verify(&array_test, sizeof(double), 1, fp_run);
                     if(array_test != MCMC->array[i_array][i_P])
                         SID_exit_error("Project array #%d element #%d is inconsistant (i.e. %le!=%le).",
                                        SID_ERROR_LOGIC, i_array, i_P, MCMC->array[i_array][i_P], array_test);
                 }
             }
-            fread_verify(&n_DS_test, sizeof(int), 1, fp_run);
+            SID_fread_verify(&n_DS_test, sizeof(int), 1, fp_run);
             if(n_DS_test != n_DS)
                 SID_exit_error("The number of datasets is inconsistant (i.e. %d!=%d).", SID_ERROR_LOGIC, n_DS,
                                n_DS_test);
@@ -364,37 +364,37 @@ void compute_MCMC(MCMC_info *MCMC) {
             i_DS       = 0;
             while(current_DS != NULL) {
                 next_DS = current_DS->next;
-                fread_verify(name_test, sizeof(char), MCMC_NAME_SIZE, fp_run);
+                SID_fread_verify(name_test, sizeof(char), MCMC_NAME_SIZE, fp_run);
                 if(strcmp(name_test, current_DS->name))
                     SID_exit_error("Dataset #%d's names are inconsistant (i.e. {%s}!={%s}).", SID_ERROR_LOGIC, i_DS,
                                    current_DS->name, name_test);
-                fread_verify(&n_M_test, sizeof(int), 1, fp_run);
+                SID_fread_verify(&n_M_test, sizeof(int), 1, fp_run);
                 if(n_M_test != n_M[i_DS])
                     SID_exit_error("The sizes of dataset #%d are inconsistant (i.e. %d!=%d).", SID_ERROR_LOGIC, i_DS,
                                    n_M_test, n_M[i_DS]);
                 for(i_M = 0; i_M < current_DS->n_M; i_M++) {
-                    fread_verify(&M_target_test, sizeof(double), 1, fp_run);
+                    SID_fread_verify(&M_target_test, sizeof(double), 1, fp_run);
                     if(M_target_test != current_DS->M_target[i_M])
                         SID_exit_error("Dataset #%d, element #%d is inconsistant (i.e. %le!=%le).", SID_ERROR_LOGIC,
                                        i_DS, i_M, current_DS->M_target[i_M], M_target_test);
                 }
                 for(i_M = 0; i_M < current_DS->n_M; i_M++) {
-                    fread_verify(&dM_target_test, sizeof(double), 1, fp_run);
+                    SID_fread_verify(&dM_target_test, sizeof(double), 1, fp_run);
                     if(dM_target_test != current_DS->dM_target[i_M])
                         SID_exit_error("Dataset #%d, uncertainty element #%d is inconsistant (i.e. %le!=%le).",
                                        SID_ERROR_LOGIC, i_DS, i_M, current_DS->M_target[i_M], M_target_test);
                 }
-                fread_verify(&n_arrays_test, sizeof(int), 1, fp_run);
+                SID_fread_verify(&n_arrays_test, sizeof(int), 1, fp_run);
                 if(n_arrays_test != current_DS->n_arrays)
                     SID_exit_error("The number of arrays in dataset #%d is inconsistant (i.e. %d!=%d).",
                                    SID_ERROR_LOGIC, i_DS, n_arrays_test, current_DS->n_arrays);
                 for(i_array = 0; i_array < current_DS->n_arrays; i_array++) {
-                    fread_verify(array_name_test, sizeof(char), MCMC_NAME_SIZE, fp_run);
+                    SID_fread_verify(array_name_test, sizeof(char), MCMC_NAME_SIZE, fp_run);
                     if(strcmp(array_name_test, current_DS->array_name[i_array]))
                         SID_exit_error("Array name #%d for dataset #%d is inconsisitant (i.e. {%s}!={%s}).",
                                        SID_ERROR_LOGIC, i_array, i_DS, current_DS->array_name[i_array], array_name_test);
                     for(i_M = 0; i_M < current_DS->n_M; i_M++) {
-                        fread_verify(&array_test, sizeof(double), 1, fp_run);
+                        SID_fread_verify(&array_test, sizeof(double), 1, fp_run);
                         if(array_test != current_DS->array[i_array][i_M])
                             SID_exit_error("Array #%d, element #%d for dataset #%d is inconsistant (i.e. %le!=%le).",
                                            SID_ERROR_LOGIC, i_array, i_M, i_DS, current_DS->array[i_array][i_M],
@@ -506,10 +506,10 @@ void compute_MCMC(MCMC_info *MCMC) {
         if((fp_chain_config = fopen(filename_chain_config, "rb")) != NULL) {
             SID_log("Reading the existant number of iterations...", SID_LOG_OPEN);
             V_read = (double *)SID_malloc(sizeof(double) * n_P * n_P);
-            fread_verify(&n_iterations_file_total, sizeof(int), 1, fp_chain_config);
-            fread_verify(&n_iterations_file_burn, sizeof(int), 1, fp_chain_config);
-            fread_verify(&(MCMC->temperature), sizeof(double), 1, fp_chain_config);
-            fread_verify(V_read, sizeof(double), n_P * n_P, fp_chain_config);
+            SID_fread_verify(&n_iterations_file_total, sizeof(int), 1, fp_chain_config);
+            SID_fread_verify(&n_iterations_file_burn, sizeof(int), 1, fp_chain_config);
+            SID_fread_verify(&(MCMC->temperature), sizeof(double), 1, fp_chain_config);
+            SID_fread_verify(V_read, sizeof(double), n_P * n_P, fp_chain_config);
             set_MCMC_covariance(MCMC, V_read);
             SID_free(SID_FARG V_read);
             SID_log("# burn  iterations = %d (%d requested)", SID_LOG_COMMENT, n_iterations_file_burn, n_iterations_burn);
@@ -525,7 +525,7 @@ void compute_MCMC(MCMC_info *MCMC) {
             fp_chain = fopen(filename_chain, "rb");
             for(i_iteration = 0; i_iteration < n_iterations_file_total; i_iteration++) {
                 for(i_avg = 0; i_avg < n_avg; i_avg++) {
-                    fread_verify(&flag_success, sizeof(char), 1, fp_chain);
+                    SID_fread_verify(&flag_success, sizeof(char), 1, fp_chain);
                     if((i_iteration + i_avg) != 0) {
                         MCMC->ln_likelihood_last = MCMC->ln_likelihood_new;
                         memcpy(P_last, P_new, n_P * sizeof(double));
@@ -534,11 +534,11 @@ void compute_MCMC(MCMC_info *MCMC) {
                                 memcpy(M_last[i_DS], M_new[i_DS], n_M[i_DS] * sizeof(double));
                         }
                     }
-                    fread_verify(&(MCMC->ln_likelihood_new), sizeof(double), 1, fp_chain);
-                    fread_verify(P_new, sizeof(double), n_P, fp_chain);
+                    SID_fread_verify(&(MCMC->ln_likelihood_new), sizeof(double), 1, fp_chain);
+                    SID_fread_verify(P_new, sizeof(double), n_P, fp_chain);
                     if(!flag_no_map_write) {
                         for(i_DS = 0; i_DS < n_DS; i_DS++)
-                            fread_verify(M_new[i_DS], sizeof(double), n_M[i_DS], fp_chain);
+                            SID_fread_verify(M_new[i_DS], sizeof(double), n_M[i_DS], fp_chain);
                     }
                     if((i_iteration + i_avg) == 0) {
                         MCMC->ln_likelihood_chain = MCMC->ln_likelihood_new;
@@ -558,28 +558,28 @@ void compute_MCMC(MCMC_info *MCMC) {
             SID_log("Reading the last-generated statistics...", SID_LOG_OPEN);
             fp_stats = fopen(filename_stats, "rb");
             for(i_iteration = 0; i_iteration < n_iterations_file_total; i_iteration++) {
-                fread_verify(P_min, sizeof(double), n_P, fp_stats); // Read proposal stats
-                fread_verify(P_avg, sizeof(double), n_P, fp_stats);
-                fread_verify(P_max, sizeof(double), n_P, fp_stats);
-                fread_verify(dP_avg, sizeof(double), n_P, fp_stats);
-                fread_verify(dP_sub, sizeof(double), n_P, fp_stats);
-                fread_verify(&ln_Pr_min, sizeof(double), 1, fp_stats);
-                fread_verify(&ln_Pr_avg, sizeof(double), 1, fp_stats);
-                fread_verify(&ln_Pr_max, sizeof(double), 1, fp_stats);
+                SID_fread_verify(P_min, sizeof(double), n_P, fp_stats); // Read proposal stats
+                SID_fread_verify(P_avg, sizeof(double), n_P, fp_stats);
+                SID_fread_verify(P_max, sizeof(double), n_P, fp_stats);
+                SID_fread_verify(dP_avg, sizeof(double), n_P, fp_stats);
+                SID_fread_verify(dP_sub, sizeof(double), n_P, fp_stats);
+                SID_fread_verify(&ln_Pr_min, sizeof(double), 1, fp_stats);
+                SID_fread_verify(&ln_Pr_avg, sizeof(double), 1, fp_stats);
+                SID_fread_verify(&ln_Pr_max, sizeof(double), 1, fp_stats);
                 if(flag_autocor_on)
-                    fread_verify(auto_cor, sizeof(double), n_avg - 1, fp_stats);
-                fread_verify(P_min, sizeof(double), n_P, fp_stats); // Read chain stats
-                fread_verify(P_avg, sizeof(double), n_P, fp_stats);
-                fread_verify(P_max, sizeof(double), n_P, fp_stats);
-                fread_verify(dP_avg, sizeof(double), n_P, fp_stats);
-                fread_verify(dP_sub, sizeof(double), n_P, fp_stats);
-                fread_verify(&ln_Pr_min, sizeof(double), 1, fp_stats);
-                fread_verify(&ln_Pr_avg, sizeof(double), 1, fp_stats);
-                fread_verify(&ln_Pr_max, sizeof(double), 1, fp_stats);
+                    SID_fread_verify(auto_cor, sizeof(double), n_avg - 1, fp_stats);
+                SID_fread_verify(P_min, sizeof(double), n_P, fp_stats); // Read chain stats
+                SID_fread_verify(P_avg, sizeof(double), n_P, fp_stats);
+                SID_fread_verify(P_max, sizeof(double), n_P, fp_stats);
+                SID_fread_verify(dP_avg, sizeof(double), n_P, fp_stats);
+                SID_fread_verify(dP_sub, sizeof(double), n_P, fp_stats);
+                SID_fread_verify(&ln_Pr_min, sizeof(double), 1, fp_stats);
+                SID_fread_verify(&ln_Pr_avg, sizeof(double), 1, fp_stats);
+                SID_fread_verify(&ln_Pr_max, sizeof(double), 1, fp_stats);
                 if(flag_autocor_on)
-                    fread_verify(auto_cor, sizeof(double), n_avg - 1, fp_stats);
-                fread_verify(slopes, sizeof(double), n_P, fp_stats);
-                fread_verify(drift, sizeof(double), n_P, fp_stats);
+                    SID_fread_verify(auto_cor, sizeof(double), n_avg - 1, fp_stats);
+                SID_fread_verify(slopes, sizeof(double), n_P, fp_stats);
+                SID_fread_verify(drift, sizeof(double), n_P, fp_stats);
             }
             fclose(fp_stats);
             fp_stats = fopen(filename_stats, "ab");

@@ -21,21 +21,21 @@ void check_integrity_grids(const char *filename_in) {
     int    n_grids;
     int    scheme;
     size_t n_bytes = 0;
-    fread_verify(&(n[0]), sizeof(int), 1, fp_in);
+    SID_fread_verify(&(n[0]), sizeof(int), 1, fp_in);
     n_bytes += sizeof(int);
-    fread_verify(&(n[1]), sizeof(int), 1, fp_in);
+    SID_fread_verify(&(n[1]), sizeof(int), 1, fp_in);
     n_bytes += sizeof(int);
-    fread_verify(&(n[2]), sizeof(int), 1, fp_in);
+    SID_fread_verify(&(n[2]), sizeof(int), 1, fp_in);
     n_bytes += sizeof(int);
-    fread_verify(&(L[0]), sizeof(double), 1, fp_in);
+    SID_fread_verify(&(L[0]), sizeof(double), 1, fp_in);
     n_bytes += sizeof(double);
-    fread_verify(&(L[1]), sizeof(double), 1, fp_in);
+    SID_fread_verify(&(L[1]), sizeof(double), 1, fp_in);
     n_bytes += sizeof(double);
-    fread_verify(&(L[2]), sizeof(double), 1, fp_in);
+    SID_fread_verify(&(L[2]), sizeof(double), 1, fp_in);
     n_bytes += sizeof(double);
-    fread_verify(&n_grids, sizeof(int), 1, fp_in);
+    SID_fread_verify(&n_grids, sizeof(int), 1, fp_in);
     n_bytes += sizeof(int);
-    fread_verify(&scheme, sizeof(int), 1, fp_in);
+    SID_fread_verify(&scheme, sizeof(int), 1, fp_in);
     n_bytes += sizeof(int);
     int grid_size = n[0] * n[1] * n[2];
 
@@ -44,9 +44,9 @@ void check_integrity_grids(const char *filename_in) {
 
     // Process the file
     for(int i_grid = 0; i_grid < n_grids; i_grid++) {
-        fread_verify(buffer, GRID_IDENTIFIER_SIZE, sizeof(char), fp_in);
+        SID_fread_verify(buffer, GRID_IDENTIFIER_SIZE, sizeof(char), fp_in);
         n_bytes += GRID_IDENTIFIER_SIZE * sizeof(char);
-        fread_verify(buffer, grid_size, sizeof(GBPREAL), fp_in);
+        SID_fread_verify(buffer, grid_size, sizeof(GBPREAL), fp_in);
         n_bytes += grid_size * sizeof(GBPREAL);
     }
 

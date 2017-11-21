@@ -102,10 +102,10 @@ int read_matches_header(char *filename_root_in,
             if((fp_read_header = fopen(filename_out, "r")) == NULL)
                 SID_exit_error("Could not open file {%s} when reading header information.", SID_ERROR_IO_OPEN,
                                filename_out);
-            fread_verify(&i_read_start_in, sizeof(int), 1, fp_read_header);
-            fread_verify(&i_read_stop_in, sizeof(int), 1, fp_read_header);
-            fread_verify(&n_search_total_in, sizeof(int), 1, fp_read_header);
-            fread_verify(&n_files_in, sizeof(int), 1, fp_read_header);
+            SID_fread_verify(&i_read_start_in, sizeof(int), 1, fp_read_header);
+            SID_fread_verify(&i_read_stop_in, sizeof(int), 1, fp_read_header);
+            SID_fread_verify(&n_search_total_in, sizeof(int), 1, fp_read_header);
+            SID_fread_verify(&n_files_in, sizeof(int), 1, fp_read_header);
             i_read_in = i_read_stop_in + 1;
 
             // Loop for each snapshot we want to keep
@@ -114,8 +114,8 @@ int read_matches_header(char *filename_root_in,
                 // Read-forward to the desired snapshot
                 int flag_continue = GBP_TRUE;
                 while(flag_continue && i_read_in > i_read_start_in) {
-                    fread_verify(&i_read_in, sizeof(int), 1, fp_read_header);
-                    fread_verify(&n_groups_1, sizeof(int), 1, fp_read_header);
+                    SID_fread_verify(&i_read_in, sizeof(int), 1, fp_read_header);
+                    SID_fread_verify(&n_groups_1, sizeof(int), 1, fp_read_header);
                     fseek(fp_read_header, n_groups_1 * sizeof(int), SEEK_CUR); // Skip halo sizes
                     if(k_match == 1)
                         fseek(fp_read_header, n_groups_1 * sizeof(int), SEEK_CUR); // Skip n_sub_per_group

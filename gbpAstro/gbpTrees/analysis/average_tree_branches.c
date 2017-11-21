@@ -24,14 +24,14 @@ void average_tree_branches(const char *catalog_name) {
         // Write header for tracks file
         int n_list;
         int n_snaps;
-        fread_verify(&n_list, sizeof(int), 1, fp_tracks_in);
-        fread_verify(&n_snaps, sizeof(int), 1, fp_tracks_in);
+        SID_fread_verify(&n_list, sizeof(int), 1, fp_tracks_in);
+        SID_fread_verify(&n_snaps, sizeof(int), 1, fp_tracks_in);
         int *   snap_list = (int *)SID_malloc(sizeof(int) * n_snaps);
         double *z_list    = (double *)SID_malloc(sizeof(double) * n_snaps);
         double *t_list    = (double *)SID_malloc(sizeof(double) * n_snaps);
-        fread_verify(snap_list, sizeof(int), n_snaps, fp_tracks_in);
-        fread_verify(z_list, sizeof(double), n_snaps, fp_tracks_in);
-        fread_verify(t_list, sizeof(double), n_snaps, fp_tracks_in);
+        SID_fread_verify(snap_list, sizeof(int), n_snaps, fp_tracks_in);
+        SID_fread_verify(z_list, sizeof(double), n_snaps, fp_tracks_in);
+        SID_fread_verify(t_list, sizeof(double), n_snaps, fp_tracks_in);
 
         // Allocate some temporary arrays for the tracks
         double M_min    = 6.;
@@ -57,17 +57,17 @@ void average_tree_branches(const char *catalog_name) {
         for(int i_list = 0; i_list < n_list; i_list++) {
             int n_track;
             // Read track
-            fread_verify(&n_track, sizeof(int), 1, fp_tracks_in);
-            fread_verify(i_z_track, sizeof(int), n_track, fp_tracks_in);
-            fread_verify(idx_track, sizeof(int), n_track, fp_tracks_in);
-            fread_verify(tc_track, sizeof(int), n_track, fp_tracks_in);
-            fread_verify(x_track, sizeof(double), n_track, fp_tracks_in);
-            fread_verify(y_track, sizeof(double), n_track, fp_tracks_in);
-            fread_verify(z_track, sizeof(double), n_track, fp_tracks_in);
-            fread_verify(vx_track, sizeof(double), n_track, fp_tracks_in);
-            fread_verify(vy_track, sizeof(double), n_track, fp_tracks_in);
-            fread_verify(vz_track, sizeof(double), n_track, fp_tracks_in);
-            fread_verify(M_track, sizeof(double), n_track, fp_tracks_in);
+            SID_fread_verify(&n_track, sizeof(int), 1, fp_tracks_in);
+            SID_fread_verify(i_z_track, sizeof(int), n_track, fp_tracks_in);
+            SID_fread_verify(idx_track, sizeof(int), n_track, fp_tracks_in);
+            SID_fread_verify(tc_track, sizeof(int), n_track, fp_tracks_in);
+            SID_fread_verify(x_track, sizeof(double), n_track, fp_tracks_in);
+            SID_fread_verify(y_track, sizeof(double), n_track, fp_tracks_in);
+            SID_fread_verify(z_track, sizeof(double), n_track, fp_tracks_in);
+            SID_fread_verify(vx_track, sizeof(double), n_track, fp_tracks_in);
+            SID_fread_verify(vy_track, sizeof(double), n_track, fp_tracks_in);
+            SID_fread_verify(vz_track, sizeof(double), n_track, fp_tracks_in);
+            SID_fread_verify(M_track, sizeof(double), n_track, fp_tracks_in);
             // Build the M-histograms
             for(int i_track = 0; i_track < n_track; i_track++) {
                 if(SID_CHECK_BITFIELD_SWITCH(tc_track[i_track], TREE_CASE_MOST_MASSIVE) ==

@@ -133,10 +133,10 @@ void read_smooth(plist_info *plist, char *filename_root_in, int snapshot_number,
         for(i_file = 0; i_file < n_files; i_file++) {
             set_smooth_filename(filename_root_in, snapshot_number, i_file, flag_multifile, flag_file_type, filename);
             if((fp = fopen(filename, "r")) != NULL) {
-                fread_verify(&(header.n_particles_file), sizeof(int), 1, fp);
-                fread_verify(&(header.offset), sizeof(int), 1, fp);
-                fread_verify(&(header.n_particles_total), sizeof(long long), 1, fp);
-                fread_verify(&(header.n_files), sizeof(int), 1, fp);
+                SID_fread_verify(&(header.n_particles_file), sizeof(int), 1, fp);
+                SID_fread_verify(&(header.offset), sizeof(int), 1, fp);
+                SID_fread_verify(&(header.n_particles_total), sizeof(long long), 1, fp);
+                SID_fread_verify(&(header.n_files), sizeof(int), 1, fp);
                 flag_file_not_found = GBP_FALSE;
             } else {
                 flag_file_not_found = GBP_TRUE;
@@ -160,7 +160,7 @@ void read_smooth(plist_info *plist, char *filename_root_in, int snapshot_number,
                     id_buf_L = (long long *)id_buf;
                     if(SID.My_rank == read_rank) {
                         fseeko(fp, (size_t)(3 * n_particles_file * sizeof(float)), SEEK_CUR);
-                        fread_verify(id_buf, sizeof(long long), n_particles_file, fp);
+                        SID_fread_verify(id_buf, sizeof(long long), n_particles_file, fp);
                     }
                     SID_Barrier(SID_COMM_WORLD);
                     SID_Bcast(id_buf_L, (int)n_particles_file, SID_LONG_LONG, read_rank, SID_COMM_WORLD);
@@ -172,7 +172,7 @@ void read_smooth(plist_info *plist, char *filename_root_in, int snapshot_number,
                     id_buf_i = (int *)id_buf;
                     if(SID.My_rank == read_rank) {
                         fseeko(fp, (size_t)(3 * n_particles_file * sizeof(float)), SEEK_CUR);
-                        fread_verify(id_buf, sizeof(int), n_particles_file, fp);
+                        SID_fread_verify(id_buf, sizeof(int), n_particles_file, fp);
                     }
                     SID_Barrier(SID_COMM_WORLD);
                     SID_Bcast(id_buf_i, (int)n_particles_file, SID_INT, read_rank, SID_COMM_WORLD);
@@ -211,10 +211,10 @@ void read_smooth(plist_info *plist, char *filename_root_in, int snapshot_number,
                 // Move to the start of the particle quantities
                 if(SID.My_rank == read_rank) {
                     rewind(fp);
-                    fread_verify(&n_particles_file, sizeof(int), 1, fp);
-                    fread_verify(&offset, sizeof(int), 1, fp);
-                    fread_verify(&n_particles_total, sizeof(long long), 1, fp);
-                    fread_verify(&n_files, sizeof(int), 1, fp);
+                    SID_fread_verify(&n_particles_file, sizeof(int), 1, fp);
+                    SID_fread_verify(&offset, sizeof(int), 1, fp);
+                    SID_fread_verify(&n_particles_total, sizeof(long long), 1, fp);
+                    SID_fread_verify(&n_files, sizeof(int), 1, fp);
                     n_files = GBP_MAX(1, n_files);
                 }
                 SID_Bcast(&n_particles_file, 1, SID_INT, read_rank, SID_COMM_WORLD);
@@ -247,7 +247,7 @@ void read_smooth(plist_info *plist, char *filename_root_in, int snapshot_number,
 
                     // Read next quantity
                     if(SID.My_rank == read_rank)
-                        fread_verify(buffer, sizeof(float), n_particles_file, fp);
+                        SID_fread_verify(buffer, sizeof(float), n_particles_file, fp);
                     SID_Barrier(SID_COMM_WORLD);
                     SID_Bcast(buffer, (int)n_particles_file, SID_FLOAT, read_rank, SID_COMM_WORLD);
 

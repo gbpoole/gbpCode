@@ -60,10 +60,10 @@ int fopen_nth_catalog_file(fp_catalog_info *fp_in, int n) {
                 r_val = GBP_TRUE;
             else {
                 // Read header information
-                fread_verify(&(fp_in->i_file), sizeof(int), 1, fp_in->fp_properties);
-                fread_verify(&(fp_in->n_files), sizeof(int), 1, fp_in->fp_properties);
-                fread_verify(&(fp_in->n_halos_file), sizeof(int), 1, fp_in->fp_properties);
-                fread_verify(&(fp_in->n_halos_total), sizeof(int), 1, fp_in->fp_properties);
+                SID_fread_verify(&(fp_in->i_file), sizeof(int), 1, fp_in->fp_properties);
+                SID_fread_verify(&(fp_in->n_files), sizeof(int), 1, fp_in->fp_properties);
+                SID_fread_verify(&(fp_in->n_halos_file), sizeof(int), 1, fp_in->fp_properties);
+                SID_fread_verify(&(fp_in->n_halos_total), sizeof(int), 1, fp_in->fp_properties);
                 // Check that the file number in the file is correct
                 if(i_file != fp_in->i_file)
                     SID_exit_error("Invalid file number (ie. %d!=%d) in catalog {%s}.", SID_ERROR_LOGIC, i_file,
@@ -77,10 +77,10 @@ int fopen_nth_catalog_file(fp_catalog_info *fp_in, int n) {
                 r_val = GBP_TRUE;
             else {
                 // Read header information
-                fread_verify(&(fp_in->i_file), sizeof(int), 1, fp_in->fp_profiles);
-                fread_verify(&(fp_in->n_files), sizeof(int), 1, fp_in->fp_profiles);
-                fread_verify(&(fp_in->n_halos_file), sizeof(int), 1, fp_in->fp_profiles);
-                fread_verify(&(fp_in->n_halos_total), sizeof(int), 1, fp_in->fp_profiles);
+                SID_fread_verify(&(fp_in->i_file), sizeof(int), 1, fp_in->fp_profiles);
+                SID_fread_verify(&(fp_in->n_files), sizeof(int), 1, fp_in->fp_profiles);
+                SID_fread_verify(&(fp_in->n_halos_file), sizeof(int), 1, fp_in->fp_profiles);
+                SID_fread_verify(&(fp_in->n_halos_total), sizeof(int), 1, fp_in->fp_profiles);
                 // Check that the file number in the file is correct
                 if(i_file != fp_in->i_file)
                     SID_exit_error("Invalid file number (ie. %d!=%d) in catalog {%s}.", SID_ERROR_LOGIC, i_file,
@@ -190,10 +190,10 @@ int fopen_catalog(char *filename_catalog_root, int snapshot_number, int mode, fp
 
         // Load/set header information
         if(fp_out->fp_properties != NULL) {
-            fread_verify(&(fp_out->i_file), sizeof(int), 1, fp_out->fp_properties);
-            fread_verify(&(fp_out->n_files), sizeof(int), 1, fp_out->fp_properties);
-            fread_verify(&(fp_out->n_halos_file), sizeof(int), 1, fp_out->fp_properties);
-            fread_verify(&(fp_out->n_halos_total), sizeof(int), 1, fp_out->fp_properties);
+            SID_fread_verify(&(fp_out->i_file), sizeof(int), 1, fp_out->fp_properties);
+            SID_fread_verify(&(fp_out->n_files), sizeof(int), 1, fp_out->fp_properties);
+            SID_fread_verify(&(fp_out->n_halos_file), sizeof(int), 1, fp_out->fp_properties);
+            SID_fread_verify(&(fp_out->n_halos_total), sizeof(int), 1, fp_out->fp_properties);
             fclose(fp_out->fp_properties);
             fp_out->fp_properties = NULL;
         }
