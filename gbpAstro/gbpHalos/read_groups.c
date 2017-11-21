@@ -1311,5 +1311,5 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
     va_end(vargs);
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_profile_stop(SID_PROFILE_DEFAULT);
+    SID_profile_stop();
 }

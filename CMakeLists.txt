@@ -36,6 +36,9 @@ if(USE_DOUBE)
     add_definitions(-DUSE_DOUBLE)
 endif()
 
+# Turn on debugging mode
+option(SID_DEBUG "Enable SID debugging information" OFF)
+
 # These options specify when (if ever) missing libraries
 #   should be installed automatically by this build script
 # !!! Not implemented yet
@@ -59,8 +62,8 @@ set_3rd_party_optional("MPI_IO"  OFF)
 set_3rd_party_optional("GD"      ON)
 set_3rd_party_optional("FFTW"    ON)
 set_3rd_party_optional("CUDA"    OFF)
-set_3rd_party_optional("CFITSIO" OFF)
-set_3rd_party_optional("HDF5"    OFF)
+set_3rd_party_optional("CFITSIO" ON)
+set_3rd_party_optional("HDF5"    ON)
 
 # Print status message
 message(STATUS "Finished initializing 3rd-party libraries.")

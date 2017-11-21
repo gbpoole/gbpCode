@@ -91,7 +91,7 @@ And if you want to use MPI:
    > make install
 
 If you have Valgrind installed and you want to use it with gbpCode, make sure you compile using:
-> make clean ; make USE_DEBUGGER=1
+> make clean ; make SID_DEBUG=1
 This compiles the code wih the '-g' option so that Valgrind can report line numbers when errors occur.
 
 6) Install SPRNG (optional; http://sprng.fsu.edu/):
