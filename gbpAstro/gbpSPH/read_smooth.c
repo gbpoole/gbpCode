@@ -60,12 +60,12 @@ void read_smooth(plist_info *plist, char *filename_root_in, int snapshot_number,
     // Interpret the mode passed to this function
     int flag_logs_used    = GBP_FALSE;
     int flag_log_quantity = GBP_FALSE;
-    if(check_mode_for_flag(mode, READ_SMOOTH_LOG_SIGMA)) {
+    if(SID_CHECK_BITFIELD_SWITCH(mode, READ_SMOOTH_LOG_SIGMA)) {
         flag_log_sigma = GBP_TRUE;
         flag_logs_used = GBP_TRUE;
     } else
         flag_log_sigma = GBP_FALSE;
-    if(check_mode_for_flag(mode, READ_SMOOTH_LOG_RHO)) {
+    if(SID_CHECK_BITFIELD_SWITCH(mode, READ_SMOOTH_LOG_RHO)) {
         flag_log_rho   = GBP_TRUE;
         flag_logs_used = GBP_TRUE;
     } else

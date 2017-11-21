@@ -104,7 +104,7 @@ void render_frame(render_info *render) {
 
     // Loop over the left/right stereo pair (if necessary)
     int i_image = 1;
-    if(check_mode_for_flag(camera_mode, CAMERA_STEREO))
+    if(SID_CHECK_BITFIELD_SWITCH(camera_mode, CAMERA_STEREO))
         i_image = 0;
     for(; i_image < 2; i_image++) {
         SID_log("Projecting to a %dx%d pixel array...", SID_LOG_OPEN | SID_LOG_TIMER, nx, ny);
@@ -116,7 +116,7 @@ void render_frame(render_info *render) {
                 stereo_offset_dir = -1;
                 break;
             case 1:
-                if(check_mode_for_flag(camera_mode, CAMERA_STEREO))
+                if(SID_CHECK_BITFIELD_SWITCH(camera_mode, CAMERA_STEREO))
                     stereo_offset_dir = 1;
                 else
                     stereo_offset_dir = 0;
@@ -174,7 +174,7 @@ void render_frame(render_info *render) {
                 break;
             case 1:
                 // Right image
-                if(check_mode_for_flag(camera_mode, CAMERA_STEREO)) {
+                if(SID_CHECK_BITFIELD_SWITCH(camera_mode, CAMERA_STEREO)) {
                     if(render->camera->image_RGB_right != NULL) {
                         RGB_image = (double **)SID_malloc(sizeof(double *) * n_depth);
                         for(int i_depth = 0; i_depth < n_depth; i_depth++)

@@ -14,7 +14,7 @@ void set_sph_kernel(double **kernel_radius, double **kernel_table_3d, double **k
     double *     kernel_radius_temp;
 
     // Determine if the kernel has already been computed
-    flag_compute_2d = check_mode_for_flag(mode, SPH_KERNEL_2D);
+    flag_compute_2d = SID_CHECK_BITFIELD_SWITCH(mode, SPH_KERNEL_2D);
     if((*kernel_table_3d) == NULL || (flag_compute_2d && (*kernel_table_2d) == NULL))
         flag_skip = GBP_FALSE;
     else
@@ -39,7 +39,7 @@ void set_sph_kernel(double **kernel_radius, double **kernel_table_3d, double **k
                 (*kernel_table_3d) = (double *)SID_malloc(sizeof(double) * (N_KERNEL_TABLE + 1));
                 fread_verify((*kernel_radius), sizeof(double), N_KERNEL_TABLE + 1, fp_in);
                 fread_verify((*kernel_table_3d), sizeof(double), N_KERNEL_TABLE + 1, fp_in);
-                if(check_mode_for_flag(mode, SPH_KERNEL_2D)) {
+                if(SID_CHECK_BITFIELD_SWITCH(mode, SPH_KERNEL_2D)) {
                     (*kernel_table_2d) = (double *)SID_malloc(sizeof(double) * (N_KERNEL_TABLE + 1));
                     fread_verify((*kernel_table_2d), sizeof(double), N_KERNEL_TABLE + 1, fp_in);
                     fread_verify(kernel_table_2d_average, sizeof(double), 1, fp_in);
@@ -57,7 +57,7 @@ void set_sph_kernel(double **kernel_radius, double **kernel_table_3d, double **k
             (*kernel_table_3d) = (double *)SID_malloc(sizeof(double) * (N_KERNEL_TABLE + 1));
 
             // Set gadget kernel
-            if(check_mode_for_flag(mode, SPH_KERNEL_GADGET)) {
+            if(SID_CHECK_BITFIELD_SWITCH(mode, SPH_KERNEL_GADGET)) {
                 for(i_table = 0; i_table <= N_KERNEL_TABLE; i_table++) {
                     (*kernel_radius)[i_table]   = (double)i_table / (double)N_KERNEL_TABLE;
                     (*kernel_table_3d)[i_table] = 0.;
@@ -90,7 +90,7 @@ void set_sph_kernel(double **kernel_radius, double **kernel_table_3d, double **k
                     else
                         (*kernel_table_3d)[i_table] = 0.;
                 }
-            } else if(check_mode_for_flag(mode, SPH_KERNEL_GAUSSIAN)) {
+            } else if(SID_CHECK_BITFIELD_SWITCH(mode, SPH_KERNEL_GAUSSIAN)) {
                 for(i_table = 0; i_table <= N_KERNEL_TABLE; i_table++) {
                     (*kernel_radius)[i_table]   = 3. * (double)i_table / (double)N_KERNEL_TABLE;
                     (*kernel_table_3d)[i_table] = 0.;
@@ -103,7 +103,7 @@ void set_sph_kernel(double **kernel_radius, double **kernel_table_3d, double **k
                 SID_exit_error("Unknown kernel type in set_sph_kernel!", SID_ERROR_LOGIC);
 
             // Integrate to form a projected line-of-sight kernel (if requested)
-            if(check_mode_for_flag(mode, SPH_KERNEL_2D)) {
+            if(SID_CHECK_BITFIELD_SWITCH(mode, SPH_KERNEL_2D)) {
                 (*kernel_table_2d)         = (double *)SID_malloc(sizeof(double) * (N_KERNEL_TABLE + 1));
                 kernel_radius_temp         = (double *)SID_malloc(sizeof(double) * (N_KERNEL_TABLE + 1));
                 (*kernel_table_2d_average) = 0.;
@@ -144,7 +144,7 @@ void set_sph_kernel(double **kernel_radius, double **kernel_table_3d, double **k
             fwrite(&mode, sizeof(int), 1, fp_out);
             fwrite((*kernel_radius), sizeof(double), N_KERNEL_TABLE + 1, fp_out);
             fwrite((*kernel_table_3d), sizeof(double), N_KERNEL_TABLE + 1, fp_out);
-            if(check_mode_for_flag(mode, SPH_KERNEL_2D)) {
+            if(SID_CHECK_BITFIELD_SWITCH(mode, SPH_KERNEL_2D)) {
                 fwrite((*kernel_table_2d), sizeof(double), N_KERNEL_TABLE + 1, fp_out);
                 fwrite(kernel_table_2d_average, sizeof(double), 1, fp_out);
             }

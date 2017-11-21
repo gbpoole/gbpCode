@@ -243,7 +243,7 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
         int *      ids_int;
 
         // In this case, we scatter the particles randomly to the ranks
-        if(check_mode_for_flag(mode, READ_GADGET_RENDER_SCATTER)) {
+        if(SID_CHECK_BITFIELD_SWITCH(mode, READ_GADGET_RENDER_SCATTER)) {
             // Count the number of particles that will be scattered to each rank
             size_t k_particle;
             SID_log("Counting the number of particles that will be scattered to each rank...", SID_LOG_OPEN | SID_LOG_TIMER);
@@ -299,7 +299,7 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
 
         // In this case we store the particles in the order of their IDs.
         // WARNING: This assumes that all IDs are represented between 0 and n_particles_all-1
-        else if(check_mode_for_flag(mode, READ_GADGET_RENDER_ID_ORDERED)) {
+        else if(SID_CHECK_BITFIELD_SWITCH(mode, READ_GADGET_RENDER_ID_ORDERED)) {
             // WARNING: This mode (as it is now) only works if n_non_zero==1
             if(n_non_zero != 1)
                 SID_exit_error("mode READ_GADGET_RENDER_ID_ORDERED does not work for multiple particle species (n=%d).",
@@ -444,7 +444,7 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                 SID_Bcast(&header, (int)sizeof(gadget_header_info), SID_CHAR, read_rank, SID_COMM_WORLD);
                 // Initialize buffer
                 buffer = SID_malloc((size_t)record_length_positions); // This is large enough to hold any of the blocks
-                if(check_mode_for_flag(mode, READ_GADGET_RENDER_SCATTER)) {
+                if(SID_CHECK_BITFIELD_SWITCH(mode, READ_GADGET_RENDER_SCATTER)) {
                     flag_alloc_keep = GBP_TRUE;
                     keep            = (char *)SID_malloc(sizeof(char) * (n_particles_file));
                     for(i = 0, jj = 0; i < N_GADGET_TYPE; i++) {
@@ -465,7 +465,7 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                     }
                 }
                 // Assign each rank a contiguous range of IDs
-                else if(check_mode_for_flag(mode, READ_GADGET_RENDER_ID_ORDERED)) {
+                else if(SID_CHECK_BITFIELD_SWITCH(mode, READ_GADGET_RENDER_ID_ORDERED)) {
                     // Read the IDs
                     if(SID.My_rank == read_rank) {
                         // Skip positions
@@ -538,7 +538,7 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                 // Some modes need to hold-on to the IDs so we need to use a second buffer
                 int   flag_alloc_buffer2;
                 void *buffer2 = NULL;
-                if(check_mode_for_flag(mode, READ_GADGET_RENDER_SCATTER)) {
+                if(SID_CHECK_BITFIELD_SWITCH(mode, READ_GADGET_RENDER_SCATTER)) {
                     buffer2            = buffer;
                     flag_alloc_buffer2 = GBP_FALSE;
                 } else {
@@ -557,7 +557,7 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                     }
                     SID_Bcast(&record_length_open, 1, SID_INT, read_rank, SID_COMM_WORLD);
                     SID_Bcast(buffer2, (int)record_length_open, SID_CHAR, read_rank, SID_COMM_WORLD);
-                    if(check_mode_for_flag(mode, READ_GADGET_RENDER_SCATTER)) {
+                    if(SID_CHECK_BITFIELD_SWITCH(mode, READ_GADGET_RENDER_SCATTER)) {
                         for(i = 0, jj = 0; i < N_GADGET_TYPE; i++) {
                             for(j = 0, k = 0; j < header.n_file[i]; j++, jj++) {
                                 if(keep[jj]) {
@@ -574,7 +574,7 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                                 SID_exit_error("Particle count mismatch (ie. %d!=%d) during positions read",
                                                SID_ERROR_LOGIC, k, n_keep[i]);
                         }
-                    } else if(check_mode_for_flag(mode, READ_GADGET_RENDER_ID_ORDERED)) {
+                    } else if(SID_CHECK_BITFIELD_SWITCH(mode, READ_GADGET_RENDER_ID_ORDERED)) {
                         if(flag_LONGIDs) {
                             for(i = 0, jj = 0; i < N_GADGET_TYPE; i++) {
                                 for(j = 0, k = 0; j < header.n_file[i]; j++, jj++) {
@@ -632,7 +632,7 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                     }
                     SID_Bcast(&record_length_open, 1, SID_INT, read_rank, SID_COMM_WORLD);
                     SID_Bcast(buffer2, record_length_open, SID_CHAR, read_rank, SID_COMM_WORLD);
-                    if(check_mode_for_flag(mode, READ_GADGET_RENDER_SCATTER)) {
+                    if(SID_CHECK_BITFIELD_SWITCH(mode, READ_GADGET_RENDER_SCATTER)) {
                         for(i = 0, jj = 0; i < N_GADGET_TYPE; i++) {
                             for(j = 0, k = 0; j < header.n_file[i]; j++, jj++) {
                                 if(keep[jj]) {
@@ -648,7 +648,7 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                             if(k != n_keep[i])
                                 SID_exit_error("Particle count mismatch during velocity read", SID_ERROR_LOGIC);
                         }
-                    } else if(check_mode_for_flag(mode, READ_GADGET_RENDER_ID_ORDERED)) {
+                    } else if(SID_CHECK_BITFIELD_SWITCH(mode, READ_GADGET_RENDER_ID_ORDERED)) {
                         if(flag_LONGIDs) {
                             for(i = 0, jj = 0; i < N_GADGET_TYPE; i++) {
                                 for(j = 0, k = 0; j < header.n_file[i]; j++, jj++) {
@@ -696,7 +696,7 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                 }
 
                 // Read IDs
-                if(check_mode_for_flag(mode, READ_GADGET_RENDER_SCATTER)) {
+                if(SID_CHECK_BITFIELD_SWITCH(mode, READ_GADGET_RENDER_SCATTER)) {
                     if(SID.My_rank == read_rank) {
                         fread_verify(&record_length_open, 4, 1, fp);
                         fread_verify(buffer2, (size_t)record_length_open, 1, fp);
@@ -739,7 +739,7 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
                             SID_exit_error("Particle count mismatch (ie. %d!=%d) during IDs read", SID_ERROR_LOGIC, k,
                                            n_keep[i]);
                     }
-                } else if(check_mode_for_flag(mode, READ_GADGET_RENDER_ID_ORDERED)) {
+                } else if(SID_CHECK_BITFIELD_SWITCH(mode, READ_GADGET_RENDER_ID_ORDERED)) {
                     if(flag_LONGIDs) {
                         for(i = 0, jj = 0; i < N_GADGET_TYPE; i++) {
                             for(j = 0, k = 0; j < header.n_file[i]; j++, jj++) {
@@ -787,7 +787,7 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
         SID_log("Done.", SID_LOG_CLOSE);
 
         // Check that all particles have been properly initialized if ID-rank-decomposing
-        if(check_mode_for_flag(mode, READ_GADGET_RENDER_ID_ORDERED)) {
+        if(SID_CHECK_BITFIELD_SWITCH(mode, READ_GADGET_RENDER_ID_ORDERED)) {
             for(i = 0, jj = 0; i < N_GADGET_TYPE; i++) {
                 for(j = 0, k = 0; j < n_of_type_rank[i]; j++, jj++) {
                     if(id_array[i][j] > n_particles_all)

@@ -26,11 +26,11 @@ void read_trees_catalogs(tree_info *trees, int mode) {
     halo_properties_info **      properties_subgroups_local       = NULL;
     halo_profile_info **         profiles_subgroups_local         = NULL;
     int                          read_catalog_mode                = READ_CATALOG_PROPERTIES;
-    if(check_mode_for_flag(mode, READ_TREES_CATALOGS_GROUPS)) {
-        if(check_mode_for_flag(mode, READ_TREES_CATALOGS_SAGE))
+    if(SID_CHECK_BITFIELD_SWITCH(mode, READ_TREES_CATALOGS_GROUPS)) {
+        if(SID_CHECK_BITFIELD_SWITCH(mode, READ_TREES_CATALOGS_SAGE))
             init_trees_data(
                 trees, (void ***)&SAGE_properties_groups_local, sizeof(halo_properties_SAGE_info), INIT_TREE_DATA_GROUPS, "properties_groups_SAGE");
-        else if(check_mode_for_flag(mode, READ_TREES_CATALOGS_SHORT))
+        else if(SID_CHECK_BITFIELD_SWITCH(mode, READ_TREES_CATALOGS_SHORT))
             init_trees_data(trees,
                             (void ***)&SHORT_properties_groups_local,
                             sizeof(halo_properties_SHORT_info),
@@ -38,7 +38,7 @@ void read_trees_catalogs(tree_info *trees, int mode) {
                             "properties_groups_SHORT");
         else
             init_trees_data(trees, (void ***)&properties_groups_local, sizeof(halo_properties_info), INIT_TREE_DATA_GROUPS, "properties_groups");
-        if(check_mode_for_flag(mode, READ_TREES_CATALOGS_PROFILES)) {
+        if(SID_CHECK_BITFIELD_SWITCH(mode, READ_TREES_CATALOGS_PROFILES)) {
             init_trees_data(trees, (void ***)&profiles_groups_local, sizeof(halo_profile_info), INIT_TREE_DATA_GROUPS, "profiles_groups");
             read_catalog_mode = read_catalog_mode | READ_CATALOG_PROFILES;
         } else
@@ -47,14 +47,14 @@ void read_trees_catalogs(tree_info *trees, int mode) {
     trees->group_properties_SHORT = SHORT_properties_groups_local;
     trees->group_properties_SAGE  = SAGE_properties_groups_local;
     trees->group_properties       = properties_groups_local;
-    if(check_mode_for_flag(mode, READ_TREES_CATALOGS_SUBGROUPS)) {
-        if(check_mode_for_flag(mode, READ_TREES_CATALOGS_SAGE))
+    if(SID_CHECK_BITFIELD_SWITCH(mode, READ_TREES_CATALOGS_SUBGROUPS)) {
+        if(SID_CHECK_BITFIELD_SWITCH(mode, READ_TREES_CATALOGS_SAGE))
             init_trees_data(trees,
                             (void ***)&SAGE_properties_subgroups_local,
                             sizeof(halo_properties_SAGE_info),
                             INIT_TREE_DATA_SUBGROUPS,
                             "properties_subgroups_SAGE");
-        else if(check_mode_for_flag(mode, READ_TREES_CATALOGS_SHORT))
+        else if(SID_CHECK_BITFIELD_SWITCH(mode, READ_TREES_CATALOGS_SHORT))
             init_trees_data(trees,
                             (void ***)&SHORT_properties_subgroups_local,
                             sizeof(halo_properties_SHORT_info),
@@ -63,7 +63,7 @@ void read_trees_catalogs(tree_info *trees, int mode) {
         else
             init_trees_data(
                 trees, (void ***)&properties_subgroups_local, sizeof(halo_properties_info), INIT_TREE_DATA_SUBGROUPS, "properties_subgroups");
-        if(check_mode_for_flag(mode, READ_TREES_CATALOGS_PROFILES)) {
+        if(SID_CHECK_BITFIELD_SWITCH(mode, READ_TREES_CATALOGS_PROFILES)) {
             init_trees_data(trees, (void ***)&profiles_subgroups_local, sizeof(halo_profile_info), INIT_TREE_DATA_SUBGROUPS, "profiles_subgroups");
             read_catalog_mode = read_catalog_mode | READ_CATALOG_PROFILES;
         } else
@@ -101,7 +101,7 @@ void read_trees_catalogs(tree_info *trees, int mode) {
             int                         flag_proceed        = GBP_TRUE;
             switch(i_type) {
                 case 0:
-                    flag_proceed = check_mode_for_flag(mode, READ_TREES_CATALOGS_SUBGROUPS);
+                    flag_proceed = SID_CHECK_BITFIELD_SWITCH(mode, READ_TREES_CATALOGS_SUBGROUPS);
                     if(flag_proceed) {
                         sprintf(group_text_prefix, "sub");
                         open_catalog_mode = READ_CATALOG_SUBGROUPS | read_catalog_mode;
@@ -118,7 +118,7 @@ void read_trees_catalogs(tree_info *trees, int mode) {
                     }
                     break;
                 case 1:
-                    flag_proceed = check_mode_for_flag(mode, READ_TREES_CATALOGS_GROUPS);
+                    flag_proceed = SID_CHECK_BITFIELD_SWITCH(mode, READ_TREES_CATALOGS_GROUPS);
                     if(flag_proceed) {
                         sprintf(group_text_prefix, "");
                         open_catalog_mode = READ_CATALOG_GROUPS | read_catalog_mode;

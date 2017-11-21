@@ -143,7 +143,7 @@ void init_MCMC(MCMC_info * MCMC,
         MCMC->array = NULL;
 
     // Set autotune defaults (if needed)
-    if(check_mode_for_flag(MCMC->mode, MCMC_MODE_AUTOTUNE))
+    if(SID_CHECK_BITFIELD_SWITCH(MCMC->mode, MCMC_MODE_AUTOTUNE))
         set_MCMC_autotune(MCMC, -1., -1., -1., -1, -1, -1, -1); // Negatives mean use defaults (set in gbpMCMC.h)
 
     // Initialize Communicator

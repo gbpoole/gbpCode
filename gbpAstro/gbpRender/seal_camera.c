@@ -27,10 +27,10 @@ void seal_camera(render_info *render) {
         render->camera->n_depth_alloc = render->camera->n_depth;
 
         // Initialize image buffers
-        if(check_mode_for_flag(render->camera->camera_mode, CAMERA_STEREO)) {
+        if(SID_CHECK_BITFIELD_SWITCH(render->camera->camera_mode, CAMERA_STEREO)) {
             // LEFT
             int flag_images_defined = GBP_FALSE;
-            if(check_mode_for_flag(render->camera->RGB_mode, CAMERA_RGB_MODE_1CHANNEL)) {
+            if(SID_CHECK_BITFIELD_SWITCH(render->camera->RGB_mode, CAMERA_RGB_MODE_1CHANNEL)) {
                 render->camera->image_RGB_left  = (image_info **)SID_malloc(sizeof(image_info *) * render->camera->n_depth_alloc);
                 render->camera->image_Y_left    = (image_info **)SID_malloc(sizeof(image_info *) * render->camera->n_depth_alloc);
                 render->camera->image_RGBY_left = (image_info **)SID_malloc(sizeof(image_info *) * render->camera->n_depth_alloc);
@@ -43,7 +43,7 @@ void seal_camera(render_info *render) {
                 }
                 flag_images_defined = GBP_TRUE;
             }
-            if(check_mode_for_flag(render->camera->RGB_mode, CAMERA_RGB_MODE_MARKED)) {
+            if(SID_CHECK_BITFIELD_SWITCH(render->camera->RGB_mode, CAMERA_RGB_MODE_MARKED)) {
                 render->camera->image_RY_left          = (image_info **)SID_malloc(sizeof(image_info *) * render->camera->n_depth_alloc);
                 render->camera->image_GY_left          = (image_info **)SID_malloc(sizeof(image_info *) * render->camera->n_depth_alloc);
                 render->camera->image_BY_left          = (image_info **)SID_malloc(sizeof(image_info *) * render->camera->n_depth_alloc);
@@ -64,7 +64,7 @@ void seal_camera(render_info *render) {
                                render->camera->RGB_mode);
             // RIGHT
             flag_images_defined = GBP_FALSE;
-            if(check_mode_for_flag(render->camera->RGB_mode, CAMERA_RGB_MODE_1CHANNEL)) {
+            if(SID_CHECK_BITFIELD_SWITCH(render->camera->RGB_mode, CAMERA_RGB_MODE_1CHANNEL)) {
                 render->camera->image_RGB_right  = (image_info **)SID_malloc(sizeof(image_info *) * render->camera->n_depth_alloc);
                 render->camera->image_Y_right    = (image_info **)SID_malloc(sizeof(image_info *) * render->camera->n_depth_alloc);
                 render->camera->image_RGBY_right = (image_info **)SID_malloc(sizeof(image_info *) * render->camera->n_depth_alloc);
@@ -77,7 +77,7 @@ void seal_camera(render_info *render) {
                 }
                 flag_images_defined = GBP_TRUE;
             }
-            if(check_mode_for_flag(render->camera->RGB_mode, CAMERA_RGB_MODE_MARKED)) {
+            if(SID_CHECK_BITFIELD_SWITCH(render->camera->RGB_mode, CAMERA_RGB_MODE_MARKED)) {
                 render->camera->image_RY_right          = (image_info **)SID_malloc(sizeof(image_info *) * render->camera->n_depth_alloc);
                 render->camera->image_GY_right          = (image_info **)SID_malloc(sizeof(image_info *) * render->camera->n_depth_alloc);
                 render->camera->image_BY_right          = (image_info **)SID_malloc(sizeof(image_info *) * render->camera->n_depth_alloc);
@@ -98,7 +98,7 @@ void seal_camera(render_info *render) {
                                render->camera->RGB_mode);
         } else {
             int flag_images_defined = GBP_FALSE;
-            if(check_mode_for_flag(render->camera->RGB_mode, CAMERA_RGB_MODE_1CHANNEL)) {
+            if(SID_CHECK_BITFIELD_SWITCH(render->camera->RGB_mode, CAMERA_RGB_MODE_1CHANNEL)) {
                 render->camera->image_RGB  = (image_info **)SID_malloc(sizeof(image_info *) * render->camera->n_depth_alloc);
                 render->camera->image_Y    = (image_info **)SID_malloc(sizeof(image_info *) * render->camera->n_depth_alloc);
                 render->camera->image_RGBY = (image_info **)SID_malloc(sizeof(image_info *) * render->camera->n_depth_alloc);
@@ -109,7 +109,7 @@ void seal_camera(render_info *render) {
                 }
                 flag_images_defined = GBP_TRUE;
             }
-            if(check_mode_for_flag(render->camera->RGB_mode, CAMERA_RGB_MODE_MARKED)) {
+            if(SID_CHECK_BITFIELD_SWITCH(render->camera->RGB_mode, CAMERA_RGB_MODE_MARKED)) {
                 render->camera->image_RY          = (image_info **)SID_malloc(sizeof(image_info *) * render->camera->n_depth_alloc);
                 render->camera->image_GY          = (image_info **)SID_malloc(sizeof(image_info *) * render->camera->n_depth_alloc);
                 render->camera->image_BY          = (image_info **)SID_malloc(sizeof(image_info *) * render->camera->n_depth_alloc);

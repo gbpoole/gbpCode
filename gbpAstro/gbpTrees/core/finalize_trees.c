@@ -12,7 +12,7 @@ void finalize_trees(tree_info *trees, int group_mode, int subgroup_mode) {
     int mode_substructure_order = TREE_SUBSTRUCTURE_ORDER_DEFAULT;
 
     // ... correct substructure ordering ...
-    if(check_mode_for_flag(mode_substructure_order, TREE_SUBSTRUCTURE_ORDER_DEFAULT))
+    if(SID_CHECK_BITFIELD_SWITCH(mode_substructure_order, TREE_SUBSTRUCTURE_ORDER_DEFAULT))
         SID_log("Assigning substructure ordering (by particle count)...", SID_LOG_OPEN | SID_LOG_TIMER);
     else
         SID_exit_error("Invalid substructure mode (%d).", SID_ERROR_LOGIC, mode_substructure_order);
@@ -63,15 +63,15 @@ void finalize_trees(tree_info *trees, int group_mode, int subgroup_mode) {
                 break;
         }
 
-        if(check_mode_for_flag(mode_progenitor_order, TREE_PROGENITOR_ORDER_DELUCIA))
+        if(SID_CHECK_BITFIELD_SWITCH(mode_progenitor_order, TREE_PROGENITOR_ORDER_DELUCIA))
             SID_log("Assigning %sgroup progenitor ordering (Delucia)...", SID_LOG_OPEN | SID_LOG_TIMER, group_prefix_text);
-        else if(check_mode_for_flag(mode_progenitor_order, TREE_PROGENITOR_ORDER_N_PARTICLES))
+        else if(SID_CHECK_BITFIELD_SWITCH(mode_progenitor_order, TREE_PROGENITOR_ORDER_N_PARTICLES))
             SID_log("Assigning %sgroup progenitor ordering (by particle count)...", SID_LOG_OPEN | SID_LOG_TIMER, group_prefix_text);
-        else if(check_mode_for_flag(mode_progenitor_order, TREE_PROGENITOR_ORDER_N_PARTICLES_INCLUSIVE))
+        else if(SID_CHECK_BITFIELD_SWITCH(mode_progenitor_order, TREE_PROGENITOR_ORDER_N_PARTICLES_INCLUSIVE))
             SID_log("Assigning %sgroup progenitor ordering (by inclusive particle count)...", SID_LOG_OPEN | SID_LOG_TIMER, group_prefix_text);
-        else if(check_mode_for_flag(mode_progenitor_order, TREE_PROGENITOR_ORDER_N_PARTICLES_PEAK))
+        else if(SID_CHECK_BITFIELD_SWITCH(mode_progenitor_order, TREE_PROGENITOR_ORDER_N_PARTICLES_PEAK))
             SID_log("Assigning %sgroup progenitor ordering (by peak particle count)...", SID_LOG_OPEN | SID_LOG_TIMER, group_prefix_text);
-        else if(check_mode_for_flag(mode_progenitor_order, TREE_PROGENITOR_ORDER_N_PARTICLES_INCLUSIVE_PEAK))
+        else if(SID_CHECK_BITFIELD_SWITCH(mode_progenitor_order, TREE_PROGENITOR_ORDER_N_PARTICLES_INCLUSIVE_PEAK))
             SID_log("Assigning %sgroup progenitor ordering (by peak inclusive particle count)...", SID_LOG_OPEN | SID_LOG_TIMER, group_prefix_text);
         else
             SID_exit_error("Invalid progenitor mode (%d).", SID_ERROR_LOGIC, mode_progenitor_order);

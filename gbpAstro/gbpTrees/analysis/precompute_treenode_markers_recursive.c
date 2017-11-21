@@ -99,20 +99,20 @@ void precompute_treenode_markers_recursive(tree_info *         trees,
 
                 // Find the main progenitor (not necessarily the first progenitor,
                 //    and not necessarily the primary halo in a merger)
-                if(check_mode_for_flag(current_progenitor->tree_case, TREE_CASE_MAIN_PROGENITOR)) {
+                if(SID_CHECK_BITFIELD_SWITCH(current_progenitor->tree_case, TREE_CASE_MAIN_PROGENITOR)) {
                     markers_main_progenitor = markers_progenitor;
                     halo_main_progenitor    = current_progenitor;
                 }
 
                 // Find the primary halo if this is a merger
-                if(check_mode_for_flag(current_progenitor->tree_case, TREE_CASE_MERGER_PRIMARY)) {
+                if(SID_CHECK_BITFIELD_SWITCH(current_progenitor->tree_case, TREE_CASE_MERGER_PRIMARY)) {
                     halo_primary       = current_progenitor;
                     n_p_peak_primary   = current_progenitor->n_particles_peak;
                     flag_has_a_primary = GBP_TRUE;
                 }
 
                 // Find the most massive secondary if this is a merger
-                else if(check_mode_for_flag(current_progenitor->tree_case, TREE_CASE_MERGER)) {
+                else if(SID_CHECK_BITFIELD_SWITCH(current_progenitor->tree_case, TREE_CASE_MERGER)) {
                     int n_p_peak_current = current_progenitor->n_particles_peak;
                     if(n_p_peak_current > n_p_peak_secondary) {
                         halo_secondary     = current_progenitor;

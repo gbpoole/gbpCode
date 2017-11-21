@@ -11,6 +11,6 @@
 
 int check_treenode_if_dropped(tree_node_info *halo) {
     if(halo != NULL)
-        return (check_mode_for_flag(halo->tree_case, TREE_CASE_DROPPED));
+        return (SID_CHECK_BITFIELD_SWITCH(halo->tree_case, TREE_CASE_DROPPED));
     return (GBP_FALSE);
 }

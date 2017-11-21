@@ -21,8 +21,9 @@ size_t mark_particles(plist_info *plist, int run_mode, double *input_vals, const
     size_t   n_marked       = 0;
 
     // Interpret run-mode
-    flag_volume        = check_mode_for_flag(run_mode, VOLUME_BOX) || check_mode_for_flag(run_mode, VOLUME_SPHERE);
-    flag_volume_sphere = check_mode_for_flag(run_mode, VOLUME_SPHERE);
+    flag_volume        =
+            SID_CHECK_BITFIELD_SWITCH(run_mode, VOLUME_BOX) || SID_CHECK_BITFIELD_SWITCH(run_mode, VOLUME_SPHERE);
+    flag_volume_sphere = SID_CHECK_BITFIELD_SWITCH(run_mode, VOLUME_SPHERE);
 
     // Loop over all species
     for(i_species = 0; i_species < N_GADGET_TYPE; i_species++) {

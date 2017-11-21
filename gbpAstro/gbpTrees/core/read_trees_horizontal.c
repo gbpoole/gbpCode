@@ -29,11 +29,12 @@ void read_trees_horizontal(void **groups_in,
     SID_log("Reading horizontal trees for snapshot #%03d...", SID_LOG_OPEN, i_read);
 
     // Parse the mode and set things up accordingly
-    if(check_mode_for_flag(mode, TREE_HORIZONTAL_STORE_EXTENDED) && check_mode_for_flag(mode, TREE_HORIZONTAL_STORE_GHOSTS))
+    if(SID_CHECK_BITFIELD_SWITCH(mode, TREE_HORIZONTAL_STORE_EXTENDED) &&
+            SID_CHECK_BITFIELD_SWITCH(mode, TREE_HORIZONTAL_STORE_GHOSTS))
         SID_exit_error("Too many storage modes chosen in read_trees_horizontal.", SID_ERROR_LOGIC);
-    int flag_read_extended  = check_mode_for_flag(mode, TREE_HORIZONTAL_READ_EXTENDED);
-    int flag_store_extended = check_mode_for_flag(mode, TREE_HORIZONTAL_STORE_EXTENDED);
-    int flag_store_ghosts   = check_mode_for_flag(mode, TREE_HORIZONTAL_STORE_GHOSTS);
+    int flag_read_extended  = SID_CHECK_BITFIELD_SWITCH(mode, TREE_HORIZONTAL_READ_EXTENDED);
+    int flag_store_extended = SID_CHECK_BITFIELD_SWITCH(mode, TREE_HORIZONTAL_STORE_EXTENDED);
+    int flag_store_ghosts   = SID_CHECK_BITFIELD_SWITCH(mode, TREE_HORIZONTAL_STORE_GHOSTS);
     if(flag_store_ghosts)
         SID_exit_error("Ghost processing not supported in read_trees_horizontal().", SID_ERROR_LOGIC);
 
@@ -148,7 +149,7 @@ void read_trees_horizontal(void **groups_in,
                 //    TREE_CASE_FRAGMENTED_NEW.  This prevents us from overwriting
                 //    the bridge info we need to propagate in order to check for
                 //    when a fragmented halo returns to its bridge.
-                if(check_mode_for_flag(group_type, TREE_CASE_FRAGMENTED_NEW)) {
+                if(SID_CHECK_BITFIELD_SWITCH(group_type, TREE_CASE_FRAGMENTED_NEW)) {
                     groups_extended[i_group].snap_bridge  = group_snap_bridge;
                     groups_extended[i_group].file_bridge  = group_file_bridge;
                     groups_extended[i_group].index_bridge = group_index_bridge;
@@ -242,7 +243,7 @@ void read_trees_horizontal(void **groups_in,
                     //    TREE_CASE_FRAGMENTED_NEW.  This prevents us from overwriting
                     //    the bridge info we need to propagate in order to check for
                     //    when a fragmented halo returns to its bridge.
-                    if(check_mode_for_flag(subgroup_type, TREE_CASE_FRAGMENTED_NEW)) {
+                    if(SID_CHECK_BITFIELD_SWITCH(subgroup_type, TREE_CASE_FRAGMENTED_NEW)) {
                         subgroups_extended[i_subgroup].snap_bridge  = subgroup_snap_bridge;
                         subgroups_extended[i_subgroup].file_bridge  = subgroup_file_bridge;
                         subgroups_extended[i_subgroup].index_bridge = subgroup_index_bridge;

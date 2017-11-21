@@ -15,12 +15,12 @@ void write_treenode_markers(tree_info *trees, const char *filename_output_root, 
     int                 flag_process_groups = GBP_FALSE;
     tree_markers_info **markers;
     int *               n_halos_array;
-    if(check_mode_for_flag(mode, PRECOMPUTE_TREENODE_MARKER_GROUPS)) {
+    if(SID_CHECK_BITFIELD_SWITCH(mode, PRECOMPUTE_TREENODE_MARKER_GROUPS)) {
         sprintf(filename_output_group_text, "groups");
         flag_process_groups = GBP_TRUE;
         markers             = trees->group_markers;
         n_halos_array       = trees->n_groups_snap_local;
-    } else if(check_mode_for_flag(mode, PRECOMPUTE_TREENODE_MARKER_SUBGROUPS)) {
+    } else if(SID_CHECK_BITFIELD_SWITCH(mode, PRECOMPUTE_TREENODE_MARKER_SUBGROUPS)) {
         sprintf(filename_output_group_text, "subgroups");
         markers       = trees->subgroup_markers;
         n_halos_array = trees->n_subgroups_snap_local;

@@ -8,7 +8,7 @@ tree_horizontal_extended_info *
         int index  = halo->descendant_index;
         if(offset > 0 && index >= 0) {
             tree_horizontal_extended_info *node_return = &(halos[file % n_wrap][index]);
-            if(check_mode_for_flag(node_return->type, TREE_CASE_INVALID))
+            if(SID_CHECK_BITFIELD_SWITCH(node_return->type, TREE_CASE_INVALID))
                 SID_exit_error("A descendant pointer points to an invalid halo (%d->%d;%d;%d).", SID_ERROR_LOGIC,
                                i_file, file, index, node_return->type);
             return (node_return);

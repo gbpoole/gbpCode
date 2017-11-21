@@ -110,7 +110,7 @@ void identify_progenitors(tree_horizontal_info **halos,
                 tree_horizontal_info *halo_i      = &(halos_i[i_halo]);
                 tree_horizontal_info *forematch_i = halo_i->forematch_default.halo;
                 // Only check unprocessed halos that have been given a descendant
-                if(forematch_i != NULL && check_mode_for_flag(halo_i->type, TREE_CASE_UNPROCESSED)) {
+                if(forematch_i != NULL && SID_CHECK_BITFIELD_SWITCH(halo_i->type, TREE_CASE_UNPROCESSED)) {
                     // Only scan for emerged halos if we are working with
                     //    matches past the current default match
                     if(j_file_2 > forematch_i->file) {

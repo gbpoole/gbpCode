@@ -6,7 +6,7 @@ tree_horizontal_extended_info *set_extended_first_progenitor(tree_horizontal_ext
         int index = halo->first_progenitor_index;
         if(file >= 0 && index >= 0) {
             tree_horizontal_extended_info *node_return = &(halos[file % n_wrap][index]);
-            if(check_mode_for_flag(node_return->type, TREE_CASE_INVALID))
+            if(SID_CHECK_BITFIELD_SWITCH(node_return->type, TREE_CASE_INVALID))
                 SID_exit_error("A first_progenitor pointer points to an invalid halo (->%d;%d;%d).", SID_ERROR_LOGIC,
                                file, index, node_return->type);
             return (node_return);

@@ -115,12 +115,12 @@ int fopen_catalog(char *filename_catalog_root, int snapshot_number, int mode, fp
     // Decide whether we're opening a group or subgroup catalog
     int flag_read_groups    = GBP_FALSE;
     int flag_read_subgroups = GBP_FALSE;
-    if(check_mode_for_flag(mode, READ_CATALOG_GROUPS)) {
+    if(SID_CHECK_BITFIELD_SWITCH(mode, READ_CATALOG_GROUPS)) {
         flag_read_groups    = GBP_TRUE;
         flag_read_subgroups = GBP_FALSE;
         sprintf(group_text_prefix, "");
     }
-    if(check_mode_for_flag(mode, READ_CATALOG_SUBGROUPS)) {
+    if(SID_CHECK_BITFIELD_SWITCH(mode, READ_CATALOG_SUBGROUPS)) {
         if(flag_read_groups)
             SID_exit_error("You can't open both groups and subgroups at the same time in fopen_catalog().",
                            SID_ERROR_LOGIC);
@@ -134,13 +134,13 @@ int fopen_catalog(char *filename_catalog_root, int snapshot_number, int mode, fp
                 SID_ERROR_LOGIC);
 
     // Decide if we are reading properties
-    if(check_mode_for_flag(mode, READ_CATALOG_PROPERTIES))
+    if(SID_CHECK_BITFIELD_SWITCH(mode, READ_CATALOG_PROPERTIES))
         fp_out->flag_read_properties = GBP_TRUE;
     else
         fp_out->flag_read_properties = GBP_FALSE;
 
     // Decide if we are reading profiles
-    if(check_mode_for_flag(mode, READ_CATALOG_PROFILES))
+    if(SID_CHECK_BITFIELD_SWITCH(mode, READ_CATALOG_PROFILES))
         fp_out->flag_read_profiles = GBP_TRUE;
     else
         fp_out->flag_read_profiles = GBP_FALSE;

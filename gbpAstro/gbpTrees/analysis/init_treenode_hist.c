@@ -27,11 +27,11 @@ void init_treenode_hist(tree_info *          trees,
     sprintf((*hist)->name, "%s", hist_name);
 
     // Parse the mode
-    if(check_mode_for_flag(mode, TREENODE_HIST_LOG_X))
+    if(SID_CHECK_BITFIELD_SWITCH(mode, TREENODE_HIST_LOG_X))
         (*hist)->flag_log_x = GBP_TRUE;
     else
         (*hist)->flag_log_x = GBP_FALSE;
-    if(check_mode_for_flag(mode, TREENODE_HIST_LOG_Y))
+    if(SID_CHECK_BITFIELD_SWITCH(mode, TREENODE_HIST_LOG_Y))
         (*hist)->flag_log_y = GBP_TRUE;
     else
         (*hist)->flag_log_y = GBP_FALSE;

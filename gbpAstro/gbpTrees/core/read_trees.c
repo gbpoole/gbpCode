@@ -93,7 +93,7 @@ void read_trees(const char *filename_SSimPL_root,
     float **          progenitor_pointers_subgroups_score = NULL;
     float **          forematch_pointers_subgroups_score  = NULL;
     float **          backmatch_pointers_subgroups_score  = NULL;
-    if(check_mode_for_flag(read_mode, TREE_READ_EXTENDED_POINTERS)) {
+    if(SID_CHECK_BITFIELD_SWITCH(read_mode, TREE_READ_EXTENDED_POINTERS)) {
         // Since the halo counts for each snap haven't been set yet, each of these
         //    just allocate an array of pointers, with one element per snap set to NULL.
         //    The arrays for each snap will need to be allocated later.
@@ -129,7 +129,7 @@ void read_trees(const char *filename_SSimPL_root,
     // Check if the halo files have substructure information.  If they do, we will read it
     //    as we read the trees to set the substructure hierarchy pointers (if requested by the read_mode, that is).
     int flag_read_sub_pointers = GBP_FALSE;
-    if(check_mode_for_flag((*trees)->mode, TREE_MODE_SUBSTRUCTURE_HIERARCHY_ON)) {
+    if(SID_CHECK_BITFIELD_SWITCH((*trees)->mode, TREE_MODE_SUBSTRUCTURE_HIERARCHY_ON)) {
         flag_read_sub_pointers = check_if_substructure_hierarchy_defined(filename_SSimPL_root, filename_halos_version, i_read_stop);
         if(!flag_read_sub_pointers)
             (*trees)->mode &= (~TREE_MODE_SUBSTRUCTURE_HIERARCHY_ON);
@@ -483,7 +483,7 @@ void read_trees(const char *filename_SSimPL_root,
 
     // Clean-up
     SID_free(SID_FARG group_substructure_pointers);
-    if(!check_mode_for_flag((*trees)->mode, TREE_MODE_REFERENCE))
+    if(!SID_CHECK_BITFIELD_SWITCH((*trees)->mode, TREE_MODE_REFERENCE))
         free_trees_lookup((*trees));
 
     SID_log("Done.", SID_LOG_CLOSE);

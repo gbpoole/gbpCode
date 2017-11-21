@@ -22,7 +22,7 @@ void compute_progenitor_score_vertical_recursive(tree_vertical_node_info *tree, 
         while(current != NULL) {
             M_iN = 0;
             compute_progenitor_score_vertical_recursive(current, &M_iN, mode);
-            if(check_mode_for_flag(mode, TREE_PROGENITOR_ORDER_DELUCIA))
+            if(SID_CHECK_BITFIELD_SWITCH(mode, TREE_PROGENITOR_ORDER_DELUCIA))
                 max_M_iN = GBP_MAX(max_M_iN, M_iN);
             i_progenitor++;
             current = current->progenitor_next;

@@ -164,7 +164,7 @@ int compute_trees_matches(char *filename_root_in,
     int        flag_compute_header;
     int        flag_sucessful_completion = GBP_TRUE;
 
-    if(check_mode_for_flag(mode, WRITE_MATCHES_PERFORM_CHECK))
+    if(SID_CHECK_BITFIELD_SWITCH(mode, WRITE_MATCHES_PERFORM_CHECK))
         SID_log("Validating merger tree matches...", SID_LOG_OPEN | SID_LOG_TIMER);
     else
         SID_log("Constructing merger tree matches...", SID_LOG_OPEN | SID_LOG_TIMER);
@@ -184,7 +184,8 @@ int compute_trees_matches(char *filename_root_in,
     // Generate headers if needed and possible
     int flag_create_headers;
     if(flag_all_inputs_present)
-        flag_create_headers = check_mode_for_flag(mode, WRITE_MATCHES_CHECK_HEADER) || check_mode_for_flag(mode, WRITE_MATCHES_PERFORM_CHECK);
+        flag_create_headers = SID_CHECK_BITFIELD_SWITCH(mode, WRITE_MATCHES_CHECK_HEADER) ||
+                SID_CHECK_BITFIELD_SWITCH(mode, WRITE_MATCHES_PERFORM_CHECK);
     else {
         flag_create_headers       = GBP_FALSE;
         flag_sucessful_completion = GBP_FALSE;
@@ -368,7 +369,7 @@ int compute_trees_matches(char *filename_root_in,
 
     // Generate matches (if needed).  Loop over base groups first...
     if(flag_go) {
-        if(check_mode_for_flag(mode, WRITE_MATCHES_PERFORM_CHECK))
+        if(SID_CHECK_BITFIELD_SWITCH(mode, WRITE_MATCHES_PERFORM_CHECK))
             SID_log("Checking that all needed matches are present...", SID_LOG_OPEN | SID_LOG_TIMER);
         else
             SID_log("Generating matches...", SID_LOG_OPEN | SID_LOG_TIMER);
@@ -491,7 +492,7 @@ int compute_trees_matches(char *filename_root_in,
                                         }
                                     } // Loop over matching order
                                 }     // If this match result didn't already exist
-                                else if(!check_mode_for_flag(mode, WRITE_MATCHES_PERFORM_CHECK))
+                                else if(!SID_CHECK_BITFIELD_SWITCH(mode, WRITE_MATCHES_PERFORM_CHECK))
                                     SID_log("Matching for %03d->%03d present...Skipping.", SID_LOG_COMMENT, i_read, j_read);
                                 if(!flag_read)
                                     free_plist(&plist2);
@@ -509,7 +510,7 @@ int compute_trees_matches(char *filename_root_in,
                     flag_sucessful_completion = GBP_FALSE;
                 }
             } // If this snapshot needs to be processed
-            else if(!check_mode_for_flag(mode, WRITE_MATCHES_PERFORM_CHECK))
+            else if(!SID_CHECK_BITFIELD_SWITCH(mode, WRITE_MATCHES_PERFORM_CHECK))
                 SID_log("Matching for snapshot #%d present...Skipping.", SID_LOG_COMMENT, i_read);
         } // Loop over base snapshots
         SID_set_verbosity(SID_SET_VERBOSITY_DEFAULT);

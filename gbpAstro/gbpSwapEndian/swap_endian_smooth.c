@@ -15,7 +15,8 @@ int swap_endian_smooth(const char *filename_in_root, const char *filename_out_ro
         SID_log("Swapping endian of region #%03d smooth file...", SID_LOG_OPEN, region_number);
 
     // Sanity check
-    if(check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE) && check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE))
+    if(SID_CHECK_BITFIELD_SWITCH(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE) &&
+            SID_CHECK_BITFIELD_SWITCH(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE))
         SID_exit_error("Invalid mode flag (%d) in swap_endian_catalogs_properties_local().", SID_ERROR_LOGIC, mode);
 
     // Set filenames
@@ -75,7 +76,7 @@ int swap_endian_smooth(const char *filename_in_root, const char *filename_out_ro
     fread_verify(&offset, sizeof(int), 1, fp_in);
     fread_verify(&n_particles_total, sizeof(long long), 1, fp_in);
     fread_verify(&n_files, sizeof(int), 1, fp_in);
-    if(check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_TO_NATIVE)) {
+    if(SID_CHECK_BITFIELD_SWITCH(mode, SWAP_SSIMPL_ENDIAN_TO_NATIVE)) {
         swap_endian((char *)(&n_particles_file), 1, sizeof(int));
         swap_endian((char *)(&offset), 1, sizeof(int));
         swap_endian((char *)(&n_particles_total), 1, sizeof(long long));
@@ -132,7 +133,7 @@ int swap_endian_smooth(const char *filename_in_root, const char *filename_out_ro
         fread_verify(&offset, sizeof(int), 1, fp_in);
         fread_verify(&n_particles_total, sizeof(long long), 1, fp_in);
         fread_verify(&n_files, sizeof(int), 1, fp_in);
-        if(check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_TO_NATIVE)) {
+        if(SID_CHECK_BITFIELD_SWITCH(mode, SWAP_SSIMPL_ENDIAN_TO_NATIVE)) {
             swap_endian((char *)(&n_particles_file), 1, sizeof(int));
             swap_endian((char *)(&offset), 1, sizeof(int));
             swap_endian((char *)(&n_particles_total), 1, sizeof(long long));

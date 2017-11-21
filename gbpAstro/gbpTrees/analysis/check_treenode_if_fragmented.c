@@ -11,8 +11,8 @@
 
 int check_treenode_if_fragmented(tree_node_info *halo) {
     if(halo != NULL)
-        return (check_mode_for_flag(halo->tree_case, TREE_CASE_FRAGMENTED_STRAYED) ||
-                check_mode_for_flag(halo->tree_case, TREE_CASE_FRAGMENTED_NORMAL) ||
-                check_mode_for_flag(halo->tree_case, TREE_CASE_FRAGMENTED_OTHER));
+        return (SID_CHECK_BITFIELD_SWITCH(halo->tree_case, TREE_CASE_FRAGMENTED_STRAYED) ||
+                SID_CHECK_BITFIELD_SWITCH(halo->tree_case, TREE_CASE_FRAGMENTED_NORMAL) ||
+                SID_CHECK_BITFIELD_SWITCH(halo->tree_case, TREE_CASE_FRAGMENTED_OTHER));
     return (GBP_FALSE);
 }

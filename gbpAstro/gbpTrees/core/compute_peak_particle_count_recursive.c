@@ -15,8 +15,8 @@ void compute_peak_particle_count_recursive(tree_info *     trees,
                                            int *           n_particles_peak,
                                            int *           n_particles_inclusive_peak) {
     // Initialize some flags
-    int flag_most_massive = check_mode_for_flag(this_halo->tree_case, TREE_CASE_MOST_MASSIVE);
-    int flag_dominant     = check_mode_for_flag(this_halo->tree_case, TREE_CASE_DOMINANT);
+    int flag_most_massive = SID_CHECK_BITFIELD_SWITCH(this_halo->tree_case, TREE_CASE_MOST_MASSIVE);
+    int flag_dominant     = SID_CHECK_BITFIELD_SWITCH(this_halo->tree_case, TREE_CASE_DOMINANT);
     int flag_fragmented   = check_if_type_is_fragmented(this_halo->tree_case);
 
     // Initialize result to zero

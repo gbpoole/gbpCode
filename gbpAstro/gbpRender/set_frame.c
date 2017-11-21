@@ -27,8 +27,8 @@ void set_frame(camera_info *camera) {
 
     // Loop over each set of images
     for(i_image = 0; i_image < 3; i_image++) {
-        int flag_log_RGB = check_mode_for_flag(camera->camera_mode, CAMERA_LOG_RGB);
-        int flag_log_Y   = check_mode_for_flag(camera->camera_mode, CAMERA_LOG_Y);
+        int flag_log_RGB = SID_CHECK_BITFIELD_SWITCH(camera->camera_mode, CAMERA_LOG_RGB);
+        int flag_log_Y   = SID_CHECK_BITFIELD_SWITCH(camera->camera_mode, CAMERA_LOG_Y);
         switch(i_image) {
             case 0: // left image of a stereo pair
                 image_RGB         = camera->image_RGB_left;

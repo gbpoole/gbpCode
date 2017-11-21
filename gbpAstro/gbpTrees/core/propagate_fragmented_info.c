@@ -40,19 +40,22 @@ void propagate_fragmented_info(tree_horizontal_extended_info **groups,
         if(group_id == group_descendant_id && !flag_returned) {
             if(group_index >= 0) { // Important for strayed cases
                 // Add the propagated type.
-                if(check_mode_for_flag(group_type, TREE_CASE_FRAGMENTED_STRAYED))
+                if(SID_CHECK_BITFIELD_SWITCH(group_type, TREE_CASE_FRAGMENTED_STRAYED))
                     groups[(i_read + group_file_offset) % n_wrap][group_index].type |= TREE_CASE_FRAGMENTED_STRAYED;
-                if(check_mode_for_flag(group_type, TREE_CASE_FRAGMENTED_NORMAL))
+                if(SID_CHECK_BITFIELD_SWITCH(group_type, TREE_CASE_FRAGMENTED_NORMAL))
                     groups[(i_read + group_file_offset) % n_wrap][group_index].type |= TREE_CASE_FRAGMENTED_NORMAL;
-                if(check_mode_for_flag(group_type, TREE_CASE_FRAGMENTED_OTHER))
+                if(SID_CHECK_BITFIELD_SWITCH(group_type, TREE_CASE_FRAGMENTED_OTHER))
                     groups[(i_read + group_file_offset) % n_wrap][group_index].type |= TREE_CASE_FRAGMENTED_OTHER;
                 // Count the number of flags the descendant already has switched on
                 int i_count = 0;
-                if(check_mode_for_flag(groups[(i_read + group_file_offset) % n_wrap][group_index].type, TREE_CASE_FRAGMENTED_STRAYED))
+                if(SID_CHECK_BITFIELD_SWITCH(groups[(i_read + group_file_offset) % n_wrap][group_index].type,
+                                             TREE_CASE_FRAGMENTED_STRAYED))
                     i_count++;
-                if(check_mode_for_flag(groups[(i_read + group_file_offset) % n_wrap][group_index].type, TREE_CASE_FRAGMENTED_NORMAL))
+                if(SID_CHECK_BITFIELD_SWITCH(groups[(i_read + group_file_offset) % n_wrap][group_index].type,
+                                             TREE_CASE_FRAGMENTED_NORMAL))
                     i_count++;
-                if(check_mode_for_flag(groups[(i_read + group_file_offset) % n_wrap][group_index].type, TREE_CASE_FRAGMENTED_OTHER))
+                if(SID_CHECK_BITFIELD_SWITCH(groups[(i_read + group_file_offset) % n_wrap][group_index].type,
+                                             TREE_CASE_FRAGMENTED_OTHER))
                     i_count++;
                 // Check that the affected halo does not have more than one fragmented halo flag turned on
                 if(i_count > 1)
@@ -87,19 +90,25 @@ void propagate_fragmented_info(tree_horizontal_extended_info **groups,
             if(subgroup_id == subgroup_descendant_id && !flag_returned) {
                 if(subgroup_index >= 0) { // Important for strayed cases
                     // Add the propagated type.
-                    if(check_mode_for_flag(subgroup_type, TREE_CASE_FRAGMENTED_STRAYED))
+                    if(SID_CHECK_BITFIELD_SWITCH(subgroup_type, TREE_CASE_FRAGMENTED_STRAYED))
                         subgroups[(i_read + subgroup_file_offset) % n_wrap][subgroup_index].type |= TREE_CASE_FRAGMENTED_STRAYED;
-                    if(check_mode_for_flag(subgroup_type, TREE_CASE_FRAGMENTED_NORMAL))
+                    if(SID_CHECK_BITFIELD_SWITCH(subgroup_type, TREE_CASE_FRAGMENTED_NORMAL))
                         subgroups[(i_read + subgroup_file_offset) % n_wrap][subgroup_index].type |= TREE_CASE_FRAGMENTED_NORMAL;
-                    if(check_mode_for_flag(subgroup_type, TREE_CASE_FRAGMENTED_OTHER))
+                    if(SID_CHECK_BITFIELD_SWITCH(subgroup_type, TREE_CASE_FRAGMENTED_OTHER))
                         subgroups[(i_read + subgroup_file_offset) % n_wrap][subgroup_index].type |= TREE_CASE_FRAGMENTED_OTHER;
                     // Count the number of flags the descendant already has switched on
                     int i_count = 0;
-                    if(check_mode_for_flag(subgroups[(i_read + subgroup_file_offset) % n_wrap][subgroup_index].type, TREE_CASE_FRAGMENTED_STRAYED))
+                    if(SID_CHECK_BITFIELD_SWITCH(
+                            subgroups[(i_read + subgroup_file_offset) % n_wrap][subgroup_index].type,
+                            TREE_CASE_FRAGMENTED_STRAYED))
                         i_count++;
-                    if(check_mode_for_flag(subgroups[(i_read + subgroup_file_offset) % n_wrap][subgroup_index].type, TREE_CASE_FRAGMENTED_NORMAL))
+                    if(SID_CHECK_BITFIELD_SWITCH(
+                            subgroups[(i_read + subgroup_file_offset) % n_wrap][subgroup_index].type,
+                            TREE_CASE_FRAGMENTED_NORMAL))
                         i_count++;
-                    if(check_mode_for_flag(subgroups[(i_read + subgroup_file_offset) % n_wrap][subgroup_index].type, TREE_CASE_FRAGMENTED_OTHER))
+                    if(SID_CHECK_BITFIELD_SWITCH(
+                            subgroups[(i_read + subgroup_file_offset) % n_wrap][subgroup_index].type,
+                            TREE_CASE_FRAGMENTED_OTHER))
                         i_count++;
                     // Check that the affected halo does not have more than one fragmented halo flag turned on
                     if(i_count > 1)

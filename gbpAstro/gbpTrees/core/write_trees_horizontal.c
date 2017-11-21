@@ -88,11 +88,11 @@ void write_trees_horizontal(void **      groups_in,
     SID_log("Writing results for snapshot #%d...", SID_LOG_OPEN | SID_LOG_TIMER, j_write);
 
     // Interpret the mode
-    int flag_check_fragmented = check_mode_for_flag(mode, TREE_HORIZONTAL_WRITE_CHECK_FRAGMENTED);
-    int flag_write_allcases   = check_mode_for_flag(mode, TREE_HORIZONTAL_WRITE_ALLCASES);
-    int flag_write_nocases    = check_mode_for_flag(mode, TREE_HORIZONTAL_WRITE_NOCASES);
-    int flag_write_extended   = check_mode_for_flag(mode, TREE_HORIZONTAL_WRITE_EXTENDED);
-    int flag_write_ghosts     = check_mode_for_flag(mode, TREE_HORIZONTAL_WRITE_GHOSTS);
+    int flag_check_fragmented = SID_CHECK_BITFIELD_SWITCH(mode, TREE_HORIZONTAL_WRITE_CHECK_FRAGMENTED);
+    int flag_write_allcases   = SID_CHECK_BITFIELD_SWITCH(mode, TREE_HORIZONTAL_WRITE_ALLCASES);
+    int flag_write_nocases    = SID_CHECK_BITFIELD_SWITCH(mode, TREE_HORIZONTAL_WRITE_NOCASES);
+    int flag_write_extended   = SID_CHECK_BITFIELD_SWITCH(mode, TREE_HORIZONTAL_WRITE_EXTENDED);
+    int flag_write_ghosts     = SID_CHECK_BITFIELD_SWITCH(mode, TREE_HORIZONTAL_WRITE_GHOSTS);
     if(flag_write_extended && flag_write_ghosts)
         SID_exit_error("Incompatible mode flags set in write_trees_horizontal.", SID_ERROR_LOGIC);
     if(flag_write_ghosts) {

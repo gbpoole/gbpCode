@@ -6,14 +6,14 @@ void calc_mean_global(void *data_local, void *result, size_t n_data_local, SID_D
     size_t n_data;
     int    flag_abs;
 
-    if(check_mode_for_flag(mode, CALC_MODE_ABS))
+    if(SID_CHECK_BITFIELD_SWITCH(mode, CALC_MODE_ABS))
         flag_abs = CALC_MODE_ABS;
     else
         flag_abs = GBP_FALSE;
 
     calc_sum_global(&n_data_local, &n_data, 1, SID_SIZE_T, CALC_MODE_DEFAULT, comm);
     if(n_data < 1) {
-        if(type == SID_DOUBLE || check_mode_for_flag(mode, CALC_MODE_RETURN_DOUBLE))
+        if(type == SID_DOUBLE || SID_CHECK_BITFIELD_SWITCH(mode, CALC_MODE_RETURN_DOUBLE))
             ((double *)result)[0] = 0.;
         else if(type == SID_FLOAT)
             ((float *)result)[0] = 0.;

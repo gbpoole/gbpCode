@@ -30,20 +30,20 @@ int compute_centroid3D(double *W,
     int flag_centroid_step;
     int flag_centroid_inplace;
     int flag_return_indices;
-    if(check_mode_for_flag(mode, CENTROID3D_MODE_STEP)) {
+    if(SID_CHECK_BITFIELD_SWITCH(mode, CENTROID3D_MODE_STEP)) {
         flag_centroid_step = GBP_TRUE;
         if(step <= 0.)
             SID_exit_error("Invalid step size selected (%le) for mode %d in compute_centroid3D().", SID_ERROR_LOGIC,
                            step, mode);
-    } else if(check_mode_for_flag(mode, CENTROID3D_MODE_FACTOR)) {
+    } else if(SID_CHECK_BITFIELD_SWITCH(mode, CENTROID3D_MODE_FACTOR)) {
         flag_centroid_step = GBP_FALSE;
         if(step >= 1. || step <= 0.)
             SID_exit_error("Invalid step size selected (%le) for mode %d in compute_centroid3D().", SID_ERROR_LOGIC,
                            step, mode);
     } else
         SID_exit_error("Invalid mode (%d) specified in compute_3dcentroid().", SID_ERROR_LOGIC, mode);
-    flag_centroid_inplace = check_mode_for_flag(mode, CENTROID3D_MODE_INPLACE);
-    flag_return_indices   = check_mode_for_flag(mode, CENTROID3D_MODE_RETURN_INDICES);
+    flag_centroid_inplace = SID_CHECK_BITFIELD_SWITCH(mode, CENTROID3D_MODE_INPLACE);
+    flag_return_indices   = SID_CHECK_BITFIELD_SWITCH(mode, CENTROID3D_MODE_RETURN_INDICES);
 
     // Perform centroiding if n>0
     double  xcen;

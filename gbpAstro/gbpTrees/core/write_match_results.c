@@ -78,12 +78,12 @@ void write_match_results(char *      filename_out_dir,
     }
 
     // Intialize filenames
-    if(check_mode_for_flag(mode, WRITE_MATCHES_MODE_TREES)) {
+    if(SID_CHECK_BITFIELD_SWITCH(mode, WRITE_MATCHES_MODE_TREES)) {
         sprintf(filename_out_dir_snap, "%s/%s", filename_out_dir, filename_cat1);
         // Create output directory if need-be
         if(filename_out_dir != NULL)
             mkdir(filename_out_dir, 02755);
-    } else if(check_mode_for_flag(mode, WRITE_MATCHES_MODE_SINGLE))
+    } else if(SID_CHECK_BITFIELD_SWITCH(mode, WRITE_MATCHES_MODE_SINGLE))
         sprintf(filename_out_dir_snap, "%s/", filename_out_dir);
     else
         SID_exit_error("Invalid write mode flag (%d).", SID_ERROR_LOGIC, mode);

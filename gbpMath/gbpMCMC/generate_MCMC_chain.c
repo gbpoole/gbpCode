@@ -44,7 +44,7 @@ int generate_MCMC_chain(MCMC_info *MCMC) {
             RNG                    = MCMC->RNG;
             n_DS                   = MCMC->n_DS;
             n_M                    = MCMC->n_M;
-            flag_report_props      = check_mode_for_flag(MCMC->mode, MCMC_MODE_REPORT_PROPS);
+            flag_report_props      = SID_CHECK_BITFIELD_SWITCH(MCMC->mode, MCMC_MODE_REPORT_PROPS);
             MCMC->first_chain_call = GBP_FALSE;
             sprintf(filename_report_props, "%s/chains/report_props_%06d.dat", MCMC->filename_output_dir, MCMC->my_chain);
             break;
@@ -76,8 +76,8 @@ int generate_MCMC_chain(MCMC_info *MCMC) {
         else
             flag_success = GBP_FALSE;
     }
-    // fprintf(stderr,"%d %le %d\n",flag_success,MCMC->ln_Pr_new,check_mode_for_flag(MCMC->mode,MCMC_MODE_PARALLEL));
-    // if(!check_mode_for_flag(MCMC->mode,MCMC_MODE_PARALLEL))
+    // fprintf(stderr,"%d %le %d\n",flag_success,MCMC->ln_Pr_new,SID_CHECK_BITFIELD_SWITCH(MCMC->mode,MCMC_MODE_PARALLEL));
+    // if(!SID_CHECK_BITFIELD_SWITCH(MCMC->mode,MCMC_MODE_PARALLEL))
     SID_Bcast(&flag_success, 1, SID_INT, SID_MASTER_RANK, MCMC->comm);
 
     // ... if it is, then update the chain ...

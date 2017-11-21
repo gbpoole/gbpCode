@@ -203,8 +203,8 @@ void compute_MCMC(MCMC_info *MCMC) {
     n_iterations           = MCMC->n_iterations;
     n_iterations_burn      = MCMC->n_iterations_burn;
     n_iterations_integrate = n_iterations - n_iterations_burn;
-    flag_no_map_write      = check_mode_for_flag(MCMC->mode, MCMC_MODE_NO_MAP_WRITE);
-    flag_minimize_IO       = check_mode_for_flag(MCMC->mode, MCMC_MODE_MINIMIZE_IO);
+    flag_no_map_write      = SID_CHECK_BITFIELD_SWITCH(MCMC->mode, MCMC_MODE_NO_MAP_WRITE);
+    flag_minimize_IO       = SID_CHECK_BITFIELD_SWITCH(MCMC->mode, MCMC_MODE_MINIMIZE_IO);
 
     SID_log("temperature            = %lf", SID_LOG_COMMENT, MCMC->temperature);
     SID_log("n_avg                  = %d", SID_LOG_COMMENT, n_avg);
@@ -476,7 +476,7 @@ void compute_MCMC(MCMC_info *MCMC) {
         }
 
         // Perform autotuning (if requested)
-        if(check_mode_for_flag(MCMC->mode, MCMC_MODE_AUTOTUNE))
+        if(SID_CHECK_BITFIELD_SWITCH(MCMC->mode, MCMC_MODE_AUTOTUNE))
             autotune_MCMC(MCMC);
         MCMC->flag_init_chain = GBP_TRUE;
 

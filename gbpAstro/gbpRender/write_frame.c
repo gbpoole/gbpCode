@@ -128,7 +128,7 @@ void write_frame(render_info *render, int frame, int mode) {
         }
 
         // Write depth metadata (if iteration is used)
-        if(flag_iteration_used && !check_mode_for_flag(render->mode, SET_RENDER_RESCALE))
+        if(flag_iteration_used && !SID_CHECK_BITFIELD_SWITCH(render->mode, SET_RENDER_RESCALE))
             write_frame_metadata(render, frame, set_label);
     }
     SID_log("Done.", SID_LOG_CLOSE);

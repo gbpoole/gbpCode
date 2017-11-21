@@ -19,7 +19,7 @@ void propagate_n_particles_peak(tree_horizontal_extended_info **groups,
         tree_horizontal_extended_info *this_group = &(groups[i_read % n_wrap][i_group]);
 
         // Initialize result at leaves
-        if(check_mode_for_flag(this_group->type, TREE_CASE_NO_PROGENITORS) || this_group->n_particles_peak == 0)
+        if(SID_CHECK_BITFIELD_SWITCH(this_group->type, TREE_CASE_NO_PROGENITORS) || this_group->n_particles_peak == 0)
             this_group->n_particles_peak = this_group->n_particles;
         // ... else check current size against a (previously) propagated result.
         else
@@ -37,9 +37,9 @@ void propagate_n_particles_peak(tree_horizontal_extended_info **groups,
             tree_horizontal_extended_info *this_subgroup = &(subgroups[i_read % n_wrap][i_subgroup]);
 
             // Initialize peak particle counts at leaves
-            int flag_most_massive = check_mode_for_flag(this_subgroup->type, TREE_CASE_MOST_MASSIVE);
-            int flag_dominant     = check_mode_for_flag(this_subgroup->type, TREE_CASE_DOMINANT);
-            if(check_mode_for_flag(this_subgroup->type, TREE_CASE_NO_PROGENITORS) || this_subgroup->n_particles_peak == 0)
+            int flag_most_massive = SID_CHECK_BITFIELD_SWITCH(this_subgroup->type, TREE_CASE_MOST_MASSIVE);
+            int flag_dominant     = SID_CHECK_BITFIELD_SWITCH(this_subgroup->type, TREE_CASE_DOMINANT);
+            if(SID_CHECK_BITFIELD_SWITCH(this_subgroup->type, TREE_CASE_NO_PROGENITORS) || this_subgroup->n_particles_peak == 0)
                 this_subgroup->n_particles_peak = this_subgroup->n_particles;
 
             // ... else check current size against a (previously) propagated result.

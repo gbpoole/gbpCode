@@ -70,7 +70,8 @@ void average_tree_branches(const char *catalog_name) {
             fread_verify(M_track, sizeof(double), n_track, fp_tracks_in);
             // Build the M-histograms
             for(int i_track = 0; i_track < n_track; i_track++) {
-                if(check_mode_for_flag(tc_track[i_track], TREE_CASE_MOST_MASSIVE) == check_mode_for_flag(tc_track[i_track], TREE_CASE_DOMINANT)) {
+                if(SID_CHECK_BITFIELD_SWITCH(tc_track[i_track], TREE_CASE_MOST_MASSIVE) ==
+                        SID_CHECK_BITFIELD_SWITCH(tc_track[i_track], TREE_CASE_DOMINANT)) {
                     int i_bin = (int)((take_log10(M_track[i_track]) - M_min) * inv_dM);
                     if(i_bin >= 0 && i_bin < n_M_bins)
                         M_hist[i_z_track[i_track]][i_bin]++;

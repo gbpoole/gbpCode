@@ -71,7 +71,7 @@ void process_gadget_file(const char *status_message,
     int flag_all_to_all;
     int flag_I_am_reader;
     int all_to_all_reader_rank = SID_MASTER_RANK;
-    if(check_mode_for_flag(mode, PROCESS_GADGET_BINARY_ALL_TO_ALL)) {
+    if(SID_CHECK_BITFIELD_SWITCH(mode, PROCESS_GADGET_BINARY_ALL_TO_ALL)) {
         i_file          = 0;
         i_file_skip     = 1;
         flag_all_to_all = GBP_TRUE;

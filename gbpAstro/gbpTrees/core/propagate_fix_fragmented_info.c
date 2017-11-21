@@ -45,14 +45,15 @@ void propagate_fix_fragmented_info(tree_horizontal_extended_info **groups,
                 int current_group_type = current_group->type;
                 if(!check_if_type_is_fragmented(current_group_type)) {
                     n_p_peak = GBP_MAX(n_p_peak, current_group->n_particles_peak);
-                    if(check_mode_for_flag(current_group_type, TREE_CASE_MERGER_PRIMARY))
+                    if(SID_CHECK_BITFIELD_SWITCH(current_group_type, TREE_CASE_MERGER_PRIMARY))
                         flag_fix = GBP_TRUE;
                 }
                 current_group = set_extended_next_progenitor(groups, current_group, n_wrap);
             }
             if(flag_fix) {
                 // Apply dominant halo condition to complete calculation of peak particle count
-                if(check_mode_for_flag(group_type, TREE_CASE_DOMINANT) == check_mode_for_flag(group_type, TREE_CASE_MOST_MASSIVE))
+                if(SID_CHECK_BITFIELD_SWITCH(group_type, TREE_CASE_DOMINANT) ==
+                        SID_CHECK_BITFIELD_SWITCH(group_type, TREE_CASE_MOST_MASSIVE))
                     n_p_peak = GBP_MAX(n_p_peak, group->n_particles);
                 // Apply fix
                 group->n_particles_peak = n_p_peak;
@@ -90,14 +91,15 @@ void propagate_fix_fragmented_info(tree_horizontal_extended_info **groups,
                     int current_subgroup_type = current_subgroup->type;
                     if(!check_if_type_is_fragmented(current_subgroup_type)) {
                         n_p_peak = GBP_MAX(n_p_peak, current_subgroup->n_particles_peak);
-                        if(check_mode_for_flag(current_subgroup_type, TREE_CASE_MERGER_PRIMARY))
+                        if(SID_CHECK_BITFIELD_SWITCH(current_subgroup_type, TREE_CASE_MERGER_PRIMARY))
                             flag_fix = GBP_TRUE;
                     }
                     current_subgroup = set_extended_next_progenitor(subgroups, current_subgroup, n_wrap);
                 }
                 if(flag_fix) {
                     // Apply dominant halo condition to complete calculation of peak particle count
-                    if(check_mode_for_flag(subgroup_type, TREE_CASE_DOMINANT) == check_mode_for_flag(subgroup_type, TREE_CASE_MOST_MASSIVE))
+                    if(SID_CHECK_BITFIELD_SWITCH(subgroup_type, TREE_CASE_DOMINANT) ==
+                            SID_CHECK_BITFIELD_SWITCH(subgroup_type, TREE_CASE_MOST_MASSIVE))
                         n_p_peak = GBP_MAX(n_p_peak, subgroup->n_particles);
                     // Apply fix
                     subgroup->n_particles_peak = n_p_peak;

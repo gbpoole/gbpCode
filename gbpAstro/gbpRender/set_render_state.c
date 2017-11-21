@@ -43,7 +43,7 @@ int set_render_state(render_info *render, int frame, int mode) {
     // Perform snapshot and smooth-file reading
     int    i_snap, j_snap, snap_best;
     double snap_diff, snap_diff_best;
-    if(!check_mode_for_flag(render->mode, SET_RENDER_RESCALE)) {
+    if(!SID_CHECK_BITFIELD_SWITCH(render->mode, SET_RENDER_RESCALE)) {
         int *snap_list = (int *)SID_malloc(sizeof(int) * render->n_interpolate);
         // Determine which snapshot(s) to use
         if(render->snap_a_list != NULL && render->n_snap_a_list > 0) {

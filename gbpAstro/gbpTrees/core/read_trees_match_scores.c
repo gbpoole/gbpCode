@@ -17,12 +17,12 @@ void read_trees_match_scores(tree_info *trees, char *filename_SSimPL_dir, int mo
     SID_log("Reading tree match scores...", SID_LOG_OPEN | SID_LOG_TIMER);
 
     // Create the array we will return
-    if(check_mode_for_flag(mode, READ_TREES_MATCH_SCORES_GROUPS)) {
+    if(SID_CHECK_BITFIELD_SWITCH(mode, READ_TREES_MATCH_SCORES_GROUPS)) {
         trees->group_match_scores = (float **)SID_malloc(sizeof(float *) * trees->n_snaps);
         for(int i_snap = 0; i_snap < trees->n_snaps; i_snap++)
             trees->group_match_scores[i_snap] = (float *)SID_calloc(sizeof(float) * trees->n_groups_snap_local[i_snap]);
     }
-    if(check_mode_for_flag(mode, READ_TREES_MATCH_SCORES_SUBGROUPS)) {
+    if(SID_CHECK_BITFIELD_SWITCH(mode, READ_TREES_MATCH_SCORES_SUBGROUPS)) {
         trees->subgroup_match_scores = (float **)SID_malloc(sizeof(float *) * trees->n_snaps);
         for(int i_snap = 0; i_snap < trees->n_snaps; i_snap++)
             trees->subgroup_match_scores[i_snap] = (float *)SID_calloc(sizeof(float) * trees->n_subgroups_snap_local[i_snap]);
@@ -53,7 +53,7 @@ void read_trees_match_scores(tree_info *trees, char *filename_SSimPL_dir, int mo
             float *         match_score_local;
             switch(i_type) {
                 case 0:
-                    flag_proceed = check_mode_for_flag(mode, READ_TREES_MATCH_SCORES_SUBGROUPS);
+                    flag_proceed = SID_CHECK_BITFIELD_SWITCH(mode, READ_TREES_MATCH_SCORES_SUBGROUPS);
                     if(flag_proceed) {
                         sprintf(group_text_prefix, "sub");
                         n_halos           = trees->n_subgroups_snap_local[i_snap];
@@ -62,7 +62,7 @@ void read_trees_match_scores(tree_info *trees, char *filename_SSimPL_dir, int mo
                     }
                     break;
                 case 1:
-                    flag_proceed = check_mode_for_flag(mode, READ_TREES_MATCH_SCORES_SUBGROUPS);
+                    flag_proceed = SID_CHECK_BITFIELD_SWITCH(mode, READ_TREES_MATCH_SCORES_SUBGROUPS);
                     if(flag_proceed) {
                         sprintf(group_text_prefix, "");
                         n_halos           = trees->n_groups_snap_local[i_snap];

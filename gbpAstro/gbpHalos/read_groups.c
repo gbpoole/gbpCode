@@ -52,14 +52,14 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
     int flag_PHK_distribute    = GBP_FALSE;
     int flag_read_MBP_ids_only = GBP_FALSE;
     int flag_long_ids          = GBP_FALSE;
-    if((check_mode_for_flag(mode, READ_GROUPS_ALL) || check_mode_for_flag(mode, READ_GROUPS_SUBGROUPS)) &&
-       !check_mode_for_flag(mode, READ_GROUPS_NOSUBGROUPS))
+    if((SID_CHECK_BITFIELD_SWITCH(mode, READ_GROUPS_ALL) || SID_CHECK_BITFIELD_SWITCH(mode, READ_GROUPS_SUBGROUPS)) &&
+       !SID_CHECK_BITFIELD_SWITCH(mode, READ_GROUPS_NOSUBGROUPS))
         flag_read_subgroups = GBP_TRUE;
-    if((check_mode_for_flag(mode, READ_GROUPS_NOIDS)))
+    if((SID_CHECK_BITFIELD_SWITCH(mode, READ_GROUPS_NOIDS)))
         flag_read_ids = GBP_FALSE;
-    if((check_mode_for_flag(mode, READ_GROUPS_MBP_IDS_ONLY)))
+    if((SID_CHECK_BITFIELD_SWITCH(mode, READ_GROUPS_MBP_IDS_ONLY)))
         flag_read_MBP_ids_only = GBP_TRUE;
-    if((check_mode_for_flag(mode, READ_GROUPS_PEANOHILBERT)))
+    if((SID_CHECK_BITFIELD_SWITCH(mode, READ_GROUPS_PEANOHILBERT)))
         flag_PHK_distribute = GBP_TRUE;
 
     // Process optional parameters

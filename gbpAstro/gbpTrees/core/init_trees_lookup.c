@@ -10,7 +10,7 @@
 #include <gbpTrees_build.h>
 
 void init_trees_lookup(tree_info *trees) {
-    if(check_mode_for_flag(trees->mode, TREE_MODE_REFERENCE))
+    if(SID_CHECK_BITFIELD_SWITCH(trees->mode, TREE_MODE_REFERENCE))
         trees->n_wrap_lookup = trees->n_snaps;
     else
         trees->n_wrap_lookup = trees->n_wrap;

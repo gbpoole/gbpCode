@@ -69,7 +69,7 @@ void init_make_map_noabs(render_info *render,
 
     // Plane parallel projection?
     int flag_plane_parallel;
-    if(check_mode_for_flag(camera_mode, CAMERA_PLANE_PARALLEL))
+    if(SID_CHECK_BITFIELD_SWITCH(camera_mode, CAMERA_PLANE_PARALLEL))
         flag_plane_parallel = GBP_TRUE;
     else
         flag_plane_parallel = GBP_FALSE;

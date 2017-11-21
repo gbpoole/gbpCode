@@ -52,7 +52,7 @@ void write_trees_horizontal_emerged_candidates(int                   i_read,
     int i_halo;
     for(i_halo = 0; i_halo < n_halos_i; i_halo++) {
         // Print bridge info
-        if(check_mode_for_flag(halos_i[i_halo].type, TREE_CASE_BRIDGED)) {
+        if(SID_CHECK_BITFIELD_SWITCH(halos_i[i_halo].type, TREE_CASE_BRIDGED)) {
             int j_halo;
             for(j_halo = 0; j_halo < halos_i[i_halo].n_back_matches; j_halo++) {
                 match_info *back_match = &(halos_i[i_halo].back_matches[j_halo]);

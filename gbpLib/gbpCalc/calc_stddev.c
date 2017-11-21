@@ -7,7 +7,7 @@ void calc_stddev(void *data, void *result, size_t n_data, SID_Datatype type, int
     double stddev;
     double mean;
     if(n_data < 1) {
-        if(type == SID_DOUBLE || check_mode_for_flag(mode, CALC_MODE_RETURN_DOUBLE))
+        if(type == SID_DOUBLE || SID_CHECK_BITFIELD_SWITCH(mode, CALC_MODE_RETURN_DOUBLE))
             ((double *)result)[0] = 0.;
         else if(type == SID_FLOAT)
             ((float *)result)[0] = 0.;
@@ -20,7 +20,7 @@ void calc_stddev(void *data, void *result, size_t n_data, SID_Datatype type, int
         else
             SID_exit_error("Unknown variable type in calc_min", SID_ERROR_LOGIC);
     } else {
-        if(check_mode_for_flag(mode, CALC_MODE_ABS)) {
+        if(SID_CHECK_BITFIELD_SWITCH(mode, CALC_MODE_ABS)) {
             calc_mean(data, &mean, n_data, type, CALC_MODE_RETURN_DOUBLE | CALC_MODE_ABS);
             for(i_data = 0, stddev = 0.; i_data < n_data; i_data++) {
                 if(type == SID_DOUBLE)
@@ -37,7 +37,7 @@ void calc_stddev(void *data, void *result, size_t n_data, SID_Datatype type, int
                     SID_exit_error("Unknown variable type in calc_stddev", SID_ERROR_LOGIC);
             }
             stddev = sqrt(stddev / (double)n_data);
-            if(type == SID_DOUBLE || check_mode_for_flag(mode, CALC_MODE_RETURN_DOUBLE))
+            if(type == SID_DOUBLE || SID_CHECK_BITFIELD_SWITCH(mode, CALC_MODE_RETURN_DOUBLE))
                 ((double *)result)[0] = (double)stddev;
             else if(type == SID_FLOAT)
                 ((float *)result)[0] = (float)stddev;
@@ -66,7 +66,7 @@ void calc_stddev(void *data, void *result, size_t n_data, SID_Datatype type, int
                     SID_exit_error("Unknown variable type in calc_stddev", SID_ERROR_LOGIC);
             }
             stddev = sqrt(stddev / (double)n_data);
-            if(type == SID_DOUBLE || check_mode_for_flag(mode, CALC_MODE_RETURN_DOUBLE))
+            if(type == SID_DOUBLE || SID_CHECK_BITFIELD_SWITCH(mode, CALC_MODE_RETURN_DOUBLE))
                 ((double *)result)[0] = (double)stddev;
             else if(type == SID_FLOAT)
                 ((float *)result)[0] = (float)stddev;

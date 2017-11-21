@@ -8,9 +8,9 @@ int add_item_to_trend(trend_info *trend, int mode, void *item_ordinate, ...) {
     va_list vargs;
     va_start(vargs, item_ordinate);
     void *item_coordinate;
-    if(check_mode_for_flag(mode, GBP_ADD_ITEM_TO_TREND_COORDINATE))
+    if(SID_CHECK_BITFIELD_SWITCH(mode, GBP_ADD_ITEM_TO_TREND_COORDINATE))
         item_coordinate = item_ordinate;
-    else if(check_mode_for_flag(mode, GBP_ADD_ITEM_TO_TREND_ORDINATE))
+    else if(SID_CHECK_BITFIELD_SWITCH(mode, GBP_ADD_ITEM_TO_TREND_ORDINATE))
         item_coordinate = (void *)va_arg(vargs, void *);
     else
         SID_exit_error("Invalid mode (%d) passed to add_item_to_trend.", SID_ERROR_LOGIC, mode);

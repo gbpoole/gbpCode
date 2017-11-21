@@ -44,9 +44,9 @@ void write_tree_branches(tree_info *      trees,
     // Count fragmented halos
     int n_frag = 0;
     for(int i_list = 0; i_list < n_list_in; i_list++) {
-        if(check_mode_for_flag(list_in[i_list]->tree_case, TREE_CASE_FRAGMENTED_STRAYED) ||
-           check_mode_for_flag(list_in[i_list]->tree_case, TREE_CASE_FRAGMENTED_NORMAL) ||
-           check_mode_for_flag(list_in[i_list]->tree_case, TREE_CASE_FRAGMENTED_OTHER))
+        if(SID_CHECK_BITFIELD_SWITCH(list_in[i_list]->tree_case, TREE_CASE_FRAGMENTED_STRAYED) ||
+                SID_CHECK_BITFIELD_SWITCH(list_in[i_list]->tree_case, TREE_CASE_FRAGMENTED_NORMAL) ||
+                SID_CHECK_BITFIELD_SWITCH(list_in[i_list]->tree_case, TREE_CASE_FRAGMENTED_OTHER))
             n_frag++;
     }
     if(n_frag > 0)
@@ -334,8 +334,8 @@ void write_tree_branches(tree_info *      trees,
                         vx_track[n_track]  = halo_properties[i_z_track[n_track]][idx_track[n_track]].velocity_COM[0];
                         vy_track[n_track]  = halo_properties[i_z_track[n_track]][idx_track[n_track]].velocity_COM[1];
                         vz_track[n_track]  = halo_properties[i_z_track[n_track]][idx_track[n_track]].velocity_COM[2];
-                        if(!check_mode_for_flag(current_track->tree_case, TREE_CASE_MOST_MASSIVE) ||
-                           check_mode_for_flag(current_track->tree_case, TREE_CASE_DOMINANT))
+                        if(!SID_CHECK_BITFIELD_SWITCH(current_track->tree_case, TREE_CASE_MOST_MASSIVE) ||
+                                SID_CHECK_BITFIELD_SWITCH(current_track->tree_case, TREE_CASE_DOMINANT))
                             M_track[n_track] = halo_properties[i_z_track[n_track]][idx_track[n_track]].M_vir;
                         else
                             M_track[n_track] = -1.;

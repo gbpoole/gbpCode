@@ -84,10 +84,11 @@ int set_camera_depths(render_info *render, int stereo_offset_dir) {
     add_render_depth_local(render, "full_frame", 1., 1., -0.5, 0.5, 0., 0.);
 
     // Add the object plane (if requested)
-    if(check_mode_for_flag(mode, GBP_TRUE)) {
+    if(SID_CHECK_BITFIELD_SWITCH(mode, GBP_TRUE)) {
         float f_stretch = compute_f_stretch(render->camera->perspective->d_image_plane,
                                             render->camera->perspective->d_o,
-                                            check_mode_for_flag(render->camera->camera_mode, CAMERA_PLANE_PARALLEL));
+                                            SID_CHECK_BITFIELD_SWITCH(render->camera->camera_mode,
+                                                                      CAMERA_PLANE_PARALLEL));
         add_render_depth_local(render,
                                "object_plane",
                                render->camera->perspective->FOV_x_object_plane,
@@ -99,7 +100,7 @@ int set_camera_depths(render_info *render, int stereo_offset_dir) {
     }
 
     // Add the image plane (if requested)
-    if(check_mode_for_flag(mode, GBP_FALSE))
+    if(SID_CHECK_BITFIELD_SWITCH(mode, GBP_FALSE))
         add_render_depth_local(render,
                                "image_plane",
                                render->camera->perspective->FOV_x_image_plane,
@@ -110,7 +111,7 @@ int set_camera_depths(render_info *render, int stereo_offset_dir) {
                                1.); // f_stretch=1 at image plane
 
     // Add marked objects (if requested)
-    if(check_mode_for_flag(mode, GBP_TRUE)) {
+    if(SID_CHECK_BITFIELD_SWITCH(mode, GBP_TRUE)) {
         mark_arg_info *current_arg = render->mark_arg_first;
         int            i_arg       = 0;
         int            i_mark      = 0;
@@ -157,7 +158,8 @@ int set_camera_depths(render_info *render, int stereo_offset_dir) {
                                        render->flag_comoving,
                                        render->flag_force_periodic);
                     float f_stretch = compute_f_stretch(
-                        render->camera->perspective->d_image_plane, z_m, check_mode_for_flag(render->camera->camera_mode, CAMERA_PLANE_PARALLEL));
+                        render->camera->perspective->d_image_plane, z_m,
+                        SID_CHECK_BITFIELD_SWITCH(render->camera->camera_mode, CAMERA_PLANE_PARALLEL));
                     add_render_depth_local(render,
                                            mark_id,
                                            render->camera->perspective->FOV_x_image_plane / f_stretch,

@@ -42,10 +42,10 @@ void read_gbpParam_file(const char *filename_in, parameter_list_info *param_list
     // Check that all manditory parameters were read
     parameter_item_info *current = param_list->first;
     while(current != NULL) {
-        if(check_mode_for_flag(current->mode, PARAMETER_MODE_MANDITORY) && current->n_read <= 0)
+        if(SID_CHECK_BITFIELD_SWITCH(current->mode, PARAMETER_MODE_MANDITORY) && current->n_read <= 0)
             SID_exit_error("Manditory parameter {%s} was not specified in {%s}.", SID_ERROR_LOGIC, current->name,
                            filename_in);
-        if(check_mode_for_flag(current->mode, PARAMETER_MODE_UNIQUE) && current->n_read > 1)
+        if(SID_CHECK_BITFIELD_SWITCH(current->mode, PARAMETER_MODE_UNIQUE) && current->n_read > 1)
             SID_exit_error("Parameter {%s} was specified %d times in {%s}.", SID_ERROR_LOGIC, current->name,
                            current->n_read, filename_in);
         current = current->next;

@@ -25,7 +25,7 @@ void write_image(image_info *image, const char *filename_dir, const char *filena
         // SID_log("Image range =%le -> %le",SID_LOG_COMMENT,image_min,image_max);
 
         // Write raw image
-        if(check_mode_for_flag(mode, WRITE_IMAGE_RAW)) {
+        if(SID_CHECK_BITFIELD_SWITCH(mode, WRITE_IMAGE_RAW)) {
             sprintf(filename, "%s/raw/%s.raw", filename_dir, filename_root);
             fp = fopen(filename, "w");
             fwrite(&(image->width), sizeof(int), 1, fp);
@@ -35,7 +35,7 @@ void write_image(image_info *image, const char *filename_dir, const char *filena
         }
 
         // Write png
-        if(check_mode_for_flag(mode, WRITE_IMAGE_PNG)) {
+        if(SID_CHECK_BITFIELD_SWITCH(mode, WRITE_IMAGE_PNG)) {
             sprintf(filename, "%s/%s.png", filename_dir, filename_root);
             fp = fopen(filename, "w");
             gdImagePng(image->gd_ptr, fp);

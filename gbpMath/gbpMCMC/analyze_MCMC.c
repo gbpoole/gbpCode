@@ -216,7 +216,7 @@ void analyze_MCMC(MCMC_info *MCMC) {
     coverage_size          = MCMC->coverage_size;
     flag_autocor_on        = MCMC->flag_autocor_on;
     flag_no_map_write      = MCMC->flag_no_map_write;
-    flag_minimize_IO       = check_mode_for_flag(MCMC->mode, MCMC_MODE_MINIMIZE_IO);
+    flag_minimize_IO       = SID_CHECK_BITFIELD_SWITCH(MCMC->mode, MCMC_MODE_MINIMIZE_IO);
 
     // Initialize arrays used for computing the covariance matrix
     P_i_bar_accum  = (double *)SID_malloc(sizeof(double) * n_P);
@@ -404,7 +404,7 @@ void analyze_MCMC(MCMC_info *MCMC) {
     // Count the number of runs we will analyze
     int n_runs;
     int i_run;
-    if(flag_minimize_IO || !check_mode_for_flag(MCMC->mode, MCMC_MODE_ANALYZE_ALL_RUNS))
+    if(flag_minimize_IO || !SID_CHECK_BITFIELD_SWITCH(MCMC->mode, MCMC_MODE_ANALYZE_ALL_RUNS))
         n_runs = 1;
     else {
         int flag_continue = GBP_TRUE;
@@ -430,7 +430,7 @@ void analyze_MCMC(MCMC_info *MCMC) {
         for(i_run = 0, n_used = 0; i_run < n_runs; i_run++) {
             if(!flag_minimize_IO) {
                 // Set chain filename (use default if we are not analyzing all runs)
-                if(check_mode_for_flag(MCMC->mode, MCMC_MODE_ANALYZE_ALL_RUNS)) {
+                if(SID_CHECK_BITFIELD_SWITCH(MCMC->mode, MCMC_MODE_ANALYZE_ALL_RUNS)) {
                     if(i_run == 0)
                         sprintf(filename_output_dir, "%s/", MCMC->filename_output_root);
                     else
@@ -552,7 +552,7 @@ void analyze_MCMC(MCMC_info *MCMC) {
         for(i_run = 0; i_run < n_runs; i_run++) {
             if(!flag_minimize_IO) {
                 // Set chain filename (use default if we are not analyzing all runs)
-                if(check_mode_for_flag(MCMC->mode, MCMC_MODE_ANALYZE_ALL_RUNS)) {
+                if(SID_CHECK_BITFIELD_SWITCH(MCMC->mode, MCMC_MODE_ANALYZE_ALL_RUNS)) {
                     if(i_run == 0)
                         sprintf(filename_output_dir, "%s/", MCMC->filename_output_root);
                     else

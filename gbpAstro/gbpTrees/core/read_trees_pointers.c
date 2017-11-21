@@ -19,7 +19,8 @@ void read_trees_pointers(tree_info *trees, const char *filename_input_dir_horizo
     float **          score_groups_prog_local    = NULL;
     float **          score_subgroups_local      = NULL;
     float **          score_subgroups_prog_local = NULL;
-    if(check_mode_for_flag(mode, READ_TREES_POINTERS_BRIDGE_FOREMATCH) && !check_mode_for_flag(mode, READ_TREES_POINTERS_BRIDGE_BACKMATCH)) {
+    if(SID_CHECK_BITFIELD_SWITCH(mode, READ_TREES_POINTERS_BRIDGE_FOREMATCH) && !SID_CHECK_BITFIELD_SWITCH(mode,
+                                                                                                           READ_TREES_POINTERS_BRIDGE_BACKMATCH)) {
         sprintf(pointer_type_text, "forematch");
         flag_bridge_forematch = GBP_TRUE;
         // Fetch the pointers from the trees structure
@@ -59,7 +60,8 @@ void read_trees_pointers(tree_info *trees, const char *filename_input_dir_horizo
                     SID_ERROR_LOGIC);
         else
             score_subgroups_prog_local = trees->subgroup_descendant_score;
-    } else if(check_mode_for_flag(mode, READ_TREES_POINTERS_BRIDGE_BACKMATCH) && !check_mode_for_flag(mode, READ_TREES_POINTERS_BRIDGE_FOREMATCH)) {
+    } else if(SID_CHECK_BITFIELD_SWITCH(mode, READ_TREES_POINTERS_BRIDGE_BACKMATCH) && !SID_CHECK_BITFIELD_SWITCH(mode,
+                                                                                                                  READ_TREES_POINTERS_BRIDGE_FOREMATCH)) {
         sprintf(pointer_type_text, "backmatch");
         flag_bridge_backmatch = GBP_TRUE;
         // Fetch the pointers from the trees structure

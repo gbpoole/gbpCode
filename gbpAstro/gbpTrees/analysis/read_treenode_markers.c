@@ -21,14 +21,14 @@ void read_treenode_markers(tree_info *trees, const char *filename_input_root, in
     int *                n_halos_total;
     int *                n_halos_local;
     tree_node_info **    first_neighbour;
-    if(check_mode_for_flag(mode, PRECOMPUTE_TREENODE_MARKER_GROUPS)) {
+    if(SID_CHECK_BITFIELD_SWITCH(mode, PRECOMPUTE_TREENODE_MARKER_GROUPS)) {
         sprintf(filename_input_group_text, "groups");
         flag_process_groups = GBP_TRUE;
         markers             = &(trees->group_markers);
         n_halos_total       = trees->n_groups_catalog;
         n_halos_local       = trees->n_groups_snap_local;
         first_neighbour     = trees->first_neighbour_groups;
-    } else if(check_mode_for_flag(mode, PRECOMPUTE_TREENODE_MARKER_SUBGROUPS)) {
+    } else if(SID_CHECK_BITFIELD_SWITCH(mode, PRECOMPUTE_TREENODE_MARKER_SUBGROUPS)) {
         sprintf(filename_input_group_text, "subgroups");
         markers         = &(trees->subgroup_markers);
         n_halos_total   = trees->n_subgroups_catalog;

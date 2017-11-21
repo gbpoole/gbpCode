@@ -11,7 +11,8 @@
 
 void precompute_treenode_markers(tree_info *trees, int mode) {
     // Sanity check
-    if(check_mode_for_flag(mode, PRECOMPUTE_TREENODE_MARKER_GROUPS) && check_mode_for_flag(mode, PRECOMPUTE_TREENODE_MARKER_SUBGROUPS))
+    if(SID_CHECK_BITFIELD_SWITCH(mode, PRECOMPUTE_TREENODE_MARKER_GROUPS) &&
+            SID_CHECK_BITFIELD_SWITCH(mode, PRECOMPUTE_TREENODE_MARKER_SUBGROUPS))
         SID_exit_error(
                 "Both group and subgroup mode flags are set when only one is allowed in precompute_treenode_markers().",
                 SID_ERROR_LOGIC);
@@ -28,13 +29,13 @@ void precompute_treenode_markers(tree_info *trees, int mode) {
     int *               n_halos_snap_local = NULL;
     tree_node_info **   first_neighbours   = NULL;
     tree_markers_info **markers;
-    if(check_mode_for_flag(mode, PRECOMPUTE_TREENODE_MARKER_GROUPS)) {
+    if(SID_CHECK_BITFIELD_SWITCH(mode, PRECOMPUTE_TREENODE_MARKER_GROUPS)) {
         sprintf(group_text, "groups");
         n_halos_snap_local  = trees->n_groups_snap_local;
         first_neighbours    = trees->first_neighbour_groups;
         markers             = trees->group_markers;
         flag_process_groups = GBP_TRUE;
-    } else if(check_mode_for_flag(mode, PRECOMPUTE_TREENODE_MARKER_SUBGROUPS)) {
+    } else if(SID_CHECK_BITFIELD_SWITCH(mode, PRECOMPUTE_TREENODE_MARKER_SUBGROUPS)) {
         sprintf(group_text, "subgroups");
         n_halos_snap_local  = trees->n_subgroups_snap_local;
         first_neighbours    = trees->first_neighbour_subgroups;

@@ -7,9 +7,11 @@
 
 void compute_histogram_range(hist_info *hist, double confidence_percent, int mode, double *x_peak, double *x_lo, double *x_hi) {
     // Sanity check
-    if(check_mode_for_flag(mode, GBP_HISTOGRAM_RANGE_ALL) && check_mode_for_flag(mode, GBP_HISTOGRAM_RANGE_HIST))
+    if(SID_CHECK_BITFIELD_SWITCH(mode, GBP_HISTOGRAM_RANGE_ALL) &&
+            SID_CHECK_BITFIELD_SWITCH(mode, GBP_HISTOGRAM_RANGE_HIST))
         SID_exit_error("Multiple range mode flags have been set in compute_histogram_range().", SID_ERROR_LOGIC);
-    if(!check_mode_for_flag(mode, GBP_HISTOGRAM_RANGE_ALL) && !check_mode_for_flag(mode, GBP_HISTOGRAM_RANGE_HIST))
+    if(!SID_CHECK_BITFIELD_SWITCH(mode, GBP_HISTOGRAM_RANGE_ALL) && !SID_CHECK_BITFIELD_SWITCH(mode,
+                                                                                               GBP_HISTOGRAM_RANGE_HIST))
         SID_exit_error("No range mode flags have been set in compute_histogram_range().", SID_ERROR_LOGIC);
 
     // Set defaults
@@ -19,9 +21,9 @@ void compute_histogram_range(hist_info *hist, double confidence_percent, int mod
 
     // Set the population to nomalize by
     size_t n_norm;
-    if(check_mode_for_flag(mode, GBP_HISTOGRAM_RANGE_ALL))
+    if(SID_CHECK_BITFIELD_SWITCH(mode, GBP_HISTOGRAM_RANGE_ALL))
         n_norm = hist->count_all;
-    else if(check_mode_for_flag(mode, GBP_HISTOGRAM_RANGE_HIST))
+    else if(SID_CHECK_BITFIELD_SWITCH(mode, GBP_HISTOGRAM_RANGE_HIST))
         n_norm = hist->count_hist;
 
     if(n_norm > 0) {

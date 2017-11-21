@@ -5,7 +5,7 @@ void init_RNG(int *seed, RNG_info *RNG, int mode) {
     if((*seed) <= 0)
         init_seed_from_clock(seed);
     RNG->seed = (*seed);
-    if(check_mode_for_flag(mode, RNG_GLOBAL))
+    if(SID_CHECK_BITFIELD_SWITCH(mode, RNG_GLOBAL))
         RNG->global = GBP_TRUE;
     else
         RNG->global = GBP_FALSE;

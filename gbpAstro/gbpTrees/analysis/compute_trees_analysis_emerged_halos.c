@@ -36,7 +36,7 @@ void compute_trees_analysis_emerged_halos(tree_info *trees, char *filename_out_r
         tree_node_info *current_halo = neighbour_list_start[i_snap];
         while(current_halo != NULL) {
             // Process each new branch
-            if(check_mode_for_flag(current_halo->tree_case, TREE_CASE_EMERGED)) {
+            if(SID_CHECK_BITFIELD_SWITCH(current_halo->tree_case, TREE_CASE_EMERGED)) {
                 // Scan the branch ...
                 // We are going to write all the emerged halos in a branch together.  This involves starting
                 //    with an emerged halo and then scanning along it's *progenitor* line, counting and writing
@@ -50,7 +50,7 @@ void compute_trees_analysis_emerged_halos(tree_info *trees, char *filename_out_r
                 while(current_progenitor != NULL) {
                     if(current_progenitor->halo_ID != current_halo->halo_ID)
                         break;
-                    n_emerged_i += check_mode_for_flag(current_progenitor->tree_case, TREE_CASE_EMERGED);
+                    n_emerged_i += SID_CHECK_BITFIELD_SWITCH(current_progenitor->tree_case, TREE_CASE_EMERGED);
                     current_progenitor = current_progenitor->descendant;
                 }
 
@@ -60,7 +60,7 @@ void compute_trees_analysis_emerged_halos(tree_info *trees, char *filename_out_r
                     n_emerged_i        = 0;
                     current_progenitor = current_halo;
                     while(current_progenitor != NULL) {
-                        int flag_emerged = check_mode_for_flag(current_progenitor->tree_case, TREE_CASE_EMERGED);
+                        int flag_emerged = SID_CHECK_BITFIELD_SWITCH(current_progenitor->tree_case, TREE_CASE_EMERGED);
                         n_emerged_i += flag_emerged;
                         current_progenitor = current_progenitor->progenitor_first;
                         // Because we may have reordered the progenitors, we can't trust that
@@ -112,7 +112,7 @@ void compute_trees_analysis_emerged_halos(tree_info *trees, char *filename_out_r
         double          z            = (double)trees->z_list[i_snap];
         while(current_halo != NULL) {
             // Process each new branch
-            if(check_mode_for_flag(current_halo->tree_case, TREE_CASE_EMERGED)) {
+            if(SID_CHECK_BITFIELD_SWITCH(current_halo->tree_case, TREE_CASE_EMERGED)) {
                 // Scan the branch ...
                 // We are going to write all the emerged halos in a branch together.  This involves starting
                 //    with an emerged halo and then scanning along it's *progenitor* line, counting and writing
@@ -126,7 +126,7 @@ void compute_trees_analysis_emerged_halos(tree_info *trees, char *filename_out_r
                 while(current_progenitor != NULL) {
                     if(current_progenitor->halo_ID != current_halo->halo_ID)
                         break;
-                    n_emerged_i += check_mode_for_flag(current_progenitor->tree_case, TREE_CASE_EMERGED);
+                    n_emerged_i += SID_CHECK_BITFIELD_SWITCH(current_progenitor->tree_case, TREE_CASE_EMERGED);
                     current_progenitor = current_progenitor->descendant;
                 }
 
@@ -135,7 +135,7 @@ void compute_trees_analysis_emerged_halos(tree_info *trees, char *filename_out_r
                 if(n_emerged_i == 0) {
                     current_progenitor = current_halo;
                     while(current_progenitor != NULL) {
-                        int flag_emerged = check_mode_for_flag(current_progenitor->tree_case, TREE_CASE_EMERGED);
+                        int flag_emerged = SID_CHECK_BITFIELD_SWITCH(current_progenitor->tree_case, TREE_CASE_EMERGED);
                         if(flag_emerged) {
                             // Add an emerged halo instance to the list
                             add_to_treenode_list(list_halos, current_progenitor);

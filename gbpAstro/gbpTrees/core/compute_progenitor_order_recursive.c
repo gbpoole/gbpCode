@@ -17,8 +17,8 @@ void compute_progenitor_order_recursive(tree_info *trees, tree_node_info *descen
     int N_i_peak           = descendant->n_particles_peak;
     int N_i_inclusive_peak = descendant->n_particles_inclusive_peak;
     int max_M_iN           = 0;
-    int flag_reset_primary = check_mode_for_flag(mode, TREE_PROGENITOR_ORDER_N_PARTICLES_INCLUSIVE_PEAK) ||
-                             check_mode_for_flag(mode, TREE_PROGENITOR_ORDER_N_PARTICLES_PEAK);
+    int flag_reset_primary = SID_CHECK_BITFIELD_SWITCH(mode, TREE_PROGENITOR_ORDER_N_PARTICLES_INCLUSIVE_PEAK) ||
+            SID_CHECK_BITFIELD_SWITCH(mode, TREE_PROGENITOR_ORDER_N_PARTICLES_PEAK);
     if(flag_reset_primary)
         descendant->progenitor_primary = NULL; // this gets set only if n_progenitors>1
     if(descendant->n_progenitors > 1) {
@@ -36,7 +36,7 @@ void compute_progenitor_order_recursive(tree_info *trees, tree_node_info *descen
                 SID_exit_error("Progenitor count exceeded in compute_progenitor_order_recursive().", SID_ERROR_LOGIC);
             node_list[n_halos] = current_progenitor;                                                // Make node  list
             compute_progenitor_order_recursive(trees, current_progenitor, &(score[n_halos]), mode); // Make score list
-            if(check_mode_for_flag(mode, TREE_PROGENITOR_ORDER_DELUCIA))
+            if(SID_CHECK_BITFIELD_SWITCH(mode, TREE_PROGENITOR_ORDER_DELUCIA))
                 max_M_iN = GBP_MAX(max_M_iN, score[n_halos]);
             n_halos++;
             current_progenitor = current_progenitor->progenitor_next;
@@ -73,23 +73,23 @@ void compute_progenitor_order_recursive(tree_info *trees, tree_node_info *descen
     else if(descendant->progenitor_first != NULL) {
         compute_progenitor_order_recursive(trees, descendant->progenitor_first, score_descendant, mode);
         if(score_descendant != NULL) {
-            if(check_mode_for_flag(mode, TREE_PROGENITOR_ORDER_DELUCIA))
+            if(SID_CHECK_BITFIELD_SWITCH(mode, TREE_PROGENITOR_ORDER_DELUCIA))
                 max_M_iN = (*score_descendant);
         }
     }
 
     // Pass order scores up the heirarchy
     if(score_descendant != NULL) {
-        if(check_mode_for_flag(mode, TREE_PROGENITOR_ORDER_DELUCIA))
+        if(SID_CHECK_BITFIELD_SWITCH(mode, TREE_PROGENITOR_ORDER_DELUCIA))
             // Add this progenitor's score to the descendant's sum (see De Lucia and Blaizot, 2006)
             (*score_descendant) = N_i + max_M_iN;
-        else if(check_mode_for_flag(mode, TREE_PROGENITOR_ORDER_N_PARTICLES))
+        else if(SID_CHECK_BITFIELD_SWITCH(mode, TREE_PROGENITOR_ORDER_N_PARTICLES))
             (*score_descendant) = N_i;
-        else if(check_mode_for_flag(mode, TREE_PROGENITOR_ORDER_N_PARTICLES_INCLUSIVE))
+        else if(SID_CHECK_BITFIELD_SWITCH(mode, TREE_PROGENITOR_ORDER_N_PARTICLES_INCLUSIVE))
             (*score_descendant) = N_i_inclusive;
-        else if(check_mode_for_flag(mode, TREE_PROGENITOR_ORDER_N_PARTICLES_PEAK))
+        else if(SID_CHECK_BITFIELD_SWITCH(mode, TREE_PROGENITOR_ORDER_N_PARTICLES_PEAK))
             (*score_descendant) = N_i_peak;
-        else if(check_mode_for_flag(mode, TREE_PROGENITOR_ORDER_N_PARTICLES_INCLUSIVE_PEAK))
+        else if(SID_CHECK_BITFIELD_SWITCH(mode, TREE_PROGENITOR_ORDER_N_PARTICLES_INCLUSIVE_PEAK))
             (*score_descendant) = N_i_inclusive_peak;
         else
             SID_exit_error("Invalid mode (%d) in assign_progenitor_order_recursive().", SID_ERROR_LOGIC, mode);

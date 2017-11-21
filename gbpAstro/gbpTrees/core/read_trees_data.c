@@ -21,9 +21,9 @@ void read_trees_data(tree_info *trees, char *filename_root, int mode, SID_Dataty
     void **data_subgroups_local = NULL;
     int    data_type_size;
     SID_Type_size(data_type, &data_type_size);
-    if(check_mode_for_flag(mode, READ_TREES_DATA_GROUPS))
+    if(SID_CHECK_BITFIELD_SWITCH(mode, READ_TREES_DATA_GROUPS))
         init_trees_data(trees, &data_groups_local, data_type_size, INIT_TREE_DATA_GROUPS, "%s_groups", name);
-    if(check_mode_for_flag(mode, READ_TREES_DATA_SUBGROUPS))
+    if(SID_CHECK_BITFIELD_SWITCH(mode, READ_TREES_DATA_SUBGROUPS))
         init_trees_data(trees, &data_subgroups_local, data_type_size, INIT_TREE_DATA_SUBGROUPS, "%s_subgroups", name);
 
     // Process each snapshot in turn
@@ -53,7 +53,7 @@ void read_trees_data(tree_info *trees, char *filename_root, int mode, SID_Dataty
             int             flag_proceed = GBP_TRUE;
             switch(i_type) {
                 case 0:
-                    flag_proceed = check_mode_for_flag(mode, READ_TREES_DATA_SUBGROUPS);
+                    flag_proceed = SID_CHECK_BITFIELD_SWITCH(mode, READ_TREES_DATA_SUBGROUPS);
                     if(flag_proceed) {
                         sprintf(group_text_prefix, "sub");
                         n_halos         = trees->n_subgroups_snap_local[i_snap];
@@ -66,7 +66,7 @@ void read_trees_data(tree_info *trees, char *filename_root, int mode, SID_Dataty
                     }
                     break;
                 case 1:
-                    flag_proceed = check_mode_for_flag(mode, READ_TREES_DATA_GROUPS);
+                    flag_proceed = SID_CHECK_BITFIELD_SWITCH(mode, READ_TREES_DATA_GROUPS);
                     if(flag_proceed) {
                         sprintf(group_text_prefix, "");
                         n_halos         = trees->n_groups_snap_local[i_snap];

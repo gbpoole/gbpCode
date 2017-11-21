@@ -40,7 +40,7 @@ void generate_MCMC_parameters(MCMC_info *MCMC) {
             RNG                        = MCMC->RNG;
             factor                     = 2.4 / sqrt((double)MCMC->n_M_total);
             MCMC->first_parameter_call = GBP_FALSE;
-            reflect_priors             = check_mode_for_flag(MCMC->mode, MCMC_MODE_REFLECT_PRIORS);
+            reflect_priors             = SID_CHECK_BITFIELD_SWITCH(MCMC->mode, MCMC_MODE_REFLECT_PRIORS);
             break;
     }
 
@@ -79,6 +79,6 @@ void generate_MCMC_parameters(MCMC_info *MCMC) {
         }
     }
 
-    if(!check_mode_for_flag(MCMC->mode, MCMC_MODE_PARALLEL))
+    if(!SID_CHECK_BITFIELD_SWITCH(MCMC->mode, MCMC_MODE_PARALLEL))
         SID_Bcast(P_new, n_P, SID_DOUBLE, SID_MASTER_RANK, MCMC->comm);
 }

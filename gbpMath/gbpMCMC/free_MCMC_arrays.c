@@ -52,7 +52,7 @@ void free_MCMC_arrays(MCMC_info *MCMC) {
         SID_free(SID_FARG MCMC->n_DoF_DS_peak);
 
         // These only need to be deallocated if we are using MCMC_MODE_MINIMIZE_IO
-        if(check_mode_for_flag(MCMC->mode, MCMC_MODE_MINIMIZE_IO)) {
+        if(SID_CHECK_BITFIELD_SWITCH(MCMC->mode, MCMC_MODE_MINIMIZE_IO)) {
             SID_free(SID_FARG MCMC->flag_success_buffer);
             SID_free(SID_FARG MCMC->ln_likelihood_new_buffer);
             SID_free(SID_FARG MCMC->P_new_buffer);

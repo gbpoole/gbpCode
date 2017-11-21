@@ -191,7 +191,7 @@ void map_to_grid(size_t      n_particles_local,
     }
 
     // Clear the field
-    if(!check_mode_for_flag(mode, MAP2GRID_MODE_NOCLEAN)) {
+    if(!SID_CHECK_BITFIELD_SWITCH(mode, MAP2GRID_MODE_NOCLEAN)) {
         SID_log("Clearing fields...", SID_LOG_OPEN);
         clear_field(field);
         if(field_norm != NULL)
@@ -373,7 +373,7 @@ void map_to_grid(size_t      n_particles_local,
     SID_log("Done.", SID_LOG_CLOSE);
 
     // Recompute local normalization (more accurate for large sample sizes)
-    if(!check_mode_for_flag(mode, MAP2GRID_MODE_NONORM)) {
+    if(!SID_CHECK_BITFIELD_SWITCH(mode, MAP2GRID_MODE_NONORM)) {
         SID_log("Applying normalization...", SID_LOG_OPEN);
         if(field_norm != NULL) {
             for(i_grid = 0; i_grid < field->n_field_R_local; i_grid++) {
@@ -381,11 +381,11 @@ void map_to_grid(size_t      n_particles_local,
                     field->field_local[i_grid] /= field_norm->field_local[i_grid];
             }
         }
-        if(check_mode_for_flag(mode, MAP2GRID_MODE_APPLYFACTOR)) {
+        if(SID_CHECK_BITFIELD_SWITCH(mode, MAP2GRID_MODE_APPLYFACTOR)) {
             for(i_grid = 0; i_grid < field->n_field_R_local; i_grid++)
                 field->field_local[i_grid] *= normalization_constant;
         }
-        if(check_mode_for_flag(mode, MAP2GRID_MODE_FORCENORM)) {
+        if(SID_CHECK_BITFIELD_SWITCH(mode, MAP2GRID_MODE_FORCENORM)) {
             norm_local = 0;
             for(i_grid = 0; i_grid < field->n_field_R_local; i_grid++)
                 norm_local += (double)field->field_local[i_grid];

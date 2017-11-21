@@ -5,9 +5,9 @@
 #include <gbpHist.h>
 
 void free_histogram(hist_info *hist) {
-    if(check_mode_for_flag(hist->mode, GBP_HISTOGRAM_FIXED)) {
+    if(SID_CHECK_BITFIELD_SWITCH(hist->mode, GBP_HISTOGRAM_FIXED)) {
         SID_free(SID_FARG hist->bin_count);
-    } else if(check_mode_for_flag(hist->mode, GBP_HISTOGRAM_IRREGULAR_XLO_DEFINED)) {
+    } else if(SID_CHECK_BITFIELD_SWITCH(hist->mode, GBP_HISTOGRAM_IRREGULAR_XLO_DEFINED)) {
         SID_free(SID_FARG hist->bin_count);
         SID_free(SID_FARG hist->x_lo);
         SID_free(SID_FARG hist->x_hi);

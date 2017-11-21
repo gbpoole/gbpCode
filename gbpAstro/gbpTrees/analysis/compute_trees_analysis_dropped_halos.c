@@ -36,7 +36,7 @@ void compute_trees_analysis_dropped_halos(tree_info *trees, char *filename_out_r
         tree_node_info *current_halo = neighbour_list_start[i_snap];
         while(current_halo != NULL) {
             // Process each new branch
-            if(check_mode_for_flag(current_halo->tree_case, TREE_CASE_DROPPED)) {
+            if(SID_CHECK_BITFIELD_SWITCH(current_halo->tree_case, TREE_CASE_DROPPED)) {
                 // Scan the branch ...
                 // ... first, find out how many dropped instances are in the descendant line.  This
                 //     is done so we can avoid double (or triple, etc) counting branches.  This will
@@ -46,7 +46,7 @@ void compute_trees_analysis_dropped_halos(tree_info *trees, char *filename_out_r
                 while(current_progenitor != NULL) {
                     if(current_progenitor->halo_ID != current_halo->halo_ID)
                         break;
-                    n_dropped_i += check_mode_for_flag(current_progenitor->tree_case, TREE_CASE_DROPPED);
+                    n_dropped_i += SID_CHECK_BITFIELD_SWITCH(current_progenitor->tree_case, TREE_CASE_DROPPED);
                     current_progenitor = current_progenitor->descendant;
                 }
 
@@ -56,7 +56,7 @@ void compute_trees_analysis_dropped_halos(tree_info *trees, char *filename_out_r
                     n_dropped_i        = 0;
                     current_progenitor = current_halo;
                     while(current_progenitor != NULL) {
-                        int flag_dropped = check_mode_for_flag(current_progenitor->tree_case, TREE_CASE_DROPPED);
+                        int flag_dropped = SID_CHECK_BITFIELD_SWITCH(current_progenitor->tree_case, TREE_CASE_DROPPED);
                         n_dropped_i += flag_dropped;
                         current_progenitor = current_progenitor->progenitor_first;
                         // Because we may have reordered the progenitors, we can't trust that
@@ -108,7 +108,7 @@ void compute_trees_analysis_dropped_halos(tree_info *trees, char *filename_out_r
         double          z            = (double)trees->z_list[i_snap];
         while(current_halo != NULL) {
             // Process each new branch
-            if(check_mode_for_flag(current_halo->tree_case, TREE_CASE_DROPPED)) {
+            if(SID_CHECK_BITFIELD_SWITCH(current_halo->tree_case, TREE_CASE_DROPPED)) {
                 // Scan the branch ...
                 // ... first, find out how many dropped instances are in the descendant line.  This
                 //     is done so we can avoid double (or triple, etc) counting branches.  This will
@@ -118,7 +118,7 @@ void compute_trees_analysis_dropped_halos(tree_info *trees, char *filename_out_r
                 while(current_progenitor != NULL) {
                     if(current_progenitor->halo_ID != current_halo->halo_ID)
                         break;
-                    n_dropped_i += check_mode_for_flag(current_progenitor->tree_case, TREE_CASE_DROPPED);
+                    n_dropped_i += SID_CHECK_BITFIELD_SWITCH(current_progenitor->tree_case, TREE_CASE_DROPPED);
                     current_progenitor = current_progenitor->descendant;
                 }
 
@@ -127,7 +127,7 @@ void compute_trees_analysis_dropped_halos(tree_info *trees, char *filename_out_r
                 if(n_dropped_i == 0) {
                     current_progenitor = current_halo;
                     while(current_progenitor != NULL) {
-                        int flag_dropped = check_mode_for_flag(current_progenitor->tree_case, TREE_CASE_DROPPED);
+                        int flag_dropped = SID_CHECK_BITFIELD_SWITCH(current_progenitor->tree_case, TREE_CASE_DROPPED);
                         if(flag_dropped) {
                             // Add an dropped halo instance to the list
                             add_to_treenode_list(list_halos, current_progenitor);

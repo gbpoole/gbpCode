@@ -56,8 +56,8 @@ int add_node_to_trees(tree_info *      trees,            // The tree datastructu
     (*new_node)->next_in_forest     = NULL;
 
     // Set some merger flags
-    int flag_primary   = check_mode_for_flag(tree_case, TREE_CASE_MERGER_PRIMARY);
-    int flag_secondary = check_mode_for_flag(tree_case, TREE_CASE_MERGER);
+    int flag_primary   = SID_CHECK_BITFIELD_SWITCH(tree_case, TREE_CASE_MERGER_PRIMARY);
+    int flag_secondary = SID_CHECK_BITFIELD_SWITCH(tree_case, TREE_CASE_MERGER);
     if(flag_primary && flag_secondary)
         SID_exit_error("Both primary and secondary flags have been switched on for halo (snap=%d;idx=%d;case=%d).",
                        SID_ERROR_LOGIC, halo_snap, halo_index, tree_case);

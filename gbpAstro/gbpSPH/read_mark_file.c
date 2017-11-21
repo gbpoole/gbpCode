@@ -37,15 +37,15 @@ void read_mark_file(plist_info *plist, const char *mark_name, const char *filena
     SID_log("Reading mark file...", SID_LOG_OPEN);
 
     // Interpret run mode
-    if(check_mode_for_flag(mode, MARK_READ_ALL))
+    if(SID_CHECK_BITFIELD_SWITCH(mode, MARK_READ_ALL))
         flag_read_mode = MARK_READ_ALL;
     else
         flag_read_mode = MARK_DEFAULT;
-    if(check_mode_for_flag(mode, MARK_LIST_ONLY))
+    if(SID_CHECK_BITFIELD_SWITCH(mode, MARK_LIST_ONLY))
         flag_mark_mode = MARK_LIST_ONLY;
     else
         flag_mark_mode = MARK_DEFAULT;
-    if(check_mode_for_flag(mode, MARK_INIT) || check_mode_for_flag(mode, MARK_OR))
+    if(SID_CHECK_BITFIELD_SWITCH(mode, MARK_INIT) || SID_CHECK_BITFIELD_SWITCH(mode, MARK_OR))
         flag_op_mode = MARK_DEFAULT;
     else
         flag_op_mode = MARK_AND;

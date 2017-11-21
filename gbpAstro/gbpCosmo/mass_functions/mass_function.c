@@ -16,7 +16,7 @@ double mass_function(double M_interp, double z, cosmo_info **cosmo, int mode, ..
 
     // Get passed parameters (if mode specifies they are there).
     double *P = NULL;
-    if(check_mode_for_flag(mode, MF_PASS_PARAMS))
+    if(SID_CHECK_BITFIELD_SWITCH(mode, MF_PASS_PARAMS))
         P = (double *)va_arg(vargs, double *);
 
     // Initialize/compute some misc. cosmology things

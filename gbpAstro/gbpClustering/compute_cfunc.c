@@ -159,17 +159,17 @@ void calc_pairs_local(const char *species_name1, const char *species_name2, int 
     // Interpret the mode
     int flag_self_match;
     int flag_pair_type = -1;
-    if(check_mode_for_flag(mode, CFUNC_SELF_MATCH))
+    if(SID_CHECK_BITFIELD_SWITCH(mode, CFUNC_SELF_MATCH))
         flag_self_match = GBP_TRUE;
     else
         flag_self_match = GBP_FALSE;
-    if(check_mode_for_flag(mode, CFUNC_ADD_PAIR_DD)) {
+    if(SID_CHECK_BITFIELD_SWITCH(mode, CFUNC_ADD_PAIR_DD)) {
         flag_pair_type = CFUNC_ADD_PAIR_DD;
-    } else if(check_mode_for_flag(mode, CFUNC_ADD_PAIR_DR)) {
+    } else if(SID_CHECK_BITFIELD_SWITCH(mode, CFUNC_ADD_PAIR_DR)) {
         if(flag_pair_type >= 0)
             SID_exit_error("Multiple pair types specified.", SID_ERROR_LOGIC);
         flag_pair_type = CFUNC_ADD_PAIR_DR;
-    } else if(check_mode_for_flag(mode, CFUNC_ADD_PAIR_RR)) {
+    } else if(SID_CHECK_BITFIELD_SWITCH(mode, CFUNC_ADD_PAIR_RR)) {
         if(flag_pair_type >= 0)
             SID_exit_error("Multiple pair types specified.", SID_ERROR_LOGIC);
         flag_pair_type = CFUNC_ADD_PAIR_RR;

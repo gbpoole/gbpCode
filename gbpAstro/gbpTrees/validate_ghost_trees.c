@@ -152,18 +152,18 @@ int main(int argc, char *argv[]) {
                             snap_i + group_file_offset * snap_step,
                             n_group_descendant);
                     if(tree_type == 1)
-                        fprintf(stdout, " %d\n", check_mode_for_flag(group_type, TREE_CASE_GHOST));
+                        fprintf(stdout, " %d\n", SID_CHECK_BITFIELD_SWITCH(group_type, TREE_CASE_GHOST));
                     else
                         fprintf(stdout, "\n");
                     n_groups_bad++;
                 }
                 // else if(snap_i==306 && i_group>188545 || i_group>0){
                 //   fprintf(stdout,"G: (%d,%d)->(%d,%d) %d %d\n",i_group,snap_i,group_index,snap_i+group_file_offset*snap_step,
-                //                                                n_group_descendant,check_mode_for_flag(group_type,TREE_CASE_GHOST));
+                //                                                n_group_descendant,SID_CHECK_BITFIELD_SWITCH(group_type,TREE_CASE_GHOST));
                 //}
             }
 
-            if(check_mode_for_flag(group_type, TREE_CASE_GHOST_NULL))
+            if(SID_CHECK_BITFIELD_SWITCH(group_type, TREE_CASE_GHOST_NULL))
                 n_null_ghost_groups++;
 
             // Process subgroups
@@ -204,7 +204,7 @@ int main(int argc, char *argv[]) {
                                 snap_i + subgroup_file_offset * snap_step,
                                 n_subgroup_descendant);
                         if(tree_type == 1)
-                            fprintf(stdout, " %d\n", check_mode_for_flag(subgroup_type, TREE_CASE_GHOST));
+                            fprintf(stdout, " %d\n", SID_CHECK_BITFIELD_SWITCH(subgroup_type, TREE_CASE_GHOST));
                         else
                             fprintf(stdout, "\n");
                         n_subgroups_bad++;
@@ -212,7 +212,7 @@ int main(int argc, char *argv[]) {
                 }
 
                 // Test message
-                // if(check_mode_for_flag(group_type,TREE_CASE_GHOST) && snap_i==306)
+                // if(SID_CHECK_BITFIELD_SWITCH(group_type,TREE_CASE_GHOST) && snap_i==306)
                 //   fprintf(stdout,"G: ( %d , %d , %d )->( %d , %d ) %d %d\n",
                 //           i_group,i_subgroup,snap_i,subgroup_index,snap_i+subgroup_file_offset*snap_step,
                 //           n_subgroup_descendant,subgroup_index>=n_subgroup_descendant);

@@ -59,7 +59,7 @@ void compute_substructure_order_recursive(tree_node_info *parent, int *score_par
         compute_substructure_order_recursive(parent->substructure_first, NULL, mode);
 
     // Pass order scores up the heirarchy
-    if(check_mode_for_flag(mode, TREE_SUBSTRUCTURE_ORDER_DEFAULT)) {
+    if(SID_CHECK_BITFIELD_SWITCH(mode, TREE_SUBSTRUCTURE_ORDER_DEFAULT)) {
         if(score_parent != NULL)
             (*score_parent) = parent->n_particles;
     } else

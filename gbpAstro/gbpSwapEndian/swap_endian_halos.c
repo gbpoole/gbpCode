@@ -19,7 +19,8 @@ void swap_endian_halos_groups_local(const char *filename_in_root,
     SID_log("Swapping endian of group file...", SID_LOG_OPEN);
 
     // Sanity check
-    if(check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE) && check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE))
+    if(SID_CHECK_BITFIELD_SWITCH(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE) &&
+            SID_CHECK_BITFIELD_SWITCH(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE))
         SID_exit_error("Invalid mode flag (%d) in swap_endian_halos_groups_local().", SID_ERROR_LOGIC, mode);
 
     // Set filenames
@@ -41,7 +42,7 @@ void swap_endian_halos_groups_local(const char *filename_in_root,
     int offset_size_bytes;
     fread_verify(&n_groups, sizeof(int), 1, fp_in);
     fread_verify(&offset_size_bytes, sizeof(int), 1, fp_in);
-    if(check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_TO_NATIVE)) {
+    if(SID_CHECK_BITFIELD_SWITCH(mode, SWAP_SSIMPL_ENDIAN_TO_NATIVE)) {
         swap_endian((char *)(&n_groups), 1, sizeof(int));
         swap_endian((char *)(&offset_size_bytes), 1, sizeof(int));
     }
@@ -82,7 +83,8 @@ void swap_endian_halos_subgroups_local(const char *filename_in_root,
     SID_log("Swapping endian of subgroup file...", SID_LOG_OPEN);
 
     // Sanity check
-    if(check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE) && check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE))
+    if(SID_CHECK_BITFIELD_SWITCH(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE) &&
+            SID_CHECK_BITFIELD_SWITCH(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE))
         SID_exit_error("Invalid mode flag (%d) in swap_endian_halos_subgroups_local().", SID_ERROR_LOGIC, mode);
 
     // Set filenames
@@ -104,7 +106,7 @@ void swap_endian_halos_subgroups_local(const char *filename_in_root,
     int offset_size_bytes;
     fread_verify(&n_subgroups, sizeof(int), 1, fp_in);
     fread_verify(&offset_size_bytes, sizeof(int), 1, fp_in);
-    if(check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_TO_NATIVE)) {
+    if(SID_CHECK_BITFIELD_SWITCH(mode, SWAP_SSIMPL_ENDIAN_TO_NATIVE)) {
         swap_endian((char *)(&n_subgroups), 1, sizeof(int));
         swap_endian((char *)(&offset_size_bytes), 1, sizeof(int));
     }
@@ -145,7 +147,8 @@ void swap_endian_halos_particles_local(const char *filename_in_root,
     SID_log("Swapping endian of particles file...", SID_LOG_OPEN);
 
     // Sanity check
-    if(check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE) && check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE))
+    if(SID_CHECK_BITFIELD_SWITCH(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE) &&
+            SID_CHECK_BITFIELD_SWITCH(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE))
         SID_exit_error("Invalid mode flag (%d) in swap_endian_halos_particles_local().", SID_ERROR_LOGIC, mode);
 
     // Set filenames
@@ -168,16 +171,16 @@ void swap_endian_halos_particles_local(const char *filename_in_root,
     long long n_particles_long_long;
     size_t    n_particles;
     fread_verify(&particle_size_bytes, sizeof(int), 1, fp_in);
-    if(check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_TO_NATIVE))
+    if(SID_CHECK_BITFIELD_SWITCH(mode, SWAP_SSIMPL_ENDIAN_TO_NATIVE))
         swap_endian((char *)(&particle_size_bytes), 1, sizeof(int));
     if(particle_size_bytes == sizeof(int)) {
         fread_verify(&n_particles_int, sizeof(int), 1, fp_in);
-        if(check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_TO_NATIVE))
+        if(SID_CHECK_BITFIELD_SWITCH(mode, SWAP_SSIMPL_ENDIAN_TO_NATIVE))
             swap_endian((char *)(&n_particles_int), 1, sizeof(int));
         n_particles = (size_t)n_particles_int;
     } else if(particle_size_bytes == sizeof(long long)) {
         fread_verify(&n_particles_long_long, sizeof(long long), 1, fp_in);
-        if(check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_TO_NATIVE))
+        if(SID_CHECK_BITFIELD_SWITCH(mode, SWAP_SSIMPL_ENDIAN_TO_NATIVE))
             swap_endian((char *)(&n_particles_long_long), 1, sizeof(long long));
         n_particles = (size_t)n_particles_long_long;
     } else

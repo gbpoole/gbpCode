@@ -12,9 +12,9 @@
 void free_precompute_treenode_markers(tree_info *trees, int mode) {
     // Set-up to work with groups or subgroups
     tree_markers_info **markers;
-    if(check_mode_for_flag(mode, PRECOMPUTE_TREENODE_MARKER_GROUPS))
+    if(SID_CHECK_BITFIELD_SWITCH(mode, PRECOMPUTE_TREENODE_MARKER_GROUPS))
         markers = trees->group_markers;
-    else if(check_mode_for_flag(mode, PRECOMPUTE_TREENODE_MARKER_SUBGROUPS))
+    else if(SID_CHECK_BITFIELD_SWITCH(mode, PRECOMPUTE_TREENODE_MARKER_SUBGROUPS))
         markers = trees->subgroup_markers;
     else
         SID_exit_error("Neither group nor subgroup mode is set in init_treenode_markers_all() when one is needed.",

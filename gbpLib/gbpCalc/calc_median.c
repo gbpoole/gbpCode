@@ -8,7 +8,7 @@ void calc_median(void *data, void *result, size_t n_data, SID_Datatype type, int
     size_t *index;
 
     if(n_data < 1) {
-        if(type == SID_DOUBLE || check_mode_for_flag(mode, CALC_MODE_RETURN_DOUBLE))
+        if(type == SID_DOUBLE || SID_CHECK_BITFIELD_SWITCH(mode, CALC_MODE_RETURN_DOUBLE))
             ((double *)result)[0] = 0.;
         else if(type == SID_FLOAT)
             ((float *)result)[0] = 0.;
@@ -45,7 +45,7 @@ void calc_median(void *data, void *result, size_t n_data, SID_Datatype type, int
                 SID_exit_error("type not supported in calc_median.", SID_ERROR_LOGIC);
         }
         SID_free(SID_FARG index);
-        if(type == SID_DOUBLE || check_mode_for_flag(mode, CALC_MODE_RETURN_DOUBLE))
+        if(type == SID_DOUBLE || SID_CHECK_BITFIELD_SWITCH(mode, CALC_MODE_RETURN_DOUBLE))
             ((double *)result)[0] = (double)median;
         else if(type == SID_FLOAT)
             ((float *)result)[0] = (float)median;

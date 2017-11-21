@@ -11,6 +11,6 @@
 
 int check_treenode_if_matched_to_emerged(tree_node_info *halo) {
     if(halo != NULL)
-        return (check_mode_for_flag(halo->tree_case, TREE_CASE_MATCHED_TO_EMERGED));
+        return (SID_CHECK_BITFIELD_SWITCH(halo->tree_case, TREE_CASE_MATCHED_TO_EMERGED));
     return (GBP_FALSE);
 }

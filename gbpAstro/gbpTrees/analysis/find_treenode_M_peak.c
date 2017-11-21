@@ -10,7 +10,7 @@
 #include <gbpTrees_analysis.h>
 
 int find_treenode_M_peak(tree_info *trees, tree_node_info *halo, tree_node_info **halo_peak) {
-    if(!check_mode_for_flag(trees->mode, TREE_PROGENITOR_ORDER_N_PARTICLES_PEAK))
+    if(!SID_CHECK_BITFIELD_SWITCH(trees->mode, TREE_PROGENITOR_ORDER_N_PARTICLES_PEAK))
         SID_exit_error(
                 "Trees need to have their progenitors ordered by peak particle count for find_treenode_M_peak() to work.",
                 SID_ERROR_LOGIC);

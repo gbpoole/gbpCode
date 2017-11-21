@@ -21,52 +21,52 @@ void ADaPS_store(ADaPS **list, void *data, const char *name, int mode, ...) {
     new_item->free_function_params = NULL;
 
     // Add data to the new item and interpret variable arguments
-    if(check_mode_for_flag(mode, ADaPS_COPY)) {
+    if(SID_CHECK_BITFIELD_SWITCH(mode, ADaPS_COPY)) {
         data_size      = (size_t)va_arg(vargs, size_t);
         new_item->data = (void *)SID_malloc(data_size);
         memcpy(new_item->data, data, data_size);
-    } else if(check_mode_for_flag(mode, ADaPS_COPY_SUBARRAY_DOUBLE)) {
+    } else if(SID_CHECK_BITFIELD_SWITCH(mode, ADaPS_COPY_SUBARRAY_DOUBLE)) {
         n_subarray     = (size_t)va_arg(vargs, size_t);
         data_size      = sizeof(double) * n_subarray;
         new_item->data = (void *)SID_malloc(data_size);
         memcpy(new_item->data, data, data_size);
-    } else if(check_mode_for_flag(mode, ADaPS_COPY_SUBARRAY_FLOAT)) {
+    } else if(SID_CHECK_BITFIELD_SWITCH(mode, ADaPS_COPY_SUBARRAY_FLOAT)) {
         n_subarray     = (size_t)va_arg(vargs, size_t);
         data_size      = sizeof(float) * n_subarray;
         new_item->data = (void *)SID_malloc(data_size);
         memcpy(new_item->data, data, data_size);
-    } else if(check_mode_for_flag(mode, ADaPS_COPY_SUBARRAY_REAL)) {
+    } else if(SID_CHECK_BITFIELD_SWITCH(mode, ADaPS_COPY_SUBARRAY_REAL)) {
         n_subarray     = (size_t)va_arg(vargs, size_t);
         data_size      = sizeof(GBPREAL) * n_subarray;
         new_item->data = (void *)SID_malloc(data_size);
         memcpy(new_item->data, data, data_size);
-    } else if(check_mode_for_flag(mode, ADaPS_COPY_SUBARRAY_SIZE_T)) {
+    } else if(SID_CHECK_BITFIELD_SWITCH(mode, ADaPS_COPY_SUBARRAY_SIZE_T)) {
         n_subarray     = (size_t)va_arg(vargs, size_t);
         data_size      = sizeof(size_t) * n_subarray;
         new_item->data = (void *)SID_malloc(data_size);
         memcpy(new_item->data, data, data_size);
-    } else if(check_mode_for_flag(mode, ADaPS_COPY_SUBARRAY_INT)) {
+    } else if(SID_CHECK_BITFIELD_SWITCH(mode, ADaPS_COPY_SUBARRAY_INT)) {
         n_subarray     = (size_t)va_arg(vargs, size_t);
         data_size      = sizeof(int) * n_subarray;
         new_item->data = (void *)SID_malloc(data_size);
         memcpy(new_item->data, data, data_size);
-    } else if(check_mode_for_flag(mode, ADaPS_SCALAR_DOUBLE)) {
+    } else if(SID_CHECK_BITFIELD_SWITCH(mode, ADaPS_SCALAR_DOUBLE)) {
         data_size      = sizeof(double);
         new_item->data = (void *)SID_malloc(data_size);
         memcpy(new_item->data, data, data_size);
-    } else if(check_mode_for_flag(mode, ADaPS_SCALAR_FLOAT)) {
+    } else if(SID_CHECK_BITFIELD_SWITCH(mode, ADaPS_SCALAR_FLOAT)) {
         data_size      = sizeof(float);
         new_item->data = (void *)SID_malloc(data_size);
         memcpy(new_item->data, data, data_size);
-    } else if(check_mode_for_flag(mode, ADaPS_SCALAR_REAL)) {
+    } else if(SID_CHECK_BITFIELD_SWITCH(mode, ADaPS_SCALAR_REAL)) {
         data_size      = sizeof(GBPREAL);
         new_item->data = (void *)SID_malloc(data_size);
         memcpy(new_item->data, data, data_size);
-    } else if(check_mode_for_flag(mode, ADaPS_SCALAR_SIZE_T)) {
+    } else if(SID_CHECK_BITFIELD_SWITCH(mode, ADaPS_SCALAR_SIZE_T)) {
         data_size      = sizeof(size_t);
         new_item->data = (void *)SID_malloc(data_size);
         memcpy(new_item->data, data, data_size);
-    } else if(check_mode_for_flag(mode, ADaPS_SCALAR_INT)) {
+    } else if(SID_CHECK_BITFIELD_SWITCH(mode, ADaPS_SCALAR_INT)) {
         data_size      = sizeof(int);
         new_item->data = (void *)SID_malloc(data_size);
         memcpy(new_item->data, data, data_size);

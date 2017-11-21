@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
     int count   = 0;
     int test_restult;
     for(i_parse = 0; i_parse < n_tree_case_flag_list; i_parse++) {
-        if(check_mode_for_flag(match_type, tree_case_flag_list[i_parse])) {
+        if(SID_CHECK_BITFIELD_SWITCH(match_type, tree_case_flag_list[i_parse])) {
             count++;
             if(count == 1)
                 SID_log("The following tree_case_flag_list are switched ON:", SID_LOG_OPEN);

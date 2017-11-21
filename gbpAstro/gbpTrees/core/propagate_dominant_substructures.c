@@ -29,7 +29,8 @@ void propagate_dominant_substructures(tree_horizontal_extended_info **groups,
             // Initialize: if this group needs to have it's dominant substructure initialized,
             //             then turn-on the dominant flag for the most massive substructure (MMS)
             tree_horizontal_extended_info *subgroup_MMS = &(subgroups[i_read % n_wrap][i_subgroup]);
-            if(check_mode_for_flag(this_group->type, TREE_CASE_NO_PROGENITORS) || check_mode_for_flag(this_group->type, TREE_CASE_REINIT_DOMINANT))
+            if(SID_CHECK_BITFIELD_SWITCH(this_group->type, TREE_CASE_NO_PROGENITORS) ||
+                    SID_CHECK_BITFIELD_SWITCH(this_group->type, TREE_CASE_REINIT_DOMINANT))
                 subgroup_MMS->type |= TREE_CASE_DOMINANT;
             // Propagate: Loop over all of the group's substructures, looking for a dominant descendant
             for(int j_subgroup = 0; j_subgroup < n_subgroups_group_i; i_subgroup++, j_subgroup++) {
@@ -38,7 +39,7 @@ void propagate_dominant_substructures(tree_horizontal_extended_info **groups,
                 if(dominant_desc == NULL) {
                     tree_horizontal_extended_info *subgroup_current = &(subgroups[i_read % n_wrap][i_subgroup]);
                     // If this subgroup is marked dominant ...
-                    if(check_mode_for_flag(subgroup_current->type, TREE_CASE_DOMINANT)) {
+                    if(SID_CHECK_BITFIELD_SWITCH(subgroup_current->type, TREE_CASE_DOMINANT)) {
                         // ... and it has a valid descendant ...
                         tree_horizontal_extended_info *subgroup_current_desc = set_extended_descendant(subgroups, subgroup_current, i_read, n_wrap);
                         if(subgroup_current_desc != NULL) {
@@ -67,7 +68,7 @@ void propagate_dominant_substructures(tree_horizontal_extended_info **groups,
         //    or propagate the dropped dominant flag.  Only set a reinitialize flag if the group's descendant is in this
         //    group's main progenitor line.
         if(this_group_desc != NULL && flag_none_propagated) {
-            if(check_mode_for_flag(this_group->type, TREE_CASE_DOMINANT_DROPPED))
+            if(SID_CHECK_BITFIELD_SWITCH(this_group->type, TREE_CASE_DOMINANT_DROPPED))
                 this_group_desc->type |= TREE_CASE_DOMINANT_DROPPED;
             else if(this_group->id == this_group_desc->id)
                 this_group_desc->type |= TREE_CASE_REINIT_DOMINANT;

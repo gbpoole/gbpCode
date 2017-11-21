@@ -16,7 +16,7 @@ int tree_case_flags_text(int match_type, const char *separator_string, char **re
     int count = 0;
     sprintf((*return_string), "");
     for(int i_parse = 0; i_parse < n_tree_case_flag_list; i_parse++) {
-        if(check_mode_for_flag(match_type, tree_case_flag_list[i_parse])) {
+        if(SID_CHECK_BITFIELD_SWITCH(match_type, tree_case_flag_list[i_parse])) {
             count++;
             if(count == 1)
                 sprintf((*return_string), "%s", tree_case_flag_list_text[i_parse]);

@@ -32,7 +32,7 @@ void compute_trees_analysis_strayed_halos(tree_info *trees, char *filename_out_r
     for(int i_snap = 0; i_snap < trees->n_snaps; i_snap++) {
         tree_node_info *current_halo = neighbour_list_start[i_snap];
         while(current_halo != NULL) {
-            if(check_mode_for_flag(current_halo->tree_case, TREE_CASE_STRAYED) && current_halo->descendant == NULL)
+            if(SID_CHECK_BITFIELD_SWITCH(current_halo->tree_case, TREE_CASE_STRAYED) && current_halo->descendant == NULL)
                 n_strayed++;
             current_halo = current_halo->next_neighbour;
         }
@@ -63,7 +63,7 @@ void compute_trees_analysis_strayed_halos(tree_info *trees, char *filename_out_r
         double          z            = (double)trees->z_list[i_snap];
         while(current_halo != NULL) {
             // Process each new branch
-            if(check_mode_for_flag(current_halo->tree_case, TREE_CASE_STRAYED) && current_halo->descendant == NULL) {
+            if(SID_CHECK_BITFIELD_SWITCH(current_halo->tree_case, TREE_CASE_STRAYED) && current_halo->descendant == NULL) {
                 // Add halo to list
                 add_to_treenode_list(list_halos, current_halo);
 

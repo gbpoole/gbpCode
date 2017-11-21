@@ -49,42 +49,42 @@ int assign_particle_to_rank(plist_info *plist,
     int scatter_rank;
 
     if(mode_mark != READ_GADGET_NONE) {
-        if(check_mode_for_flag(mode_mark, READ_GADGET_MARKED)) {
+        if(SID_CHECK_BITFIELD_SWITCH(mode_mark, READ_GADGET_MARKED)) {
             if(id_list[id_list_index[find_index(id_list, id_p, n_id_list, id_list_index)]] != id_p)
                 keep *= GBP_FALSE;
         }
 #if USE_MPI
-        else if(check_mode_for_flag(mode, READ_GADGET_RANDOM)) {
+        else if(SID_CHECK_BITFIELD_SWITCH(mode, READ_GADGET_RANDOM)) {
             scatter_rank = GBP_MIN(SID.n_proc - 1, (int)(random_number(RNG) * (GBPREAL)SID.n_proc));
             if(scatter_rank != SID.My_rank)
                 keep *= GBP_FALSE;
         }
 #endif
-        else if(check_mode_for_flag(mode, READ_GADGET_DEFAULT)) {
+        else if(SID_CHECK_BITFIELD_SWITCH(mode, READ_GADGET_DEFAULT)) {
             if(i_p < i_p_min || i_p > i_p_max)
                 keep *= GBP_FALSE;
         }
-        if(check_mode_for_flag(mode, READ_GADGET_X_MIN)) {
+        if(SID_CHECK_BITFIELD_SWITCH(mode, READ_GADGET_X_MIN)) {
             if(x_p < x_min)
                 keep *= GBP_FALSE;
         }
-        if(check_mode_for_flag(mode, READ_GADGET_X_MAX)) {
+        if(SID_CHECK_BITFIELD_SWITCH(mode, READ_GADGET_X_MAX)) {
             if(x_p >= x_max)
                 keep *= GBP_FALSE;
         }
-        if(check_mode_for_flag(mode, READ_GADGET_Y_MIN)) {
+        if(SID_CHECK_BITFIELD_SWITCH(mode, READ_GADGET_Y_MIN)) {
             if(y_p < y_min)
                 keep *= GBP_FALSE;
         }
-        if(check_mode_for_flag(mode, READ_GADGET_Y_MAX)) {
+        if(SID_CHECK_BITFIELD_SWITCH(mode, READ_GADGET_Y_MAX)) {
             if(y_p >= y_max)
                 keep *= GBP_FALSE;
         }
-        if(check_mode_for_flag(mode, READ_GADGET_Z_MIN)) {
+        if(SID_CHECK_BITFIELD_SWITCH(mode, READ_GADGET_Z_MIN)) {
             if(z_p < z_min)
                 keep *= GBP_FALSE;
         }
-        if(check_mode_for_flag(mode, READ_GADGET_Z_MAX)) {
+        if(SID_CHECK_BITFIELD_SWITCH(mode, READ_GADGET_Z_MAX)) {
             if(z_p >= z_max)
                 keep *= GBP_FALSE;
         }
@@ -395,7 +395,7 @@ void read_gadget_binary(char *filename_root_in, int snapshot_number, plist_info 
         s_load += n_return * sizeof(double);
         if(h_Hubble < 1e-10)
             h_Hubble = 1.;
-        if(check_mode_for_flag(mode, READ_GADGET_NO_HUBBLE))
+        if(SID_CHECK_BITFIELD_SWITCH(mode, READ_GADGET_NO_HUBBLE))
             h_Hubble = 1.;
         box_size *= plist->length_unit / h_Hubble;
         ADaPS_store(&(plist->data), (void *)(&box_size), "box_size", ADaPS_SCALAR_DOUBLE);

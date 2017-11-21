@@ -50,7 +50,7 @@ double bias_model_BPR_integral(cosmo_info **cosmo, double z) {
 
 double bias_model(double x_in, double delta_c, double z, cosmo_info **cosmo, int mode) {
     // Decide what the input is
-    int    flag_Vmax_ordinate = check_mode_for_flag(mode, BIAS_MODEL_VMAX_ORDINATE);
+    int    flag_Vmax_ordinate = SID_CHECK_BITFIELD_SWITCH(mode, BIAS_MODEL_VMAX_ORDINATE);
     double M_R;
     double V_max;
     if(flag_Vmax_ordinate)
@@ -62,7 +62,7 @@ double bias_model(double x_in, double delta_c, double z, cosmo_info **cosmo, int
     int    flag_done = GBP_FALSE;
 
     // Tinker et al 2010
-    if(check_mode_for_flag(mode, BIAS_MODEL_TRK)) {
+    if(SID_CHECK_BITFIELD_SWITCH(mode, BIAS_MODEL_TRK)) {
         if(flag_done)
             SID_exit_error("Mode flag (%d) is invalid in bias_model().  Multiple model definitions.", SID_ERROR_LOGIC,
                            mode);
@@ -81,7 +81,7 @@ double bias_model(double x_in, double delta_c, double z, cosmo_info **cosmo, int
         bias         = 1. - A * pow(nu, a) / (pow(nu, a) + pow(delta_c, a)) + B * pow(nu, b) + C * pow(nu, c);
     }
     // Basilakos and Plionis (2001;2003) w/ Papageorgiou et al 2013 coeeficients
-    if(check_mode_for_flag(mode, BIAS_MODEL_BPR)) {
+    if(SID_CHECK_BITFIELD_SWITCH(mode, BIAS_MODEL_BPR)) {
         if(flag_done)
             SID_exit_error("Mode flag (%d) is invalid in bias_model().  Multiple model definitions.", SID_ERROR_LOGIC,
                            mode);
@@ -108,7 +108,7 @@ double bias_model(double x_in, double delta_c, double z, cosmo_info **cosmo, int
         bias         = (C_1 + C_2 * I_z) * Ez + 1.;
     }
     // Poole et al 2014
-    if(check_mode_for_flag(mode, BIAS_MODEL_POOLE_HALO)) {
+    if(SID_CHECK_BITFIELD_SWITCH(mode, BIAS_MODEL_POOLE_HALO)) {
         if(flag_done)
             SID_exit_error("Mode flag (%d) is invalid in bias_model().  Multiple model definitions.", SID_ERROR_LOGIC,
                            mode);
@@ -125,7 +125,7 @@ double bias_model(double x_in, double delta_c, double z, cosmo_info **cosmo, int
         double b_o_z;
         double b_V_o;
         double b_V_z;
-        if(check_mode_for_flag(mode, BIAS_MODEL_POOLE_SUBSTRUCTURE)) {
+        if(SID_CHECK_BITFIELD_SWITCH(mode, BIAS_MODEL_POOLE_SUBSTRUCTURE)) {
             V_SF_o = 5.326176e-02;
             V_SF_z = -1.673868e-01;
             s_V_o  = 4.026941e-01;
@@ -151,7 +151,7 @@ double bias_model(double x_in, double delta_c, double z, cosmo_info **cosmo, int
         double s    = s_V * fabs(V_max - V_SF);
         bias        = take_alog10(0.5 * (b_o + b_V * V_max));
     }
-    if(check_mode_for_flag(mode, BIAS_MODEL_POOLE_ZSPACE)) {
+    if(SID_CHECK_BITFIELD_SWITCH(mode, BIAS_MODEL_POOLE_ZSPACE)) {
         if(flag_done)
             SID_exit_error("Mode flag (%d) is invalid in bias_model().  Multiple model definitions.", SID_ERROR_LOGIC,
                            mode);
@@ -169,7 +169,7 @@ double bias_model(double x_in, double delta_c, double z, cosmo_info **cosmo, int
         double b_V_o;
         double b_V_z;
         double z_b_c;
-        if(check_mode_for_flag(mode, BIAS_MODEL_POOLE_SUBSTRUCTURE)) {
+        if(SID_CHECK_BITFIELD_SWITCH(mode, BIAS_MODEL_POOLE_SUBSTRUCTURE)) {
             V_SF_o = 3.173152e-01;
             V_SF_z = -1.599133e-01;
             s_V_o  = 5.344408e-01;
@@ -197,7 +197,7 @@ double bias_model(double x_in, double delta_c, double z, cosmo_info **cosmo, int
         double s    = s_V * fabs(V_max - V_SF);
         bias        = take_alog10(0.5 * (b_o + b_V * V_max));
     }
-    if(check_mode_for_flag(mode, BIAS_MODEL_POOLE_TOTAL)) {
+    if(SID_CHECK_BITFIELD_SWITCH(mode, BIAS_MODEL_POOLE_TOTAL)) {
         if(flag_done)
             SID_exit_error("Mode flag (%d) is invalid in bias_model().  Multiple model definitions.", SID_ERROR_LOGIC,
                            mode);
@@ -214,7 +214,7 @@ double bias_model(double x_in, double delta_c, double z, cosmo_info **cosmo, int
         double b_o_z;
         double b_V_o;
         double b_V_z;
-        if(check_mode_for_flag(mode, BIAS_MODEL_POOLE_SUBSTRUCTURE)) {
+        if(SID_CHECK_BITFIELD_SWITCH(mode, BIAS_MODEL_POOLE_SUBSTRUCTURE)) {
             V_SF_o = 2.128681e-01;
             V_SF_z = -2.280569e-01;
             s_V_o  = 1.118792e+00;
@@ -245,14 +245,14 @@ double bias_model(double x_in, double delta_c, double z, cosmo_info **cosmo, int
     // Apply the Kaiser '87 model to whatever model has been processed above.  Be careful, there
     //   are some mode flags (such as BIAS_MODE_POOLE_ZSPACE) for which this does not make sence
     //   and we presently don't check for this.
-    if(check_mode_for_flag(mode, BIAS_MODEL_KAISER_BOOST)) {
+    if(SID_CHECK_BITFIELD_SWITCH(mode, BIAS_MODEL_KAISER_BOOST)) {
         double Omega_M_z = Omega_z(z, (*cosmo));
         double f         = pow(Omega_M_z, 0.55);
         double beta      = f / bias;
         double boost     = pow(1. + TWO_THIRDS * beta + 0.2 * beta * beta, 0.5);
         bias             = boost;
     }
-    if(check_mode_for_flag(mode, BIAS_MODEL_KAISER)) {
+    if(SID_CHECK_BITFIELD_SWITCH(mode, BIAS_MODEL_KAISER)) {
         double Omega_M_z = Omega_z(z, (*cosmo));
         double f         = pow(Omega_M_z, 0.55);
         double beta      = f / bias;

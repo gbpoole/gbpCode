@@ -15,12 +15,13 @@ void check_for_fragmented_halos(int k_match, tree_horizontal_info **halos, int n
     for(i_halo = 0; i_halo < n_halos; i_halo++) {
         // Perform some sanity checks on the match_type flag
         int type = halos[i_write % n_wrap][i_halo].type;
-        if(check_mode_for_flag(type, TREE_CASE_UNPROCESSED) || check_mode_for_flag(type, TREE_CASE_INVALID))
+        if(SID_CHECK_BITFIELD_SWITCH(type, TREE_CASE_UNPROCESSED) || SID_CHECK_BITFIELD_SWITCH(type, TREE_CASE_INVALID))
             SID_exit_error("Invalid halo match_type flag (%d) for i_halo=%d", SID_ERROR_LOGIC,
                            halos[i_write % n_wrap][i_halo].type, i_halo);
         // Perform checks for fragmented halos here
         match_info *back_match = &(halos[i_write % n_wrap][i_halo].bridge_backmatch);
-        if(check_mode_for_flag(type, TREE_CASE_NO_PROGENITORS) && check_mode_for_flag(type, TREE_CASE_EMERGED_CANDIDATE)) {
+        if(SID_CHECK_BITFIELD_SWITCH(type, TREE_CASE_NO_PROGENITORS) &&
+                SID_CHECK_BITFIELD_SWITCH(type, TREE_CASE_EMERGED_CANDIDATE)) {
             // We've identified the start of a new fragmented halo.
             halos[i_write % n_wrap][i_halo].type |= TREE_CASE_FRAGMENTED_NEW;
             // Decide what type of fragmented halo it is.
@@ -28,9 +29,9 @@ void check_for_fragmented_halos(int k_match, tree_horizontal_info **halos, int n
             int halo_id            = halos[i_write % n_wrap][i_halo].id;
             int main_progenitor_id = halos[i_write % n_wrap][i_halo].main_progenitor_id;
             // This is the one case that get's set elsewhere
-            if(check_mode_for_flag(halos[i_write % n_wrap][i_halo].type, TREE_CASE_FRAGMENTED_OTHER))
+            if(SID_CHECK_BITFIELD_SWITCH(halos[i_write % n_wrap][i_halo].type, TREE_CASE_FRAGMENTED_OTHER))
                 n_other++;
-            else if(halo_id < 0 || check_mode_for_flag(type, TREE_CASE_STRAYED)) {
+            else if(halo_id < 0 || SID_CHECK_BITFIELD_SWITCH(type, TREE_CASE_STRAYED)) {
                 halos[i_write % n_wrap][i_halo].type |= TREE_CASE_FRAGMENTED_STRAYED;
                 n_strayed++;
             } else {
@@ -40,7 +41,7 @@ void check_for_fragmented_halos(int k_match, tree_horizontal_info **halos, int n
         }
         // It's possible that this flag was set incorrectly in cases where an initial
         //    emerged match was rejected but a subsequent one was made.  Fix this here.
-        else if(check_mode_for_flag(halos[i_write % n_wrap][i_halo].type, TREE_CASE_FRAGMENTED_OTHER))
+        else if(SID_CHECK_BITFIELD_SWITCH(halos[i_write % n_wrap][i_halo].type, TREE_CASE_FRAGMENTED_OTHER))
             halos[i_write % n_wrap][i_halo].type &= (~TREE_CASE_FRAGMENTED_OTHER);
     }
     if(n_strayed != 0 || n_normal != 0 || n_other != 0) {

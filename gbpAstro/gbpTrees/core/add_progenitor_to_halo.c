@@ -101,11 +101,11 @@ void add_progenitor_to_halo(tree_horizontal_info **halos,
     // Set match-type flags ...
     //   Propagate strayed halo flags (needed for identifying
     //   strayed fragmented halos later, for example)...
-    if(check_mode_for_flag(halos_j[j_halo].type, TREE_CASE_STRAYED))
+    if(SID_CHECK_BITFIELD_SWITCH(halos_j[j_halo].type, TREE_CASE_STRAYED))
         halos_i[i_halo].type |= TREE_CASE_STRAYED;
 
     // ... set the flags for emerged halo matches
-    if(check_mode_for_flag(halos_j[j_halo].type, TREE_CASE_EMERGED_CANDIDATE)) {
+    if(SID_CHECK_BITFIELD_SWITCH(halos_j[j_halo].type, TREE_CASE_EMERGED_CANDIDATE)) {
         halos_i[i_halo].type |= TREE_CASE_MATCHED_TO_EMERGED;
         halos_j[j_halo].type |= TREE_CASE_EMERGED;
     }

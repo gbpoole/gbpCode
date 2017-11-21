@@ -8,7 +8,7 @@ int check_validity_of_emerged_match(tree_horizontal_info *halo_i, match_info *ba
 
     // 1) The TREE_CASE_EMERGED_CANDIDATE flag must be set for the back-matched halo.
     //    This isn't the case if this back match is in the main progenitor line of it's bridge.
-    flag_valid = check_mode_for_flag(back_match->halo->type, TREE_CASE_EMERGED_CANDIDATE);
+    flag_valid = SID_CHECK_BITFIELD_SWITCH(back_match->halo->type, TREE_CASE_EMERGED_CANDIDATE);
 
     if(flag_valid) {
         // 2) The candidate must not have a progenitor yet.  This ensures that an emerged

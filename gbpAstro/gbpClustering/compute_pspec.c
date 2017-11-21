@@ -256,10 +256,10 @@ void compute_pspec(plist_info *plist, const char *species_name, pspec_info *pspe
     for(i_i[0] = FFT->i_k_start_local[0], j_i[0] = 0; i_i[0] <= FFT->i_k_stop_local[0]; i_i[0]++, j_i[0]++) {
         for(i_i[1] = FFT->i_k_start_local[1], j_i[1] = 0; i_i[1] <= FFT->i_k_stop_local[1]; i_i[1]++, j_i[1]++) {
             for(i_i[2] = FFT->i_k_start_local[2], j_i[2] = 0; i_i[2] <= FFT->i_k_stop_local[2]; i_i[2]++, j_i[2]++) {
-                if(check_mode_for_flag(mode, PSPEC_ADD_VX)) {
+                if(SID_CHECK_BITFIELD_SWITCH(mode, PSPEC_ADD_VX)) {
                     k_mag_x = sqrt(FFT->k_field[1][i_i[1]] * FFT->k_field[1][i_i[1]] + FFT->k_field[2][i_i[2]] * FFT->k_field[2][i_i[2]]);
                     k_mag_y = FFT->k_field[0][i_i[0]];
-                } else if(check_mode_for_flag(mode, PSPEC_ADD_VY)) {
+                } else if(SID_CHECK_BITFIELD_SWITCH(mode, PSPEC_ADD_VY)) {
                     k_mag_x = sqrt(FFT->k_field[0][i_i[0]] * FFT->k_field[0][i_i[0]] + FFT->k_field[2][i_i[2]] * FFT->k_field[2][i_i[2]]);
                     k_mag_y = FFT->k_field[1][i_i[1]];
                 } else {

@@ -11,17 +11,18 @@
 
 void init_precompute_treenode_markers(tree_info *trees, int mode) {
     // Sanity check
-    if(check_mode_for_flag(mode, PRECOMPUTE_TREENODE_MARKER_GROUPS) && check_mode_for_flag(mode, PRECOMPUTE_TREENODE_MARKER_SUBGROUPS))
+    if(SID_CHECK_BITFIELD_SWITCH(mode, PRECOMPUTE_TREENODE_MARKER_GROUPS) &&
+            SID_CHECK_BITFIELD_SWITCH(mode, PRECOMPUTE_TREENODE_MARKER_SUBGROUPS))
         SID_exit_error("Both group and subgroup mode is set in init_treenode_markers_all() when only one is needed.",
                        SID_ERROR_LOGIC);
 
     // Set-up to work with groups or subgroups
     tree_markers_info ***markers;
     int *                n_halos_array;
-    if(check_mode_for_flag(mode, PRECOMPUTE_TREENODE_MARKER_GROUPS)) {
+    if(SID_CHECK_BITFIELD_SWITCH(mode, PRECOMPUTE_TREENODE_MARKER_GROUPS)) {
         markers       = &(trees->group_markers);
         n_halos_array = trees->n_groups_snap_local;
-    } else if(check_mode_for_flag(mode, PRECOMPUTE_TREENODE_MARKER_SUBGROUPS)) {
+    } else if(SID_CHECK_BITFIELD_SWITCH(mode, PRECOMPUTE_TREENODE_MARKER_SUBGROUPS)) {
         markers       = &(trees->subgroup_markers);
         n_halos_array = trees->n_subgroups_snap_local;
     } else

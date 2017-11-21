@@ -11,7 +11,8 @@ void swap_endian_grids(const char *filename_in, const char *filename_out, int mo
     SID_log("Swapping endian of grids...", SID_LOG_OPEN);
 
     // Sanity check
-    if(check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE) && check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE))
+    if(SID_CHECK_BITFIELD_SWITCH(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE) &&
+            SID_CHECK_BITFIELD_SWITCH(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE))
         SID_exit_error("Invalid mode flag (%d) in swap_endian_grids().", SID_ERROR_LOGIC, mode);
 
     // Open input and output files
@@ -36,7 +37,7 @@ void swap_endian_grids(const char *filename_in, const char *filename_out, int mo
         fread_verify(&(L[2]), sizeof(double), 1, fp_in);
         fread_verify(&n_grids, sizeof(int), 1, fp_in);
         fread_verify(&scheme, sizeof(int), 1, fp_in);
-        if(check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_TO_NATIVE)) {
+        if(SID_CHECK_BITFIELD_SWITCH(mode, SWAP_SSIMPL_ENDIAN_TO_NATIVE)) {
             swap_endian((char *)(n), 3, sizeof(int));
             swap_endian((char *)(&n_grids), 1, sizeof(int));
         }

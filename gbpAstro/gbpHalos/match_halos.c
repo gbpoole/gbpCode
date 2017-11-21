@@ -95,7 +95,7 @@ void match_halos(plist_info *plist_1_in,
     float *     score_lookup_table;
 
     // Check if we are back-matching.  If we are, then switch the inputs.
-    if(check_mode_for_flag(mode, MATCH_BACK)) {
+    if(SID_CHECK_BITFIELD_SWITCH(mode, MATCH_BACK)) {
         plist_1  = plist_2_in;
         i_file_1 = i_file_2_in;
         plist_2  = plist_1_in;
@@ -125,18 +125,18 @@ void match_halos(plist_info *plist_1_in,
     int flag_moment_preselection = GBP_TRUE;
 
     // Determine if we are matching groups or subgroups (default is subgroups)
-    if(check_mode_for_flag(mode, MATCH_GROUPS) && check_mode_for_flag(mode, MATCH_SUBGROUPS))
+    if(SID_CHECK_BITFIELD_SWITCH(mode, MATCH_GROUPS) && SID_CHECK_BITFIELD_SWITCH(mode, MATCH_SUBGROUPS))
         SID_exit_error("match_groups can't match both groups and subgroups (yet).", SID_ERROR_LOGIC);
-    else if(check_mode_for_flag(mode, MATCH_GROUPS))
+    else if(SID_CHECK_BITFIELD_SWITCH(mode, MATCH_GROUPS))
         flag_match_subgroups = GBP_FALSE;
-    else if(check_mode_for_flag(mode, MATCH_SUBGROUPS))
+    else if(SID_CHECK_BITFIELD_SWITCH(mode, MATCH_SUBGROUPS))
         flag_match_subgroups = GBP_TRUE;
     else
         flag_match_subgroups = GBP_TRUE;
 
     // Are we matching substructure (we will ignore self matches and
     //   select the largest of multiple matches if so)
-    if(check_mode_for_flag(mode, MATCH_SUBSTRUCTURE)) {
+    if(SID_CHECK_BITFIELD_SWITCH(mode, MATCH_SUBSTRUCTURE)) {
         flag_match_subgroups    = GBP_FALSE;
         flag_match_substructure = GBP_TRUE;
     } else
@@ -194,7 +194,7 @@ void match_halos(plist_info *plist_1_in,
         else
             n_groups_2_all = 0;
     } else {
-        if(check_mode_for_flag(mode, MATCH_SUBSTRUCTURE))
+        if(SID_CHECK_BITFIELD_SWITCH(mode, MATCH_SUBSTRUCTURE))
             SID_log("Finding substructure from catalog {%s} in catalog {%s}...", SID_LOG_OPEN | SID_LOG_TIMER, catalog_1, catalog_2);
         else
             SID_log("Matching groups catalog {%s} to catalog {%s}...", SID_LOG_OPEN | SID_LOG_TIMER, catalog_1, catalog_2);
@@ -237,7 +237,7 @@ void match_halos(plist_info *plist_1_in,
     }
 
     // Check if we are storing the match score.
-    if(check_mode_for_flag(mode, MATCH_STORE_SCORE))
+    if(SID_CHECK_BITFIELD_SWITCH(mode, MATCH_STORE_SCORE))
         flag_store_score = GBP_TRUE;
     else
         flag_store_score = GBP_FALSE;
@@ -750,11 +750,11 @@ void match_halos(plist_info *plist_1_in,
             SID_free(SID_FARG match_count);
 
         // Store matches
-        if(check_mode_for_flag(mode, MATCH_STORE_2))
+        if(SID_CHECK_BITFIELD_SWITCH(mode, MATCH_STORE_2))
             plist_store = plist_2;
         else
             plist_store = plist_1;
-        if(check_mode_for_flag(mode, MATCH_BACK)) {
+        if(SID_CHECK_BITFIELD_SWITCH(mode, MATCH_BACK)) {
             ADaPS_store(&(plist_store->data), (void *)(&n_match), "n_back_match_%s", ADaPS_SCALAR_INT, catalog_1to2);
             ADaPS_store(&(plist_store->data), (void *)(match), "back_match_%s", ADaPS_DEFAULT, catalog_1to2);
             if(flag_store_score) {
@@ -773,12 +773,12 @@ void match_halos(plist_info *plist_1_in,
         SID_log("%d of %d matched to %d.", SID_LOG_COMMENT, n_match, n_match_1_all, n_groups_2_all);
         SID_log("Done.", SID_LOG_CLOSE);
     } else {
-        if(check_mode_for_flag(mode, MATCH_STORE_2))
+        if(SID_CHECK_BITFIELD_SWITCH(mode, MATCH_STORE_2))
             plist_store = plist_2;
         else
             plist_store = plist_1;
         n_match = 0;
-        if(check_mode_for_flag(mode, MATCH_BACK)) {
+        if(SID_CHECK_BITFIELD_SWITCH(mode, MATCH_BACK)) {
             ADaPS_store(&(plist_store->data), (void *)(&n_match), "n_back_match_%s", ADaPS_SCALAR_INT, catalog_1to2);
             ADaPS_store(&(plist_store->data), (void *)(match), "back_match_%s", ADaPS_DEFAULT, catalog_1to2);
             if(flag_store_score) {

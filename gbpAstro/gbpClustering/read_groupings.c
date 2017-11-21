@@ -28,11 +28,11 @@ void read_groupings(const char *filename_root, int grouping_number, plist_info *
     int        n_bits_PHK;
     int        PHK_width;
     slab_info *slab;
-    if(check_mode_for_flag(mode, READ_GROUPING_SLAB) && check_mode_for_flag(mode, READ_GROUPING_PHK))
+    if(SID_CHECK_BITFIELD_SWITCH(mode, READ_GROUPING_SLAB) && SID_CHECK_BITFIELD_SWITCH(mode, READ_GROUPING_PHK))
         SID_exit_error("Multiple domain decompositions have been set in read_groupings().", SID_ERROR_LOGIC);
-    if(check_mode_for_flag(mode, READ_GROUPING_SLAB))
+    if(SID_CHECK_BITFIELD_SWITCH(mode, READ_GROUPING_SLAB))
         slab = (slab_info *)va_arg(vargs, slab_info *);
-    else if(check_mode_for_flag(mode, READ_GROUPING_PHK)) {
+    else if(SID_CHECK_BITFIELD_SWITCH(mode, READ_GROUPING_PHK)) {
         r_max      = (double)va_arg(vargs, double);
         box_size   = (double)va_arg(vargs, double);
         n_bits_PHK = (int)va_arg(vargs, int);
@@ -46,15 +46,15 @@ void read_groupings(const char *filename_root, int grouping_number, plist_info *
     int flag_add_zspace_z;
     int flag_add_zspace;
     int n_z_dims;
-    flag_add_zspace_x = check_mode_for_flag(mode, READ_GROUPING_ADD_VX);
-    flag_add_zspace_y = check_mode_for_flag(mode, READ_GROUPING_ADD_VY);
-    flag_add_zspace_z = check_mode_for_flag(mode, READ_GROUPING_ADD_VZ);
+    flag_add_zspace_x = SID_CHECK_BITFIELD_SWITCH(mode, READ_GROUPING_ADD_VX);
+    flag_add_zspace_y = SID_CHECK_BITFIELD_SWITCH(mode, READ_GROUPING_ADD_VY);
+    flag_add_zspace_z = SID_CHECK_BITFIELD_SWITCH(mode, READ_GROUPING_ADD_VZ);
     n_z_dims          = flag_add_zspace_x + flag_add_zspace_y + flag_add_zspace_z;
     if(n_z_dims > 1)
         SID_exit_error("More then one redshift-space dimension (%d) has been specified.", SID_ERROR_LOGIC, n_z_dims);
     else if(n_z_dims == 1) {
         flag_add_zspace = GBP_TRUE;
-        if(check_mode_for_flag(mode, READ_GROUPING_SLAB))
+        if(SID_CHECK_BITFIELD_SWITCH(mode, READ_GROUPING_SLAB))
             box_size = (double)va_arg(vargs, double);
         redshift = va_arg(vargs, double);
         cosmo    = va_arg(vargs, cosmo_info *);
@@ -138,7 +138,7 @@ void read_groupings(const char *filename_root, int grouping_number, plist_info *
     int      PHK_max_local;
     size_t * PHK_halo;
     size_t * read_index;
-    if(check_mode_for_flag(mode, READ_GROUPING_SLAB)) {
+    if(SID_CHECK_BITFIELD_SWITCH(mode, READ_GROUPING_SLAB)) {
         // Count the number of halos that will be read (slab decomposed)
         for(i_halo = 0, n_halos_allocate = 0; i_halo < n_halos; i_halo++) {
             grab_next_line_data(fp_in, &line, &line_length);
@@ -211,7 +211,7 @@ void read_groupings(const char *filename_root, int grouping_number, plist_info *
                 n_halos_local++;
             }
         }
-    } else if(check_mode_for_flag(mode, READ_GROUPING_PHK)) {
+    } else if(SID_CHECK_BITFIELD_SWITCH(mode, READ_GROUPING_PHK)) {
         // Determine what key size to use.  We want the size of each key's region to exceed
         //   the largest scale we're interested in.
         SID_log("Using %d bit-per-dimension keys (%d keys; size=%le [Mpc/h]).",

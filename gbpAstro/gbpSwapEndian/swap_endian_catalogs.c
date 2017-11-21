@@ -23,7 +23,8 @@ void swap_endian_catalogs_properties_local(const char *filename_in_root,
     SID_log("Swapping endian of %sgroup properties...", SID_LOG_OPEN, prefix);
 
     // Sanity check
-    if(check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE) && check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE))
+    if(SID_CHECK_BITFIELD_SWITCH(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE) &&
+            SID_CHECK_BITFIELD_SWITCH(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE))
         SID_exit_error("Invalid mode flag (%d) in swap_endian_catalogs_properties_local().", SID_ERROR_LOGIC, mode);
 
     // Set filenames
@@ -70,7 +71,7 @@ void swap_endian_catalogs_properties_local(const char *filename_in_root,
     int n_files;
     fread_verify(&i_file_in, sizeof(int), 1, fp_in);
     fread_verify(&n_files, sizeof(int), 1, fp_in);
-    if(check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_TO_NATIVE))
+    if(SID_CHECK_BITFIELD_SWITCH(mode, SWAP_SSIMPL_ENDIAN_TO_NATIVE))
         swap_endian((char *)(&n_files), 1, sizeof(int));
     fclose(fp_in);
 
@@ -119,7 +120,7 @@ void swap_endian_catalogs_properties_local(const char *filename_in_root,
         fread_verify(&n_files, sizeof(int), 1, fp_in);
         fread_verify(&n_halos_file, sizeof(int), 1, fp_in);
         fread_verify(&n_halos_total, sizeof(int), 1, fp_in);
-        if(check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_TO_NATIVE)) {
+        if(SID_CHECK_BITFIELD_SWITCH(mode, SWAP_SSIMPL_ENDIAN_TO_NATIVE)) {
             swap_endian((char *)(&i_file_in), 1, sizeof(int));
             swap_endian((char *)(&n_files), 1, sizeof(int));
             swap_endian((char *)(&n_halos_file), 1, sizeof(int));
@@ -174,7 +175,8 @@ void swap_endian_catalogs_profiles_local(const char *filename_in_root,
     SID_log("Swapping endian of %sgroup profiles...", SID_LOG_OPEN, prefix);
 
     // Sanity check
-    if(check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE) && check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE))
+    if(SID_CHECK_BITFIELD_SWITCH(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE) &&
+            SID_CHECK_BITFIELD_SWITCH(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE))
         SID_exit_error("Invalid mode flag (%d) in swap_endian_catalogs_profiles_local().", SID_ERROR_LOGIC, mode);
 
     // Set filenames
@@ -221,7 +223,7 @@ void swap_endian_catalogs_profiles_local(const char *filename_in_root,
     int n_files;
     fread_verify(&i_file_in, sizeof(int), 1, fp_in);
     fread_verify(&n_files, sizeof(int), 1, fp_in);
-    if(check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_TO_NATIVE))
+    if(SID_CHECK_BITFIELD_SWITCH(mode, SWAP_SSIMPL_ENDIAN_TO_NATIVE))
         swap_endian((char *)(&n_files), 1, sizeof(int));
     fclose(fp_in);
 
@@ -269,7 +271,7 @@ void swap_endian_catalogs_profiles_local(const char *filename_in_root,
         fread_verify(&n_files, sizeof(int), 1, fp_in);
         fread_verify(&n_halos_file, sizeof(int), 1, fp_in);
         fread_verify(&n_halos_total, sizeof(int), 1, fp_in);
-        if(check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_TO_NATIVE)) {
+        if(SID_CHECK_BITFIELD_SWITCH(mode, SWAP_SSIMPL_ENDIAN_TO_NATIVE)) {
             swap_endian((char *)(&i_file_in), 1, sizeof(int));
             swap_endian((char *)(&n_files), 1, sizeof(int));
             swap_endian((char *)(&n_halos_file), 1, sizeof(int));
@@ -287,7 +289,7 @@ void swap_endian_catalogs_profiles_local(const char *filename_in_root,
             n_bins     = n_bins_in;
             n_bins_out = n_bins_in;
             swap_endian((char *)(&n_bins_out), 1, sizeof(int));
-            if(check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_TO_NATIVE))
+            if(SID_CHECK_BITFIELD_SWITCH(mode, SWAP_SSIMPL_ENDIAN_TO_NATIVE))
                 swap_endian((char *)(&n_bins), 1, sizeof(int));
             fwrite(&n_bins_out, sizeof(int), 1, fp_out);
             for(int i_bin = 0; i_bin < n_bins; i_bin++) {
@@ -335,7 +337,8 @@ void swap_endian_catalogs_SO_local(const char *filename_in_root,
     SID_log("Swapping endian of %sgroup SO properties...", SID_LOG_OPEN, prefix);
 
     // Sanity check
-    if(check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE) && check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE))
+    if(SID_CHECK_BITFIELD_SWITCH(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE) &&
+            SID_CHECK_BITFIELD_SWITCH(mode, SWAP_SSIMPL_ENDIAN_FROM_NATIVE))
         SID_exit_error("Invalid mode flag (%d) in swap_endian_catalogs_properties_local().", SID_ERROR_LOGIC, mode);
 
     // Set filenames
@@ -384,7 +387,7 @@ void swap_endian_catalogs_SO_local(const char *filename_in_root,
     int n_files;
     fread_verify(&i_file_in, sizeof(int), 1, fp_in);
     fread_verify(&n_files, sizeof(int), 1, fp_in);
-    if(check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_TO_NATIVE))
+    if(SID_CHECK_BITFIELD_SWITCH(mode, SWAP_SSIMPL_ENDIAN_TO_NATIVE))
         swap_endian((char *)(&n_files), 1, sizeof(int));
     fclose(fp_in);
 
@@ -433,7 +436,7 @@ void swap_endian_catalogs_SO_local(const char *filename_in_root,
         fread_verify(&n_files, sizeof(int), 1, fp_in);
         fread_verify(&n_halos_file, sizeof(int), 1, fp_in);
         fread_verify(&n_halos_total, sizeof(int), 1, fp_in);
-        if(check_mode_for_flag(mode, SWAP_SSIMPL_ENDIAN_TO_NATIVE)) {
+        if(SID_CHECK_BITFIELD_SWITCH(mode, SWAP_SSIMPL_ENDIAN_TO_NATIVE)) {
             swap_endian((char *)(&i_file_in), 1, sizeof(int));
             swap_endian((char *)(&n_files), 1, sizeof(int));
             swap_endian((char *)(&n_halos_file), 1, sizeof(int));

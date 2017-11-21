@@ -182,8 +182,8 @@ int main(int argc, char *argv[]) {
     double redshift_norm;
     int    flag_centrals_only;
     int    flag_use_bias_model;
-    flag_centrals_only  = check_mode_for_flag(mode, MAKE_GROUPINGS_CENTRALS_ONLY);
-    flag_use_bias_model = check_mode_for_flag(mode, MAKE_GROUPINGS_USE_BIAS_MODEL);
+    flag_centrals_only  = SID_CHECK_BITFIELD_SWITCH(mode, MAKE_GROUPINGS_CENTRALS_ONLY);
+    flag_use_bias_model = SID_CHECK_BITFIELD_SWITCH(mode, MAKE_GROUPINGS_USE_BIAS_MODEL);
     if(flag_centrals_only)
         SID_log("USING CENTRALS ONLY.", SID_LOG_COMMENT);
     else

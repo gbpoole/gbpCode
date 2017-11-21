@@ -5,7 +5,7 @@ void calc_min(void *data, void *result, size_t n_data, SID_Datatype type, int mo
     int i_data;
 
     // Initialize to zero
-    if(type == SID_DOUBLE || check_mode_for_flag(mode, CALC_MODE_RETURN_DOUBLE))
+    if(type == SID_DOUBLE || SID_CHECK_BITFIELD_SWITCH(mode, CALC_MODE_RETURN_DOUBLE))
         ((double *)result)[0] = 0.;
     else if(type == SID_FLOAT)
         ((float *)result)[0] = 0.;
@@ -19,7 +19,7 @@ void calc_min(void *data, void *result, size_t n_data, SID_Datatype type, int mo
         SID_exit_error("Unknown variable type in calc_max", SID_ERROR_LOGIC);
 
     if(n_data < 1) {
-        if(type == SID_DOUBLE || check_mode_for_flag(mode, CALC_MODE_RETURN_DOUBLE))
+        if(type == SID_DOUBLE || SID_CHECK_BITFIELD_SWITCH(mode, CALC_MODE_RETURN_DOUBLE))
             ((double *)result)[0] = 0.;
         else if(type == SID_FLOAT)
             ((float *)result)[0] = 0.;
@@ -31,7 +31,7 @@ void calc_min(void *data, void *result, size_t n_data, SID_Datatype type, int mo
             ((size_t *)result)[0] = 0;
         else
             SID_exit_error("Unknown variable type in calc_max", SID_ERROR_LOGIC);
-    } else if(check_mode_for_flag(mode, CALC_MODE_RETURN_DOUBLE)) {
+    } else if(SID_CHECK_BITFIELD_SWITCH(mode, CALC_MODE_RETURN_DOUBLE)) {
         if(type == SID_DOUBLE)
             ((double *)result)[0] = (double)((double *)data)[0];
         else if(type == SID_FLOAT)
@@ -44,7 +44,7 @@ void calc_min(void *data, void *result, size_t n_data, SID_Datatype type, int mo
             ((double *)result)[0] = (double)((size_t *)data)[0];
         else
             SID_exit_error("Unknown variable type in calc_max\n", SID_ERROR_LOGIC);
-        if(check_mode_for_flag(mode, CALC_MODE_ABS)) {
+        if(SID_CHECK_BITFIELD_SWITCH(mode, CALC_MODE_ABS)) {
             if(type == SID_DOUBLE)
                 ((double *)result)[0] = GBP_IABS((double)((double *)data)[0]);
             else if(type == SID_FLOAT)

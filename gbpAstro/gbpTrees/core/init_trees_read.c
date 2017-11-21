@@ -199,7 +199,7 @@ void init_trees_read(const char *filename_SSimPL_dir,
     ADaPS_init(&((*tree)->data));
 
     // If we only want the header information, then don't do the rest
-    if(!check_mode_for_flag(mode, TREE_READ_HEADER_ONLY)) {
+    if(!SID_CHECK_BITFIELD_SWITCH(mode, TREE_READ_HEADER_ONLY)) {
         // Compute/fetch the mapping between horizontal tree IDs and forest IDs ...
         int n_forests_group_in;
         int n_forests_subgroup_in;
