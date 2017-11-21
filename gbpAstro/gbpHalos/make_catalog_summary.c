@@ -21,10 +21,10 @@ void init_trend_f_local(trend_property_info *property, void *params, int i_hist,
     double x_min = 0.;
     double dx    = 0.01;
     int    n_x   = 100;
-    gbp_va_start(vargs);
-    gbp_add_va_arg(vargs, sizeof(double), &x_min);
-    gbp_add_va_arg(vargs, sizeof(double), &dx);
-    gbp_add_va_arg(vargs, sizeof(int), &n_x);
+    SID_va_start(vargs);
+    SID_add_va_arg(vargs, sizeof(double), &x_min);
+    SID_add_va_arg(vargs, sizeof(double), &dx);
+    SID_add_va_arg(vargs, sizeof(int), &n_x);
 }
 void free_trend_f_local(trend_property_info *property, void *trees_in, int i_hist, int *mode, gbp_va_list *vargs);
 void free_trend_f_local(trend_property_info *property, void *trees_in, int i_hist, int *mode, gbp_va_list *vargs) {
@@ -36,10 +36,10 @@ void init_trend_from_hist_local(trend_property_info *property, void *parent_hist
     double x_min = ((hist_info *)parent_hist)->x_min;
     double dx    = ((hist_info *)parent_hist)->dx;
     int    n_x   = ((hist_info *)parent_hist)->n_bins;
-    gbp_va_start(vargs);
-    gbp_add_va_arg(vargs, sizeof(double), &x_min);
-    gbp_add_va_arg(vargs, sizeof(double), &dx);
-    gbp_add_va_arg(vargs, sizeof(int), &n_x);
+    SID_va_start(vargs);
+    SID_add_va_arg(vargs, sizeof(double), &x_min);
+    SID_add_va_arg(vargs, sizeof(double), &dx);
+    SID_add_va_arg(vargs, sizeof(int), &n_x);
 }
 
 void free_trend_from_hist_local(trend_property_info *property, void *trees_in, int i_hist, int *mode, gbp_va_list *vargs);

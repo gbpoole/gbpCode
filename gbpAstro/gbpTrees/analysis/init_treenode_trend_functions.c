@@ -9,9 +9,9 @@ void init_tree_property_z(trend_property_info *property, void *trees_in, int i_h
     tree_info *trees  = (tree_info *)(property->params);
     double *   x_lo   = trees->z_list;
     int        n_bins = trees->n_snaps;
-    gbp_va_start(vargs);
-    gbp_add_va_arg(vargs, sizeof(double *), &x_lo);
-    gbp_add_va_arg(vargs, sizeof(int), &n_bins);
+    SID_va_start(vargs);
+    SID_add_va_arg(vargs, sizeof(double *), &x_lo);
+    SID_add_va_arg(vargs, sizeof(int), &n_bins);
 }
 void free_tree_property_z(trend_property_info *property, void *trees_in, int i_hist, int *mode, gbp_va_list *vargs) {
 }
@@ -24,20 +24,20 @@ void init_tree_property_logM_course(trend_property_info *property, void *trees_i
     double x_min = 7.0;
     double dx    = 0.5;
     int    n_x   = 18;
-    gbp_va_start(vargs);
-    gbp_add_va_arg(vargs, sizeof(double), &x_min);
-    gbp_add_va_arg(vargs, sizeof(double), &dx);
-    gbp_add_va_arg(vargs, sizeof(int), &n_x);
+    SID_va_start(vargs);
+    SID_add_va_arg(vargs, sizeof(double), &x_min);
+    SID_add_va_arg(vargs, sizeof(double), &dx);
+    SID_add_va_arg(vargs, sizeof(int), &n_x);
 }
 void init_tree_property_logM(trend_property_info *property, void *trees_in, int i_hist, int *mode, gbp_va_list *vargs) {
     (*mode)      = GBP_HISTOGRAM_FIXED;
     double x_min = 7.0;
     double dx    = 0.1;
     int    n_x   = 14;
-    gbp_va_start(vargs);
-    gbp_add_va_arg(vargs, sizeof(double), &x_min);
-    gbp_add_va_arg(vargs, sizeof(double), &dx);
-    gbp_add_va_arg(vargs, sizeof(int), &n_x);
+    SID_va_start(vargs);
+    SID_add_va_arg(vargs, sizeof(double), &x_min);
+    SID_add_va_arg(vargs, sizeof(double), &dx);
+    SID_add_va_arg(vargs, sizeof(int), &n_x);
 }
 void free_tree_property_logM(trend_property_info *property, void *trees_in, int i_hist, int *mode, gbp_va_list *vargs) {
 }
@@ -52,10 +52,10 @@ void init_tree_property_xoff(trend_property_info *property, void *trees_in, int 
     double x_min = 0.0;
     double dx    = 0.01;
     int    n_x   = 100;
-    gbp_va_start(vargs);
-    gbp_add_va_arg(vargs, sizeof(double), &x_min);
-    gbp_add_va_arg(vargs, sizeof(double), &dx);
-    gbp_add_va_arg(vargs, sizeof(int), &n_x);
+    SID_va_start(vargs);
+    SID_add_va_arg(vargs, sizeof(double), &x_min);
+    SID_add_va_arg(vargs, sizeof(double), &dx);
+    SID_add_va_arg(vargs, sizeof(int), &n_x);
 }
 void free_tree_property_xoff(trend_property_info *property, void *trees_in, int i_hist, int *mode, gbp_va_list *vargs) {
 }
@@ -70,10 +70,10 @@ void init_tree_property_SSFctn(trend_property_info *property, void *trees_in, in
     double x_min = 0.0;
     double dx    = 0.01;
     int    n_x   = 100;
-    gbp_va_start(vargs);
-    gbp_add_va_arg(vargs, sizeof(double), &x_min);
-    gbp_add_va_arg(vargs, sizeof(double), &dx);
-    gbp_add_va_arg(vargs, sizeof(int), &n_x);
+    SID_va_start(vargs);
+    SID_add_va_arg(vargs, sizeof(double), &x_min);
+    SID_add_va_arg(vargs, sizeof(double), &dx);
+    SID_add_va_arg(vargs, sizeof(int), &n_x);
 }
 void free_tree_property_SSFctn(trend_property_info *property, void *trees_in, int i_hist, int *mode, gbp_va_list *vargs) {
 }
@@ -88,10 +88,10 @@ void init_tree_property_Vir_ratio(trend_property_info *property, void *trees_in,
     double x_min = 0.0;
     double dx    = 0.02;
     int    n_x   = 200;
-    gbp_va_start(vargs);
-    gbp_add_va_arg(vargs, sizeof(double), &x_min);
-    gbp_add_va_arg(vargs, sizeof(double), &dx);
-    gbp_add_va_arg(vargs, sizeof(int), &n_x);
+    SID_va_start(vargs);
+    SID_add_va_arg(vargs, sizeof(double), &x_min);
+    SID_add_va_arg(vargs, sizeof(double), &dx);
+    SID_add_va_arg(vargs, sizeof(int), &n_x);
 }
 void free_tree_property_Vir_ratio(trend_property_info *property, void *trees_in, int i_hist, int *mode, gbp_va_list *vargs) {
 }
@@ -106,10 +106,10 @@ void init_tree_property_log_sigma_vx(trend_property_info *property, void *trees_
     double x_min = 0.0;
     double dx    = 0.01;
     int    n_x   = 500;
-    gbp_va_start(vargs);
-    gbp_add_va_arg(vargs, sizeof(double), &x_min);
-    gbp_add_va_arg(vargs, sizeof(double), &dx);
-    gbp_add_va_arg(vargs, sizeof(int), &n_x);
+    SID_va_start(vargs);
+    SID_add_va_arg(vargs, sizeof(double), &x_min);
+    SID_add_va_arg(vargs, sizeof(double), &dx);
+    SID_add_va_arg(vargs, sizeof(int), &n_x);
 }
 void free_tree_property_log_sigma_vx(trend_property_info *property, void *trees_in, int i_hist, int *mode, gbp_va_list *vargs) {
 }
@@ -132,16 +132,16 @@ void init_tree_property_tau(trend_property_info *property, void *trees_in, int i
         n_bins = GBP_MIN(i_hist + 1, trees->n_snaps);
         i_0    = i_hist;
     }
-    gbp_va_start(vargs);
-    gbp_add_va_arg(vargs, sizeof(double), &tau_array);
-    gbp_add_va_arg(vargs, sizeof(int), &n_bins);
+    SID_va_start(vargs);
+    SID_add_va_arg(vargs, sizeof(double), &tau_array);
+    SID_add_va_arg(vargs, sizeof(int), &n_bins);
     for(int i_tau = 0; i_tau < n_bins; i_tau++)
         tau_array[i_tau] = (trees->t_list[i_0] - trees->t_list[i_0 - i_tau]) / t_dyn_z(trees->z_list[i_0], trees->cosmo);
 }
 void free_tree_property_tau(trend_property_info *property, void *trees_in, int i_hist, int *mode, gbp_va_list *vargs) {
     double *tau_array;
-    gbp_va_start(vargs);
-    gbp_fetch_va_arg(vargs, sizeof(double), &tau_array);
+    SID_va_start(vargs);
+    SID_fetch_va_arg(vargs, sizeof(double), &tau_array);
     SID_free(SID_FARG tau_array);
 }
 int calc_tree_property_index_tau_form(trend_property_info *property, hist_info *hist, void *halo_in) {

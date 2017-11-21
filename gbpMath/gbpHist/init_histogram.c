@@ -15,7 +15,7 @@ void init_histogram(hist_info *hist, int mode, ...) {
     gbp_va_list *vargs_gbp          = NULL;
     if(SID_CHECK_BITFIELD_SWITCH(mode, GBP_HISTOGRAM_GBP_VARGS)) {
         vargs_gbp = (gbp_va_list *)va_arg(vargs, gbp_va_list *);
-        gbp_va_start(vargs_gbp);
+        SID_va_start(vargs_gbp);
         flag_use_gbp_vargs = GBP_TRUE;
     }
 
@@ -25,9 +25,9 @@ void init_histogram(hist_info *hist, int mode, ...) {
     // Set things dependant on mode
     if(SID_CHECK_BITFIELD_SWITCH(mode, GBP_HISTOGRAM_FIXED)) {
         if(flag_use_gbp_vargs) {
-            gbp_fetch_va_arg(vargs_gbp, sizeof(double), &(hist->x_min));
-            gbp_fetch_va_arg(vargs_gbp, sizeof(double), &(hist->dx));
-            gbp_fetch_va_arg(vargs_gbp, sizeof(int), &(hist->n_bins));
+            SID_fetch_va_arg(vargs_gbp, sizeof(double), &(hist->x_min));
+            SID_fetch_va_arg(vargs_gbp, sizeof(double), &(hist->dx));
+            SID_fetch_va_arg(vargs_gbp, sizeof(int), &(hist->n_bins));
         } else {
             hist->x_min  = (double)va_arg(vargs, double);
             hist->dx     = (double)va_arg(vargs, double);
@@ -38,8 +38,8 @@ void init_histogram(hist_info *hist, int mode, ...) {
     } else if(SID_CHECK_BITFIELD_SWITCH(mode, GBP_HISTOGRAM_IRREGULAR_XLO_DEFINED)) {
         double *x_lo_in;
         if(flag_use_gbp_vargs) {
-            gbp_fetch_va_arg(vargs_gbp, sizeof(double *), &x_lo_in);
-            gbp_fetch_va_arg(vargs_gbp, sizeof(int), &(hist->n_bins));
+            SID_fetch_va_arg(vargs_gbp, sizeof(double *), &x_lo_in);
+            SID_fetch_va_arg(vargs_gbp, sizeof(int), &(hist->n_bins));
         } else {
             x_lo_in      = (double *)va_arg(vargs, double *);
             hist->n_bins = (int)va_arg(vargs, int);

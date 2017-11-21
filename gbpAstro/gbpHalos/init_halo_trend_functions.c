@@ -8,9 +8,9 @@ void init_halo_trend_property_z(trend_property_info *property, void *property_da
     halo_trend_info *halo_trend = (halo_trend_info *)(property->params);
     double *         x_lo       = halo_trend->z_list;
     int              n_bins     = halo_trend->n_snaps;
-    gbp_va_start(vargs);
-    gbp_add_va_arg(vargs, sizeof(double *), &x_lo);
-    gbp_add_va_arg(vargs, sizeof(int), &n_bins);
+    SID_va_start(vargs);
+    SID_add_va_arg(vargs, sizeof(double *), &x_lo);
+    SID_add_va_arg(vargs, sizeof(int), &n_bins);
 }
 void free_halo_trend_property_z(trend_property_info *property, void *property_data, int i_hist, int *mode, gbp_va_list *vargs) {
 }
@@ -23,10 +23,10 @@ void init_halo_trend_property_logM_FoF(trend_property_info *property, void *prop
     double x_min = 7.0;
     double dx    = 0.2;
     int    n_x   = 40;
-    gbp_va_start(vargs);
-    gbp_add_va_arg(vargs, sizeof(double), &x_min);
-    gbp_add_va_arg(vargs, sizeof(double), &dx);
-    gbp_add_va_arg(vargs, sizeof(int), &n_x);
+    SID_va_start(vargs);
+    SID_add_va_arg(vargs, sizeof(double), &x_min);
+    SID_add_va_arg(vargs, sizeof(double), &dx);
+    SID_add_va_arg(vargs, sizeof(int), &n_x);
 }
 void free_halo_trend_property_logM_FoF(trend_property_info *property, void *property_data, int i_hist, int *mode, gbp_va_list *vargs) {
 }
@@ -41,10 +41,10 @@ void init_halo_trend_property_SSFctn(trend_property_info *property, void *proper
     double x_min = 0.0;
     double dx    = 0.01;
     int    n_x   = 100;
-    gbp_va_start(vargs);
-    gbp_add_va_arg(vargs, sizeof(double), &x_min);
-    gbp_add_va_arg(vargs, sizeof(double), &dx);
-    gbp_add_va_arg(vargs, sizeof(int), &n_x);
+    SID_va_start(vargs);
+    SID_add_va_arg(vargs, sizeof(double), &x_min);
+    SID_add_va_arg(vargs, sizeof(double), &dx);
+    SID_add_va_arg(vargs, sizeof(int), &n_x);
 }
 void free_halo_trend_property_SSFctn(trend_property_info *property, void *property_data, int i_hist, int *mode, gbp_va_list *vargs) {
 }
