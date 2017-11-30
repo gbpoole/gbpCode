@@ -34,7 +34,7 @@ list(APPEND SRCFILES "check_integrity_catalogs.c" )
 # Add executable source files (those with a main())
 # eg. list(APPEND EXEFILES "file" )
 list(APPEND EXEFILES "check_integrity_SSimPL.c" )
-list(APPEND EXEFILES "swap_endian_SSimPL.c" )
+list(APPEND EXEFILES "swap_endian_SSimPL.cc" )
 
 # Add data files
 # eg. list(APPEND DATAFILES "file" )

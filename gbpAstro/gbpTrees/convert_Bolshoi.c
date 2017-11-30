@@ -200,7 +200,7 @@ int main(int argc, char *argv[]) {
     int     tree_hi_file[1];
     int     n_halos_file[1];
 
-    SID_init(&argc, &argv, NULL, NULL);
+    SID_Init(&argc, &argv, NULL);
 
     SID_log("Converting Bolshoi trees...", SID_LOG_OPEN | SID_LOG_TIMER);
 
@@ -603,7 +603,7 @@ int main(int argc, char *argv[]) {
 
                     // Finalize trees
                     // This code has been broken by recent changes.  Please update to reflect current function definitions
-                    SID_exit(1);
+                    SID_Finalize(1);
                     /*
                               finalize_trees_vertical(trees,n_halos_tree,n_trees_out,n_scales,progenitor_mode);
                     */
@@ -658,5 +658,5 @@ int main(int argc, char *argv[]) {
     }
     free_RNG(&RNG);
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(SID_ERROR_NONE);
+    SID_Finalize();
 }

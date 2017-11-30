@@ -8,7 +8,7 @@
 #include <gbpTrees.h>
 
 int main(int argc, char *argv[]) {
-    SID_init(&argc, &argv, NULL, NULL);
+    SID_Init(&argc, &argv, NULL);
 
     // Fetch user inputs
     if(argc != 7 && argc != 6)
@@ -25,8 +25,7 @@ int main(int argc, char *argv[]) {
     } else if(!strcmp(argv[4], "subgroups") || !strcmp(argv[4], "subgroup")) {
         sprintf(group_prefix, "sub");
     } else {
-        SID_log("Invalid mode selection {%s}.  Should be 'group' or 'subgroup'.", SID_LOG_COMMENT, argv[4]);
-        SID_exit(SID_ERROR_SYNTAX);
+        SID_exit_error("Invalid mode selection {%s}.  Should be 'group' or 'subgroup'.", SID_ERROR_SYNTAX, argv[4]);
     }
     int i_forest_query = atoi(argv[5]);
 
@@ -103,5 +102,5 @@ int main(int argc, char *argv[]) {
     } while(flag_continue); // loop over files
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(SID_ERROR_NONE);
+    SID_Finalize();
 }

@@ -8,7 +8,7 @@
 #include <gbpSPH.h>
 
 int main(int argc, char *argv[]) {
-    SID_init(&argc, &argv, NULL, NULL);
+    SID_Init(&argc, &argv, NULL);
 
     // Parse command line
     select_gadget_volume_params_info select_gadget_volume_params;
@@ -96,5 +96,5 @@ int main(int argc, char *argv[]) {
     free_plist(&plist);
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(SID_ERROR_NONE);
+    SID_Finalize();
 }

@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
     int    i_read_stop;
     SID_fp fp_in;
 
-    SID_init(&argc, &argv, NULL, NULL);
+    SID_Init(&argc, &argv, NULL);
 
     // Fetch user inputs
     strcpy(filename_SSimPL_root, argv[1]);
@@ -38,8 +38,7 @@ int main(int argc, char *argv[]) {
     else if(!strcmp(argv[2], "subgroups") || !strcmp(argv[2], "subgroup"))
         mode = MATCH_SUBGROUPS;
     else {
-        SID_log("Invalid mode selection {%s}.  Should be 'group' or 'subgroup'.", SID_LOG_COMMENT, argv[2]);
-        SID_exit(SID_ERROR_SYNTAX);
+        SID_exit_error("Invalid mode selection {%s}.  Should be 'group' or 'subgroup'.", SID_ERROR_SYNTAX, argv[2]);
     }
     i_read = atoi(argv[3]);
     j_read = atoi(argv[4]);
@@ -196,5 +195,5 @@ int main(int argc, char *argv[]) {
     SID_free(SID_FARG match_backward_2way);
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(SID_ERROR_NONE);
+    SID_Finalize();
 }

@@ -34,7 +34,7 @@ int main(int argc, char *argv[]) {
     int *   n_groups;
     int     flag_fix_bridges = GBP_TRUE;
 
-    SID_init(&argc, &argv, NULL, NULL);
+    SID_Init(&argc, &argv, NULL);
 
     // Fetch user inputs
     float match_weight_rank_index = MATCH_SCORE_RANK_INDEX;
@@ -53,5 +53,5 @@ int main(int argc, char *argv[]) {
             match_weight_rank_index);
     compute_cross_catalog_matches(filename_halo_root_in, filename_halo_root_in, filename_root_matches, i_read_1, i_read_2, match_weight_rank_index);
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(SID_ERROR_NONE);
+    SID_Finalize();
 }

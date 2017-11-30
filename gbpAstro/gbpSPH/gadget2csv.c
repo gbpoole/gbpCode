@@ -11,7 +11,7 @@ int main(int argc, char *argv[]) {
     char       filename_in[256];
     char       filename_out[256];
 
-    SID_init(&argc, &argv, NULL, NULL);
+    SID_Init(&argc, &argv, NULL);
 
     /**********************/
     /* Parse command line */

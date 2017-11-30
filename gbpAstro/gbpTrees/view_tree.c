@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
     int                        n_gal    = 0;
     int                        max_snap = 0;
 
-    SID_init(&argc, &argv, NULL, NULL);
+    SID_Init(&argc, &argv, NULL);
 
     // Fetch user inputs
     strcpy(filename_tree_in, argv[1]);
@@ -205,5 +205,5 @@ int main(int argc, char *argv[]) {
     fclose(fp);
     SID_log("Done.", SID_LOG_CLOSE);
 
-    SID_exit(0);
+    SID_Finalize();
 }

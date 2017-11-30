@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
     int    i_read_stop;
     SID_fp fp_in;
 
-    SID_init(&argc, &argv, NULL, NULL);
+    SID_Init(&argc, &argv, NULL);
     SID_log("Writing match score table...", SID_LOG_OPEN);
 
     FILE *fp       = stdout;
@@ -70,5 +70,5 @@ int main(int argc, char *argv[]) {
         fclose(fp);
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(SID_ERROR_NONE);
+    SID_Finalize();
 }

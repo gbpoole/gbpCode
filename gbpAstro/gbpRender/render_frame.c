@@ -415,7 +415,7 @@ void render_frame(render_info *render) {
         size_t        n_particles_used_local = 0;
         size_t        n_particles_used       = 0;
         pcounter_info pcounter;
-        SID_init_pcounter(&pcounter, n_particles, 10);
+        SID_Init_pcounter(&pcounter, n_particles, 10);
 
         // This array keeps track of which depth planes a particle gets added to
         char *depth_flags = (char *)SID_malloc(sizeof(char) * n_depth);

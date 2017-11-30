@@ -15,7 +15,7 @@ int main(int argc, char *argv[]) {
     char  filename_halo_type[SID_MAX_FILENAME_LENGTH];
     FILE *fp_out[2];
 
-    SID_init(&argc, &argv, NULL, NULL);
+    SID_Init(&argc, &argv, NULL);
 
     strcpy(filename_SSimPL, argv[1]);
     strcpy(filename_halo_type, argv[2]);
@@ -461,5 +461,5 @@ int main(int argc, char *argv[]) {
     SID_free(SID_FARG z_list);
     free_cosmo(&cosmo);
 
-    SID_exit(SID_ERROR_NONE);
+    SID_Finalize();
 }

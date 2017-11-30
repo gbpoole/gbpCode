@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
     double M_cut;
     int    n_regions;
 
-    SID_init(&argc, &argv, NULL, NULL);
+    SID_Init(&argc, &argv, NULL);
 
     strcpy(filename_in_root, argv[1]);
     box_size         = atof(argv[2]);
@@ -149,5 +149,5 @@ int main(int argc, char *argv[]) {
         SID_log("Done.", SID_LOG_CLOSE);
     }
 
-    SID_exit(SID_ERROR_NONE);
+    SID_Finalize();
 }

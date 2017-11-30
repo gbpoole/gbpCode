@@ -12,13 +12,11 @@ int main(int argc, char *argv[]) {
     char       filename_in[256];
     int        snapshot;
 
-    SID_init(&argc, &argv, NULL, NULL);
+    SID_Init(&argc, &argv, NULL);
 
     // Parse command line
     if(argc != 3) {
-        fprintf(stderr, "\n syntax: %s filename_root snapshot\n", argv[0]);
-        fprintf(stderr, " ------\n\n");
-        SID_exit(SID_ERROR_SYNTAX);
+        SID_exit_error("Syntax: %s filename_root snapshot\n", SID_ERROR_SYNTAX, argv[0]);
     } else {
         strcpy(filename_in, argv[1]);
         snapshot = (int)atoi(argv[2]);
@@ -36,5 +34,5 @@ int main(int argc, char *argv[]) {
     // Clean-up
     free_plist(&plist);
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(SID_ERROR_NONE);
+    SID_Finalize();
 }

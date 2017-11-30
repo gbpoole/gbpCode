@@ -42,7 +42,7 @@ int main(int argc, char *argv[]) {
     cosmo_info *cosmo;
     int         flag_fix_bridges;
 
-    SID_init(&argc, &argv, NULL, NULL);
+    SID_Init(&argc, &argv, NULL);
 
     // Fetch user inputs
     double box_size;
@@ -98,5 +98,5 @@ int main(int argc, char *argv[]) {
     // Clean-up
     ADaPS_free(SID_FARG cosmo);
 
-    SID_exit(SID_ERROR_NONE);
+    SID_Finalize();
 }

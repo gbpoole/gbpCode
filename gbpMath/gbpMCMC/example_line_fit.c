@@ -75,7 +75,7 @@ int main(int argc, char *argv[]) {
     RNG_info     RNG;
 
     // This must be called at the very beginning of the main function
-    SID_init(&argc, &argv, NULL, NULL);
+    SID_Init(&argc, &argv, NULL);
 
     SID_log("Running the MCMC example code '%s'...", SID_LOG_OPEN, argv[0]);
 
@@ -87,8 +87,7 @@ int main(int argc, char *argv[]) {
         n_M  = atoi(argv[2]);
         SID_log("%d datasets of size %d specified...", SID_LOG_CONTINUE, n_DS, n_M);
     } else {
-        SID_log("SYNTAX: example_fit_line n_datasets size_of_datasets", SID_LOG_COMMENT);
-        SID_exit(SID_ERROR_SYNTAX);
+        SID_exit_error("SYNTAX: example_fit_line n_datasets size_of_datasets", SID_ERROR_SYNTAX);
     }
     SID_log("Done.", SID_LOG_CLOSE);
 
@@ -267,7 +266,7 @@ int main(int argc, char *argv[]) {
 
     // Exit
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(SID_ERROR_NONE);
+    SID_Finalize();
 
     // Once the code exits, run the 'allresults_MCMC.py'
     //   script on the directory and it will generate

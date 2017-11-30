@@ -12,7 +12,7 @@
 int main(int argc, char *argv[]) {
     char filename_root_out[256];
 
-    SID_init(&argc, &argv, NULL, NULL);
+    SID_Init(&argc, &argv, NULL);
 
     // Fetch user inputs
     strcpy(filename_root_out, argv[1]);
@@ -34,5 +34,5 @@ int main(int argc, char *argv[]) {
     // Generate mapping
     compute_forests(filename_root_out, n_search_forests);
 
-    SID_exit(SID_ERROR_NONE);
+    SID_Finalize();
 }

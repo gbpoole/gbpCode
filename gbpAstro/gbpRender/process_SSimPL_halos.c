@@ -127,15 +127,15 @@ void process_SSimPL_halos(render_info *render,
     SID_fp_buffer *fp_groups_offset_buffer    = NULL;
     SID_fp_buffer *fp_trees_in_buffer         = NULL;
     size_t         n_bytes_trees              = sizeof(int) * ((8 * (size_t)n_groups) + (7 * (size_t)n_subgroups));
-    SID_init_fp_buffer(&fp_subgroups_length, (size_t) n_subgroups * sizeof(int), SID_SIZE_OF_MEGABYTE,
+    SID_Init_fp_buffer(&fp_subgroups_length, (size_t) n_subgroups * sizeof(int), SID_SIZE_OF_MEGABYTE,
                        &fp_subgroups_length_buffer);
-    SID_init_fp_buffer(&fp_subgroups_offset, (size_t) n_subgroups * offset_size, SID_SIZE_OF_MEGABYTE,
+    SID_Init_fp_buffer(&fp_subgroups_offset, (size_t) n_subgroups * offset_size, SID_SIZE_OF_MEGABYTE,
                        &fp_subgroups_offset_buffer);
-    SID_init_fp_buffer(&fp_groups_length, (size_t) n_groups * sizeof(int), SID_SIZE_OF_MEGABYTE,
+    SID_Init_fp_buffer(&fp_groups_length, (size_t) n_groups * sizeof(int), SID_SIZE_OF_MEGABYTE,
                        &fp_groups_length_buffer);
-    SID_init_fp_buffer(&fp_groups_offset, (size_t) n_groups * offset_size, SID_SIZE_OF_MEGABYTE,
+    SID_Init_fp_buffer(&fp_groups_offset, (size_t) n_groups * offset_size, SID_SIZE_OF_MEGABYTE,
                        &fp_groups_offset_buffer);
-    SID_init_fp_buffer(&fp_trees_in, n_bytes_trees, SID_SIZE_OF_MEGABYTE, &fp_trees_in_buffer);
+    SID_Init_fp_buffer(&fp_trees_in, n_bytes_trees, SID_SIZE_OF_MEGABYTE, &fp_trees_in_buffer);
 
     // Open IDs file and initialize the IDs array
     int    flag_long_ids = GBP_TRUE;
@@ -178,7 +178,7 @@ void process_SSimPL_halos(render_info *render,
 
     // Read each group in turn
     // pcounter_info pcounter;
-    // SID_init_pcounter(&pcounter,n_groups,10);
+    // SID_Init_pcounter(&pcounter,n_groups,10);
     size_t index_last_read         = 0;
     int    n_groups_unused         = 0;
     int    n_groups_added_multiply = 0;

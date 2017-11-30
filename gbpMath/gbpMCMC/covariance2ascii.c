@@ -20,7 +20,7 @@ int main(int argc, char *argv[]) {
     double val;
     int    i_P, j_P, n_P, i_C, n_C;
 
-    SID_init(&argc, &argv, NULL, NULL);
+    SID_Init(&argc, &argv, NULL);
 
     strcpy(filename_in_root, argv[1]);
     sprintf(filename_in2, "%s/results/covariance.dat", filename_in_root);
@@ -57,5 +57,5 @@ int main(int argc, char *argv[]) {
     fclose(fp_in1);
     fclose(fp_in2);
     fclose(fp_out);
-    SID_exit(SID_ERROR_NONE);
+    SID_Finalize();
 }

@@ -12,7 +12,7 @@ int main(int argc, char *argv[]) {
     int       coverage_size = 100;
     MCMC_info MCMC;
 
-    SID_init(&argc, &argv, NULL, NULL);
+    SID_Init(&argc, &argv, NULL);
 
     init_MCMC(&MCMC, "", NULL, NULL, 0, NULL, NULL, NULL, NULL, 0);
 
@@ -33,5 +33,5 @@ int main(int argc, char *argv[]) {
     SID_log("Done.", SID_LOG_CLOSE);
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(SID_ERROR_NONE);
+    SID_Finalize();
 }

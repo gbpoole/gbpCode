@@ -8,7 +8,7 @@
 #include <gbpTrees.h>
 
 int main(int argc, char *argv[]) {
-    SID_init(&argc, &argv, NULL, NULL);
+    SID_Init(&argc, &argv, NULL);
 
     SID_log("Constructing match catalog...", SID_LOG_OPEN | SID_LOG_TIMER);
 
@@ -189,5 +189,5 @@ int main(int argc, char *argv[]) {
     SID_free(SID_FARG storage_index);
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(SID_ERROR_NONE);
+    SID_Finalize();
 }

@@ -20,7 +20,7 @@ int main(int argc, char *argv[]) {
     int   snap_number;
     char *group_type_in;
 
-    SID_init(&argc, &argv, NULL, NULL);
+    SID_Init(&argc, &argv, NULL);
 
     strcpy(filename_root, argv[1]);
     snap_number      = atoi(argv[2]);
@@ -124,5 +124,5 @@ int main(int argc, char *argv[]) {
             SID_log("no. of subhalos = %d", SID_LOG_COMMENT, n_sub_i);
     }
 
-    SID_exit(SID_ERROR_NONE);
+    SID_Finalize();
 }

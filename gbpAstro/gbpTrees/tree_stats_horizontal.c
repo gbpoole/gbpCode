@@ -9,7 +9,7 @@
 #include <gbpTrees.h>
 
 int main(int argc, char *argv[]) {
-    SID_init(&argc, &argv, NULL, NULL);
+    SID_Init(&argc, &argv, NULL);
 
     char filename_root[SID_MAX_FILENAME_LENGTH];
     int  snap_start, snap_stop, snap_step;
@@ -161,5 +161,5 @@ int main(int argc, char *argv[]) {
     // Clean-up
     SID_free(SID_FARG n_halos_tree_groups);
     SID_free(SID_FARG n_halos_tree_subgroups);
-    SID_exit(SID_ERROR_NONE);
+    SID_Finalize();
 }

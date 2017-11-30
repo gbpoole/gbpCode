@@ -12,7 +12,7 @@ int main(int argc, char *argv[]) {
     char       filename_out[256];
     int        n_files;
 
-    SID_init(&argc, &argv, NULL, NULL);
+    SID_Init(&argc, &argv, NULL);
 
     // Parse command line
     if(argc != 5) {
@@ -40,5 +40,5 @@ int main(int argc, char *argv[]) {
     free_plist(&plist);
     SID_log("Done.", SID_LOG_CLOSE);
 
-    SID_exit(SID_ERROR_NONE);
+    SID_Finalize();
 }

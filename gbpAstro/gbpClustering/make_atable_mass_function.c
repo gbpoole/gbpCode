@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
     int    flag_log;
 
     // Initialization -- MPI etc.
-    SID_init(&argc, &argv, NULL, NULL);
+    SID_Init(&argc, &argv, NULL);
     if(argc != 11)
         SID_exit_error("Incorrect syntax.", SID_ERROR_SYNTAX);
 
@@ -170,5 +170,5 @@ int main(int argc, char *argv[]) {
     SID_free(SID_FARG hist);
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(SID_ERROR_NONE);
+    SID_Finalize();
 }

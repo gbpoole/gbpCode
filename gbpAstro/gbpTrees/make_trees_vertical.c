@@ -10,7 +10,7 @@
 #include <gbpTrees.h>
 
 int main(int argc, char *argv[]) {
-    SID_init(&argc, &argv, NULL, NULL);
+    SID_Init(&argc, &argv, NULL);
 
     // Fetch user inputs
     char filename_SSimPL_dir[SID_MAX_FILENAME_LENGTH];
@@ -25,5 +25,5 @@ int main(int argc, char *argv[]) {
     compute_trees_vertical(filename_SSimPL_dir, filename_halo_version_root, filename_trees_name, n_dim_files);
     SID_log("Done.", SID_LOG_CLOSE);
 
-    SID_exit(SID_ERROR_NONE);
+    SID_Finalize();
 }

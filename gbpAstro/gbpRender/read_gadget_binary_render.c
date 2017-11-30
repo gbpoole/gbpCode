@@ -395,7 +395,7 @@ void read_gadget_binary_render(char *filename_root_in, int snapshot_number, plis
         size_t        n_particles_read = 0;
         RNG_info      RNG;
         init_RNG(&seed, &RNG, RNG_GLOBAL);
-        SID_init_pcounter(&pcounter, n_particles_all, 10);
+        SID_Init_pcounter(&pcounter, n_particles_all, 10);
         SID_log("Performing read...", SID_LOG_OPEN | SID_LOG_TIMER);
         int n_file_missing = 0;
         for(i_file = 0, n_particles_kept = 0; i_file < n_files; i_file++) {

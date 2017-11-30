@@ -92,7 +92,7 @@ int main(int argc, char *argv[]) {
     int                  n_bits = N_BITS_MIN;
     char *               filename_number;
 
-    SID_init(&argc, &argv, NULL, NULL);
+    SID_Init(&argc, &argv, NULL);
     SID_profile_start("make_group_PHKs", SID_PROFILE_NOTMPIENABLED);
 
     // Fetch user inputs
@@ -152,5 +152,5 @@ int main(int argc, char *argv[]) {
     }
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(SID_ERROR_NONE);
+    SID_Finalize();
 }

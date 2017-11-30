@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
     int  snap_number_stop;
     int  snap_number_step;
 
-    SID_init(&argc, &argv, NULL, NULL);
+    SID_Init(&argc, &argv, NULL);
 
     strcpy(filename_SSimPL, argv[1]);
     strcpy(filename_halo_type, argv[2]);
@@ -169,5 +169,5 @@ int main(int argc, char *argv[]) {
         SID_log("Done.", SID_LOG_CLOSE);
     }
 
-    SID_exit(SID_ERROR_NONE);
+    SID_Finalize();
 }

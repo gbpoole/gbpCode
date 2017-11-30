@@ -99,7 +99,7 @@ void process_gadget_file(const char *status_message,
     int           n_ranks_active              = SID.n_proc;
     size_t        n_particles_processed_local = 0;
     size_t        n_particles_processed       = 0;
-    SID_init_pcounter(&pcounter, n_particles_snap, 10);
+    SID_Init_pcounter(&pcounter, n_particles_snap, 10);
     for(int j_file = 0; i_file < fp_gadget.header.n_files; i_file += i_file_skip, j_file++) {
         // Open file pointers
         size_t record_length;

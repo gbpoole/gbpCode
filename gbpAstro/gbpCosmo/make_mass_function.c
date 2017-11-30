@@ -8,7 +8,7 @@
 #include <gbpCosmo.h>
 
 int main(int argc, char *argv[]) {
-    SID_init(&argc, &argv, NULL, NULL);
+    SID_Init(&argc, &argv, NULL);
 
     char   filename_cosmology[SID_MAX_FILENAME_LENGTH];
     char   paramterization[SID_MAX_FILENAME_LENGTH];
@@ -79,7 +79,7 @@ int main(int argc, char *argv[]) {
     // Create the mass function
     SID_log("Writing results to {%s}...", SID_LOG_OPEN | SID_LOG_TIMER, filename_out);
     pcounter_info pcounter;
-    SID_init_pcounter(&pcounter, n_M_bins, 10);
+    SID_Init_pcounter(&pcounter, n_M_bins, 10);
     double h_Hubble      = ((double *)ADaPS_fetch(cosmo, "h_Hubble"))[0];
     double mass_factor   = M_SOL / h_Hubble;
     double vol_factor    = pow(M_PER_MPC, 3.0);
@@ -111,5 +111,5 @@ int main(int argc, char *argv[]) {
     free_cosmo(&cosmo);
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(SID_ERROR_NONE);
+    SID_Finalize();
 }

@@ -129,7 +129,7 @@ void read_smooth(plist_info *plist, char *filename_root_in, int snapshot_number,
         int           n_files_not_found = 0;
         int           flag_file_not_found;
         SID_log("Performing read...", SID_LOG_OPEN | SID_LOG_TIMER);
-        SID_init_pcounter(&pcounter, n_particles_total, 10);
+        SID_Init_pcounter(&pcounter, n_particles_total, 10);
         for(i_file = 0; i_file < n_files; i_file++) {
             set_smooth_filename(filename_root_in, snapshot_number, i_file, flag_multifile, flag_file_type, filename);
             if((fp = fopen(filename, "r")) != NULL) {

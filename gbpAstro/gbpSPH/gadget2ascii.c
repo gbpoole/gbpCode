@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
     int                flag_filefound, flag_multifile, flag_file_type;
     FILE *             fp;
 
-    SID_init(&argc, &argv, NULL, NULL);
+    SID_Init(&argc, &argv, NULL);
 
     // Parse command line
     if(argc != 4) {
@@ -49,5 +49,5 @@ int main(int argc, char *argv[]) {
     free_plist(&plist);
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(SID_ERROR_NONE);
+    SID_Finalize();
 }

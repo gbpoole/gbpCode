@@ -8,7 +8,7 @@
 #include <gbpHalos.h>
 
 int main(int argc, char *argv[]) {
-    SID_init(&argc, &argv, NULL, NULL);
+    SID_Init(&argc, &argv, NULL);
 
     char filename_SSimPL[SID_MAX_FILENAME_LENGTH];
     char filename_halo_type[SID_MAX_FILENAME_LENGTH];
@@ -66,5 +66,5 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    SID_exit(SID_ERROR_NONE);
+    SID_Finalize();
 }

@@ -88,7 +88,7 @@ int main(int argc, char *argv[]) {
     int                  largest_truncated_local;
     char *               filename_number;
 
-    SID_init(&argc, &argv, NULL, NULL);
+    SID_Init(&argc, &argv, NULL);
 
     // Fetch user inputs
     char filename_in_root[SID_MAX_FILENAME_LENGTH];
@@ -479,5 +479,5 @@ int main(int argc, char *argv[]) {
     } // i_snap
     SID_log("Done.", SID_LOG_CLOSE);
 
-    SID_exit(SID_ERROR_NONE);
+    SID_Finalize();
 }

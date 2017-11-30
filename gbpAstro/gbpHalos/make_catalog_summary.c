@@ -84,7 +84,7 @@ int main(int argc, char *argv[]) {
     float  r_min, r_max;
     double box_size;
 
-    SID_init(&argc, &argv, NULL, NULL);
+    SID_Init(&argc, &argv, NULL);
 
     strcpy(filename_SSimPL_root, argv[1]);
     strcpy(filename_halos_root, argv[2]);
@@ -204,5 +204,5 @@ int main(int argc, char *argv[]) {
 
     SID_log("Done.", SID_LOG_CLOSE);
 
-    SID_exit(SID_ERROR_NONE);
+    SID_Finalize();
 }

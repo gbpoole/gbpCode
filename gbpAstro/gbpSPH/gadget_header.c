@@ -6,15 +6,13 @@
 #include <gbpSPH.h>
 
 int main(int argc, char *argv[]) {
-    SID_init(&argc, &argv, NULL, NULL);
+    SID_Init(&argc, &argv, NULL);
 
     // Parse command line
     char filename_in[256];
     int  snapshot;
     if(argc != 3) {
-        fprintf(stderr, "\n syntax: %s filename_in_root snapshot\n", argv[0]);
-        fprintf(stderr, " ------\n\n");
-        SID_exit(SID_ERROR_SYNTAX);
+        SID_exit_error("Syntax: %s filename_in_root snapshot\n", SID_ERROR_SYNTAX, argv[0]);
     }
     strcpy(filename_in, argv[1]);
     snapshot = atoi(argv[2]);
@@ -30,5 +28,5 @@ int main(int argc, char *argv[]) {
     // Clean-up
     free_plist(&plist);
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(SID_ERROR_NONE);
+    SID_Finalize();
 }

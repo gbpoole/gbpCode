@@ -209,7 +209,7 @@ void map_to_grid(size_t      n_particles_local,
 
     // Loop over all the objects
     pcounter_info pcounter;
-    SID_init_pcounter(&pcounter, n_particles_local, 10);
+    SID_Init_pcounter(&pcounter, n_particles_local, 10);
     for(i_p = 0, norm_local = 0.; i_p < n_particles_local; i_p++) {
         double norm_i;
         double value_i;

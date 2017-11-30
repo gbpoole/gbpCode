@@ -44,7 +44,7 @@ int main(int argc, char *argv[]) {
     long long    id_in_long;
     int          n_groups;
 
-    SID_init(&argc, &argv, NULL, NULL);
+    SID_Init(&argc, &argv, NULL);
 
     // Parse command line
     if(argc != 4) {
@@ -249,5 +249,5 @@ int main(int argc, char *argv[]) {
     } else
         SID_log_error("File not found.", SID_ERROR_IO_READ);
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(SID_ERROR_NONE);
+    SID_Finalize();
 }

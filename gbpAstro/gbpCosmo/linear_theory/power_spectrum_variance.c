@@ -70,7 +70,7 @@ void init_power_spectrum_variance(cosmo_info **cosmo, int mode, int component) {
             while(rel_diff >= 0.25 * rel_accuracy) {
                 // fprintf(stderr,"A:%le %le\n",limit_lo,limit_hi);
                 // for(double k_i=limit_lo;k_i<limit_hi;k_i+=(limit_hi-limit_lo)*0.01) printf("%le %le\n",k_i,sigma2_integrand(k_i,(void
-                // *)(&params)));  fprintf(stderr,"B:%le %le\n",limit_lo,limit_hi);  SID_exit(0);
+                // *)(&params)));  fprintf(stderr,"B:%le %le\n",limit_lo,limit_hi);  SID_Finalize(0);
 
                 // Perform spherical top-hat integral
                 //    for this iteration
@@ -134,7 +134,7 @@ void init_power_spectrum_variance(cosmo_info **cosmo, int mode, int component) {
     //
     // for(double lk=lk_P[0];lk<lk_P[n_k-1];lk+=0.05) printf("%le %le %le %le
     // %le\n",lk,interpolate(interp,lk),1./sqrt(interpolate(interp,lk)),interpolate_derivative(interp2,lk),interpolate_derivative(interp,lk));
-    // SID_exit(0);
+    // SID_Finalize(0);
 
     // Clean-up
     gsl_integration_workspace_free(wspace);

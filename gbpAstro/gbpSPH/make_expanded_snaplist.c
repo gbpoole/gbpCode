@@ -33,7 +33,7 @@ double delta_n_dyn(double a_1, double a_2, cosmo_info **cosmo) {
 }
 
 int main(int argc, char *argv[]) {
-    SID_init(&argc, &argv, NULL, NULL);
+    SID_Init(&argc, &argv, NULL);
 
     // Parse arguments
     char filename_cosmo[SID_MAX_FILENAME_LENGTH];
@@ -141,5 +141,5 @@ int main(int argc, char *argv[]) {
     free_cosmo(&cosmo);
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(SID_ERROR_NONE);
+    SID_Finalize();
 }

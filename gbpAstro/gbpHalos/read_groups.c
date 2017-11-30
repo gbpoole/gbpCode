@@ -31,8 +31,6 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
     va_list vargs;
     va_start(vargs, catalog_name);
 
-    SID_profile_start("read_groups", SID_PROFILE_DEFAULT);
-
     // SID_set_verbosity(SID_SET_VERBOSITY_DEFAULT);
 
     // Set filenames
@@ -1311,5 +1309,4 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
     va_end(vargs);
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_profile_stop();
 }

@@ -8,7 +8,7 @@
 #include <gbpCosmo.h>
 
 int main(int argc, char *argv[]) {
-    SID_init(&argc, &argv, NULL, NULL);
+    SID_Init(&argc, &argv, NULL);
 
     // Parse arguments and initialize
     char   filename_gbpCosmo_source[SID_MAX_FILENAME_LENGTH];
@@ -56,5 +56,5 @@ int main(int argc, char *argv[]) {
     // Clean-up
     free_cosmo(&cosmo_1);
     free_cosmo(&cosmo_2);
-    SID_exit(SID_ERROR_NONE);
+    SID_Finalize();
 }

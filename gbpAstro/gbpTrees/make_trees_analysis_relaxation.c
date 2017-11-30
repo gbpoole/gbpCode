@@ -291,7 +291,7 @@ void process_trees_fctn_fin_local(tree_info *trees, void *params_in, int mode, i
 }
 
 int main(int argc, char *argv[]) {
-    SID_init(&argc, &argv, NULL, NULL);
+    SID_Init(&argc, &argv, NULL);
 
     // Fetch user inputs
     char filename_SSimPL_root[SID_MAX_FILENAME_LENGTH];
@@ -393,5 +393,5 @@ int main(int argc, char *argv[]) {
     free_trees(&trees);
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(SID_ERROR_NONE);
+    SID_Finalize();
 }

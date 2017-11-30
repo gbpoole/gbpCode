@@ -18,13 +18,11 @@ int main(int argc, char *argv[]) {
     char filename_in[256], filename_out[256];
 
     // Initialize
-    SID_init(&argc, &argv, NULL, NULL);
+    SID_Init(&argc, &argv, NULL);
 
     // Process user inputs
     if(argc != 8) {
-        fprintf(stderr, "Syntax: %s n_x n_y n_z n_files_out filename_in snapshot filename_out\n", argv[0]);
-        fprintf(stderr, "-------\n");
-        SID_exit(SID_ERROR_SYNTAX);
+        SID_exit_error("Syntax: %s n_x n_y n_z n_files_out filename_in snapshot filename_out\n", SID_ERROR_SYNTAX, argv[0]);
     }
     n_x   = (int)atoi(argv[1]);
     n_y   = (int)atoi(argv[2]);
@@ -50,5 +48,5 @@ int main(int argc, char *argv[]) {
 
     // Clean-up
     free_plist(&plist);
-    SID_exit(SID_ERROR_NONE);
+    SID_Finalize();
 }

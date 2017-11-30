@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
     GBPREAL *  sigma_v_array;
     FILE *     fp_out;
 
-    SID_init(&argc, &argv, NULL, NULL);
+    SID_Init(&argc, &argv, NULL);
 
     strcpy(filename_snapshot, argv[1]);
     snapshot = atoi(argv[2]);
@@ -106,5 +106,5 @@ int main(int argc, char *argv[]) {
     // Clean-up
     free_plist(&plist);
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(SID_ERROR_NONE);
+    SID_Finalize();
 }

@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
     float                offset_COM;
     float                r_min, r_max;
 
-    SID_init(&argc, &argv, NULL, NULL);
+    SID_Init(&argc, &argv, NULL);
 
     strcpy(filename_root, argv[1]);
     snap_number      = atoi(argv[2]);
@@ -124,5 +124,5 @@ int main(int argc, char *argv[]) {
         SID_log("Done.", SID_LOG_CLOSE);
     }
 
-    SID_exit(SID_ERROR_NONE);
+    SID_Finalize();
 }

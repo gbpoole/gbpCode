@@ -8,7 +8,7 @@
 #include <gbpSwapEndian.h>
 
 int main(int argc, char *argv[]) {
-    SID_init(&argc, &argv, NULL, NULL);
+    SID_Init(&argc, &argv, NULL);
 
     // Fetch user inputs
     if(argc != 5)
@@ -62,5 +62,5 @@ int main(int argc, char *argv[]) {
     }
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(SID_ERROR_NONE);
+    SID_Finalize();
 }

@@ -441,7 +441,7 @@ int main(int argc, char *argv[]) {
     char *      grid_identifier;
 
     // Initialization -- MPI etc.
-    SID_init(&argc, &argv, NULL, NULL);
+    SID_Init(&argc, &argv, NULL);
 
     // Parse arguments
     int  grid_size;
@@ -768,5 +768,5 @@ int main(int argc, char *argv[]) {
 
     SID_log("Done.", SID_LOG_CLOSE);
 
-    SID_exit(SID_ERROR_NONE);
+    SID_Finalize();
 }

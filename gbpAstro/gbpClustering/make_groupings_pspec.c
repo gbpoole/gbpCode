@@ -56,7 +56,7 @@ int main(int argc, char *argv[]) {
     double k_max_2D;
 
     // Initialization -- MPI etc.
-    SID_init(&argc, &argv, NULL, NULL);
+    SID_Init(&argc, &argv, NULL);
     if(argc != 8)
         SID_exit_error("Incorrect syntax.", SID_ERROR_SYNTAX);
 
@@ -164,5 +164,5 @@ int main(int argc, char *argv[]) {
     free_pspec(&pspec);
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(SID_ERROR_NONE);
+    SID_Finalize();
 }

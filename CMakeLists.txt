@@ -7,7 +7,8 @@ set(CMAKE_CXX_COMPILER "g++")
 
 # Compiler flags
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu99")
-set(CMAKE_CXX_FLAGS "-std=c++11")
+#set(CMAKE_CXX_FLAGS "-std=c++11")
+set(CMAKE_CXX_STANDARD 11) 
 
 # Declare the project name
 project (gbpCode)

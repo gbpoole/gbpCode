@@ -93,7 +93,7 @@ void read_treenode_markers(tree_info *trees, const char *filename_input_root, in
         int            bytes_per_marker = 4;
         int            bytes_per_halo   = n_markers * bytes_per_marker;
         SID_fp_buffer *fp_in_buffer     = NULL;
-        SID_init_fp_buffer(&fp_in, (size_t) (bytes_per_halo * n_halos_total[i_snap]) * sizeof(int),
+        SID_Init_fp_buffer(&fp_in, (size_t) (bytes_per_halo * n_halos_total[i_snap]) * sizeof(int),
                            SID_SIZE_OF_MEGABYTE, &fp_in_buffer);
         for(int i_halo = 0; i_halo < n_halos_total[i_snap]; i_halo++) {
             int                flag_keep     = GBP_FALSE;

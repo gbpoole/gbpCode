@@ -8,7 +8,7 @@
 #include <gbpSPH.h>
 
 int main(int argc, char *argv[]) {
-    SID_init(&argc, &argv, NULL, NULL);
+    SID_Init(&argc, &argv, NULL);
 
     // Parse command line
     select_gadget_ids_params_info params;
@@ -162,7 +162,7 @@ int main(int argc, char *argv[]) {
         SID_log("Done.", SID_LOG_CLOSE);
         SID_log("Writing particles...", SID_LOG_OPEN);
         pcounter_info pcounter;
-        SID_init_pcounter(&pcounter, halo_length, 10);
+        SID_Init_pcounter(&pcounter, halo_length, 10);
         int n_unfound = 0;
         for(int i_p = 0; i_p < halo_length; i_p++) {
             size_t k_p = id_indices[find_index(id, id_list_unsorted[i_p], n_p, id_indices)];
@@ -194,5 +194,5 @@ int main(int argc, char *argv[]) {
     free_plist(&plist);
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(SID_ERROR_NONE);
+    SID_Finalize();
 }

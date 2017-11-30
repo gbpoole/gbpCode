@@ -34,7 +34,7 @@ int main(int argc, char *argv[]) {
     int     flag_fix_bridges   = GBP_TRUE;
     int     flag_write_headers = GBP_TRUE;
 
-    SID_init(&argc, &argv, NULL, NULL);
+    SID_Init(&argc, &argv, NULL);
 
     // Fetch user inputs
     strcpy(filename_halo_root_in, argv[1]);
@@ -62,5 +62,5 @@ int main(int argc, char *argv[]) {
     compute_trees_matches(filename_halo_root_in, filename_root_matches, i_read_start, i_read_stop, i_read_step, n_search, mode);
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(SID_ERROR_NONE);
+    SID_Finalize();
 }

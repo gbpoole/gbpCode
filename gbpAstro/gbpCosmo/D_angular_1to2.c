@@ -7,7 +7,7 @@
 #include <gbpCosmo.h>
 
 int main(int argc, char *argv[]) {
-    SID_init(&argc, &argv, NULL, NULL);
+    SID_Init(&argc, &argv, NULL);
 
     // Parse arguments and initialize
     double z_lo;
@@ -35,5 +35,5 @@ int main(int argc, char *argv[]) {
     // Clean-up
     free_cosmo(&cosmo);
 
-    SID_exit(SID_ERROR_NONE);
+    SID_Finalize();
 }

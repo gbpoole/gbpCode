@@ -20,7 +20,7 @@ int main(int argc, char *argv[]) {
     double       Y_max;
     FILE *       fp_check;
 
-    SID_init(&argc, &argv, NULL, NULL);
+    SID_Init(&argc, &argv, NULL);
 
     // Parse cmd line arguments
     int flag_force_render = GBP_FALSE;
@@ -85,5 +85,5 @@ int main(int argc, char *argv[]) {
     free_render(&render);
 
     SID_log("Done.", SID_LOG_CLOSE);
-    SID_exit(SID_ERROR_NONE);
+    SID_Finalize();
 }
