@@ -12,7 +12,6 @@
 
 int main(int argc, char *argv[]) {
     SID_Init(&argc, &argv, NULL);
-    SID_profile_start("make_group_PHKs", SID_PROFILE_NOTMPIENABLED);
 
     // Fetch user inputs
     char   filename_halos_root[256];

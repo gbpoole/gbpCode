@@ -224,11 +224,37 @@ macro(build_data_files cur_dir )
     endforeach()
 endmacro()
 
+# Macro for initializing &/or building external dependencies
+macro(process_externs cur_dir )
+
+    if( ${cur_dir} STREQUAL ${CMAKE_SOURCE_DIR} )
+        message(STATUS "" )
+        message(STATUS "Checking for external dependencies..." )
+    endif()
+
+    # Check if the current directory has an 'extern.cmake' file
+    if(EXISTS "${cur_dir}/extern.cmake")
+        include( ${cur_dir}/extern.cmake )
+        local_extern( ${cur_dir} )
+    endif()
+
+    # Recurse through all directories
+    set_dir_state(${cur_dir})
+    foreach(_dir_name ${ALLDIRS} )
+        process_externs( ${cur_dir}/${_dir_name} ) 
+    endforeach()
+
+    if( ${cur_dir} STREQUAL ${CMAKE_SOURCE_DIR} )
+        message(STATUS "Done." )
+    endif()
+endmacro()
+
 # Macro to assemble a list of all directories
 #    with a header file and their filenames
 macro(process_headers cur_dir )
     # Perform some initialization on the first call
     if( ${cur_dir} STREQUAL ${CMAKE_SOURCE_DIR} )
+        message(STATUS "" )
         message(STATUS "Assembling a list of project header directories..." )
         set(INC_DIRS_PROJECT "" )
         set(INC_FILES_PROJECT "" )

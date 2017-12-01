@@ -93,7 +93,6 @@ int main(int argc, char *argv[]) {
     char *               filename_number;
 
     SID_Init(&argc, &argv, NULL);
-    SID_profile_start("make_group_PHKs", SID_PROFILE_NOTMPIENABLED);
 
     // Fetch user inputs
     strcpy(filename_PHKs_root, argv[1]);
