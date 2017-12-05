@@ -1,23 +1,28 @@
+# Build products
 *.o
 *.a
+
+# Some annoying Apple stuff
+.DS_Store
 *.dSYM
+
+# Python stuff
 *.pyc
-*.a.objsfile
-cmake-build-debug
+
+# .vi swap files
+*.*.swp
+
+# Common names for out-of-source build directories
+cmake-build-*
+build*
+
+# Used for testing
+mpich
+
+# Ignore Sphynx themes (for now)
+docs/themes/*
+
+#Miscillaneous
 .idea
 .install*
-.printed_status
-todo
-wip
-*.my*
 *.old
-3rd_Party
-gbpProj
-myBin
-myData
-myInclude
-myLib
-.cshrc.myCode
-.bashrc.myCode
-build-*
-docs/themes/*
