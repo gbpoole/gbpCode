@@ -15,17 +15,17 @@ namespace gbpApp {
         char filename_SSimPL_in[SID_MAX_FILENAME_LENGTH];
         char filename_SSimPL_out[SID_MAX_FILENAME_LENGTH];
         char filename_halo_type[SID_MAX_FILENAME_LENGTH];
-        int  i_snap_lo;
-        int  i_snap_hi;
         int  flag_process_halos;
         int  flag_process_catalogs;
         int  flag_process_grids;
         int  flag_process_snapshots;
         int  mode;
+        int  i_snap_lo;
+        int  i_snap_hi;
     };
 
     // Set default values
-    arg_list args = {GBP_FALSE, GBP_TRUE, GBP_TRUE, GBP_TRUE, GBP_TRUE, SWAP_SSIMPL_ENDIAN_TO_NATIVE, 1, 1};
+    arg_list args = {"unset","unset","unset", GBP_TRUE, GBP_TRUE, GBP_TRUE, GBP_TRUE, SWAP_SSIMPL_ENDIAN_TO_NATIVE, 1, 1};
 
     // Create a personalised derived class for this application from
     // the base class defined in "gbpApp.hh".
