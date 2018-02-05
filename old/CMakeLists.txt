@@ -3,31 +3,12 @@
 #    -   latest version availale on Travis CI     -
 cmake_minimum_required(VERSION 3.2)
 
-# Read the file with the macro definitions which specify
-# the behaviour specific to this project and then run
-# the initialization macro
-include(${CMAKE_SOURCE_DIR}/project.cmake)
-
-# Check that the relative path (from the main project directory)
-# to gbpBuild has been defined by project.cmake
-if(NOT GBPBUILD_REL_PATH)
-    message( FATAL_ERROR "GBPBUILD_REL_PATH has not been set by project.cmake")
-endif()
-
-# Add the 'cmake' directory in the project directory to the module path
-set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_SOURCE_DIR};${CMAKE_SOURCE_DIR}/cmake")
-message(STATUS "${CMAKE_MODULE_PATH}")
-
-# Load and run a macro to validate the initialization
-include ("init_validate")
-init_validate()
-
 # Declare the project name
-project (${GBP_PROJECT_NAME})
+project (gbpCode)
 
 # Clear default install directory (user should use
 # DESTDIR with make to set installation directory)
-set( CMAKE_INSTALL_PREFIX "./" )
+#set( CMAKE_INSTALL_PREFIX "" )
 
 # Set default compilers(must come before project line)
 set(CMAKE_C_COMPILER   "gcc")
@@ -37,8 +18,8 @@ set(CMAKE_CXX_COMPILER "g++")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu99")
 set(CMAKE_CXX_STANDARD 11)
 
-# Set the location of the gbpBuild submodule
-set(GBP_BUILD_DIR "${CMAKE_SOURCE_DIR}/${GBPBUILD_REL_PATH}/" )
+# Add the 'cmake' directory in the project directory to the module path
+set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_SOURCE_DIR};${CMAKE_SOURCE_DIR}/extern/gbpBuild/cmake")
 
 # Load all macros and functions
 message(STATUS "Loading macros & functions...")
@@ -64,7 +45,7 @@ process_externs( ${CMAKE_SOURCE_DIR} )
 # Execute all project specific configurations
 # (set options, library dependencies, etc.)
 # ===========================================
-project_options_and_dependancies()
+include(${CMAKE_SOURCE_DIR}/project.cmake)
 # ===========================================
 
 # ============= Process the project =============

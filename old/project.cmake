@@ -1,0 +1,32 @@
+#========= Set project-specific options ========
+# Use double precision liberally ?
+option(USE_DOUBLE "Use double liberally" OFF)
+if(USE_DOUBE)
+    add_definitions(-DUSE_DOUBLE)
+endif()
+
+# Turn on debugging mode
+option(SID_DEBUG "Enable SID debugging information" OFF)
+
+#=========== Add 3rd-party libraries ===========
+# (look in gbpBuild/cmake/3rd_party.cmake for a list of supported libraries)
+message(STATUS "")
+message(STATUS "Initializing 3rd-party libraries...")
+
+# List of *required* 3rd-Party libraries
+set_3rd_party_required("GSL")
+
+# List of *requested* 3rd-Party libraries (and their defaults)
+set_3rd_party_requested("GBP_DOCS_BUILD" ON)
+
+# List of *optional* 3rd-Party libraries (and their defaults)
+set_3rd_party_optional("MPI"     ON)
+set_3rd_party_optional("MPI_IO"  OFF)
+set_3rd_party_optional("GD"      ON)
+set_3rd_party_optional("FFTW"    ON)
+set_3rd_party_optional("CUDA"    OFF)
+set_3rd_party_optional("CFITSIO" ON)
+set_3rd_party_optional("HDF5"    ON)
+
+# Print status message
+message(STATUS "Finished initializing 3rd-party libraries.")

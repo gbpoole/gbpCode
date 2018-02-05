@@ -8,10 +8,6 @@
 
 # Python stuff
 *.pyc
-*.egg
-*.egg-info
-__pycache__
-.idea
 
 # .vi swap files
 *.*.swp
@@ -23,6 +19,10 @@ build*
 # Used for testing
 mpich
 
+# Ignore Sphynx themes (for now)
+docs/themes/*
+
 #Miscillaneous
+.idea
 .install*
 *.old
