@@ -1,15 +1,3 @@
-# *****************************************************
-# *** A 'local.cmake' file following this format    ***
-# *** should reside in every directory contributing ***
-# *** the C/C++ code of this project.               ***
-# *****************************************************
-
-# The following directive is used to organise
-# how the Doxygen groups defined by this project
-# will be organised in the documentation:
-#
-# set_active_API_module root Project root
-
 # Set empty defaults
 set(LIBDIRS    "" )
 set(SRCDIRS    "" )
@@ -22,7 +10,8 @@ set(DATASUBDIR "" )
 
 # Add subdirectories that are roots to libraries
 # eg. list(APPEND LIBDIRS "dir" )
-# -- NONE FOR THIS DIR --
+list(APPEND LIBDIRS "gbpLib"  )
+list(APPEND LIBDIRS "gbpMath" )
 
 # Add directories that contribute source files 
 # eg. list(APPEND SRCDIRS "dir" )
@@ -51,5 +40,5 @@ set(DATASUBDIR "" )
 # Add subdirectories that we want to decend into
 #   but which we won't scan for sources, etc
 # eg. list(APPEND PASSDIRS "dir" )
-# -- NONE FOR THIS DIR --
+list(APPEND PASSDIRS "gbpAstro" )
 
