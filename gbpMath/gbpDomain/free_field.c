@@ -14,7 +14,17 @@ void free_field(field_info *FFT) {
     SID_free(SID_FARG FFT->i_R_stop_local);
     SID_free(SID_FARG FFT->i_k_stop_local);
 
-    // Free FFTs
+// Free FFTs
+#if USE_FFTW
+#if USE_FFTW2
+#if USE_MPI
+    rfftwnd_mpi_destroy_plan(FFT->plan);
+    rfftwnd_mpi_destroy_plan(FFT->iplan);
+#else
+    rfftwnd_destroy_plan(FFT->plan);
+    rfftwnd_destroy_plan(FFT->iplan);
+#endif
+#else
 #ifdef USE_DOUBLE
     fftw_destroy_plan(FFT->plan);
     fftw_destroy_plan(FFT->iplan);
@@ -30,6 +40,8 @@ void free_field(field_info *FFT) {
     fftwf_mpi_cleanup();
 #else
     fftwf_cleanup();
+#endif
+#endif
 #endif
 #endif
 

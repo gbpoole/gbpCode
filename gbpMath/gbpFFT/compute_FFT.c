@@ -1,4 +1,5 @@
 #include <gbpLib.h>
+#include <gbpDomain.h>
 #include <gbpFFT.h>
 
 void compute_FFT(field_info *FFT) {
@@ -11,10 +12,18 @@ void compute_FFT(field_info *FFT) {
     }
 
 // Perform the FFT
+#if USE_FFTW2
+#if USE_MPI
+    rfftwnd_mpi(FFT->plan, 1, FFT->field_local, NULL, FFTW_TRANSPOSED_ORDER);
+#else
+    rfftwnd_one_real_to_complex(FFT->plan, FFT->field_local, NULL);
+#endif
+#else
 #ifdef USE_DOUBLE
     fftw_execute((const fftw_plan)FFT->plan);
 #else
     fftwf_execute((const fftwf_plan)FFT->plan);
+#endif
 #endif
 
     if(flag_log_message)

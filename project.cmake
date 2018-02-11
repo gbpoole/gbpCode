@@ -7,10 +7,17 @@ macro(project_options_and_dependancies)
     #========= Set project-specific options ========
     # Use double precision liberally ?
     option(USE_DOUBLE "Use double liberally" OFF)
-    if(USE_DOUBE)
+    if(USE_DOUBLE)
         add_definitions(-DUSE_DOUBLE)
     endif()
     
+    option(USE_FFTW2 "Use v2 of FFTW" ON)
+    if(USE_FFTW2)
+        add_definitions(-DUSE_FFTW2)
+    endif()
+
+    set(FFTW_ROOT "/Users/gpoole/3rd_Party/")
+
     # Turn on debugging mode
     option(SID_DEBUG "Enable SID debugging information" OFF)
     
@@ -29,7 +36,11 @@ macro(project_options_and_dependancies)
     set_3rd_party_optional("MPI"     ON)
     set_3rd_party_optional("MPI_IO"  OFF)
     set_3rd_party_optional("GD"      ON)
-    set_3rd_party_optional("FFTW"    ON)
+    if(USE_FFTW2)
+       set_3rd_party_optional("FFTW2" ON)
+    else()
+       set_3rd_party_optional("FFTW3" ON)
+    endif()      
     set_3rd_party_optional("CUDA"    OFF)
     set_3rd_party_optional("CFITSIO" ON)
     set_3rd_party_optional("HDF5"    ON)    

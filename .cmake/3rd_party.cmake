@@ -296,19 +296,49 @@ function(init_3rd_party_HDF5 lib_name required_in)
     endif()
 endfunction()
 
-# Initialize FFTW
-function(init_3rd_party_FFTW lib_name required_in)
+# Initialize FFTW v2
+function(init_3rd_party_FFTW2 lib_name required_in)
     set_required_variables(${required_in})
     if(USE_${lib_name})
         add_definitions(-DUSE_${lib_name})
         find_package(${lib_name} ${required})
 
         # Check status and print message    
-        check_3rd_party_status( FFTW_FOUND )
+        check_3rd_party_status( FFTW2_FOUND )
 
         # Personalized set-up:
-        include_directories( ${FFTW_INCLUDES} )
-        link_libraries( ${FFTW_LIBRARIES} )
+        include_directories( ${FFTW2_INCLUDES} )
+        link_libraries( ${FFTW2_LIBRARIES} )
+
+        # Generalized FFTW declarations
+        if(FFTW2_FOUND)
+            add_definitions(-DUSE_FFTW=ON)
+            add_definitions(-DFFTW_FOUND)
+        endif()
+    else()
+        skip_3rd_party_status(required_in)
+    endif()
+endfunction()
+
+# Initialize FFTW v3
+function(init_3rd_party_FFTW3 lib_name required_in)
+    set_required_variables(${required_in})
+    if(USE_${lib_name})
+        add_definitions(-DUSE_${lib_name})
+        find_package(${lib_name} ${required})
+
+        # Check status and print message    
+        check_3rd_party_status( FFTW3_FOUND )
+
+        # Personalized set-up:
+        include_directories( ${FFTW3_INCLUDES} )
+        link_libraries( ${FFTW3_LIBRARIES} )
+
+        # Generalized FFTW declarations
+        if(FFTW2_FOUND)
+            add_definitions(-DUSE_FFTW=ON)
+            add_definitions(-DFFTW_FOUND)
+        endif()
     else()
         skip_3rd_party_status(required_in)
     endif()
