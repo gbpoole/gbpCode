@@ -91,7 +91,11 @@ endmacro()
 
 # Success/fail/skipped status messages
 macro(check_3rd_party_status success )
+    # Write a sucess/failure message and throw an error if needed
     if(${success})
+        # Create a couple preprocessor macros that can be used in the code
+        add_definitions(-DUSE_${lib_name})
+        add_definitions(-D${lib_name}_FOUND)
         message(STATUS "   -> ${required_txt} library initialized:  ${lib_name}")
     else()
         if(required STREQUAL "REQUIRED" )
@@ -311,9 +315,9 @@ function(init_3rd_party_FFTW2 lib_name required_in)
         link_libraries( ${FFTW2_LIBRARIES} )
 
         # Generalized FFTW declarations
-        if(FFTW2_FOUND)
+        if(${FFTW2_FOUND})
             add_definitions(-DUSE_FFTW=ON)
-            add_definitions(-DFFTW_FOUND)
+            add_definitions(-DFFTW_FOUND=ON)
         endif()
     else()
         skip_3rd_party_status(required_in)
@@ -335,9 +339,9 @@ function(init_3rd_party_FFTW3 lib_name required_in)
         link_libraries( ${FFTW3_LIBRARIES} )
 
         # Generalized FFTW declarations
-        if(FFTW2_FOUND)
+        if(${FFTW3_FOUND})
             add_definitions(-DUSE_FFTW=ON)
-            add_definitions(-DFFTW_FOUND)
+            add_definitions(-DFFTW_FOUND=ON)
         endif()
     else()
         skip_3rd_party_status(required_in)

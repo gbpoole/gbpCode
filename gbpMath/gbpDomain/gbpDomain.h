@@ -47,8 +47,8 @@ struct field_info {
     fftw_real *   field_local;
     fftw_complex *cfield_local;
 #else
-    GBPREAL *       field_local;
-    gbpFFT_complex *cfield_local;
+    GBPREAL *     field_local;
+    fftw_complex *cfield_local;
 #endif
 #else
     GBPREAL *field_local;

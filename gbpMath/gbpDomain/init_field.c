@@ -29,7 +29,7 @@ void init_field(int n_d, int *n, double *L, field_info *FFT) {
 
     // Initialize FFT sizes
     FFT->n_d             = n_d;
-    FFT->n               = (ptrdiff_t *)SID_calloc(sizeof(int) * FFT->n_d);
+    FFT->n               = (int *)SID_calloc(sizeof(int) * FFT->n_d);
     FFT->L               = (double *)SID_calloc(sizeof(double) * FFT->n_d);
     FFT->n_k_local       = (int *)SID_calloc(sizeof(int) * FFT->n_d);
     FFT->n_R_local       = (int *)SID_calloc(sizeof(int) * FFT->n_d);
@@ -50,24 +50,24 @@ void init_field(int n_d, int *n, double *L, field_info *FFT) {
 // Initialize FFTW
 #if USE_MPI
 #if USE_FFTW2
-#if USE_MPI
+    int total_local_size_int;
+    int n_x_local_int;
+    int i_x_start_local_int;
+    int n_y_transpose_local_int;
+    int i_y_start_transpose_local_int;
     FFT->plan  = rfftwnd_mpi_create_plan(SID.COMM_WORLD->comm, FFT->n_d, FFT->n, FFTW_REAL_TO_COMPLEX, FFTW_ESTIMATE);
     FFT->iplan = rfftwnd_mpi_create_plan(SID.COMM_WORLD->comm, FFT->n_d, FFT->n, FFTW_COMPLEX_TO_REAL, FFTW_ESTIMATE);
     rfftwnd_mpi_local_sizes(FFT->plan,
-                            &(n_x_local),
-                            &(i_x_start_local),
-                            &(n_y_transpose_local),
-                            &(i_y_start_transpose_local),
+                            &(n_x_local_int),
+                            &(i_x_start_local_int),
+                            &(n_y_transpose_local_int),
+                            &(i_y_start_transpose_local_int),
                             &total_local_size_int);
+    n_x_local=n_x_local_int;
+    i_x_start_local=i_x_start_local_int;
+    n_y_transpose_local=n_y_transpose_local_int;
+    i_y_start_transpose_local=i_y_start_transpose_local_int;
     FFT->total_local_size = (size_t)total_local_size_int;
-#else
-    for(i_d = 0, FFT->total_local_size = 1; i_d < FFT->n_d; i_d++) {
-        if(i_d < FFT->n_d - 1)
-            FFT->total_local_size *= FFT->n[i_d];
-        else
-            FFT->total_local_size *= 2 * (FFT->n[i_d] / 2 + 1);
-    }
-#endif
 #else
 #ifdef USE_DOUBLE
     fftw_mpi_init();
@@ -111,14 +111,15 @@ void init_field(int n_d, int *n, double *L, field_info *FFT) {
     }
 
     // Allocate field
-    FFT->field_local  = fftwf_alloc_real(FFT->total_local_size);
-    FFT->cfield_local = (gbpFFT_complex *)FFT->field_local;
+#if USE_FFTW2
+        FFT->field_local = (GBPREAL *)SID_malloc(sizeof(GBPREAL *)*FFT->total_local_size);
+#else
+        FFT->field_local = fftwf_alloc_real(FFT->total_local_size);
+#endif
+    FFT->cfield_local = (fftw_complex *)FFT->field_local;
 
 // Generate plans
-#if USE_FFTW2
-    FFT->plan         = rfftwnd_create_plan(FFT->n_d, FFT->n, FFTW_REAL_TO_COMPLEX, FFTW_ESTIMATE | FFTW_IN_PLACE);
-    FFT->iplan        = rfftwnd_create_plan(FFT->n_d, FFT->n, FFTW_COMPLEX_TO_REAL, FFTW_ESTIMATE | FFTW_IN_PLACE);
-#else
+#if !USE_FFTW2
 #ifdef USE_DOUBLE
     FFT->plan  = fftw_mpi_plan_dft_r2c(FFT->n_d, FFT->n, FFT->field_local, FFT->cfield_local, SID_COMM_WORLD->comm, FFTW_ESTIMATE);
     FFT->iplan = fftw_mpi_plan_dft_c2r(FFT->n_d, FFT->n, FFT->cfield_local, FFT->field_local, SID_COMM_WORLD->comm, FFTW_ESTIMATE);
@@ -127,20 +128,25 @@ void init_field(int n_d, int *n, double *L, field_info *FFT) {
     FFT->iplan = fftwf_mpi_plan_dft_c2r(FFT->n_d, FFT->n, FFT->cfield_local, FFT->field_local, SID_COMM_WORLD->comm, FFTW_ESTIMATE);
 #endif
 #endif
-
 #else
+
     for(i_d = 0, FFT->total_local_size = 1; i_d < FFT->n_d; i_d++) {
         if(i_d < FFT->n_d - 1)
             FFT->total_local_size *= FFT->n[i_d];
         else
             FFT->total_local_size *= 2 * (FFT->n[i_d] / 2 + 1);
     }
+#if USE_FFTW2
+    FFT->plan         = rfftwnd_create_plan(FFT->n_d, FFT->n, FFTW_REAL_TO_COMPLEX, FFTW_ESTIMATE | FFTW_IN_PLACE);
+    FFT->iplan        = rfftwnd_create_plan(FFT->n_d, FFT->n, FFTW_COMPLEX_TO_REAL, FFTW_ESTIMATE | FFTW_IN_PLACE);
+#else
 #ifdef USE_DOUBLE
     FFT->plan  = fftw_plan_dft_r2c(FFT->n_d, FFT->n, FFT->field_local, FFT->cfield_local, FFTW_ESTIMATE);
     FFT->iplan = fftw_plan_dft_c2r(FFT->n_d, FFT->n, FFT->cfield_local, FFT->field_local, FFTW_ESTIMATE);
 #else
     FFT->plan  = fftwf_plan_dft_r2c(FFT->n_d, FFT->n, FFT->field_local, FFT->cfield_local, FFTW_ESTIMATE);
     FFT->iplan = fftwf_plan_dft_c2r(FFT->n_d, FFT->n, FFT->cfield_local, FFT->field_local, FFTW_ESTIMATE);
+#endif
 #endif
 #endif
 
