@@ -6,8 +6,10 @@
 #include <gbpSPH.h>
 #include <gbpClustering.h>
 
+#ifndef USE_FFTW2
 #define c_re(c) ((c)[0])
 #define c_im(c) ((c)[1])
+#endif
 
 void compute_pspec(plist_info *plist, const char *species_name, pspec_info *pspec, int i_run) {
     int          i_k;
