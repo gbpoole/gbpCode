@@ -11,12 +11,10 @@ macro(project_options_and_dependancies)
         add_definitions(-DUSE_DOUBLE)
     endif()
     
-    option(USE_FFTW2 "Use v2 of FFTW" ON)
+    option(USE_FFTW2 "Use v2 of FFTW" OFF)
     if(USE_FFTW2)
         add_definitions(-DUSE_FFTW2)
     endif()
-
-    set(FFTW_ROOT "/Users/gpoole/3rd_Party/")
 
     # Turn on debugging mode
     option(SID_DEBUG "Enable SID debugging information" OFF)
