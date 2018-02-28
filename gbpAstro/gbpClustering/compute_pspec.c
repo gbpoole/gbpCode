@@ -1,12 +1,11 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <gbpLib.h>
 #include <gbpMath.h>
 #include <gbpCosmo.h>
 #include <gbpSPH.h>
 #include <gbpClustering.h>
 
-#ifndef USE_FFTW2
+#if !USE_FFTW
 #define c_re(c) ((c)[0])
 #define c_im(c) ((c)[1])
 #endif
