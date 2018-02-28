@@ -1203,17 +1203,21 @@ void read_groups(char *filename_groups_root, int i_file, int mode, plist_info *p
                                             buffer[i_particle] = (size_t)(buffer_int[i_particle]);
                                         break;
                                 }
-                                SID_Send(buffer, buffer_sizes[i_buffer], SID_SIZE_T, buffer_ranks[i_buffer], 10708923, SID_COMM_WORLD);
+                                SID_Status status;
+                                SID_Send(buffer, buffer_sizes[i_buffer], SID_SIZE_T, buffer_ranks[i_buffer], 10708923,
+                                         SID_COMM_WORLD);
                             }
                         }
                     } else {
+                        SID_Status status;
                         for(int j_buffer = 0; j_buffer < n_buffer_local; j_buffer++) {
                             SID_Recv(&(input_id[buffer_indices_local[j_buffer]]),
                                      buffer_sizes_local[j_buffer],
                                      SID_SIZE_T,
                                      SID_MASTER_RANK,
                                      10708923,
-                                     SID_COMM_WORLD);
+                                     SID_COMM_WORLD,
+                                     &status);
                             for(size_t i_particle = 0, j_particle = buffer_indices_local[j_buffer]; i_particle < buffer_sizes_local[j_buffer];
                                 i_particle++, j_particle++)
                                 test[j_particle]++;

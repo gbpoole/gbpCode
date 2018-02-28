@@ -91,6 +91,7 @@ void write_gadget_binary_block(plist_info *plist,
                         }
                         // Communicate the buffer; MASTER->OTHER
                         else {
+                            SID_Status status;
                             for(int i_variable = 0; i_variable < n_variables; i_variable++) {
                                 // Communicate the buffer
                                 SID_Sendrecv(&(local_array[i_variable][j_particle * storage_size[i_variable]]),
@@ -103,7 +104,8 @@ void write_gadget_binary_block(plist_info *plist,
                                              SID_BYTE,
                                              i_rank,
                                              191273,
-                                             SID_COMM_WORLD);
+                                             SID_COMM_WORLD,
+                                             &status);
                             }
                         }
                         // Write the buffer

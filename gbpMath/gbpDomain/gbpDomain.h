@@ -2,6 +2,8 @@
 #define GBPDOMAIN_AWAKE
 #ifndef GBPFFTW_AWAKE
 #define GBPFFTW_AWAKE
+#include <stddef.h>
+
 #if USE_FFTW
  #if USE_FFTW2
   #if USE_MPI
@@ -39,21 +41,24 @@ struct slab_info {
     int    rank_to_right;
 };
 
-typedef struct field_info field_info;
-struct field_info {
-// Array storing the field
 #if USE_FFTW
 #if USE_FFTW2
-    fftw_real *   field_local;
-    fftw_complex *cfield_local;
+#define gbpFFT_real    fftw_real
+#define gbpFFT_complex fftw_complex
 #else
-    GBPREAL *     field_local;
-    fftw_complex *cfield_local;
+#define gbpFFT_real    GBPREAL
+#define gbpFFT_complex fftw_complex
 #endif
 #else
-    GBPREAL *field_local;
-    GBPREAL *cfield_local;
+#define gbpFFT_real    GBPREAL
+#define gbpFFT_complex GBPREAL
 #endif
+
+typedef struct field_info field_info;
+struct field_info {
+    // Array storing the field
+    gbpFFT_real *   field_local;
+    gbpFFT_complex *cfield_local;
     // Field domain
     double * L;
     double * dR;
@@ -63,13 +68,13 @@ struct field_info {
     double * k_Nyquist;
     // Field sizes
     int    n_d;
-    int *  n;
-    int *  n_R_local;
-    int *  n_k_local;
-    int *  i_R_start_local;
-    int *  i_k_start_local;
-    int *  i_R_stop_local;
-    int *  i_k_stop_local;
+    ptrdiff_t *  n;
+    ptrdiff_t *  n_R_local;
+    ptrdiff_t *  n_k_local;
+    ptrdiff_t *  i_R_start_local;
+    ptrdiff_t *  i_k_start_local;
+    ptrdiff_t *  i_R_stop_local;
+    ptrdiff_t *  i_k_stop_local;
     size_t n_field;
     size_t n_field_R_local;
     size_t n_field_k_local;

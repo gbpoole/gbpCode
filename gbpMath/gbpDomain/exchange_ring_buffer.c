@@ -21,7 +21,7 @@ void exchange_ring_buffer(void *  send_buffer,
         send_buffer_size = 0;
     set_exchange_ring_ranks(&rank_to, &rank_from, i_rank);
     if(i_rank != 0) {
-        SID_Sendrecv(&send_count, 1, SID_SIZE_T, rank_to, 1036267, &receive_count, 1, SID_SIZE_T, rank_from, 1036267, SID_COMM_WORLD);
+        SID_Sendrecv(&send_count, 1, SID_SIZE_T, rank_to, 1036267, &receive_count, 1, SID_SIZE_T, rank_from, 1036267, SID_COMM_WORLD, SID_STATUS_IGNORE);
         receive_buffer_size = (int)(receive_count * buffer_type_size);
         SID_Sendrecv(send_buffer,
                      send_buffer_size,
@@ -33,7 +33,8 @@ void exchange_ring_buffer(void *  send_buffer,
                      SID_BYTE,
                      rank_from,
                      1256269,
-                     SID_COMM_WORLD);
+                     SID_COMM_WORLD,
+                     SID_STATUS_IGNORE);
     } else {
         receive_buffer_size = send_buffer_size;
         receive_count       = send_count;

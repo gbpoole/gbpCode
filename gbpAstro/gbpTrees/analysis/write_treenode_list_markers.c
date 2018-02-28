@@ -48,7 +48,8 @@ void write_treenode_list_markers(tree_info *trees, const char *filename_out_root
             if(i_rank == 0)
                 n_list_i = n_list_in;
             else {
-                SID_Sendrecv(&n_list_in, 1, SID_INT, SID_MASTER_RANK, 1918270, &n_list_i, 1, SID_INT, i_rank, 1918270, SID_COMM_WORLD);
+                SID_Status status;
+                SID_Sendrecv(&n_list_in, 1, SID_INT, SID_MASTER_RANK, 1918270, &n_list_i, 1, SID_INT, i_rank, 1918270, SID_COMM_WORLD,&status);
             }
             for(int i_list = 0; i_list < n_list_i; i_list++, j_list++) {
                 // Point to the halo to be processed
@@ -164,13 +165,14 @@ void write_treenode_list_markers(tree_info *trees, const char *filename_out_root
 
                     // Write properties
                     if(i_rank != 0) {
-                        SID_Sendrecv(&i_z_node, 1, SID_INT, SID_MASTER_RANK, 1918271, &i_z_node, 1, SID_INT, i_rank, 1918271, SID_COMM_WORLD);
-                        SID_Sendrecv(&idx_node, 1, SID_INT, SID_MASTER_RANK, 1918272, &idx_node, 1, SID_INT, i_rank, 1918272, SID_COMM_WORLD);
-                        SID_Sendrecv(&t_node, 1, SID_DOUBLE, SID_MASTER_RANK, 1918273, &t_node, 1, SID_DOUBLE, i_rank, 1918273, SID_COMM_WORLD);
-                        SID_Sendrecv(&z_node, 1, SID_DOUBLE, SID_MASTER_RANK, 1918274, &z_node, 1, SID_DOUBLE, i_rank, 1918274, SID_COMM_WORLD);
-                        SID_Sendrecv(&M_node, 1, SID_DOUBLE, SID_MASTER_RANK, 1918275, &M_node, 1, SID_DOUBLE, i_rank, 1918275, SID_COMM_WORLD);
+                        SID_Status status;
+                        SID_Sendrecv(&i_z_node, 1, SID_INT, SID_MASTER_RANK, 1918271, &i_z_node, 1, SID_INT, i_rank, 1918271, SID_COMM_WORLD,&status);
+                        SID_Sendrecv(&idx_node, 1, SID_INT, SID_MASTER_RANK, 1918272, &idx_node, 1, SID_INT, i_rank, 1918272, SID_COMM_WORLD,&status);
+                        SID_Sendrecv(&t_node, 1, SID_DOUBLE, SID_MASTER_RANK, 1918273, &t_node, 1, SID_DOUBLE, i_rank, 1918273, SID_COMM_WORLD,&status);
+                        SID_Sendrecv(&z_node, 1, SID_DOUBLE, SID_MASTER_RANK, 1918274, &z_node, 1, SID_DOUBLE, i_rank, 1918274, SID_COMM_WORLD,&status);
+                        SID_Sendrecv(&M_node, 1, SID_DOUBLE, SID_MASTER_RANK, 1918275, &M_node, 1, SID_DOUBLE, i_rank, 1918275, SID_COMM_WORLD,&status);
                         SID_Sendrecv(
-                            &M_node_parent, 1, SID_DOUBLE, SID_MASTER_RANK, 1918276, &M_node_parent, 1, SID_DOUBLE, i_rank, 1918276, SID_COMM_WORLD);
+                            &M_node_parent, 1, SID_DOUBLE, SID_MASTER_RANK, 1918276, &M_node_parent, 1, SID_DOUBLE, i_rank, 1918276, SID_COMM_WORLD,&status);
                     }
                     if(SID.I_am_Master) {
                         int snap_node = -1;
