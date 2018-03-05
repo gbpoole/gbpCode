@@ -6,8 +6,8 @@ set(SRCFILES   "" )
 set(EXEFILES   "" )
 set(TARGETDEPS "" )
 set(DATAFILES  "" )
-set(PASSDIRS   "" )
 set(DATASUBDIR "" )
+set(PASSDIRS   "" )
 
 # Add subdirectories that are roots to libraries
 # eg. list(APPEND LIBDIRS "dirname")
@@ -15,7 +15,7 @@ set(DATASUBDIR "" )
 
 # Add directories that contribute source files 
 # eg. list(APPEND SRCDIRS "dirname")
-list(APPEND SRCDIRS "gbpSID" )
+list(APPEND SRCDIRS "extern/gbpSID" )
 list(APPEND SRCDIRS "gbpSort" )
 list(APPEND SRCDIRS "gbpCalc" )
 list(APPEND SRCDIRS "gbpParse" )
@@ -46,7 +46,7 @@ list(APPEND INCFILES "gbpConstants.h")
 # -- NONE FOR THIS DIR --
 
 # Add data files
-# eg. list(APPEND TARGETDEPS "dep_name")
+# eg. list(APPEND DATAFILES "filename")
 # -- NONE FOR THIS DIR --
 
 # Set data subdirectory
@@ -55,5 +55,3 @@ list(APPEND INCFILES "gbpConstants.h")
 
 # Add subdirectories that we want to decend into
 #   but which we won't scan for sources, etc
-# -- NONE FOR THIS DIR --
-

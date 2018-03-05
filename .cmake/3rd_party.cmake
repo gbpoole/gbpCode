@@ -5,30 +5,62 @@
 # ==== These are the functions users should call directly ====
 
 # Declare that a 3rd-party library is *required*
-function(set_3rd_party_required lib_name)
+function(set_3rd_party_required lib_name )
+    # Check for optional arguments
+    set (optional_args ${ARGN})
+    list(LENGTH optional_args n_optional_args)
+
     set(USE_${lib_name} ON)
-    eval("init_3rd_party_${lib_name}(${lib_name} \"REQUIRED\" )")
+    if(${n_optional_args} GREATER 0)
+        eval("init_3rd_party_${lib_name}(${lib_name} \"REQUIRED\" ${optional_args})")
+    else()
+        eval("init_3rd_party_${lib_name}(${lib_name} \"REQUIRED\" )")
+    endif()
 endfunction()
 
 # Declare that a 3rd-party library is *optional*
 # Build will *fail* if val is 'ON' and package load fails
-function(set_3rd_party_optional lib_name val)
+function(set_3rd_party_optional lib_name val )
+    # Check for optional arguments
+    set (optional_args ${ARGN})
+    list(LENGTH optional_args n_optional_args)
+
     option(USE_${lib_name} "Use ${lib_name} (If ON, build will fail if library load fails)" ${val})
     if(USE_${lib_name})
-        eval("init_3rd_party_${lib_name}(${lib_name} \"SELECTED\" )")
+        if(${n_optional_args} GREATER 0)
+            eval("init_3rd_party_${lib_name}(${lib_name} \"SELECTED\" ${optional_args})")
+        else()
+            eval("init_3rd_party_${lib_name}(${lib_name} \"SELECTED\" )")
+        endif()
     else()
-        eval("init_3rd_party_${lib_name}(${lib_name} \"SKIPPED\" )")
+        if(${n_optional_args} GREATER 0)
+            eval("init_3rd_party_${lib_name}(${lib_name} \"SKIPPED\" ${optional_args})")
+        else()
+            eval("init_3rd_party_${lib_name}(${lib_name} \"SKIPPED\" )")
+        endif()
     endif()
 endfunction()
 
 # Declare that a 3rd-party library is *requested*
 # Build will *continue* if val is 'ON' and package load fails
 function(set_3rd_party_requested lib_name val)
+    # Check for optional arguments
+    set (optional_args ${ARGN})
+    list(LENGTH optional_args n_optional_args)
+
     option(USE_${lib_name} "Use ${lib_name} (If ON, build will continue if library load fails)" ${val})
     if(USE_${lib_name})
-        eval("init_3rd_party_${lib_name}(${lib_name} \"REQUESTED\" )")
+        if(${n_optional_args} GREATER 0)
+            eval("init_3rd_party_${lib_name}(${lib_name} \"REQUESTED\" ${optional_args})")
+        else()
+            eval("init_3rd_party_${lib_name}(${lib_name} \"REQUESTED\" )")
+        endif()
     else()
-        eval("init_3rd_party_${lib_name}(${lib_name} \"SKIPPED\" )")
+        if(${n_optional_args} GREATER 0)
+            eval("init_3rd_party_${lib_name}(${lib_name} \"SKIPPED\" ${optional_args})")
+        else()
+            eval("init_3rd_party_${lib_name}(${lib_name} \"SKIPPED\" )")
+        endif()
     endif()
 endfunction()
 
@@ -93,9 +125,9 @@ endmacro()
 macro(check_3rd_party_status success )
     # Write a sucess/failure message and throw an error if needed
     if(${success})
-        # Create a couple preprocessor macros that can be used in the code
+        # Create a preprocessor macro that can be used in the code
         add_definitions(-DUSE_${lib_name})
-        add_definitions(-D${lib_name}_FOUND)
+        SET(USE_${lib_name} TRUE CACHE INTERNAL "${lib_name} is configured")
         message(STATUS "   -> ${required_txt} library initialized:  ${lib_name}")
     else()
         if(required STREQUAL "REQUIRED" )
@@ -112,7 +144,6 @@ macro(skip_3rd_party_status required_in)
         message(STATUS "   -> ${required_txt} library not selected: ${lib_name}")
     endif()
 endmacro()
-
 
 # ============== Library-specific stuff follows ==============
 # If items are added to this list, don't forget to update the
@@ -316,8 +347,10 @@ function(init_3rd_party_FFTW2 lib_name required_in)
 
         # Generalized FFTW declarations
         if(${FFTW2_FOUND})
-            add_definitions(-DUSE_FFTW=ON)
-            add_definitions(-DFFTW_FOUND=ON)
+            add_definitions(-DUSE_FFTW)
+            add_definitions(-DFFTW_FOUND)
+            SET(USE_FFTW TRUE CACHE INTERNAL "FFTW (version 2 or 3) is configured")
+            SET(FFTW_FOUND TRUE CACHE INTERNAL "FFTW (version 2 or 3) is configured")
         endif()
     else()
         skip_3rd_party_status(required_in)
@@ -340,8 +373,10 @@ function(init_3rd_party_FFTW3 lib_name required_in)
 
         # Generalized FFTW declarations
         if(${FFTW3_FOUND})
-            add_definitions(-DUSE_FFTW=ON)
-            add_definitions(-DFFTW_FOUND=ON)
+            add_definitions(-DUSE_FFTW)
+            add_definitions(-DFFTW_FOUND)
+            SET(USE_FFTW TRUE CACHE INTERNAL "FFTW (version 2 or 3) is configured")
+            SET(FFTW_FOUND TRUE CACHE INTERNAL "FFTW (version 2 or 3) is configured")
         endif()
     else()
         skip_3rd_party_status(required_in)
@@ -366,3 +401,126 @@ function(init_3rd_party_OpenMP lib_name required_in)
     endif()
 endfunction()
 
+# Initialize SOCI
+function(init_3rd_party_Soci lib_name required_in)
+    # Check for optional arguments
+    set (optional_args ${ARGN})
+    list(LENGTH optional_args n_optional_args)
+
+    set_required_variables(${required_in})
+    if(USE_${lib_name})
+        add_definitions(-DUSE_${lib_name})
+        if(${n_optional_args} GREATER 0)
+            find_package(${lib_name} ${required} COMPONENTS "${optional_args}" )
+        else()
+            find_package(${lib_name} ${required} )
+        endif()
+
+        # Check status and print message    
+        check_3rd_party_status( SOCI_FOUND )
+
+        # Personalized set-up:
+        include_directories( ${SOCI_INCLUDE_DIRS} )
+        link_libraries( ${SOCI_LIBRARY} )
+
+        # Add plugins
+        if(${n_optional_args} GREATER 0)
+            foreach(component_i ${optional_args})
+                set(plugin_i SOCI_${component_i}_PLUGIN)
+                link_libraries( "${${plugin_i}}" )
+            endforeach()
+        endif()
+    else()
+        skip_3rd_party_status(required_in)
+    endif()
+endfunction()
+
+# Initialize FindPostgreSQL
+function(init_3rd_party_PostgreSQL lib_name required_in)
+    set_required_variables(${required_in})
+    if(USE_${lib_name})
+        add_definitions(-DUSE_${lib_name})
+        find_package(${lib_name} ${required})
+
+        # Check status and print message    
+        check_3rd_party_status( PostgreSQL_FOUND )
+
+        # Personalized set-up:
+        include_directories( ${PostgreSQL_INCLUDE_DIRS} )
+        link_libraries( ${PostgreSQL_LIBRARIES} )
+    else()
+        skip_3rd_party_status(required_in)
+    endif()
+endfunction()
+
+# Initialize PugiXML
+function(init_3rd_party_PugiXML lib_name required_in)
+    set_required_variables(${required_in})
+    if(USE_${lib_name})
+        add_definitions(-DUSE_${lib_name})
+        find_package(${lib_name} ${required})
+
+        # Check status and print message    
+        check_3rd_party_status( PUGIXML_FOUND )
+
+        # Personalized set-up:
+        include_directories( ${PUGIXML_INCLUDE_DIR} )
+        link_libraries( ${PUGIXML_LIBRARIES} )
+    else()
+        skip_3rd_party_status(required_in)
+    endif()
+endfunction()
+
+# Initialize the system thread library
+function(init_3rd_party_Threads lib_name required_in)
+    set_required_variables(${required_in})
+    if(USE_${lib_name})
+        add_definitions(-DUSE_${lib_name})
+        find_package(${lib_name} ${required})
+
+        # FindThreads does not provide a reliable way
+        # to check that a threads library was found,
+        # so just assume that it was. It will throw
+        # its own error on failure.
+        #if(CMAKE_THREAD_LIBS_INIT)
+        #    set( Threads_FOUND TRUE)
+        #else()
+        #    set( Threads_FOUND FALSE)
+        #endif()
+        set( Threads_FOUND TRUE)
+
+        # Check status and print message 
+        check_3rd_party_status( Threads_FOUND )
+
+        # Personalized set-up:
+        link_libraries( Threads::Threads )
+    else()
+        skip_3rd_party_status(required_in)
+    endif()
+endfunction()
+
+# Initialize Boost
+function(init_3rd_party_Boost lib_name required_in )
+    # Check for optional arguments
+    set (optional_args ${ARGN})
+    list(LENGTH optional_args n_optional_args)
+
+    set_required_variables(${required_in})
+    if(USE_${lib_name})
+        add_definitions(-DUSE_${lib_name})
+        if(${n_optional_args} GREATER 0)
+            find_package(${lib_name} ${required} COMPONENTS "${optional_args}" )
+        else()
+            find_package(${lib_name} ${required} )
+        endif()
+
+        # Check status and print message    
+        check_3rd_party_status( Boost_FOUND )
+
+        # Personalized set-up:
+        include_directories( ${Boost_INCLUDE_DIRS} )
+        link_libraries( ${Boost_LIBRARIES} )
+    else()
+        skip_3rd_party_status(required_in)
+    endif()
+endfunction()
