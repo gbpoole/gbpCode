@@ -31,18 +31,8 @@ void   compute_Daubechies_scaling_fctns(int D_order, int l_max, double **x_retur
 void   force_periodic(GBPREAL *coord, GBPREAL min, GBPREAL box_size);
 void   force_periodic_double(double *coord, double min, double box_size);
 double d_periodic(double d, double box_size);
-int    compute_centroid3D(double *W,
-                          double *x_in,
-                          double *y_in,
-                          double *z_in,
-                          int     n,
-                          double  R_min,
-                          double  step,
-                          int     convergence_N,
-                          int     mode,
-                          double *xcen_out,
-                          double *ycen_out,
-                          double *zcen_out);
+int    compute_centroid3D(double *W, double *x_in, double *y_in, double *z_in, size_t n, double R_min, double step,
+                          int convergence_N, int mode, double *xcen_out, double *ycen_out, double *zcen_out);
 void   compute_triaxiality(double *x_in,
                            double *y_in,
                            double *z_in,

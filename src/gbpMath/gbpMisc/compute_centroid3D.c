@@ -12,24 +12,13 @@ double calc_weight_local(double *W, int i) {
         return (1.);
 }
 
-int compute_centroid3D(double *W,
-                       double *x_in,
-                       double *y_in,
-                       double *z_in,
-                       int     n,
-                       double  R_min,
-                       double  step,
-                       int     convergence_N,
-                       int     mode,
-                       double *xcen_out,
-                       double *ycen_out,
-                       double *zcen_out) {
+int compute_centroid3D(double *W, double *x_in, double *y_in, double *z_in, size_t n, double R_min, double step,
+                       int convergence_N, int mode, double *xcen_out, double *ycen_out, double *zcen_out) {
     int n_iterations = 0;
 
     // Parse the mode flags
     int flag_centroid_step;
     int flag_centroid_inplace;
-    int flag_return_indices;
     if(SID_CHECK_BITFIELD_SWITCH(mode, CENTROID3D_MODE_STEP)) {
         flag_centroid_step = GBP_TRUE;
         if(step <= 0.)
@@ -43,7 +32,6 @@ int compute_centroid3D(double *W,
     } else
         SID_exit_error("Invalid mode (%d) specified in compute_3dcentroid().", SID_ERROR_LOGIC, mode);
     flag_centroid_inplace = SID_CHECK_BITFIELD_SWITCH(mode, CENTROID3D_MODE_INPLACE);
-    flag_return_indices   = SID_CHECK_BITFIELD_SWITCH(mode, CENTROID3D_MODE_RETURN_INDICES);
 
     // Perform centroiding if n>0
     double  xcen;

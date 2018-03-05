@@ -337,7 +337,7 @@ void compute_MCMC(MCMC_info *MCMC) {
                 if(P_max_test != MCMC->P_limit_max[i_P])
                     SID_exit_error("Parameter #%d's maximum values are inconsistant (i.e. %le!=%le).", SID_ERROR_LOGIC,
                                    i_P, MCMC->P_limit_max[i_P], P_max_test);
-                MCMC->P_name_length = GBP_MAX(MCMC->P_name_length, strlen(MCMC->P_names[i_P]));
+                MCMC->P_name_length = GBP_MAX((size_t)(MCMC->P_name_length), strlen(MCMC->P_names[i_P]));
             }
             sprintf(MCMC->P_name_format, "%%-%ds", MCMC->P_name_length);
             SID_fread_verify(&n_arrays_test, sizeof(int), 1, fp_run);

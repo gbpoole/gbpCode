@@ -3,7 +3,6 @@
 #include <gbpCalc.h>
 
 void calc_stddev(void *data, void *result, size_t n_data, SID_Datatype type, int mode) {
-    int    i_data;
     double stddev;
     double mean;
     if(n_data < 1) {
@@ -22,7 +21,7 @@ void calc_stddev(void *data, void *result, size_t n_data, SID_Datatype type, int
     } else {
         if(SID_CHECK_BITFIELD_SWITCH(mode, CALC_MODE_ABS)) {
             calc_mean(data, &mean, n_data, type, CALC_MODE_RETURN_DOUBLE | CALC_MODE_ABS);
-            for(i_data = 0, stddev = 0.; i_data < n_data; i_data++) {
+            for(size_t i_data = 0, stddev = 0.; i_data < n_data; i_data++) {
                 if(type == SID_DOUBLE)
                     stddev += pow(GBP_IABS((double)((double *)data)[i_data]) - mean, 2.);
                 else if(type == SID_FLOAT)
@@ -51,7 +50,7 @@ void calc_stddev(void *data, void *result, size_t n_data, SID_Datatype type, int
                 SID_exit_error("Unknown variable type in calc_min", SID_ERROR_LOGIC);
         } else {
             calc_mean(data, &mean, n_data, type, CALC_MODE_RETURN_DOUBLE);
-            for(i_data = 0, stddev = 0.; i_data < n_data; i_data++) {
+            for(size_t i_data = 0, stddev = 0.; i_data < n_data; i_data++) {
                 if(type == SID_DOUBLE)
                     stddev += pow((double)((double *)data)[i_data] - mean, 2.);
                 else if(type == SID_FLOAT)

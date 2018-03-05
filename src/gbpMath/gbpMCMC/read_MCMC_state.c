@@ -114,7 +114,7 @@ void read_MCMC_state(MCMC_info *MCMC) {
             SID_fread_verify(&(MCMC->P_init[i_P]), sizeof(double), 1, fp_run);
             SID_fread_verify(&(MCMC->P_limit_min[i_P]), sizeof(double), 1, fp_run);
             SID_fread_verify(&(MCMC->P_limit_max[i_P]), sizeof(double), 1, fp_run);
-            MCMC->P_name_length = GBP_MAX(MCMC->P_name_length, strlen(MCMC->P_names[i_P]));
+            MCMC->P_name_length = GBP_MAX((size_t)(MCMC->P_name_length), strlen(MCMC->P_names[i_P]));
         }
         sprintf(MCMC->P_name_format, "%%-%ds", MCMC->P_name_length);
         sprintf(format_string, "%s %%13.6le %%13.6le %%13.6le", MCMC->P_name_format);

@@ -102,19 +102,14 @@ extern void hilbert_util_calcPos(hikey_t key, unsigned bits, unsigned *pos) {
     pos[0] = (unsigned)coord[0];
     pos[1] = (unsigned)coord[1];
     pos[2] = (unsigned)coord[2];
-
-    return;
 }
 
 extern void hilbert_util_getShell(hikey_t base, hikey_t *shell, unsigned bits) {
     hikey_t basecoord[3];
     hikey_t coord[3];
-    hikey_t num1dim;
-    int     i, j, k;
-    int     count;
 
     /* Calculate the number of possible Key values per dimension */
-    num1dim = (1L << bits);
+    hikey_t num1dim = (hikey_t)(1L << bits);
 
     /* Convert the Hilbert Key to a position */
     hilbert_i2c(3, bits, base, basecoord);
@@ -124,20 +119,18 @@ extern void hilbert_util_getShell(hikey_t base, hikey_t *shell, unsigned bits) {
      * the base cell. Starting at the lower left front corner, first *
      * going in the x2 direction, than x1 and finally x0             *
     \*****************************************************************/
-    count = 0;
-    for(i = num1dim - 1; i <= num1dim + 1; i++) {
+    size_t count = 0;
+    for(size_t i = num1dim - 1; i <= num1dim + 1; i++) {
         coord[0] = (basecoord[0] + i) % num1dim;
-        for(j = num1dim - 1; j <= num1dim + 1; j++) {
+        for(size_t j = num1dim - 1; j <= num1dim + 1; j++) {
             coord[1] = (basecoord[1] + j) % num1dim;
-            for(k = num1dim - 1; k <= num1dim + 1; k++) {
+            for(size_t k = num1dim - 1; k <= num1dim + 1; k++) {
                 coord[2]     = (basecoord[2] + k) % num1dim;
                 shell[count] = hilbert_c2i(3, bits, coord);
                 count++;
             }
         }
     }
-
-    return;
 }
 
 /***********************************************************************\

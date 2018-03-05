@@ -115,11 +115,11 @@ void read_duplicates_file_local(const char *filename_in,
                 (*index_duplicate_added_to)[i_duplicate] += offset_group[index_test]; // Temporarily place things in the local ID list frame
                 for(i_group = 0, i_subgroup = 0; i_group < index_test; i_group++)
                     i_subgroup += n_subgroups_group[i_group];
-                while((offset_subgroup[i_subgroup] + size_subgroup[i_subgroup]) < (*index_duplicate_added_to)[i_duplicate] &&
+                while((offset_subgroup[i_subgroup] + size_subgroup[i_subgroup]) < (size_t)(*index_duplicate_added_to)[i_duplicate] &&
                       i_subgroup < (n_subgroups_local - 1))
                     i_subgroup++;
-                if((*index_duplicate_added_to)[i_duplicate] >= offset_subgroup[i_subgroup] &&
-                   (*index_duplicate_added_to)[i_duplicate] < (offset_subgroup[i_subgroup] + size_subgroup[i_subgroup]))
+                if((size_t)(*index_duplicate_added_to)[i_duplicate] >= offset_subgroup[i_subgroup] &&
+                   (size_t)(*index_duplicate_added_to)[i_duplicate] < (offset_subgroup[i_subgroup] + size_subgroup[i_subgroup]))
                     (*subgroup_duplicate_added_to)[i_duplicate] = i_subgroup;
                 else
                     (*subgroup_duplicate_added_to)[i_duplicate] = -1;
@@ -130,7 +130,7 @@ void read_duplicates_file_local(const char *filename_in,
             else {
                 (*group_duplicate_added_to)[i_duplicate]    = -1;
                 (*subgroup_duplicate_added_to)[i_duplicate] = -1;
-                (*index_duplicate_added_to)[i_duplicate]    = n_particles_local + 1;
+                (*index_duplicate_added_to)[i_duplicate]    = (int)(n_particles_local + 1);
             }
         }
         SID_Allreduce(SID_IN_PLACE, (*id_duplicate_added), (*n_duplicates_added), SID_SIZE_T, SID_MAX, SID_COMM_WORLD);

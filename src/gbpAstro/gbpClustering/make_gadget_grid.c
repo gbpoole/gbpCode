@@ -40,7 +40,6 @@ void read_gadget_binary_local(char *      filename_root_in,
     GBPREAL *vx_array[N_GADGET_TYPE];
     GBPREAL *vy_array[N_GADGET_TYPE];
     GBPREAL *vz_array[N_GADGET_TYPE];
-    int      i_type;
 
     // Determine file format and read the header
     gadget_read_info   fp_gadget;
@@ -67,7 +66,7 @@ void read_gadget_binary_local(char *      filename_root_in,
 
         // Number of particles and masses for each species in all files
         size_t n_all[N_GADGET_TYPE];
-        for(i_type = 0; i_type < N_GADGET_TYPE; i_type++) {
+        for(int i_type = 0; i_type < N_GADGET_TYPE; i_type++) {
             n_all[i_type]      = (size_t)header.n_all_lo_word[i_type] + (((size_t)header.n_all_hi_word[i_type]) << 32);
             mass_array[i_type] = (GBPREAL)header.mass_array[i_type];
         }
@@ -101,7 +100,7 @@ void read_gadget_binary_local(char *      filename_root_in,
         size_t n_particles_all;
         int    n_non_zero;
         n_particles_all = 0;
-        for(i_type = 0, n_non_zero = 0; i_type < N_GADGET_TYPE; i_type++) {
+        for(int i_type = 0, n_non_zero = 0; i_type < N_GADGET_TYPE; i_type++) {
             if(n_all[i_type] > 0) {
                 n_particles_all += n_all[i_type];
                 n_non_zero++;
@@ -110,7 +109,7 @@ void read_gadget_binary_local(char *      filename_root_in,
         SID_log("%zd", SID_LOG_CONTINUE, n_particles_all);
         if(n_non_zero > 0)
             SID_log(" (", SID_LOG_CONTINUE, n_particles_all);
-        for(i_type = 0; i_type < N_GADGET_TYPE; i_type++) {
+        for(int i_type = 0; i_type < N_GADGET_TYPE; i_type++) {
             if(n_all[i_type] > 0) {
                 if(i_type == n_non_zero - 1) {
                     if(n_non_zero > 1)
@@ -136,7 +135,6 @@ void read_gadget_binary_local(char *      filename_root_in,
         int      i_file;
         int      record_length_open;
         int      record_length_close;
-        size_t   i_particle;
         size_t   i_buffer;
         size_t   i_step;
         int      i_type;
@@ -190,7 +188,7 @@ void read_gadget_binary_local(char *      filename_root_in,
             // We only have to worry about z-space effects for domain decomposition in this one case.
             if(i_coord == 1) {
                 for(i_type = 0; i_type < N_GADGET_TYPE; i_type++) {
-                    for(i_particle = 0; i_particle < header.n_file[i_type]; i_particle += i_step) {
+                    for(int i_particle = 0; i_particle < header.n_file[i_type]; i_particle += i_step) {
                         i_step = GBP_MIN(READ_BUFFER_SIZE_LOCAL, header.n_file[i_type] - i_particle);
                         if(SID.I_am_Master) {
                             SID_fread_verify(pos_buffer, sizeof(GBPREAL), 3 * i_step, fp_pos);
@@ -214,7 +212,7 @@ void read_gadget_binary_local(char *      filename_root_in,
                 }
             } else {
                 for(i_type = 0; i_type < N_GADGET_TYPE; i_type++) {
-                    for(i_particle = 0; i_particle < header.n_file[i_type]; i_particle += i_step) {
+                    for(int i_particle = 0; i_particle < header.n_file[i_type]; i_particle += i_step) {
                         i_step = GBP_MIN(READ_BUFFER_SIZE_LOCAL, header.n_file[i_type] - i_particle);
                         if(SID.I_am_Master) {
                             SID_fread_verify(pos_buffer, sizeof(GBPREAL), 3 * i_step, fp_pos);
@@ -228,7 +226,6 @@ void read_gadget_binary_local(char *      filename_root_in,
                                 n_of_type_local[i_type]++;
                         }
                     }
-                    i_step = GBP_MIN(READ_BUFFER_SIZE_LOCAL, header.n_file[i_type] - i_particle);
                 }
             }
             fclose(fp_pos);
@@ -277,11 +274,10 @@ void read_gadget_binary_local(char *      filename_root_in,
             SID_fread_verify(&record_length_open, 4, 1, fp_vel);
 
             // Perform the read and populate the local position arrays
-            size_t i_particle;
             size_t i_step;
             int    i_type;
             for(i_type = 0; i_type < N_GADGET_TYPE; i_type++) {
-                for(i_particle = 0; i_particle < header.n_file[i_type]; i_particle += i_step) {
+                for(int i_particle = 0; i_particle < header.n_file[i_type]; i_particle += i_step) {
                     i_step = GBP_MIN(READ_BUFFER_SIZE_LOCAL, header.n_file[i_type] - i_particle);
                     if(SID.I_am_Master) {
                         SID_fread_verify(pos_buffer, sizeof(GBPREAL), 3 * i_step, fp_pos);
@@ -327,12 +323,12 @@ void read_gadget_binary_local(char *      filename_root_in,
                                 break;
                         }
                         if(x_test >= slab->x_min_local && x_test < slab->x_max_local) {
-                            x_array[i_type][type_counter[i_type]]  = x_test;
-                            y_array[i_type][type_counter[i_type]]  = y_test;
-                            z_array[i_type][type_counter[i_type]]  = z_test;
-                            vx_array[i_type][type_counter[i_type]] = vx_test;
-                            vy_array[i_type][type_counter[i_type]] = vy_test;
-                            vz_array[i_type][type_counter[i_type]] = vz_test;
+                            x_array[i_type][type_counter[i_type]]  = (GBPREAL)x_test;
+                            y_array[i_type][type_counter[i_type]]  = (GBPREAL)y_test;
+                            z_array[i_type][type_counter[i_type]]  = (GBPREAL)z_test;
+                            vx_array[i_type][type_counter[i_type]] = (GBPREAL)vx_test;
+                            vy_array[i_type][type_counter[i_type]] = (GBPREAL)vy_test;
+                            vz_array[i_type][type_counter[i_type]] = (GBPREAL)vz_test;
                             type_counter[i_type]++;
                         }
                     }
@@ -657,8 +653,7 @@ int main(int argc, char *argv[]) {
                             } else {
                                 flag_alloc_m      = GBP_TRUE;
                                 m_particles_local = (GBPREAL *)SID_malloc(n_particles_local * sizeof(GBPREAL));
-                                int i_particle;
-                                for(i_particle = 0; i_particle < n_particles_local; i_particle++)
+                                for(size_t i_particle = 0; i_particle < n_particles_local; i_particle++)
                                     m_particles_local[i_particle] = mass_array[i_species];
                             }
 

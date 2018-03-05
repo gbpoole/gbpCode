@@ -19,7 +19,6 @@ int main(int argc, char *argv[]) {
     int          n_files;
     unsigned int n_local[N_GADGET_TYPE];
     int          i_type;
-    size_t       i_particle, j_particle;
     FILE *       fp;
     FILE *       fp_out;
     int          record_length_in;
@@ -94,7 +93,7 @@ int main(int argc, char *argv[]) {
                 seed = seed_init + 1387 * i_file;
                 init_RNG(&seed, &RNG, RNG_DEFAULT);
                 for(i_type = 0; i_type < N_GADGET_TYPE; i_type++) {
-                    for(j_particle = 0; j_particle < header.n_file[i_type]; j_particle++) {
+                    for(int j_particle = 0; j_particle < header.n_file[i_type]; j_particle++) {
                         if(random_number(&RNG) <= RNG_max)
                             n_all_keep[i_type]++;
                     }
@@ -158,7 +157,7 @@ int main(int argc, char *argv[]) {
                 seed = seed_init + 1387 * i_file;
                 init_RNG(&seed, &RNG, RNG_DEFAULT);
                 for(i_type = 0, n_keep_total = 0, n_init_total = 0; i_type < N_GADGET_TYPE; i_type++) {
-                    for(j_particle = 0; j_particle < n_local[i_type]; j_particle++, i_particle++) {
+                    for(int j_particle = 0; j_particle < n_local[i_type]; j_particle++) {
                         if(random_number(&RNG) <= RNG_max) {
                             header.n_file[i_type]++;
                             n_keep_total++;
@@ -179,7 +178,7 @@ int main(int argc, char *argv[]) {
                 SID_fread_verify(&record_length_in, sizeof(int), 1, fp);
                 fwrite(&record_length, sizeof(int), 1, fp_out);
                 for(i_type = 0; i_type < N_GADGET_TYPE; i_type++) {
-                    for(j_particle = 0; j_particle < n_local[i_type]; j_particle++) {
+                    for(int j_particle = 0; j_particle < n_local[i_type]; j_particle++) {
                         SID_fread_verify(position, sizeof(GBPREAL), 3, fp);
                         if(random_number(&RNG) <= RNG_max)
                             fwrite(position, sizeof(GBPREAL), 3, fp_out);
@@ -196,7 +195,7 @@ int main(int argc, char *argv[]) {
                 SID_fread_verify(&record_length_in, sizeof(int), 1, fp);
                 fwrite(&record_length, sizeof(int), 1, fp_out);
                 for(i_type = 0; i_type < N_GADGET_TYPE; i_type++) {
-                    for(j_particle = 0; j_particle < n_local[i_type]; j_particle++) {
+                    for(int j_particle = 0; j_particle < n_local[i_type]; j_particle++) {
                         SID_fread_verify(velocity, sizeof(GBPREAL), 3, fp);
                         if(random_number(&RNG) <= RNG_max)
                             fwrite(velocity, sizeof(GBPREAL), 3, fp_out);
@@ -220,7 +219,7 @@ int main(int argc, char *argv[]) {
                 fwrite(&record_length, sizeof(int), 1, fp_out);
                 if(flag_long_ids) {
                     for(i_type = 0; i_type < N_GADGET_TYPE; i_type++) {
-                        for(j_particle = 0; j_particle < n_local[i_type]; j_particle++) {
+                        for(int j_particle = 0; j_particle < n_local[i_type]; j_particle++) {
                             SID_fread_verify(&id_in_long, sizeof(long long), 1, fp);
                             if(random_number(&RNG) <= RNG_max)
                                 fwrite(&id_in_long, sizeof(long long), 1, fp_out);
@@ -228,7 +227,7 @@ int main(int argc, char *argv[]) {
                     }
                 } else {
                     for(i_type = 0; i_type < N_GADGET_TYPE; i_type++) {
-                        for(j_particle = 0; j_particle < n_local[i_type]; j_particle++) {
+                        for(int j_particle = 0; j_particle < n_local[i_type]; j_particle++) {
                             SID_fread_verify(&id_in_int, sizeof(int), 1, fp);
                             if(random_number(&RNG) <= RNG_max)
                                 fwrite(&id_in_int, sizeof(int), 1, fp_out);

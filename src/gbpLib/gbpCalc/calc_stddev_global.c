@@ -3,7 +3,6 @@
 #include <gbpCalc.h>
 
 void calc_stddev_global(void *data, void *result, size_t n_data_local, SID_Datatype type, int mode, SID_Comm *comm) {
-    int    i_data;
     double stddev;
     double mean;
     size_t n_data;
@@ -25,7 +24,7 @@ void calc_stddev_global(void *data, void *result, size_t n_data_local, SID_Datat
     } else {
         if(SID_CHECK_BITFIELD_SWITCH(mode, CALC_MODE_ABS)) {
             calc_mean_global(data, &mean, n_data_local, type, CALC_MODE_RETURN_DOUBLE | CALC_MODE_ABS, comm);
-            for(i_data = 0, stddev = 0.; i_data < n_data_local; i_data++) {
+            for(size_t i_data = 0, stddev = 0.; i_data < n_data_local; i_data++) {
                 if(type == SID_DOUBLE)
                     stddev += pow(GBP_IABS((double)((double *)data)[i_data]) - mean, 2.);
                 else if(type == SID_FLOAT)
@@ -41,7 +40,7 @@ void calc_stddev_global(void *data, void *result, size_t n_data_local, SID_Datat
             }
         } else {
             calc_mean_global(data, &mean, n_data_local, type, CALC_MODE_RETURN_DOUBLE, comm);
-            for(i_data = 0, stddev = 0.; i_data < n_data_local; i_data++) {
+            for(size_t i_data = 0, stddev = 0.; i_data < n_data_local; i_data++) {
                 if(type == SID_DOUBLE)
                     stddev += pow((double)((double *)data)[i_data] - mean, 2.);
                 else if(type == SID_FLOAT)

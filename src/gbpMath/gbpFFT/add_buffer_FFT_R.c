@@ -9,7 +9,7 @@ int add_buffer_FFT_R(field_info *FFT) {
                       //       i_FFT is unsigned and the 'i_FFT--' causes problems.
                       //       There's no need since the first run of the last (fastest running)
                       //       dimension is obviously not padded.
-        for(i_FFT = FFT->n_field_R_local - 1; i_FFT >= FFT->n_R_local[FFT->n_d - 1]; i_FFT--) {
+        for(i_FFT = FFT->n_field_R_local - 1; i_FFT >= (size_t)(FFT->n_R_local[FFT->n_d - 1]); i_FFT--) {
             size_t index_pad;
             index_pad = pad_index_FFT_R(FFT, i_FFT);
             if(index_pad != i_FFT) {

@@ -5,9 +5,6 @@
 void compute_PHK_volume_keys(int PHK_bit_size, PHK_t key_in, int shell_min, int shell_max, int *n_keys_return, PHK_t **keys_return_in) {
     hikey_t  basecoord[3];
     hikey_t  coord[3];
-    hikey_t  num1dim;
-    int      i, j, k;
-    int      count;
     unsigned bits;
 
     // Some type conversions
@@ -18,12 +15,12 @@ void compute_PHK_volume_keys(int PHK_bit_size, PHK_t key_in, int shell_min, int 
     keys_return = (hikey_t **)keys_return_in;
 
     // Calculate the number of possible Key values per dimension
-    num1dim = PHK_DIM_SIZE(bits);
+    hikey_t num1dim = (hikey_t)PHK_DIM_SIZE(bits);
 
     // Sanity checks
     if(shell_min < 0)
         SID_exit_error("shell_min<0 (ie %d<0) in compute_PHK_volume_keys", SID_ERROR_LOGIC, shell_min);
-    if(shell_max > num1dim)
+    if((hikey_t)shell_max > num1dim)
         SID_exit_error("shell_max>num1dim (ie %d>%d) in compute_PHK_volume_keys", SID_ERROR_LOGIC, shell_max, num1dim);
     if(shell_max < shell_min)
         SID_exit_error("shell_max<shell_min (ie %d<%d) in compute_PHK_volume_keys", SID_ERROR_LOGIC, shell_max,
@@ -42,12 +39,12 @@ void compute_PHK_volume_keys(int PHK_bit_size, PHK_t key_in, int shell_min, int 
     hilbert_i2c(3, bits, base, basecoord);
 
     // Find keys
-    count = 0;
-    for(i = num1dim - shell_max; i <= num1dim + shell_max; i++) {
+    size_t count = 0;
+    for(size_t i = num1dim - shell_max; i <= num1dim + shell_max; i++) {
         coord[0] = (basecoord[0] + i) % num1dim;
-        for(j = num1dim - shell_max; j <= num1dim + shell_max; j++) {
+        for(size_t j = num1dim - shell_max; j <= num1dim + shell_max; j++) {
             coord[1] = (basecoord[1] + j) % num1dim;
-            for(k = num1dim - shell_max; k <= num1dim + shell_max; k++) {
+            for(size_t k = num1dim - shell_max; k <= num1dim + shell_max; k++) {
                 // Check that the cell is not in the centrally excluded zone
                 if((i <= num1dim - shell_min) || (i >= num1dim + shell_min) || (j <= num1dim - shell_min) || (j >= num1dim + shell_min) ||
                    (k <= num1dim - shell_min) || (k >= num1dim + shell_min)) {
@@ -59,7 +56,7 @@ void compute_PHK_volume_keys(int PHK_bit_size, PHK_t key_in, int shell_min, int 
     }
 
     // Sanity check
-    if(count != (*n_keys_return))
+    if(count != (size_t)(*n_keys_return))
         SID_exit_error("Resulting key count in compute_PHK_from_Cartesian does not make sense (ie %d!=%d)",
                        SID_ERROR_LOGIC, count, (*n_keys_return));
 }

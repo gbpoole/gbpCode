@@ -8,7 +8,7 @@
 void display_gadget_header(plist_info *plist) {
     FILE *  fp;
     char ** pname;
-    int     i, j, k;
+    int     j, k;
     int     counter;
     size_t  n_of_type[N_GADGET_TYPE];
     int     n_of_type_tmp[N_GADGET_TYPE];
@@ -41,7 +41,6 @@ void display_gadget_header(plist_info *plist) {
     int     i_temp;
     int     i1_temp;
     int     i2_temp;
-    int     n_type_used;
     long    record_length;
     int     n_return;
     int     s_load;
@@ -60,7 +59,8 @@ void display_gadget_header(plist_info *plist) {
 
     // Determine which species are present
     n_particles = 0;
-    for(i = 0, n_type_used = 0; i < plist->n_species; i++) {
+    unsigned int n_type_used =0;
+    for(unsigned int i = 0; i < plist->n_species; i++) {
         if(ADaPS_exist(plist->data, "n_%s", pname[i])) {
             n_of_type[i] = ((size_t *)ADaPS_fetch(plist->data, "n_%s", pname[i]))[0];
             if(n_of_type[i] > 0) {
@@ -149,14 +149,14 @@ void display_gadget_header(plist_info *plist) {
         fprintf(stderr, "Omega_Lambda not set!\n");
 
     /* Number of particles */
-    for(i = 0; i < plist->n_species; i++) {
+    for(unsigned inti = 0; i < plist->n_species; i++) {
         sprintf(var_name, "n_%s", pname[i]);
         if(ADaPS_exist(plist->data, var_name)) {
             sprintf(var_name2, "n_[%s]", pname[i]);
             fprintf(stderr, "%20s = %zd\n", var_name2, ((size_t *)ADaPS_fetch(plist->data, var_name))[0]);
         }
     }
-    for(i = 0; i < plist->n_species; i++) {
+    for(unsigned inti = 0; i < plist->n_species; i++) {
         sprintf(var_name, "n_all_%s", pname[i]);
         if(ADaPS_exist(plist->data, var_name)) {
             sprintf(var_name2, "n_all_[%s]", pname[i]);
@@ -165,7 +165,7 @@ void display_gadget_header(plist_info *plist) {
     }
 
     /* Particle mass array */
-    for(i = 0; i < plist->n_species; i++) {
+    for(unsigned int i = 0; i < plist->n_species; i++) {
         if(flag_used[i]) {
             sprintf(var_name, "mass_array_%s", pname[i]);
             if(ADaPS_exist(plist->data, var_name)) {

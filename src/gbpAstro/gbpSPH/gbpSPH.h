@@ -57,7 +57,7 @@
 
 typedef struct gadget_header_info gadget_header_info;
 struct gadget_header_info {
-    int          n_file[N_GADGET_TYPE];
+    unsigned int n_file[N_GADGET_TYPE];
     double       mass_array[N_GADGET_TYPE];
     double       time;
     double       redshift;
@@ -65,7 +65,7 @@ struct gadget_header_info {
     int          flag_feedback;
     unsigned int n_all_lo_word[N_GADGET_TYPE];
     int          flag_cooling;
-    int          n_files;
+    unsigned int n_files;
     double       box_size;
     double       Omega_M;
     double       Omega_Lambda;
@@ -122,8 +122,8 @@ struct AbIL_info {
 // Structure to store particle info
 typedef struct plist_info plist_info;
 struct plist_info {
-    char **species;
-    int    n_species;
+    char         **species;
+    unsigned int   n_species;
     double time;
     double mass_unit;
     double length_unit;

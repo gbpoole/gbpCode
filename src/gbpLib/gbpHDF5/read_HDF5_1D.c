@@ -17,7 +17,7 @@ int read_HDF5_1D(char *arrayName, char *filename, float **data_out, float *themi
     hid_t hdf5_datatype = 0, hdf5_dataspace_in_memory = 0;
 
     char    buf[256];
-    int     rank, i, j;
+    int     rank;
     hsize_t dims[2];
     size_t  n_values;
     size_t  nrow;
@@ -96,8 +96,8 @@ int read_HDF5_1D(char *arrayName, char *filename, float **data_out, float *themi
     fprintf(stderr, "n_values=%ld\n", (long)n_values);
     fprintf(stderr, "data_out[10]=%f\n", (*data_out)[10]);
 
-    for(i = 0; i < n_values / nrow; i++) {
-        for(j = 0; j < nrow; j++) {
+    for(size_t i = 0; i < n_values / nrow; i++) {
+        for(size_t j = 0; j < nrow; j++) {
             if(themin != NULL)
                 *themin = GBP_MIN(*themin, (*data_out)[i * nrow + j]);
             if(themax != NULL)

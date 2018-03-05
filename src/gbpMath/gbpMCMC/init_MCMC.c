@@ -93,7 +93,7 @@ void init_MCMC(MCMC_info * MCMC,
     for(i_P = 0; i_P < n_P; i_P++) {
         MCMC->P_names[i_P] = (char *)SID_malloc(sizeof(char) * MCMC_NAME_SIZE);
         sprintf(MCMC->P_names[i_P], "%s", P_names[i_P]);
-        MCMC->P_name_length = GBP_MAX(MCMC->P_name_length, strlen(MCMC->P_names[i_P]));
+        MCMC->P_name_length = GBP_MAX((size_t)(MCMC->P_name_length), strlen(MCMC->P_names[i_P]));
     }
     sprintf(MCMC->P_name_format, "%%-%ds", MCMC->P_name_length);
 

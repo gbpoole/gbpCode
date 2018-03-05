@@ -6,8 +6,8 @@
 
 int remove_parameter_character(char *line) {
     char temp_char[2];
-    int  j, flag = GBP_TRUE, rval = GBP_FALSE;
-    for(j = 0; j < strlen(line) && flag; j++) {
+    int  flag = GBP_TRUE, rval = GBP_FALSE;
+    for(size_t j = 0; j < strlen(line) && flag; j++) {
         sprintf(temp_char, "%c", line[j]);
         if(strcmp(temp_char, " ")) {
             if(!strcmp(temp_char, GBPPARSE_PARAMETER_CHARACTER)) {

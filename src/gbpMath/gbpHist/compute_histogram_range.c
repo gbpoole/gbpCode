@@ -15,16 +15,18 @@ void compute_histogram_range(hist_info *hist, double confidence_percent, int mod
         SID_exit_error("No range mode flags have been set in compute_histogram_range().", SID_ERROR_LOGIC);
 
     // Set defaults
-    int i_peak = hist->n_bins / 2;
-    int i_lo   = 0;
-    int i_hi   = hist->n_bins - 1;
+    size_t i_peak = hist->n_bins / 2;
+    size_t i_lo   = 0;
+    size_t i_hi   = hist->n_bins - 1;
 
     // Set the population to nomalize by
-    size_t n_norm;
+    size_t n_norm=hist->count_hist;
     if(SID_CHECK_BITFIELD_SWITCH(mode, GBP_HISTOGRAM_RANGE_ALL))
         n_norm = hist->count_all;
     else if(SID_CHECK_BITFIELD_SWITCH(mode, GBP_HISTOGRAM_RANGE_HIST))
         n_norm = hist->count_hist;
+    else
+        SID_log_error("Normalisation mode is ambiguous (mode=%d) in compute_histogram_range().",SID_ERROR_LOGIC,mode);
 
     if(n_norm > 0) {
         // Sort counts

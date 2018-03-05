@@ -366,7 +366,7 @@ void analyze_MCMC(MCMC_info *MCMC) {
             for(j_M = 0; j_M < coverage_size; j_M++)
                 M_histogram[i_DS][i_M][j_M] = 0;
         }
-        n_residual = GBP_MAX(n_residual, n_M[i_DS]);
+        n_residual = GBP_MAX(n_residual, (size_t)n_M[i_DS]);
         current_DS = next_DS;
     }
     if(next_DS != NULL)
