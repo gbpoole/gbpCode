@@ -10,7 +10,8 @@ set(DATASUBDIR "" )
 
 # Add subdirectories that are roots to libraries
 # eg. list(APPEND LIBDIRS "dir" )
-# -- NONE FOR THIS DIR --
+list(APPEND LIBDIRS "gbpLib"  )
+list(APPEND LIBDIRS "gbpMath" )
 
 # Add directories that contribute source files 
 # eg. list(APPEND SRCDIRS "dir" )
@@ -39,4 +40,5 @@ set(DATASUBDIR "" )
 # Add subdirectories that we want to decend into
 #   but which we won't scan for sources, etc
 # eg. list(APPEND PASSDIRS "dir" )
-list(APPEND PASSDIRS "src" )
+list(APPEND PASSDIRS "gbpAstro" )
+

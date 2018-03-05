@@ -5,7 +5,8 @@ import glob
 import click
 
 # Find the project root directory
-git_repo = git.Repo(os.path.realpath(__file__), search_parent_directories=True)
+#git_repo = git.Repo(os.path.realpath(__file__), search_parent_directories=True)
+git_repo = git.Repo(os.path.realpath(os.getcwd()), search_parent_directories=True)
 dir_root = git_repo.git.rev_parse("--show-toplevel")
 dir_python = os.path.abspath(os.path.join(dir_root, "python"))
 

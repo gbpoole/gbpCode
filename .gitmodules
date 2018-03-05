@@ -1,0 +1,3 @@
+[submodule "src/gbpLib/extern/gbpSID"]
+	path = src/gbpLib/extern/gbpSID
+	url = https://github.com/gbpoole/gbpSID.git
