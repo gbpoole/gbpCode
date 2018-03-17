@@ -2,6 +2,9 @@
 # By checking ENV, we can alter compiler versions in CI
 # environments (for example)
 macro(init_compilers)
+    message(STATUS "")
+    message(STATUS "--- Configuring compiler ---")
+    message(STATUS "")    
     if(DEFINED ENV{CXX} AND DEFINED ENV{CC})
         set(CMAKE_C_COMPILER $ENV{CC})
         set(CMAKE_CXX_COMPILER $ENV{CXX})
@@ -17,8 +20,8 @@ endmacro(init_compilers)
 
 # Set compiler flags
 macro(set_compiler_flags)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu99 -Wextra -Wno-unused-parameter")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu99 -Wextra -Wno-unused-parameter")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu99 -Wextra")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu99 -Wextra")
     set(CMAKE_CXX_STANDARD 11)
 endmacro(set_compiler_flags)
 
@@ -58,4 +61,7 @@ macro(validate_compilers)
     endif()
     message(STATUS "   ID     : ${CMAKE_CXX_COMPILER_ID}")
     message(STATUS "   VERSION: ${CMAKE_CXX_COMPILER_VERSION}")
+    message(STATUS "")
+    message(STATUS "--- Finished configuring compiler ---")
+    message(STATUS "")
 endmacro(validate_compilers)

@@ -1,24 +1,13 @@
 # Define these outside any of any macros or functions
-set(GBPBUILD_REL_PATH "extern/gbpBuild" )
-set(GBP_PROJECT_NAME  "gbpSID")
+set(_PROJECT_NAME  "gbpCode")
 
 # Set options and dependencies
 macro(project_options_and_dependencies)
     #========= Set project-specific options ========
-    # Use double precision liberally ?
-    option(USE_DOUBLE "Use double liberally" OFF)
-    if(USE_DOUBLE)
-        add_definitions(-DUSE_DOUBLE)
-    endif()
-    
-    option(USE_FFTW2 "Use v2 of FFTW" OFF)
-    if(USE_FFTW2)
-        add_definitions(-DUSE_FFTW2)
-    endif()
+    define_project_env_variable(USE_DOUBLE "Use double precision liberally"   OFF ON OFF)
+    define_project_env_variable(SID_DEBUG  "Enable SID debugging information" OFF ON OFF)
+    define_project_env_variable(USE_FFTW2  "Use v2 of FFTW"                   ON  ON OFF)
 
-    # Turn on debugging mode
-    option(SID_DEBUG "Enable SID debugging information" OFF)
-    
     #=========== Add 3rd-party libraries ===========
     # (look in gbpBuild/cmake/3rd_party.cmake for a list of supported libraries)
     message(STATUS "")
