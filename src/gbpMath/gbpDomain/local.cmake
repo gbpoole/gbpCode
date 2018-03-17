@@ -22,8 +22,6 @@ list(APPEND INCFILES "gbpDomain.h" )
 
 # Add source files
 # eg. list(APPEND SRCFILES "file" )
-list(APPEND SRCFILES "set_exchange_ring_ranks.c" )
-list(APPEND SRCFILES "exchange_ring_buffer.c" )
 list(APPEND SRCFILES "exchange_slab_buffer_left.c" )
 list(APPEND SRCFILES "exchange_slab_buffer_right.c" )
 list(APPEND SRCFILES "clear_field.c" )
