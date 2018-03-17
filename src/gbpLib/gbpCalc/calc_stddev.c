@@ -21,7 +21,8 @@ void calc_stddev(void *data, void *result, size_t n_data, SID_Datatype type, int
     } else {
         if(SID_CHECK_BITFIELD_SWITCH(mode, CALC_MODE_ABS)) {
             calc_mean(data, &mean, n_data, type, CALC_MODE_RETURN_DOUBLE | CALC_MODE_ABS);
-            for(size_t i_data = 0, stddev = 0.; i_data < n_data; i_data++) {
+            stddev = 0;
+            for(size_t i_data = 0; i_data < n_data; i_data++) {
                 if(type == SID_DOUBLE)
                     stddev += pow(GBP_IABS((double)((double *)data)[i_data]) - mean, 2.);
                 else if(type == SID_FLOAT)
@@ -35,7 +36,7 @@ void calc_stddev(void *data, void *result, size_t n_data, SID_Datatype type, int
                 else
                     SID_exit_error("Unknown variable type in calc_stddev", SID_ERROR_LOGIC);
             }
-            stddev = sqrt(stddev / (double)n_data);
+            stddev = sqrt(stddev / (double)n_data); // n_data must be >0 at this point
             if(type == SID_DOUBLE || SID_CHECK_BITFIELD_SWITCH(mode, CALC_MODE_RETURN_DOUBLE))
                 ((double *)result)[0] = (double)stddev;
             else if(type == SID_FLOAT)
