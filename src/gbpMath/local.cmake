@@ -13,7 +13,7 @@ set(PASSDIRS   "" )
 
 # Add directories that contribute source files 
 # eg. list(APPEND SRCDIRS "dir" )
-if(USE_FFTW)
+if(USE_FFTW OR SCAN_ALL_DIRS)
     list(APPEND SRCDIRS "gbpFFT" )
 else()
     message(STATUS "fftw not found.  Skipping config of gbpFFT." )
