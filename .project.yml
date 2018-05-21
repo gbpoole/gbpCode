@@ -1,5 +1,5 @@
 # Build configuration parameters for project: gbpCode
 - description: One line description of project.
-- email: gbpoole@gmail.com
+- author_email: gbpoole@gmail.com
 - name: gbpCode
 - author: Gregory B. Poole
