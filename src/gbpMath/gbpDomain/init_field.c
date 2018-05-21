@@ -51,7 +51,7 @@ void init_field(int n_d, int *n, double *L, field_info *FFT) {
     int *n_int=(int *)SID_malloc(sizeof(int)*FFT->n_d);
     for(int i_d=0;i_d<FFT->n_d;i_d++)
         n_int[i_d]=(int)FFT->n[i_d];
-#if USE_FFTW2
+#if FFTW_V2
 #if USE_MPI
     int total_local_size_int;
     int n_x_local_int;

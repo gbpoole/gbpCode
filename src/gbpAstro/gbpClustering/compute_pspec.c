@@ -5,7 +5,7 @@
 #include <gbpSPH.h>
 #include <gbpClustering.h>
 
-#if !USE_FFTW2
+#if !FFTW_V2
 #define c_re(c) ((c)[0])
 #define c_im(c) ((c)[1])
 #endif

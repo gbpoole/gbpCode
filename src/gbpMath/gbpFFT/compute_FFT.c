@@ -12,7 +12,7 @@ void compute_FFT(field_info *FFT) {
     }
 
 // Perform the FFT
-#if USE_FFTW2
+#if FFTW_V2
 #if USE_MPI
     rfftwnd_mpi(FFT->plan, 1, FFT->field_local, NULL, FFTW_TRANSPOSED_ORDER);
 #else

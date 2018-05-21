@@ -5,7 +5,7 @@
 #include <stddef.h>
 
 #if USE_FFTW
- #if USE_FFTW2
+ #if FFTW_V2
   #if USE_MPI
    #if USE_DOUBLE
     #include <drfftw_mpi.h>
@@ -42,7 +42,7 @@ struct slab_info {
 };
 
 #if USE_FFTW
-#if USE_FFTW2
+#if FFTW_V2
 #define gbpFFT_real    fftw_real
 #define gbpFFT_complex fftw_complex
 #else
@@ -85,7 +85,7 @@ struct field_info {
     int flag_padded;
 // FFTW plans
 #if USE_FFTW
-#if USE_FFTW2
+#if FFTW_V2
 #if USE_MPI
     rfftwnd_mpi_plan plan;
     rfftwnd_mpi_plan iplan;

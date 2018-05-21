@@ -16,7 +16,7 @@ void free_field(field_info *FFT) {
 
 // Free FFTs
 #if USE_FFTW
-#if USE_FFTW2
+#if FFTW_V2
 #if USE_MPI
     rfftwnd_mpi_destroy_plan(FFT->plan);
     rfftwnd_mpi_destroy_plan(FFT->iplan);
