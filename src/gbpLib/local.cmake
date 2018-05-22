@@ -15,7 +15,6 @@ set(PASSDIRS   "" )
 
 # Add directories that contribute source files 
 # eg. list(APPEND SRCDIRS "dirname")
-list(APPEND SRCDIRS "extern/gbpSID" )
 list(APPEND SRCDIRS "gbpSort" )
 list(APPEND SRCDIRS "gbpCalc" )
 list(APPEND SRCDIRS "gbpParse" )
