@@ -31,7 +31,7 @@ using namespace gbpSID;
 // worry about either of those.
 void application::define_arguments() {
     // Set default values
-    args = {"unset","unset","unset", GBP_TRUE, GBP_TRUE, GBP_TRUE, GBP_TRUE, SWAP_SSIMPL_ENDIAN_TO_NATIVE, 1, 1};
+    args = arg_list{"unset","unset","unset", GBP_TRUE, GBP_TRUE, GBP_TRUE, GBP_TRUE, SWAP_SSIMPL_ENDIAN_TO_NATIVE, 1, 1};
     // Define options
     cli |= clara::Opt([&](bool) { args.flag_process_halos = GBP_FALSE; })["--ignore-halos"]("Ignore processing of halo files");
     cli |= clara::Opt([&](bool) { args.flag_process_catalogs = GBP_FALSE; })["--ignore-catalogs"]("Ignore processing of catalog files");

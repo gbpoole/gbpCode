@@ -15,7 +15,7 @@ using namespace gbpSID;
 // worry about either of those.
 void application::define_arguments() {
     // Set default values
-    args = {1};
+    args = arg_list{1};
     // Add instructions text
     instructions_text += "Add instructions here.";
 }
