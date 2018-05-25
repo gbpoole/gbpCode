@@ -251,6 +251,7 @@ endmacro()
 macro(build_data_files cur_dir )
     # Collect the data files for this directory
     collect_data_files( ${cur_dir} )
+
     # Add each data file to the target list
     set_dir_state(${cur_dir})
     foreach( _data_file ${DATAFILE_LIST} )
