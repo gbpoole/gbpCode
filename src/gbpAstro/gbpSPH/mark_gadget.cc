@@ -22,6 +22,7 @@ void application::define_arguments() {
 
 // This method executes the application's logic
 #include <stdlib.h>
+#include <string.h>
 #include <gbpSPH.h>
 int application::execute() {
     int        i;
