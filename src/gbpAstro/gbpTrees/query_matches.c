@@ -158,7 +158,7 @@ int main(int argc, char *argv[]) {
                 sprintf(goodness_of_match_text, "bad");
 
             // Check for 2-way match
-            char twoway_match_text[5];
+            char twoway_match_text[6];
             if(match_2way[i_halo])
                 sprintf(twoway_match_text, "2-way");
             else
@@ -240,7 +240,7 @@ int main(int argc, char *argv[]) {
                         sprintf(goodness_of_match_text, "bad");
 
                     // Check for 2-way match
-                    char twoway_match_text[5];
+                    char twoway_match_text[6];
                     if(match_2way[i_halo])
                         sprintf(twoway_match_text, "2-way");
                     else
